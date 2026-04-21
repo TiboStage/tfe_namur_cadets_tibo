@@ -1,0 +1,166 @@
+dashboard:
+    greeting: "Bonjour,"
+    subtitle: "projet(s) au total"
+    stats:
+        projects_value: "Projets en cours"
+        projects_link: "↗ Voir tous"
+        views_value: "Vues totales"
+        views_link: "↗ Statistiques"
+        entities_value: "Entités créées"
+    actions:
+        new_project_title: "Nouveau projet"
+        new_project_desc: "Jeu vidéo, série, film"
+        new_project_btn: "+ Créer"
+        export_title: "Exporter un projet"
+        export_desc: "Format (.pdf, .xml)"
+        export_btn: "↓ Export"
+    projects:
+        title: "Projets en cours"
+        see_more: "Voir plus ↗"
+        empty: "Aucun projet pour l'instant. Créez-en un !"
+    activity:
+        title: "Activité récente"
+        see_all: "Voir tous ↗"
+        action: "a modifié un projet"
+        ago: "Il y a"
+        min: "min."
+
+projects:
+    index:
+        title: "Mes projets"
+        subtitle: "projet(s) au total"
+        btn_new: "+ Nouveau projet"
+        empty: "Aucun projet pour l'instant."
+        empty_btn: "Créer mon premier projet"
+        modified: "Modifié le"
+        btn_open: "Ouvrir"
+        btn_edit: "Éditer"
+    new:
+        title: "Nouveau projet"
+        back: "← Mes projets"
+        label_title: "Titre du projet"
+        label_type: "Type de projet"
+        label_desc: "Description"
+        placeholder_title: "Ex: Les Ombres de Valoria"
+        placeholder_desc: "Décrivez votre univers en quelques phrases..."
+        btn_cancel: "Annuler"
+        btn_submit: "Créer le projet →"
+    edit:
+        title: "Paramètres du projet"
+        label_title: "Titre"
+        label_type: "Type de projet"
+        label_desc: "Description"
+        btn_cancel: "Annuler"
+        btn_submit: "Enregistrer"
+        danger_title: "Zone de danger"
+        danger_desc: "La suppression est irréversible. Toutes les données du projet seront perdues."
+        danger_btn: "Supprimer ce projet"
+        danger_confirm: "Supprimer définitivement ce projet ?"
+    show:
+        back: "← Mes projets"
+        btn_settings: "Paramètres"
+        no_description: "Aucune description."
+        section_structure: "Structure narrative"
+        section_structure_desc: "Actes, séquences, scènes"
+        section_structure_btn: "Ouvrir l'éditeur"
+        section_characters: "Personnages"
+        section_locations: "Lieux"
+        section_tags: "Tags"
+        btn_manage: "Gérer"
+
+location:
+    index:
+        title: "Lieux"
+        new_btn: "+ Nouveau lieu"
+        empty: "Aucun lieu pour l'instant."
+        empty_create: "Créer le premier lieu"
+
+    new:
+        title: "Nouveau lieu"
+        back: "← Lieux"
+        submit: "Créer le lieu →"
+        cancel: "Annuler"
+
+    edit:
+        title: "Modifier le lieu"
+        submit: "Enregistrer"
+        cancel: "Annuler"
+        danger_zone: "Zone de danger"
+        danger_desc: "La suppression est irréversible."
+        delete_btn: "Supprimer ce lieu"
+        delete_confirm: "Supprimer ce lieu ?"
+
+    show:
+        back: "← Lieux"
+        edit_btn: "Modifier"
+        no_description: "Aucune description pour ce lieu."
+
+    form:
+        name: "Nom du lieu"
+        name_placeholder: "Ex: Le manoir des Blackwood"
+        type: "Type de lieu"
+        description: "Description"
+        description_placeholder: "Décrivez ce lieu, son ambiance, ses caractéristiques..."
+
+    info:
+        title: "Informations"
+        type: "Type"
+        created_at: "Créé le"
+        updated_at: "Modifié le"
+
+character:
+    new:
+        title: "Nouveau personnage"
+        back: "← Personnages"
+        submit: "Créer le personnage →"
+        cancel: "Annuler"
+
+    edit:
+        title: "Modifier le personnage"
+        submit: "Enregistrer"
+        cancel: "Annuler"
+        danger_zone: "Zone de danger"
+        danger_desc: "La suppression est irréversible."
+        delete_btn: "Supprimer ce personnage"
+        delete_confirm: "Supprimer ce personnage ?"
+
+    index:
+        title: "Personnages"
+        new_btn: "+ Nouveau personnage"
+        empty: "Aucun personnage pour l'instant."
+        empty_create: "Créer le premier personnage"
+
+    show:
+        back: "← Personnages"
+        edit_btn: "Modifier"
+        no_description: "Aucune description pour ce personnage."
+
+    form:
+        section_identity: "Identité"
+        section_psychology: "Psychologie"
+        name: "Nom d'affichage"
+        name_placeholder: "Ex: Marie Dupont"
+        firstname: "Prénom"
+        firstname_placeholder: "Marie"
+        lastname: "Nom"
+        lastname_placeholder: "Dupont"
+        nickname: "Surnom / Alias principal"
+        nickname_placeholder: "La détective"
+        role: "Rôle narratif"
+        description: "Description courte"
+        description_placeholder: "Décrivez brièvement ce personnage..."
+        biography: "Biographie"
+        biography_placeholder: "Son histoire, son passé..."
+        goals: "Objectifs"
+        goals_placeholder: "Qu'est-ce qu'il veut obtenir ?"
+        motivations: "Motivations"
+        motivations_placeholder: "Pourquoi agit-il ainsi ?"
+        arc: "Arc narratif"
+        arc_placeholder: "Comment évolue-t-il au fil de l'histoire ?"
+
+    info:
+        title: "Informations"
+        role: "Rôle"
+        created_at: "Créé le"
+        relations: "Relations"
+        no_relations: "Aucune relation définie."

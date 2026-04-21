@@ -1,0 +1,57 @@
+meta:
+    title: "Scénart - Imagine, Structure, Write"
+
+hero:
+    badge: "✦ A tool designed for world builders"
+    title: "Imagine, Structure,"
+    title_highlight: "Write."
+    subtitle: "Bring your worlds to life, clarify your scripts and stories.<br>Your imagination, limitless."
+    mockup_placeholder: "Preview of the Scénart workshop"
+    actions:
+        register: "Sign up"
+        discover: "Discover ↗"
+
+features:
+    label: "FEATURES"
+    title: "Everything you need to"
+    title_highlight: "build your universe"
+    desc: "Tools designed for serious creators.<br>From raw idea to complete world."
+    items:
+        editor_title: "Script Editor"
+        editor_desc: "Professional screenplay format. Sluglines, dialogue, auto narration."
+        characters_title: "Character sheets"
+        characters_desc: "Biographies, motivations, narrative arcs and portraits for every character."
+        locations_title: "Location sheets"
+        locations_desc: "Sets, atmospheres and metadata for every location in your universe."
+        timeline_title: "Visual timeline"
+        timeline_desc: "Visualize the order of events in your story on an interactive timeline."
+        export_title: "Pro PDF export"
+        export_desc: "Generate a complete narrative bible ready to send to a publisher or producer."
+        relations_title: "Relationship graph"
+        relations_desc: "Map the links between your characters: allies, enemies, family, love."
+
+for_whom:
+    label: "FOR WHOM?"
+    title: "A tool for"
+    title_highlight: "every creator"
+    cards:
+        cinema:
+            title: "Movies & Series"
+            desc: "Scripts, storyboards, narrative arcs over multiple seasons."
+        roman:
+            title: "Literature"
+            desc: "Chapter organization, character sheets, and worldbuilding."
+        game:
+            title: "Video Games"
+            desc: "Narrative design, branching quests, and interactive lore."
+        jdr:
+            title: "TTRPG"
+            desc: "Campaigns, bestiaries, and scenario management for GMs."
+
+cta:
+    title: "Ready to write your"
+    title_highlight: "first world?"
+    desc: "Join hundreds of creators launching their universes on Scénart."
+    actions:
+        start: "Start for free"
+        examples: "View examples ↗"

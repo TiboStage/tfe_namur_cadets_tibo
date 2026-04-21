@@ -1,0 +1,29 @@
+:root {
+    /* Couleurs principales */
+    --color-primary: #FFB800;    /* Jaune Scénart */
+    --color-bg-dark: #0A0A0A;   /* Noir de fond */
+    --color-bg-card: #15151A;   /* Gris foncé des cartes/menus */
+    --color-border: #222222;    /* Bordures subtiles */
+    --container-width: 1400px;
+    --container-padding: 50px;
+
+    /* Couleurs de texte */
+    --text-main: #FFFFFF;
+    --text-muted: #888888;
+    --text-dark: #000000;
+
+    /* Espacements & Rayons */
+    --transition: all 0.3s ease;
+
+}
+
+/* Mode clair */
+:root.light {
+    --color-bg-dark: #F5F5F5;
+    --color-bg-card: #FFFFFF;
+    --color-border: #E0E0E0;
+    --text-main: #0A0A0A;
+    --text-muted: #666666;
+    --text-dark: #000000;
+    --color-primary: #FFB800; /* Le jaune reste */
+}

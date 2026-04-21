@@ -1,0 +1,78 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop_interface' %}
+{% import 'workshop/_macros/form_field.html.twig' as forms %}
+
+{% block title %}{{ 'character.edit.title'|trans }} {{ character.name }} — {{ project.title }}{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_character_show', {project_id: project.id, id: character.id}) }}" class="link-back">← {{ character.name }}</a>
+                <h1>{{ 'character.edit.title'|trans }}</h1>
+            </div>
+        </header>
+
+        <div class="form-page-wrapper" style="max-width: 900px;">
+
+            {{ form_start(form, {
+                'attr': {
+                    'novalidate': 'novalidate',
+                    'class': 'project-form',
+                    'data-controller': 'validator',
+                    'data-validator-error-value': 'form.errors.required_invalid'|trans({}, 'validators'),
+                    'data-action': 'submit->validator#validateForm'
+                }
+            }) }}
+
+            <div class="character-form-grid">
+
+                {# ── Colonne gauche — Identité ─────────────────────────────────── #}
+                <div>
+                    <div class="form-section-title">{{ 'character.form.section_identity'|trans }}</div>
+
+                    {{ forms.field(form.name, 'character.form.name'|trans, required=true) }}
+
+                    <div class="form-row-two">
+                        {{ forms.field(form.firstName, 'character.form.firstname'|trans) }}
+                        {{ forms.field(form.lastName, 'character.form.lastname'|trans) }}
+                    </div>
+
+                    {{ forms.field(form.nickname, 'character.form.nickname'|trans) }}
+                    {{ forms.select(form.role, 'character.form.role'|trans, required=true) }}
+                    {{ forms.textarea(form.description, 'character.form.description'|trans, rows=3) }}
+                </div>
+
+                {# ── Colonne droite — Psychologie ──────────────────────────────── #}
+                <div>
+                    <div class="form-section-title">{{ 'character.form.section_psychology'|trans }}</div>
+
+                    {{ forms.textarea(form.biography, 'character.form.biography'|trans, rows=5) }}
+                    {{ forms.textarea(form.goals, 'character.form.goals'|trans, rows=3) }}
+                    {{ forms.textarea(form.motivations, 'character.form.motivations'|trans, rows=3) }}
+                    {{ forms.textarea(form.characterArc, 'character.form.arc'|trans, rows=3) }}
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ path('app_character_show', {project_id: project.id, id: character.id}) }}" class="btn-export">{{ 'character.edit.cancel'|trans }}</a>
+                <button type="submit" class="btn-creat">{{ 'character.edit.submit'|trans }}</button>
+            </div>
+
+            {{ form_end(form) }}
+
+            {{ forms.danger_zone(
+                path('app_character_delete', {project_id: project.id, id: character.id}),
+                'delete_character_',
+                character.id,
+                'character.edit.delete_confirm'|trans,
+                'character.edit.delete_btn'|trans,
+                'character.edit.danger_zone'|trans,
+                'character.edit.danger_desc'|trans
+            ) }}
+
+        </div>
+    </div>
+{% endblock %}

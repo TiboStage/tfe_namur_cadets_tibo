@@ -1,0 +1,149 @@
+/* ============================================================
+   TOPBAR WORKSHOP — _topbar.css
+   ============================================================ */
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    height: 56px;
+    background: #0d0d10;
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* ── Gauche ──────────────────────────────────────────────── */
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.topbar-logo img {
+    display: block;
+}
+
+.link-back {
+    color: var(--text-muted);
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.link-back:hover {
+    color: var(--text-main);
+}
+
+/* ── Centre ──────────────────────────────────────────────── */
+
+.search-bar {
+    background: #1a1a1e;
+    border: 1px solid var(--color-border);
+    padding: 0 15px;
+    width: 380px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    transition: border-color 0.2s ease;
+}
+
+.search-bar:focus-within {
+    border-color: var(--text-muted);
+}
+
+.search-bar input {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    width: 100%;
+    outline: none;
+    font-size: 13px;
+}
+
+.search-bar input::placeholder {
+    color: var(--text-muted);
+}
+
+/* ── Droite ──────────────────────────────────────────────── */
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.notification-btn {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.notification-btn:hover {
+    border-color: var(--text-muted);
+    color: var(--text-main);
+}
+
+.profile-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #111114;
+    padding: 0 12px 0 15px;
+    height: 38px;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+}
+
+.profile-pill:hover {
+    border-color: var(--text-muted);
+}
+
+.profile-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1px;
+}
+
+.user-name {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.badge-premium {
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--color-primary);
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Avatar : cercle car c'est une convention UI acceptable */
+.avatar-circle {
+    width: 30px;
+    height: 30px;
+    background: var(--color-primary);
+    color: #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 11px;
+    flex-shrink: 0;
+}

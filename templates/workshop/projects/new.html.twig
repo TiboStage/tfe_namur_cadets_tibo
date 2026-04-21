@@ -1,0 +1,26 @@
+{# templates/workshop/projects/new.html.twig #}
+{% extends 'workshop/layout.html.twig' %}
+
+{% block content %}
+    <div class="dashboard-container">
+        {{ form_start(form, {
+            'attr': {
+                'novalidate': 'novalidate',
+                'class': 'project-form',
+                'data-controller': 'validator',
+                'data-validator-error-value': 'form.errors.required_invalid'|trans({}, 'validators'),
+                'data-action': 'submit->validator#validateForm'
+            }
+        }) }}
+
+        {{ form_row(form.title) }}
+        {{ form_row(form.projectType) }}
+        {{ form_row(form.description) }}
+
+        <div class="form-actions">
+            <button type="submit" class="btn-creat">Créer</button>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {# Conteneur des Toasts (Flash messages) #}
+    <div class="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                {# On utilise ton composant Alert ici #}
+                {{ component('Alert', { type: label, message: message|trans }) }}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {# templates/workshop/layout.html.twig #}
+
+    <div class="toast-container" id="main-toast-container">
+        {# Alertes Serveur (Flash messages) #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                {{ component('Alert', {
+                    type: label,
+                    message: message|trans,
+                    withIcon: true
+                }) }}
+            {% endfor %}
+        {% endfor %}
+    </div>
+
+    <div class="workshop-wrapper">
+        {% include 'workshop/_partials/_topbar.html.twig' %}
+        {% include 'workshop/_partials/_subnav.html.twig' %}
+
+        <main class="workshop-content" data-turbo="false">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+{% endblock %}

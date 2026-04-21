@@ -1,0 +1,80 @@
+/* 1. Reset Global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+html, body {
+    background-color: var(--color-bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, sans-serif;
+    width: 100%;
+    margin: 0;
+    /* L'astuce magique : overlay pour que la barre flotte sans pousser le contenu */
+    overflow-y: overlay;
+}
+/* ─── Utilitaires globaux ─── */
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+}
+
+.section-header {
+    padding-top: 100px;
+    margin-bottom: 60px;
+}
+
+.section-tag {
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.main-title {
+    font-size: 48px;
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+
+.section-desc {
+    color: var(--text-muted);
+    font-size: 17px;
+    max-width: 550px;
+    line-height: 1.6;
+}
+
+/* On s'assure que le wrapper prend bien toute la largeur */
+.site-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 2. Scrollbar "Ghost" (elle ne prend pas de place) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent; /* Fond invisible = pas de morceau noir ! */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-primary);
+}
+.hidden { display: none !important; }

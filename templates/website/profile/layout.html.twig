@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="profile-wrapper">
+
+        {# ── Header minimal ──────────────────────────────────────────────── #}
+        <header class="profile-topbar">
+            <a href="{{ path('app_home') }}" class="profile-logo">
+                SCÉN<span class="highlight">ART</span>
+            </a>
+
+            <div class="profile-topbar-right">
+                <div class="avatar-circle">
+                    {{ app.user.firstName|slice(0,1)|upper }}{{ app.user.lastName|slice(0,1)|upper }}
+                </div>
+            </div>
+        </header>
+
+        {# ── Contenu ──────────────────────────────────────────────────────── #}
+        <div class="profile-body">
+            {% block content %}{% endblock %}
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends 'website/layout.html.twig' %}
+{% trans_default_domain 'auth' %}
+
+{% block title %}{{ 'meta_title'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="auth-page-container"
+         data-controller="auth-slider"
+         data-has-errors="{{ not registrationForm.vars.valid ? 'true' : 'false' }}">
+
+        <div class="auth-card {{ not registrationForm.vars.valid ? 'right-panel-active' : '' }}"
+             id="auth-card"
+             data-auth-slider-target="card">
+
+            {# ── FORMULAIRE INSCRIPTION ────────────────────────────────────── #}
+            <div class="form-container signup-container">
+
+                {{ form_start(registrationForm, {
+                    'action': path('app_register'),
+                    'attr': {'novalidate': 'novalidate'}
+                }) }}
+
+                <h1>{{ 'register.title'|trans }}</h1>
+
+                {# Prénom + Nom côte à côte #}
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form_widget(registrationForm.firstName, {
+                            'attr': {'placeholder': 'register.firstname'|trans}
+                        }) }}
+                        {{ form_errors(registrationForm.firstName) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(registrationForm.lastName, {
+                            'attr': {'placeholder': 'register.lastname'|trans}
+                        }) }}
+                        {{ form_errors(registrationForm.lastName) }}
+                    </div>
+                </div>
+
+                {# Nom d'utilisateur #}
+                <div class="form-group">
+                    {{ form_widget(registrationForm.username, {
+                        'attr': {'placeholder': 'register.username'|trans}
+                    }) }}
+                    {{ form_errors(registrationForm.username) }}
+                </div>
+
+                {# Email #}
+                <div class="form-group">
+                    {{ form_widget(registrationForm.email, {
+                        'attr': {'placeholder': 'register.email'|trans}
+                    }) }}
+                    {{ form_errors(registrationForm.email) }}
+                </div>
+
+                {# Mot de passe #}
+                <div class="form-group">
+                    {{ form_widget(registrationForm.plainPassword, {
+                        'attr': {'placeholder': 'register.password'|trans}
+                    }) }}
+                    {{ form_errors(registrationForm.plainPassword) }}
+                </div>
+
+                {# CGU #}
+                <div class="form-check">
+                    {{ form_widget(registrationForm.agreeTerms) }}
+                    <label for="{{ registrationForm.agreeTerms.vars.id }}">
+                        {{ 'register.agree_terms'|trans }}
+                    </label>
+                    {{ form_errors(registrationForm.agreeTerms) }}
+                </div>
+
+                <button type="submit" class="btn btn--cta-yellow">
+                    {{ 'register.submit'|trans }}
+                </button>
+
+                {{ form_end(registrationForm) }}
+
+            </div>
+
+            {# ── FORMULAIRE CONNEXION ──────────────────────────────────────── #}
+            <div class="form-container login-container">
+                <form method="post" action="{{ path('app_login') }}">
+
+                    <h1>{{ 'login.title'|trans }}</h1>
+
+                    {# Erreur d'authentification Symfony Security #}
+                    {% if error %}
+                        <div class="alert alert--error">
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            {{ component('Alert', { type: label, message: message }) }}
+                        {% endfor %}
+                    {% endfor %}
+
+                    <div class="form-group">
+                        <input type="email"
+                               name="email"
+                               value="{{ last_username }}"
+                               placeholder="{{ 'login.email'|trans }}"
+                               autocomplete="email"
+                               required
+                               autofocus>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password"
+                               name="password"
+                               placeholder="{{ 'login.password'|trans }}"
+                               autocomplete="current-password"
+                               required>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="btn btn--cta-black">
+                        {{ 'login.submit'|trans }}
+                    </button>
+
+                </form>
+            </div>
+
+            {# ── OVERLAY ───────────────────────────────────────────────────── #}
+            <div class="overlay-container">
+                <div class="overlay">
+
+                    <div class="overlay-panel overlay-left">
+                        <h2>{{ 'overlay.welcome'|trans }}</h2>
+                        <p>{{ 'overlay.desc_login'|trans }}</p>
+                        <button class="btn btn--ghost"
+                                type="button"
+                                data-action="click->auth-slider#showLogin">
+                            {{ 'overlay.btn_login'|trans }}
+                        </button>
+                    </div>
+
+                    <div class="overlay-panel overlay-right">
+                        <h2>{{ 'overlay.hello'|trans }}</h2>
+                        <p>{{ 'overlay.desc_register'|trans }}</p>
+                        <button class="btn btn--ghost"
+                                type="button"
+                                data-action="click->auth-slider#showSignup">
+                            {{ 'overlay.btn_register'|trans }}
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

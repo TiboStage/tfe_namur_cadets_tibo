@@ -1,0 +1,23 @@
+{% extends 'workshop/layout.html.twig' %}
+
+{% block content %}
+    <div class="dashboard-container form-narrow">
+        <header class="page-header">
+            <a href="{{ path('app_scenario_index', {project_id: project.id}) }}">← Retour</a>
+            <h1>Nouveau {{ elementType|upper }}</h1>
+        </header>
+
+        <form method="post">
+            <div class="form-block">
+                <label>Titre</label>
+                <input type="text" name="title" class="form-control" autofocus required>
+            </div>
+
+            <input type="hidden" name="_token" value="{{ csrf_token('new_scenario') }}">
+
+            <div class="form-actions">
+                <button type="submit" class="btn-creat">Créer l'élément</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

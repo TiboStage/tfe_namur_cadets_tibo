@@ -1,0 +1,44 @@
+{# templates/components/UserProfile.html.twig #}
+<div class="user-profile-dropdown"
+     data-controller="dropdown"
+     data-action="click@window->dropdown#hide">
+
+    {# On groupe l'info et l'avatar dans un conteneur cliquable #}
+    <div class="user-trigger" data-action="click->dropdown#toggle" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+        <div class="user-info">
+            <span class="user-name">
+                {{ app.user.firstName|capitalize }} {{ app.user.lastName|slice(0, 1)|upper }}.
+            </span>
+            <span class="user-status">
+                {{ ux_icon('lucide:diamond', { class: 'icon-xs', fill: 'currentColor' }) }}
+                Premium
+            </span>
+        </div>
+
+        <div class="user-avatar">
+            {{ app.user.firstName|slice(0, 1)|upper }}{{ app.user.lastName|slice(0, 1)|upper }}
+        </div>
+
+        {{ ux_icon('lucide:chevron-down', { class: 'icon-xs icon-muted' }) }}
+    </div>
+
+    {# On ajoute data-dropdown-target="menu" pour que le JS le trouve #}
+    <ul class="dropdown-content hidden" data-dropdown-target="menu">
+        <li>
+            <a href="{{ path('app_profile') }}">
+                {{ ux_icon('lucide:user-round', { class: 'icon-sm' }) }}
+                Profil
+            </a>
+        </li>
+
+        {# Correction du HR ici #}
+        <li class="dropdown-divider"><hr></li>
+
+        <li>
+            <a href="{{ path('app_logout') }}" data-turbo="false" class="logout-link">
+                {{ ux_icon('lucide:log-out', { class: 'icon-sm' }) }}
+                Déconnexion
+            </a>
+        </li>
+    </ul>
+</div>

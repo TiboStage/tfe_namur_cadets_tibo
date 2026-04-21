@@ -1,0 +1,46 @@
+<nav class="workshop-subnav">
+    <div class="subnav-links">
+
+        <a href="{{ path('app_workshop_dashboard') }}"
+           class="{{ app.request.attributes.get('_route') starts with 'app_workshop_dashboard' ? 'active' : '' }}">
+            Dashboard
+        </a>
+
+        <a href="{{ path('app_project_index') }}"
+           class="{{ app.request.attributes.get('_route') starts with 'app_project_' ? 'active' : '' }}">
+            Mes projets
+            <span class="nav-count">{{ projects_count|default(0) }}</span>
+        </a>
+
+        <a href="#"
+           class="{{ app.request.attributes.get('_route') starts with 'app_shared_' ? 'active' : '' }}">
+            Partagés
+        </a>
+
+        <a href="#"
+           class="{{ app.request.attributes.get('_route') == 'app_recent' ? 'active' : '' }}">
+            Récents
+        </a>
+
+        <a href="#"
+           class="{{ app.request.attributes.get('_route') == 'app_activity' ? 'active' : '' }}">
+            Activité
+        </a>
+
+        <a href="#"
+           class="{{ app.request.attributes.get('_route') == 'app_documentation' ? 'active' : '' }}">
+            Documentation
+        </a>
+
+    </div>
+
+    <div class="subnav-actions">
+        <button class="btn-export">
+            {{ ux_icon('lucide:download', {style: 'width: 14px; height: 14px;'}) }}
+            Export
+        </button>
+        <a href="{{ path('app_project_new') }}" class="btn-creat">
+            + Créer
+        </a>
+    </div>
+</nav>

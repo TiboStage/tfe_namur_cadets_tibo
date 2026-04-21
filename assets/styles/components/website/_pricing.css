@@ -1,0 +1,336 @@
+/* ============================================================
+   PRICING PAGE — _pricing.css
+   Sharp corners, Jaune/Noir/Blanc, vanilla CSS
+   ============================================================ */
+
+/* --- Layout général --- */
+.pricing-page {
+    padding-bottom: 120px;
+}
+
+/* --- Bannière Early Access --- */
+.early-access-banner {
+    border: 1px solid rgba(255, 184, 0, 0.3);
+    background: rgba(255, 184, 0, 0.05);
+    padding: 18px 24px;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.early-access-banner p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.early-access-banner p strong {
+    color: var(--color-primary);
+}
+
+.early-access-banner a {
+    background: var(--color-primary);
+    color: #000;
+    padding: 10px 20px;
+    font-weight: 800;
+    font-size: 13px;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity 0.2s ease;
+}
+
+.early-access-banner a:hover {
+    opacity: 0.85;
+}
+
+/* --- Grille de cartes — alignée sur le container --- */
+.pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    width: 100%;
+    margin: 0 auto 0;
+    align-items: start;
+}
+
+/* --- Carte de base --- */
+.card-pricing {
+    background: #0d0d10;
+    border: 1px solid var(--color-border);
+    padding: 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Carte Pro (featured) --- */
+.card-pricing.featured {
+    border: 2px solid var(--color-primary);
+    padding-top: 60px;
+}
+
+/* --- Badge "RECOMMANDÉ" --- */
+.featured-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-primary);
+    color: #000;
+    text-align: center;
+    padding: 10px;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+/* --- En-tête de carte --- */
+.plan-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.plan-name.highlight {
+    color: var(--color-primary);
+}
+
+.price-tag {
+    font-size: 80px;
+    font-weight: 300;
+    line-height: 1;
+    margin: 15px 0 5px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.price-tag span {
+    font-size: 28px;
+    font-weight: 300;
+    margin-top: 12px;
+    margin-right: 2px;
+}
+
+.price-tag small {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 400;
+    align-self: flex-end;
+    margin-bottom: 12px;
+    margin-left: 4px;
+}
+
+.plan-description {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+/* --- Badge cible --- */
+.plan-badge {
+    background: #16161a;
+    border: 1px solid var(--color-border);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+}
+
+.plan-badge.highlighted {
+    border-color: rgba(255, 184, 0, 0.3);
+    color: var(--color-primary);
+    background: rgba(255, 184, 0, 0.05);
+}
+
+/* --- Liste de features --- */
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 40px 0;
+    flex-grow: 1;
+}
+
+.features-list li {
+    margin-bottom: 13px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-main);
+}
+
+.features-list li.active i {
+    color: var(--color-primary);
+    font-size: 12px;
+}
+
+.features-list li.disabled {
+    color: #444;
+}
+
+.features-list li.disabled i {
+    color: #333;
+    font-size: 12px;
+}
+
+/* --- Boutons CTA --- */
+.btn-primary-pricing {
+    background: var(--color-primary);
+    color: #000;
+    padding: 16px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 14px;
+    text-decoration: none;
+    display: block;
+    transition: opacity 0.2s ease;
+}
+
+.btn-primary-pricing:hover {
+    opacity: 0.9;
+}
+
+.btn-outline-pricing {
+    border: 1px solid var(--color-border);
+    color: var(--text-main);
+    padding: 16px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    display: block;
+    transition: border-color 0.2s ease;
+}
+
+.btn-outline-pricing:hover {
+    border-color: var(--text-muted);
+}
+
+/* --- État désactivé (Early Access) --- */
+.btn-primary-pricing.disabled,
+.btn-outline-pricing.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* --- Footer pricing --- */
+.pricing-footer {
+    text-align: center;
+    margin-top: 50px;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 2;
+}
+
+.pricing-footer span {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.pricing-footer a {
+    color: var(--text-main);
+    text-decoration: underline;
+}
+
+/* ============================================================
+   FAQ ACCORDÉON
+   ============================================================ */
+.faq-section {
+    margin-top: 120px;
+    padding-bottom: 60px;
+}
+
+.faq-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.faq-grid {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.faq-item:first-child {
+    border-top: 1px solid var(--color-border);
+}
+
+.faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 22px 0;
+    text-align: left;
+    gap: 20px;
+    transition: color 0.2s ease;
+}
+
+.faq-question i {
+    font-size: 13px;
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.faq-question:hover {
+    color: var(--color-primary);
+}
+
+.faq-item.active .faq-question {
+    color: var(--color-primary);
+}
+
+.faq-answer {
+    display: none;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 0 0 22px 0;
+}
+
+.faq-item.active .faq-answer {
+    display: block;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .early-access-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .price-tag {
+        font-size: 60px;
+    }
+}

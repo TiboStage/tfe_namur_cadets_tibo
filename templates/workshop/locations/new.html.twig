@@ -1,0 +1,49 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop_interface' %}
+
+{% block title %}{{ 'location.new.title'|trans }} — {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <header class="page-header">
+        <div>
+            <a href="{{ path('app_location_index', {project_id: project.id}) }}" class="link-back">{{ 'location.new.back'|trans }}</a>
+            <h1>{{ 'location.new.title'|trans }}</h1>
+        </div>
+    </header>
+
+    <div class="form-page-wrapper">
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
+
+            <div class="form-block">
+                <label class="form-label">{{ 'location.form.name'|trans }} <span class="required">*</span></label>
+                {{ form_widget(form.name, {'attr': {'placeholder': 'location.form.name_placeholder'|trans}}) }}
+                {{ form_errors(form.name) }}
+            </div>
+
+            <div class="form-block">
+                <label class="form-label">{{ 'location.form.type'|trans }} <span class="required">*</span></label>
+                <div class="select-wrapper">
+                    {{ form_widget(form.type) }}
+                </div>
+                {{ form_errors(form.type) }}
+            </div>
+
+            <div class="form-block">
+                <label class="form-label">{{ 'location.form.description'|trans }}</label>
+                {{ form_widget(form.description, {'attr': {'placeholder': 'location.form.description_placeholder'|trans}}) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ path('app_location_index', {project_id: project.id}) }}" class="btn-export">{{ 'location.new.cancel'|trans }}</a>
+                <button type="submit" class="btn-creat">{{ 'location.new.submit'|trans }}</button>
+            </div>
+
+        {{ form_end(form) }}
+
+    </div>
+</div>
+{% endblock %}

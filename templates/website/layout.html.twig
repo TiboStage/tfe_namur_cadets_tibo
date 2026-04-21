@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="site-wrapper">
+        {% include 'website/_partials/_navbar.html.twig' %}
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        {% include 'website/_partials/_footer.html.twig' %}
+    </div>
+{% endblock %}

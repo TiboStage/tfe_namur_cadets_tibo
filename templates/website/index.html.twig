@@ -1,0 +1,159 @@
+{% extends 'website/layout.html.twig' %}
+{% trans_default_domain 'home' %}
+
+{% block title %}{{ 'meta.title'|trans }}{% endblock %}
+
+{% block content %}
+
+    {# ── HERO ─────────────────────────────────────────────────────────────── #}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">{{ 'hero.badge'|trans }}</div>
+            <h1>
+                {{ 'hero.title'|trans }}<br>
+                <span class="highlight">{{ 'hero.title_highlight'|trans }}</span>
+            </h1>
+            <p class="hero-subtitle">{{ 'hero.subtitle'|trans|raw }}</p>
+
+            <div class="hero-actions">
+                <a href="{{ path('app_login') }}" class="btn-primary">{{ 'hero.actions.register'|trans }}</a>
+                <a href="#features" class="btn-outline">{{ 'hero.actions.discover'|trans }}</a>
+            </div>
+        </div>
+
+        {# Mockup dashboard — remplacer par une vraie capture quand disponible #}
+        <div class="container">
+            <div class="hero-mockup">
+                <div class="hero-mockup-placeholder">
+                    {{ 'hero.mockup_placeholder'|trans }}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ── FEATURES ─────────────────────────────────────────────────────────── #}
+    <section class="features-section " id="features">
+        <div class="container">
+            <span class="section-tag">{{ 'features.label'|trans }}</span>
+            <h2 class="main-title">
+                {{ 'features.title'|trans }}<br>
+                <span class="highlight">{{ 'features.title_highlight'|trans }}</span>
+            </h2>
+            <p class="section-desc">{{ 'features.desc'|trans|raw }}</p>
+
+            <div class="features-grid">
+
+                <div class="feature-card">
+                <span class="feature-icon">
+                    {{ ux_icon('lucide:pen-line', {style: 'width: 28px; height: 28px;'}) }}
+                </span>
+                    <h3>{{ 'features.items.editor_title'|trans }}</h3>
+                    <p>{{ 'features.items.editor_desc'|trans }}</p>
+                </div>
+
+                <div class="feature-card">
+                <span class="feature-icon">
+                    {{ ux_icon('lucide:users', {style: 'width: 28px; height: 28px;'}) }}
+                </span>
+                    <h3>{{ 'features.items.characters_title'|trans }}</h3>
+                    <p>{{ 'features.items.characters_desc'|trans }}</p>
+                </div>
+
+                <div class="feature-card">
+                <span class="feature-icon">
+                    {{ ux_icon('lucide:map-pin', {style: 'width: 28px; height: 28px;'}) }}
+                </span>
+                    <h3>{{ 'features.items.locations_title'|trans }}</h3>
+                    <p>{{ 'features.items.locations_desc'|trans }}</p>
+                </div>
+
+                <div class="feature-card">
+                <span class="feature-icon">
+                    {{ ux_icon('lucide:calendar-range', {style: 'width: 28px; height: 28px;'}) }}
+                </span>
+                    <h3>{{ 'features.items.timeline_title'|trans }}</h3>
+                    <p>{{ 'features.items.timeline_desc'|trans }}</p>
+                </div>
+
+                <div class="feature-card">
+                <span class="feature-icon">
+                    {{ ux_icon('lucide:file-text', {style: 'width: 28px; height: 28px;'}) }}
+                </span>
+                    <h3>{{ 'features.items.export_title'|trans }}</h3>
+                    <p>{{ 'features.items.export_desc'|trans }}</p>
+                </div>
+
+                <div class="feature-card">
+                <span class="feature-icon">
+                    {{ ux_icon('lucide:git-fork', {style: 'width: 28px; height: 28px;'}) }}
+                </span>
+                    <h3>{{ 'features.items.relations_title'|trans }}</h3>
+                    <p>{{ 'features.items.relations_desc'|trans }}</p>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    {# ── POUR QUI ? ───────────────────────────────────────────────────────── #}
+    <section class="for-whom-section">
+        <div class="inner">
+            <span class="section-tag">{{ 'for_whom.label'|trans }}</span>
+            <h2>
+                {{ 'for_whom.title'|trans }}<br>
+                <span class="highlight-italic">{{ 'for_whom.title_highlight'|trans }}</span>
+            </h2>
+
+            <div class="creator-grid">
+
+                <div class="creator-card">
+                    <span class="creator-icon">
+                        {{ ux_icon('lucide:film', {style: 'width: 26px; height: 26px;'}) }}
+                    </span>
+                    <h3>{{ 'for_whom.cards.cinema.title'|trans }}</h3>
+                    <p>{{ 'for_whom.cards.cinema.desc'|trans }}</p>
+                </div>
+
+                <div class="creator-card">
+                    <span class="creator-icon">
+                        {{ ux_icon('lucide:book-open', {style: 'width: 26px; height: 26px;'}) }}
+                    </span>
+                    <h3>{{ 'for_whom.cards.roman.title'|trans }}</h3>
+                    <p>{{ 'for_whom.cards.roman.desc'|trans }}</p>
+                </div>
+
+                <div class="creator-card">
+                    <span class="creator-icon">
+                        {{ ux_icon('lucide:gamepad-2', {style: 'width: 26px; height: 26px;'}) }}
+                    </span>
+                    <h3>{{ 'for_whom.cards.game.title'|trans }}</h3>
+                    <p>{{ 'for_whom.cards.game.desc'|trans }}</p>
+                </div>
+
+                <div class="creator-card">
+                    <span class="creator-icon">
+                        {{ ux_icon('lucide:dice-5', {style: 'width: 26px; height: 26px;'}) }}
+                    </span>
+                    <h3>{{ 'for_whom.cards.jdr.title'|trans }}</h3>
+                    <p>{{ 'for_whom.cards.jdr.desc'|trans }}</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    {# ── CTA FINAL ────────────────────────────────────────────────────────── #}
+    <section class="cta-final">
+        <h2>
+            {{ 'cta.title'|trans }}<br>
+            <span class="highlight">{{ 'cta.title_highlight'|trans }}</span>
+        </h2>
+        <p>{{ 'cta.desc'|trans }}</p>
+        <div class="hero-actions">
+            <a href="{{ path('app_login') }}" class="btn-primary">{{ 'cta.actions.start'|trans }}</a>
+            <a href="{{ path('app_examples') }}" class="btn-outline">{{ 'cta.actions.examples'|trans }}</a>
+        </div>
+    </section>
+
+{% endblock %}

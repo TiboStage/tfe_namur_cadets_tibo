@@ -1,0 +1,44 @@
+meta:
+    title: "Contact - Scénart"
+info:
+    tag: "Contact"
+    title: "On est là pour"
+    title_highlight: "vous aider."
+    description: "Que vous ayez une question technique, une suggestion ou un projet de partenariat, notre équipe est disponible."
+    cards:
+        response_time: "Temps de réponse"
+        response_desc: "Moins de 24h en semaine."
+        response_sub: "Support prioritaire pour les abonnés Pro & Studio."
+        academic: "Projet académique"
+        academic_desc: "StoryForge — TFE 2024-2025"
+        academic_location: "EAFC Namur-Cadets, Belgique"
+form:
+    title: "Envoyer un message"
+    labels:
+        email: "EMAIL"
+        firstname: "PRÉNOM"
+        lastname: "NOM"
+        subject: "SUJET"
+        message: "MESSAGE"
+    placeholders:
+        firstname: "John"
+        lastname: "Doe"
+        subject: "Choisir un sujet..."
+        message: "Décrivez votre demande en détail..."
+    subjects:
+        support: "Support technique"
+        billing: "Facturation"
+        partnership: "Partenariat"
+    privacy: "J'accepte que mes données soient utilisées pour traiter ma demande conformément à la"
+    privacy_link: "politique de confidentialité"
+    submit: "Envoyer le message"
+
+    errors:
+        empty_fields: "Veuillez remplir tous les champs obligatoires et accepter la politique."
+        success: "Votre message a bien été envoyé ! Notre équipe reviendra vers vous rapidement."
+        email_invalid: "Format d'email invalide"
+        required: "Ce champ est obligatoire"
+        subject_required: "Veuillez choisir un sujet"
+        message_short: "Message trop court (10 car. min)"
+        global_invalid: "Veuillez remplir correctement tous les champs."
+        privacy_required: "Vous devez accepter la politique de confidentialité pour continuer."

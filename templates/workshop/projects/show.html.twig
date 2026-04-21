@@ -1,0 +1,64 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop_interface' %}
+
+{% block title %}{{ project.title }} — Scénart{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_project_index') }}" class="link-back">{{ 'projects.show.back'|trans }}</a>
+                <h1>
+                    {{ project.title }}
+                    <span class="project-type-badge">{{ project.projectType }}</span>
+                </h1>
+                <p class="text-muted">
+                    {{ project.description|default('projects.show.no_description'|trans) }}
+                </p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="btn-export">
+                    {{ 'projects.show.btn_settings'|trans }}
+                </a>
+            </div>
+        </header>
+
+        <div class="project-sections-grid">
+
+            <div class="project-section-card">
+                <h3>{{ 'projects.show.section_structure'|trans }}</h3>
+                <p class="text-muted">{{ 'projects.show.section_structure_desc'|trans }}</p>
+                <a href="{{ path('app_scenario_index', {project_id: project.id}) }}" class="btn-creat" style="margin-top: auto;">
+                    {{ 'projects.show.section_structure_btn'|trans }}
+                </a>
+            </div>
+
+            <div class="project-section-card">
+                <h3>{{ 'projects.show.section_characters'|trans }}</h3>
+                <p class="text-muted">{{ project.characters|length }} {{ 'projects.show.section_characters'|trans|lower }}</p>
+                <a href="{{ path('app_character_index', {project_id: project.id}) }}"
+                   class="btn-action-small" style="margin-top: auto;">
+                    {{ 'projects.show.btn_manage'|trans }}
+                </a>
+            </div>
+
+            <div class="project-section-card">
+                <h3>{{ 'projects.show.section_locations'|trans }}</h3>
+                <p class="text-muted">{{ project.locations|length }} {{ 'projects.show.section_locations'|trans|lower }}</p>
+                <a href="{{ path('app_location_index', {project_id: project.id}) }}" class="btn-action-small" style="margin-top: auto;">
+                    {{ 'projects.show.btn_manage'|trans }}
+                </a>
+            </div>
+
+            <div class="project-section-card">
+                <h3>{{ 'projects.show.section_tags'|trans }}</h3>
+                <p class="text-muted">{{ project.tags|length }} {{ 'projects.show.section_tags'|trans|lower }}</p>
+                <a href="#" class="btn-action-small" style="margin-top: auto;">
+                    {{ 'projects.show.btn_manage'|trans }}
+                </a>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

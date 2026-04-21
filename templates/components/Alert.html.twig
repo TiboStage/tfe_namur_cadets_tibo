@@ -1,0 +1,12 @@
+{# templates/components/Alert.html.twig #}
+<div class="scenart-alert alert-{{ type }}" data-controller="alert">
+    <div class="alert-icon">
+        {{ ux_icon(this.icon, {class: 'icon-alert'}) }}
+    </div>
+    <div class="alert-body">
+        <p>{{ message }}</p>
+    </div>
+    <button class="alert-close" data-action="click->alert#close">
+        {{ ux_icon('lucide:x', {class: 'icon-close'}) }}
+    </button>
+</div>

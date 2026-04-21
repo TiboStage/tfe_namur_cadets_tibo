@@ -1,0 +1,277 @@
+/* ============================================================
+   BOUTONS — _buttons.css
+   Tous les boutons du projet centralisés ici.
+   Zéro border-radius — design sharp.
+   ============================================================
+
+   INDEX :
+   1. Boutons généraux (site vitrine)
+   2. Boutons navbar
+   3. Boutons pricing
+   4. Boutons auth (slider)
+   5. Boutons workshop
+   ============================================================ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   1. BOUTONS GÉNÉRAUX
+   Utilisés dans : hero, CTA, sections
+   ───────────────────────────────────────────────────────────── */
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--text-dark);
+    padding: 14px 28px;
+    font-weight: 800;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--color-border);
+    padding: 14px 28px;
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.btn-outline:hover {
+    border-color: var(--text-muted);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   2. BOUTONS NAVBAR
+   Utilisés dans : _navbar.html.twig
+   ───────────────────────────────────────────────────────────── */
+
+/* Bouton "L'Atelier" — CTA jaune navbar */
+.btn-atelier {
+    background: var(--color-primary);
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 20px 0 25px;
+    font-weight: 800;
+    font-size: 14px;
+    text-decoration: none;
+    gap: 5px;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-atelier:hover {
+    opacity: 0.9;
+}
+
+/* Bouton "Connexion" — ghost navbar */
+.btn-login {
+    background: transparent;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 0 10px;
+    transition: color 0.2s ease;
+}
+
+.btn-login:hover {
+    color: var(--color-primary);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   3. BOUTONS PRICING
+   Utilisés dans : pricing.html.twig
+   ───────────────────────────────────────────────────────────── */
+
+.btn-primary-pricing {
+    background: var(--color-primary);
+    color: #000;
+    padding: 16px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 14px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.btn-primary-pricing:hover {
+    opacity: 0.9;
+}
+
+.btn-outline-pricing {
+    border: 1px solid var(--color-border);
+    color: var(--text-main);
+    padding: 16px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.btn-outline-pricing:hover {
+    border-color: var(--text-muted);
+}
+
+/* État désactivé Early Access */
+.btn-primary-pricing.disabled,
+.btn-outline-pricing.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   4. BOUTONS AUTH
+   Utilisés dans : auth.html.twig (slider login/register)
+   ───────────────────────────────────────────────────────────── */
+
+/* Bouton principal overlay jaune */
+.btn--cta-yellow {
+    background: var(--color-primary);
+    color: var(--text-dark);
+    padding: 14px 28px;
+    font-weight: 800;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s ease;
+    width: 100%;
+}
+
+.btn--cta-yellow:hover {
+    opacity: 0.9;
+}
+
+/* Bouton principal overlay noir */
+.btn--cta-black {
+    background: #000;
+    color: var(--text-main);
+    padding: 14px 28px;
+    font-weight: 800;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s ease;
+    width: 100%;
+}
+
+.btn--cta-black:hover {
+    opacity: 0.85;
+}
+
+/* Bouton ghost overlay (transparent sur fond jaune) */
+.btn--ghost {
+    background: transparent;
+    color: var(--text-dark);
+    border: 2px solid var(--text-dark);
+    padding: 12px 28px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.btn--ghost:hover {
+    background: var(--text-dark);
+    color: var(--color-primary);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   5. BOUTONS WORKSHOP
+   Utilisés dans : dashboard, éditeur, topbar
+   ───────────────────────────────────────────────────────────── */
+
+/* Créer / Action principale */
+.btn-creat {
+    background: var(--color-primary);
+    color: #000;
+    border: none;
+    padding: 8px 20px;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 14px;
+    transition: opacity 0.2s ease;
+}
+
+.btn-creat:hover {
+    opacity: 0.9;
+}
+
+/* Export / Action secondaire */
+.btn-export {
+    background: #15151A;
+    color: var(--text-main);
+    border: 1px solid var(--color-border);
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.btn-export:hover {
+    border-color: var(--text-muted);
+}
+
+/* Admin / Action tertiaire */
+.btn-admin {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    padding: 10px 15px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-admin:hover {
+    border-color: var(--text-muted);
+    color: var(--text-main);
+}
+
+/* Petites actions inline */
+.btn-icon-small,
+.btn-action-small {
+    background: #1A1A1E;
+    color: var(--text-muted);
+    border: 1px solid var(--color-border);
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-icon-small:hover,
+.btn-action-small:hover {
+    border-color: var(--text-muted);
+    color: var(--text-main);
+}

@@ -1,0 +1,18 @@
+banner:
+    user: "Ready to create? "
+    user_link: "Discover the Workshop"
+    guest: "New to Scénart? "
+    guest_link: "Start for free!"
+links:
+    home: "Home"
+    examples: "Examples"
+    pricing: "Pricing"
+    contact: "Contact"
+
+actions:
+    workshop: "Workshop"
+    profile: "Profile"
+    logout: "Logout"
+    login: "Login"
+    register: "Sign Up"
+

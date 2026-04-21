@@ -1,0 +1,59 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop_interface' %}
+
+{% block title %}{{ 'projects.edit.title'|trans }} — {{ project.title }}{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="link-back">← {{ project.title }}</a>
+                <h1>{{ 'projects.edit.title'|trans }}</h1>
+            </div>
+        </header>
+
+        <div class="form-page-wrapper">
+
+            {{ form_start(form, {
+                'attr': {
+                    'novalidate': 'novalidate',
+                    'class': 'project-form',
+                    'data-controller': 'validator',
+                    'data-validator-error-value': 'form.errors.required_invalid'|trans({}, 'validators'),
+                    'data-action': 'submit->validator#validateForm'
+                }
+            }) }}
+
+            {# Remplacement des macros par form_row #}
+            {{ form_row(form.title, {'label': 'projects.edit.label_title'|trans}) }}
+            {{ form_row(form.projectType, {'label': 'projects.edit.label_type'|trans}) }}
+            {{ form_row(form.description, {'label': 'projects.edit.label_desc'|trans}) }}
+
+            <div class="form-actions">
+                <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="btn-export">
+                    {{ 'projects.edit.btn_cancel'|trans }}
+                </a>
+                <button type="submit" class="btn-creat">{{ 'projects.edit.btn_submit'|trans }}</button>
+            </div>
+
+            {{ form_end(form) }}
+
+            <hr class="my-5">
+
+            {# Remplacement de la danger_zone par un formulaire de suppression classique #}
+            <div class="danger-zone-fallback p-4 border border-danger rounded">
+                <h3 class="text-danger">{{ 'projects.edit.danger_title'|trans }}</h3>
+                <p>{{ 'projects.edit.danger_desc'|trans }}</p>
+
+                <form method="post" action="{{ path('app_project_delete', {slug: project.slug}) }}" onsubmit="return confirm('{{ 'projects.edit.danger_confirm'|trans }}');">
+                    {# On ajoute bien _project_ dans le nom du token ici #}
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_project_' ~ project.id) }}">
+
+                    <button class="btn-delete">{{ 'projects.edit.danger_btn'|trans }}</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

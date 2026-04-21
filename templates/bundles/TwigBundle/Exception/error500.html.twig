@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 — {{ 'error_500.title'|trans({}, 'errors', locale) }} · Scénart</title>
+    {{ importmap('app') }}
+</head>
+<body>
+<div class="error-page">
+    <div class="error-content">
+
+        <a href="/" class="error-logo">SCÉN<span class="highlight">ART</span></a>
+
+        <div class="error-code">500</div>
+        <h1 class="error-title">{{ 'error_500.title'|trans({}, 'errors', locale) }}</h1>
+        <p class="error-desc">{{ 'error_500.desc'|trans({}, 'errors', locale) }}</p>
+
+        <div class="error-actions">
+            <a href="/" class="btn-primary">
+                {{ 'error_500.btn_home'|trans({}, 'errors', locale) }}
+            </a>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

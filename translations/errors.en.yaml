@@ -1,0 +1,16 @@
+error_403:
+    title: "Access Denied"
+    desc: "You don't have permission to access this resource. This project belongs to another creator."
+    btn_back: "← Back"
+    btn_workshop: "My workshop"
+
+error_404:
+    title: "Page Not Found"
+    desc: "This page doesn't exist or has been moved. Check the URL or go back to the homepage."
+    btn_back: "← Back"
+    btn_home: "Homepage"
+
+error_500:
+    title: "Server Error"
+    desc: "Something went wrong on our end. Our team has been notified. Please try again in a few moments."
+    btn_home: "Back to homepage"

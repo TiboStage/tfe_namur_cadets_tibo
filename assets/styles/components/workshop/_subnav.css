@@ -1,0 +1,57 @@
+/* ============================================================
+   SUBNAV WORKSHOP — _subnav.css
+   ============================================================ */
+
+.workshop-subnav {
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0d0d10;
+    border-bottom: 1px solid var(--color-border);
+    height: 48px;
+}
+
+.subnav-links {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 0;
+}
+
+.subnav-links a {
+    color: var(--text-muted);
+    margin: 0 20px 0 0;
+    height: 100%;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s ease;
+}
+
+.subnav-links a:hover {
+    color: var(--text-main);
+}
+
+.subnav-links a.active {
+    color: var(--text-main);
+    border-bottom-color: var(--color-primary);
+}
+
+.nav-count {
+    background: #222;
+    color: var(--text-muted);
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.subnav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

@@ -1,0 +1,19 @@
+# config/packages/ux_icons.yaml
+ux_icons:
+    # 1. Dossier de stockage local (INDISPENSABLE pour le mode hors-ligne)
+    icon_dir: '%kernel.project_dir%/var/icons'
+
+    default_icon_attributes:
+        # 2. Lucide utilise le "stroke" (contour), pas le "fill" (remplissage)
+        fill: 'none'
+        stroke: 'currentColor'
+        stroke-width: 2
+
+        # 3. On enlève les dimensions fixes (1em) pour les gérer via ton CSS (_icons.css)
+        # On peut laisser height/width vides ou les supprimer
+
+    ignore_not_found: false
+
+when@prod:
+    ux_icons:
+        ignore_not_found: true

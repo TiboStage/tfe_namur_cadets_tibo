@@ -1,0 +1,59 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop_interface' %}
+
+{% block title %}{{ 'location.edit.title'|trans }} {{ location.name }} — {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <header class="page-header">
+        <div>
+            <a href="{{ path('app_location_show', {project_id: project.id, id: location.id}) }}" class="link-back">← {{ location.name }}</a>
+            <h1>{{ 'location.edit.title'|trans }}</h1>
+        </div>
+    </header>
+
+    <div class="form-page-wrapper">
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
+
+            <div class="form-block">
+                <label class="form-label">{{ 'location.form.name'|trans }} <span class="required">*</span></label>
+                {{ form_widget(form.name) }}
+                {{ form_errors(form.name) }}
+            </div>
+
+            <div class="form-block">
+                <label class="form-label">{{ 'location.form.type'|trans }}</label>
+                <div class="select-wrapper">
+                    {{ form_widget(form.type) }}
+                </div>
+                {{ form_errors(form.type) }}
+            </div>
+
+            <div class="form-block">
+                <label class="form-label">{{ 'location.form.description'|trans }}</label>
+                {{ form_widget(form.description) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ path('app_location_show', {project_id: project.id, id: location.id}) }}" class="btn-export">{{ 'location.edit.cancel'|trans }}</a>
+                <button type="submit" class="btn-creat">{{ 'location.edit.submit'|trans }}</button>
+            </div>
+
+        {{ form_end(form) }}
+
+        <div class="danger-zone">
+            <h3>{{ 'location.edit.danger_zone'|trans }}</h3>
+            <p class="text-muted">{{ 'location.edit.danger_desc'|trans }}</p>
+            <form method="post" action="{{ path('app_location_delete', {project_id: project.id, id: location.id}) }}"
+                  onsubmit="return confirm('{{ 'location.edit.delete_confirm'|trans }}')">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_location_' ~ location.id) }}">
+                <button type="submit" class="btn-danger">{{ 'location.edit.delete_btn'|trans }}</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

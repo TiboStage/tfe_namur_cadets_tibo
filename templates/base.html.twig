@@ -1,24 +1,37 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<html lang="{{ app.request.locale }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Scénart{% endblock %}</title>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
+    {% block favicon %}
+        <link rel="icon" type="image/png" href="{{ asset('images/favicons/favicon.png') }}">
+    {% endblock %}
 
-        {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
-        {% if frankenphpHotReload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
-        {% endif %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {# 1. APPEL DES JAVASCRIPTS ET PRELOADS (En premier) #}
+    {% block javascripts %}
+        {{ importmap('app') }}
+    {% endblock %}
+
+    {# 2. APPEL DES STYLES (En deuxième) #}
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+
+{# Flash PHP — centré en haut #}
+<div class="flash-container">
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <twig:Alert :type="label" :message="message" />
+        {% endfor %}
+    {% endfor %}
+</div>
+
+{# Toast Stimulus — coin droit #}
+<div id="toast-container" class="toast-container"></div>
+
+{% block body %}{% endblock %}
+
+</body>
 </html>

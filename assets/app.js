@@ -1,10 +1,28 @@
 import './stimulus_bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
-import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+/* Styles */
+import './styles/app.css';
+import './styles/components/_alerts.css';
+
+
+//
+// /* Scripts */
+// import './scripts/navbar.js';
+import './scripts/pricing.js';
+// import './scripts/auth.js';
+// import './scripts/alerts.js';
+//
+
+// assets/app.js
+
+document.addEventListener('turbo:load', () => {
+    if (typeof SymfonyWebProfiler !== 'undefined') {
+        // On laisse un mini délai pour que le DOM soit stable
+        setTimeout(() => {
+            const toolbar = document.querySelector('.sf-toolbar');
+            if (toolbar && window.loadToolbar) {
+                loadToolbar(); // Force le rechargement du script de la toolbar
+            }
+        }, 100);
+    }
+});

@@ -1,0 +1,138 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop_interface' %}
+
+{% block title %}L'Atelier - Scénart{% endblock %}
+
+{% block favicon %}
+    <link rel="icon" type="image/png" href="{{ asset('images/favicons/favicon_workshop.png') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+
+        {# ── EN-TÊTE ──────────────────────────────────────────────────────── #}
+        <header class="dashboard-intro">
+            <h1>
+                {{ 'dashboard.greeting'|trans }}
+                <span class="highlight">{{ app.user.firstName|default('Auteur') }}</span>
+            </h1>
+            <p class="text-muted">
+                {{ "now"|date("l d F Y") }} — {{ projects_count }} {{ 'dashboard.subtitle'|trans }}
+            </p>
+        </header>
+
+        {# ── STATS ────────────────────────────────────────────────────────── #}
+        <section class="stats-grid">
+
+            <div class="stat-card stat-card--yellow">
+                <span class="stat-value">{{ projects_count }}</span>
+                <span class="stat-desc">{{ 'dashboard.stats.projects_value'|trans }}</span>
+                <a href="{{ path('app_project_index') }}" class="stat-footer-link">
+                    {{ 'dashboard.stats.projects_link'|trans }}
+                </a>
+            </div>
+
+            <div class="stat-card stat-card--dark">
+                <span class="stat-value">—</span>
+                <span class="stat-desc">{{ 'dashboard.stats.views_value'|trans }}</span>
+                <a href="#" class="stat-footer-link highlight">
+                    {{ 'dashboard.stats.views_link'|trans }}
+                </a>
+            </div>
+
+            <div class="stat-card stat-card--dark">
+                <span class="stat-value">—</span>
+                <span class="stat-desc">{{ 'dashboard.stats.entities_value'|trans }}</span>
+            </div>
+
+            <div class="stat-card stat-card--dark">
+                <span class="stat-value">—</span>
+                <span class="stat-desc">{{ 'dashboard.stats.entities_value'|trans }}</span>
+            </div>
+
+            {# Actions rapides #}
+            <div class="action-stack">
+                <div class="quick-action-card">
+                    <div class="quick-action-info">
+                        <span class="text-bold">{{ 'dashboard.actions.new_project_title'|trans }}</span>
+                        <span class="text-muted">{{ 'dashboard.actions.new_project_desc'|trans }}</span>
+                    </div>
+                    <a href="{{ path('app_project_new') }}" class="btn-creat">
+                        {{ 'dashboard.actions.new_project_btn'|trans }}
+                    </a>
+                </div>
+                <div class="quick-action-card">
+                    <div class="quick-action-info">
+                        <span class="text-bold">{{ 'dashboard.actions.export_title'|trans }}</span>
+                        <span class="text-muted">{{ 'dashboard.actions.export_desc'|trans }}</span>
+                    </div>
+                    <button class="btn-export">{{ 'dashboard.actions.export_btn'|trans }}</button>
+                </div>
+            </div>
+
+        </section>
+
+        {# ── GRILLE BASSE ─────────────────────────────────────────────────── #}
+        <div class="dashboard-lower-grid">
+
+            {# Projets en cours #}
+            <section class="dashboard-section">
+                <div class="dashboard-section-header">
+                    <h2>{{ 'dashboard.projects.title'|trans }}</h2>
+                    <a href="{{ path('app_project_index') }}" class="highlight link-more">
+                        {{ 'dashboard.projects.see_more'|trans }}
+                    </a>
+                </div>
+
+                <div class="project-list">
+                    {% if projects is empty %}
+                        <p class="text-muted empty-state">{{ 'dashboard.projects.empty'|trans }}</p>
+                    {% else %}
+                        {% for project in projects %}
+                            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="project-list-item">
+                                <div class="project-thumb">
+                                    {{ project.title|first|upper }}
+                                </div>
+                                <div class="project-info">
+                                    <span class="project-title">{{ project.title }}</span>
+                                    <span class="project-meta text-muted">
+                                        {{ project.projectType }} — {{ project.updatedAt|date('d/m/Y') }}
+                                    </span>
+                                </div>
+                                <span class="status-badge status-badge--{{ project.status }}">
+                                    {{ project.status }}
+                                </span>
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </section>
+
+            {# Activité récente #}
+            <section class="dashboard-section">
+                <div class="dashboard-section-header">
+                    <h2>{{ 'dashboard.activity.title'|trans }}</h2>
+                    <a href="#" class="highlight link-more">{{ 'dashboard.activity.see_all'|trans }}</a>
+                </div>
+
+                <div class="activity-list">
+                    {% for i in 1..4 %}
+                        <div class="activity-item">
+                            <span class="activity-dot"></span>
+                            <div class="activity-text">
+                                <p>
+                                    <strong>{{ app.user.firstName }}</strong>
+                                    {{ 'dashboard.activity.action'|trans }}
+                                </p>
+                                <span class="text-muted">
+                                    {{ 'dashboard.activity.ago'|trans }} {{ i * 12 }} {{ 'dashboard.activity.min'|trans }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+        </div>
+    </div>
+{% endblock %}

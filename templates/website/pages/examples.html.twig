@@ -1,0 +1,41 @@
+{% extends 'website/layout.html.twig' %}
+
+{% trans_default_domain 'examples' %}
+
+{% block title %}{{ 'meta.title'|trans }}{% endblock %}
+
+{% block content %}
+    <main class="container examples-page section-header">
+
+        {# En-tête de la page #}
+        <div class="examples-header">
+            <span class="section-tag">{{ 'header.tag'|trans }}</span>
+            <h1 class="main-title">
+                {{ 'header.title'|trans }} <br>
+                <span class="highlight">SCÉNART</span>
+            </h1>
+            <p class="section-desc">
+                {{ 'header.description'|trans }}
+            </p>
+        </div>
+
+        {# Filtres (Catégories) #}
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">{{ 'filters.all'|trans }}</button>
+            <button class="filter-btn" data-filter="cinema">{{ 'filters.cinema'|trans }}</button>
+            <button class="filter-btn" data-filter="serie">{{ 'filters.serie'|trans }}</button>
+            <button class="filter-btn" data-filter="roman">{{ 'filters.roman'|trans }}</button>
+            <button class="filter-btn" data-filter="jeu-video">{{ 'filters.video_game'|trans }}</button>
+            <button class="filter-btn" data-filter="jdr">{{ 'filters.jdr'|trans }}</button>
+        </div>
+
+        {# Grille de projets (Vide pour l'instant ou avec des placeholders) #}
+        <div class="projects-grid">
+            {# On peut boucler ici sur des exemples si tu en as en DB ou en dur #}
+            <div class="no-projects">
+                <p>{{ 'grid.empty_message'|trans }}</p>
+            </div>
+        </div>
+
+    </main>
+{% endblock %}

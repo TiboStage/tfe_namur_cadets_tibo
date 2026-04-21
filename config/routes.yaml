@@ -1,11 +1,279 @@
-# yaml-language-server: $schema=../vendor/symfony/routing/Loader/schema/routing.schema.json
+# config/routes.yaml
 
-# This file is the entry point to configure the routes of your app.
-# Methods with the #[Route] attribute are automatically imported.
-# See also https://symfony.com/doc/current/routing.html
+# 1. REDIRECTION DE LA RACINE
+root_redirect:
+    path: /
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+    defaults:
+        route: app_home
+        _locale: fr
+        permanent: false
 
-# To list all registered routes, run the following command:
-#   bin/console debug:router
+# 2. ROUTES AVEC URLS TRADUITES
+app_home:
+    path:
+        fr: /{_locale}/accueil
+        en: /{_locale}/home
+    controller: App\Controller\Website\PagesController::index
+    requirements:
+        _locale: en|fr
 
+app_examples:
+    path:
+        fr: /{_locale}/exemples
+        en: /{_locale}/examples
+    controller: App\Controller\Website\PagesController::examples
+    requirements:
+        _locale: en|fr
+
+app_pricing:
+    path:
+        fr: /{_locale}/tarifs
+        en: /{_locale}/pricing
+    controller: App\Controller\Website\PagesController::pricing
+    requirements:
+        _locale: en|fr
+
+app_features:
+    path:
+        fr: /{_locale}/fonctionnalites
+        en: /{_locale}/features
+    controller: App\Controller\Website\PagesController::features
+    requirements:
+        _locale: en|fr
+
+app_contact:
+    path:
+        fr: /{_locale}/contact
+        en: /{_locale}/contact
+    controller: App\Controller\Website\PagesController::contact
+    requirements:
+        _locale: en|fr
+
+
+# Workshop — URLs traduites
+
+app_workshop_dashboard:
+    path:
+        fr: /{_locale}/atelier
+        en: /{_locale}/workshop
+    controller: App\Controller\Workshop\DashboardController::index
+    requirements:
+        _locale: en|fr
+
+app_project_index:
+    path:
+        fr: /{_locale}/atelier/projets
+        en: /{_locale}/workshop/projects
+    controller: App\Controller\Workshop\ProjectController::index
+    requirements:
+        _locale: en|fr
+
+app_project_new:
+    path:
+        fr: /{_locale}/atelier/projets/nouveau
+        en: /{_locale}/workshop/projects/new
+    controller: App\Controller\Workshop\ProjectController::new
+    requirements:
+        _locale: en|fr
+
+app_project_show:
+    path:
+        fr: /{_locale}/atelier/projets/{slug}
+        en: /{_locale}/workshop/projects/{slug}
+    controller: App\Controller\Workshop\ProjectController::show
+    requirements:
+        _locale: en|fr
+        id: \d+
+
+app_project_edit:
+    path:
+        fr: /{_locale}/atelier/projets/{slug}/modifier
+        en: /{_locale}/workshop/projects/{slug}/edit
+    controller: App\Controller\Workshop\ProjectController::edit
+    requirements:
+        _locale: en|fr
+        id: \d+
+
+app_project_delete:
+    path:
+        fr: /{_locale}/atelier/projets/{slug}/supprimer
+        en: /{_locale}/workshop/projects/{slug}/delete
+    controller: App\Controller\Workshop\ProjectController::delete
+    requirements:
+        _locale: en|fr
+        id: \d+
+    methods: [POST]
+
+app_profile:
+    path:
+        fr: /{_locale}/profil
+        en: /{_locale}/profile
+    controller: App\Controller\Website\ProfileController::show
+    requirements:
+        _locale: en|fr
+
+app_character_index:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/personnages
+        en: /{_locale}/workshop/projects/{project_id}/characters
+    controller: App\Controller\Workshop\CharacterController::index
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+
+app_character_new:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/personnages/nouveau
+        en: /{_locale}/workshop/projects/{project_id}/characters/new
+    controller: App\Controller\Workshop\CharacterController::new
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+
+app_character_show:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/personnages/{id}
+        en: /{_locale}/workshop/projects/{project_id}/characters/{id}
+    controller: App\Controller\Workshop\CharacterController::show
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+        id: \d+
+
+app_character_edit:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/personnages/{id}/modifier
+        en: /{_locale}/workshop/projects/{project_id}/characters/{id}/edit
+    controller: App\Controller\Workshop\CharacterController::edit
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+        id: \d+
+
+app_character_delete:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/personnages/{id}/supprimer
+        en: /{_locale}/workshop/projects/{project_id}/characters/{id}/delete
+    controller: App\Controller\Workshop\CharacterController::delete
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+        id: \d+
+    methods: [POST]
+
+# Routes lieux
+
+app_location_index:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/lieux
+        en: /{_locale}/workshop/projects/{project_id}/locations
+    controller: App\Controller\Workshop\LocationController::index
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+
+app_location_new:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/lieux/nouveau
+        en: /{_locale}/workshop/projects/{project_id}/locations/new
+    controller: App\Controller\Workshop\LocationController::new
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+
+app_location_show:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/lieux/{id}
+        en: /{_locale}/workshop/projects/{project_id}/locations/{id}
+    controller: App\Controller\Workshop\LocationController::show
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+        id: \d+
+
+app_location_edit:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/lieux/{id}/modifier
+        en: /{_locale}/workshop/projects/{project_id}/locations/{id}/edit
+    controller: App\Controller\Workshop\LocationController::edit
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+        id: \d+
+
+app_location_delete:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/lieux/{id}/supprimer
+        en: /{_locale}/workshop/projects/{project_id}/locations/{id}/delete
+    controller: App\Controller\Workshop\LocationController::delete
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+        id: \d+
+    methods: [POST]
+
+# 3. CHARGEMENT AUTOMATIQUE DU RESTE
 controllers:
-    resource: routing.controllers
+    resource: ../src/Controller/
+    type: attribute
+    prefix: '/{_locale}'
+    requirements:
+        _locale: en|fr
+    defaults:
+        _locale: fr
+
+
+
+# Routes ScenarioElement — à ajouter dans config/routes.yaml
+
+app_scenario_index:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/editeur
+        en: /{_locale}/workshop/projects/{project_id}/editor
+    controller: App\Controller\Workshop\ScenarioElementController::index
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+
+app_scenario_new:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/editeur/nouveau
+        en: /{_locale}/workshop/projects/{project_id}/editor/new
+    controller: App\Controller\Workshop\ScenarioElementController::new
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+    methods: [GET, POST]
+
+app_scenario_show:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/editeur/{id}
+        en: /{_locale}/workshop/projects/{project_id}/editor/{id}
+    controller: App\Controller\Workshop\ScenarioElementController::show
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+        id: \d+
+
+app_scenario_save:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/editeur/{id}/sauvegarder
+        en: /{_locale}/workshop/projects/{project_id}/editor/{id}/save
+    controller: App\Controller\Workshop\ScenarioElementController::save
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+        id: \d+
+    methods: [POST]
+
+app_scenario_delete:
+    path:
+        fr: /{_locale}/atelier/projets/{project_id}/editeur/{id}/supprimer
+        en: /{_locale}/workshop/projects/{project_id}/editor/{id}/delete
+    controller: App\Controller\Workshop\ScenarioElementController::delete
+    requirements:
+        _locale: en|fr
+        project_id: \d+
+        id: \d+
+    methods: [POST]

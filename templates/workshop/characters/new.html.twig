@@ -1,0 +1,109 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop_interface' %}
+{% import 'workshop/_macros/form_field.html.twig' as forms %}
+
+{% block title %}{{ 'character.new.title'|trans }} — {{ project.title }}{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_character_index', {project_id: project.id}) }}" class="link-back">{{ 'character.new.back'|trans }}</a>
+                <h1>{{ 'character.new.title'|trans }}</h1>
+            </div>
+        </header>
+
+        <div class="form-page-wrapper" style="max-width: 900px;">
+
+            {{ form_start(form, {
+                'attr': {
+                    'novalidate': 'novalidate',
+                    'class': 'project-form',
+                    'data-controller': 'validator',
+                    'data-validator-error-value': 'form.errors.required_invalid'|trans({}, 'validators'),
+                    'data-action': 'submit->validator#validateForm'
+                }
+            }) }}
+
+            <div class="character-form-grid">
+
+                {# ── Colonne gauche — Identité ─────────────────────────────────── #}
+                <div>
+                    <div class="form-section-title">{{ 'character.form.section_identity'|trans }}</div>
+
+                    {{ forms.field(form.name,
+                        'character.form.name'|trans,
+                        required=true,
+                        placeholder='character.form.name_placeholder'|trans
+                    ) }}
+
+                    <div class="form-row-two">
+                        {{ forms.field(form.firstName,
+                            'character.form.firstname'|trans,
+                            placeholder='character.form.firstname_placeholder'|trans
+                        ) }}
+                        {{ forms.field(form.lastName,
+                            'character.form.lastname'|trans,
+                            placeholder='character.form.lastname_placeholder'|trans
+                        ) }}
+                    </div>
+
+                    {{ forms.field(form.nickname,
+                        'character.form.nickname'|trans,
+                        placeholder='character.form.nickname_placeholder'|trans
+                    ) }}
+
+                    {{ forms.select(form.role,
+                        'character.form.role'|trans,
+                        required=true
+                    ) }}
+
+                    {{ forms.textarea(form.description,
+                        'character.form.description'|trans,
+                        placeholder='character.form.description_placeholder'|trans,
+                        rows=3
+                    ) }}
+                </div>
+
+                {# ── Colonne droite — Psychologie ──────────────────────────────── #}
+                <div>
+                    <div class="form-section-title">{{ 'character.form.section_psychology'|trans }}</div>
+
+                    {{ forms.textarea(form.biography,
+                        'character.form.biography'|trans,
+                        placeholder='character.form.biography_placeholder'|trans,
+                        rows=5
+                    ) }}
+
+                    {{ forms.textarea(form.goals,
+                        'character.form.goals'|trans,
+                        placeholder='character.form.goals_placeholder'|trans,
+                        rows=3
+                    ) }}
+
+                    {{ forms.textarea(form.motivations,
+                        'character.form.motivations'|trans,
+                        placeholder='character.form.motivations_placeholder'|trans,
+                        rows=3
+                    ) }}
+
+                    {{ forms.textarea(form.characterArc,
+                        'character.form.arc'|trans,
+                        placeholder='character.form.arc_placeholder'|trans,
+                        rows=3
+                    ) }}
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ path('app_character_index', {project_id: project.id}) }}" class="btn-export">{{ 'character.new.cancel'|trans }}</a>
+                <button type="submit" class="btn-creat">{{ 'character.new.submit'|trans }}</button>
+            </div>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+{% endblock %}

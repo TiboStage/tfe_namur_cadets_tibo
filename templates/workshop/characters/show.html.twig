@@ -1,0 +1,110 @@
+{% extends 'workshop/layout.html.twig' %}
+
+{% block title %}{{ character.name }} — {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <header class="page-header">
+        <div>
+            <a href="{{ path('app_character_index', {project_id: project.id}) }}" class="link-back">← Personnages</a>
+            <h1>
+                {{ character.name }}
+                {% if character.role %}
+                    <span class="project-type-badge">{{ character.role }}</span>
+                {% endif %}
+            </h1>
+            {% if character.nickname %}
+                <p class="text-muted">« {{ character.nickname }} »</p>
+            {% endif %}
+        </div>
+        <a href="{{ path('app_character_edit', {project_id: project.id, id: character.id}) }}" class="btn-export">
+            Modifier
+        </a>
+    </header>
+
+    <div class="character-show-grid">
+
+        {# ── Infos principales ────────────────────────────────────────── #}
+        <div class="character-main">
+
+            {% if character.description %}
+                <div class="profile-section">
+                    <div class="profile-section-header"><h2>Description</h2></div>
+                    <p>{{ character.description }}</p>
+                </div>
+            {% endif %}
+
+            {% if character.biography %}
+                <div class="profile-section">
+                    <div class="profile-section-header"><h2>Biographie</h2></div>
+                    <p>{{ character.biography }}</p>
+                </div>
+            {% endif %}
+
+            {% if character.goals %}
+                <div class="profile-section">
+                    <div class="profile-section-header"><h2>Objectifs</h2></div>
+                    <p>{{ character.goals }}</p>
+                </div>
+            {% endif %}
+
+            {% if character.motivations %}
+                <div class="profile-section">
+                    <div class="profile-section-header"><h2>Motivations</h2></div>
+                    <p>{{ character.motivations }}</p>
+                </div>
+            {% endif %}
+
+            {% if character.characterArc %}
+                <div class="profile-section">
+                    <div class="profile-section-header"><h2>Arc narratif</h2></div>
+                    <p>{{ character.characterArc }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+
+        {# ── Sidebar ──────────────────────────────────────────────────── #}
+        <aside class="character-sidebar">
+            <div class="profile-section">
+                <div class="profile-section-header"><h2>Informations</h2></div>
+                <div class="stat-row">
+                    <span class="text-muted">Prénom</span>
+                    <span>{{ character.firstName|default('—') }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="text-muted">Nom</span>
+                    <span>{{ character.lastName|default('—') }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="text-muted">Rôle</span>
+                    <span>{{ character.role|default('—') }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="text-muted">Créé le</span>
+                    <span>{{ character.createdAt|date('d/m/Y') }}</span>
+                </div>
+            </div>
+
+            {# Relations #}
+            <div class="profile-section">
+                <div class="profile-section-header"><h2>Relations</h2></div>
+                {% set relations = character.getAllRelations() %}
+                {% if relations is empty %}
+                    <p class="text-muted" style="font-size: 13px;">Aucune relation définie.</p>
+                {% else %}
+                    {% for relation in relations %}
+                        <div class="stat-row">
+                            {% set other = relation.characterA == character ? relation.characterB : relation.characterA %}
+                            <span>{{ other.name }}</span>
+                            <span class="project-type-badge">{{ relation.relationType }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </aside>
+
+    </div>
+</div>
+{% endblock %}

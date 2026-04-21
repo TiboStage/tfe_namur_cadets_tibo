@@ -1,0 +1,59 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop_interface' %}
+
+{% block title %}{{ 'projects.index.title'|trans }} — Scénart{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+
+        <header class="page-header">
+            <div>
+                <h1>{{ 'projects.index.title'|trans }}</h1>
+                <p class="text-muted">{{ projects|length }} {{ 'projects.index.subtitle'|trans }}</p>
+            </div>
+            <a href="{{ path('app_project_new') }}" class="btn-creat">
+                {{ 'projects.index.btn_new'|trans }}
+            </a>
+        </header>
+
+        {% if projects is empty %}
+            <div class="empty-projects">
+                <p class="text-muted">{{ 'projects.index.empty'|trans }}</p>
+                <a href="{{ path('app_project_new') }}" class="btn-creat">
+                    {{ 'projects.index.empty_btn'|trans }}
+                </a>
+            </div>
+        {% else %}
+            <div class="projects-grid">
+                {% for project in projects %}
+                    <div class="project-card">
+                        <div class="project-card-header">
+                            <div class="project-card-thumb">{{ project.title|first|upper }}</div>
+                            <span class="project-type-badge">{{ project.projectType }}</span>
+                        </div>
+                        <div class="project-card-body">
+                            <h3 class="project-card-title">{{ project.title }}</h3>
+                            <p class="project-card-desc text-muted">
+                                {{ project.description|default('...')|slice(0, 100) }}{% if project.description|length > 100 %}…{% endif %}
+                            </p>
+                        </div>
+                        <div class="project-card-footer">
+                        <span class="text-muted" style="font-size: 11px;">
+                            {{ 'projects.index.modified'|trans }} {{ project.updatedAt|date('d/m/Y') }}
+                        </span>
+                            <div class="project-card-actions">
+                                <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="btn-action-small">
+                                    {{ 'projects.index.btn_open'|trans }}
+                                </a>
+                                <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="btn-action-small">
+                                    {{ 'projects.index.btn_edit'|trans }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

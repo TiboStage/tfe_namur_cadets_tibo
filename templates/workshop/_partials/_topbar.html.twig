@@ -1,0 +1,31 @@
+<header class="top-nav">
+
+    <div class="nav-left">
+        <a href="{{ path('app_workshop_dashboard') }}" class="topbar-logo">
+            <img src="{{ asset('images/favicons/favicon_workshop.png') }}" alt="Scénart" width="28">
+        </a>
+        <a href="{{ path('app_home') }}" class="link-back">← Retour au site</a>
+    </div>
+
+    <div class="nav-center">
+        <div class="search-bar">
+            <input type="text" placeholder="Recherche...">
+        </div>
+    </div>
+
+    <div class="nav-right">
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="#" class="btn-admin">Administration</a>
+        {% endif %}
+
+        <div class="notification-wrapper">
+            <button class="notification-btn" aria-label="Notifications">
+                {{ ux_icon('lucide:bell', {style: 'width: 18px; height: 18px;'}) }}
+            </button>
+        </div>
+
+        <twig:UserProfile />
+
+    </div>
+
+</header>

@@ -1,3 +1,36 @@
-body {
-    background-color: skyblue;
-}
+/* assets/styles/app.css */
+
+/* Configuration de base */
+@import "./_variables.css";
+@import "./_reset.css";
+
+
+/* Composants WEBSITE */
+@import "./components/_buttons.css"; /* Nouveau ! */
+@import "./components/website/_navbar.css";
+@import "./components/website/_footer.css";
+@import "./components/_alerts.css";
+@import "./components/_icons.css";
+
+
+/* Pages Website */
+@import "./components/website/_home.css";
+@import "./components/website/_pricing.css";
+@import "./components/website/_contact.css";
+@import "./components/website/_examples.css";
+@import "./components/website/_auth.css";
+@import "components/website/_profile.css";
+
+/* Composants du WORKSHOP  */
+@import "components/workshop/_subnav.css";
+@import "components/workshop/_topbar.css";
+
+
+/* Pages Workshop */
+@import "components/workshop/_dashboard.css";
+@import "components/workshop/_projects.css";
+@import "components/workshop/_characters.css";
+
+/* Pages Erreur */
+@import "components/_scenario.css";
+@import "components/_error-pages.css";

@@ -1,0 +1,131 @@
+/* ============================================================
+   ALERTES & TOASTS — _alerts.css
+   ============================================================
+   3 niveaux :
+   1. Erreur inline     → .field-error (sous les champs)
+   2. Toast warning     → #toast-container .scenart-alert.alert-warning (coin droit)
+   3. Flash PHP         → .flash-container .scenart-alert (centré en haut)
+   ============================================================ */
+
+/* ─── Flash container — centré en haut ──────────────────────────────────────── */
+
+.flash-container {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    width: 100%;
+    max-width: 600px;
+    pointer-events: none;
+}
+
+/* ─── Toast container — coin droit ──────────────────────────────────────────── */
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+/* ─── Alert de base ──────────────────────────────────────────────────────────── */
+
+.scenart-alert {
+    position: relative;
+    display: flex;
+    align-items: center;
+    pointer-events: auto;
+    gap: 15px;
+    padding: 20px 25px;
+    background: #15151A;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+    animation: slideInDown 0.4s ease-out;
+}
+
+/* ─── Variantes ──────────────────────────────────────────────────────────────── */
+
+.alert-success {
+    border-left: 5px solid #FFB800;
+}
+
+.alert-danger {
+    border-left: 5px solid #FF4B4B;
+}
+
+.alert-warning {
+    border-left: 5px solid var(--color-primary);
+}
+
+/* ─── Contenu ────────────────────────────────────────────────────────────────── */
+
+.alert-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.icon-alert {
+    width: 20px;
+    height: 20px;
+}
+
+.alert-body p {
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ─── Bouton fermer ──────────────────────────────────────────────────────────── */
+
+.alert-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    margin-left: auto;
+    opacity: 0.7;
+    transition: var(--transition);
+}
+
+.alert-close:hover {
+    color: #FFB800;
+    opacity: 1;
+}
+
+.icon-close {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+.alert-close:hover .icon-close {
+    transform: scale(1.2);
+}
+
+/* ─── Animations ─────────────────────────────────────────────────────────────── */
+
+.alert-fade-out {
+    opacity: 0 !important;
+    transform: translateY(-20px) !important;
+    transition: all 0.5s ease-out !important;
+}
+
+@keyframes slideInDown {
+    from { opacity: 0; transform: translateY(-100%); }
+    to   { opacity: 1; transform: translateY(0); }
+}

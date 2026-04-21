@@ -1,0 +1,120 @@
+{% extends 'website/profile/layout.html.twig' %}
+{% trans_default_domain 'profile' %}
+
+{% block title %}{{ 'meta.title'|trans }}{% endblock %}
+
+{% block content %}
+<main class="profile-page">
+    <a href="#" onclick="history.back()" class="link-back">← Retour</a>
+
+    {# ── En-tête ──────────────────────────────────────────────────────── #}
+    <div class="profile-header">
+        <div class="profile-avatar-large">
+            {{ user.firstName|slice(0,1)|upper }}{{ user.lastName|slice(0,1)|upper }}
+        </div>
+        <div>
+            <h1>{{ 'page.title'|trans }}</h1>
+            <p class="text-muted">{{ 'page.subtitle'|trans }}</p>
+        </div>
+    </div>
+
+    <div class="profile-grid">
+
+        {# ── Colonne gauche : formulaire ──────────────────────────────── #}
+        <div class="profile-main">
+
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'profile-form'}}) }}
+
+                {# Identité #}
+                <div class="profile-section">
+                    <div class="profile-section-header">
+                        <h2>{{ 'sections.identity'|trans }}</h2>
+                        <p class="text-muted">{{ 'sections.identity_desc'|trans }}</p>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">{{ 'form.firstname'|trans }}</label>
+                            {{ form_widget(form.firstName, {'attr': {'placeholder': 'form.firstname'|trans}}) }}
+                            {{ form_errors(form.firstName) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">{{ 'form.lastname'|trans }}</label>
+                            {{ form_widget(form.lastName, {'attr': {'placeholder': 'form.lastname'|trans}}) }}
+                            {{ form_errors(form.lastName) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">{{ 'form.username'|trans }}</label>
+                        {{ form_widget(form.username, {'attr': {'placeholder': 'form.username'|trans}}) }}
+                        {{ form_errors(form.username) }}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">{{ 'form.email'|trans }}</label>
+                        {{ form_widget(form.email, {'attr': {'placeholder': 'form.email'|trans}}) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+                </div>
+
+                {# Sécurité #}
+                <div class="profile-section">
+                    <div class="profile-section-header">
+                        <h2>{{ 'sections.security'|trans }}</h2>
+                        <p class="text-muted">{{ 'sections.security_desc'|trans }}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">{{ 'form.new_password'|trans }}</label>
+                        {{ form_widget(form.newPassword.first, {'attr': {'placeholder': 'form.new_password'|trans}}) }}
+                        {{ form_errors(form.newPassword.first) }}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">{{ 'form.confirm_password'|trans }}</label>
+                        {{ form_widget(form.newPassword.second, {'attr': {'placeholder': 'form.confirm_password'|trans}}) }}
+                        {{ form_errors(form.newPassword.second) }}
+                    </div>
+
+                    <p class="form-hint text-muted">{{ 'form.password_hint'|trans }}</p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">{{ 'form.btn_save'|trans }}</button>
+                </div>
+
+            {{ form_end(form) }}
+
+        </div>
+
+        {# ── Colonne droite : stats ────────────────────────────────────── #}
+        <aside class="profile-sidebar">
+            <div class="profile-section">
+                <h2>{{ 'sections.stats'|trans }}</h2>
+
+                <div class="stat-row">
+                    <span class="text-muted">{{ 'stats.member_since'|trans }}</span>
+                    <span>{{ user.createdAt|date('d/m/Y') }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="text-muted">{{ 'stats.projects'|trans }}</span>
+                    <span class="highlight">{{ projects_count }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="text-muted">{{ 'stats.last_login'|trans }}</span>
+                    <span>
+                        {% if user.lastLoginAt %}
+                            {{ user.lastLoginAt|date('d/m/Y H:i') }}
+                        {% else %}
+                            {{ 'stats.never'|trans }}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+</main>
+{% endblock %}

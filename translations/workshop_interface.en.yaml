@@ -1,0 +1,166 @@
+dashboard:
+    greeting: "Hello,"
+    subtitle: "project(s) in total"
+    stats:
+        projects_value: "Projects in progress"
+        projects_link: "↗ View all"
+        views_value: "Total views"
+        views_link: "↗ Statistics"
+        entities_value: "Entities created"
+    actions:
+        new_project_title: "New project"
+        new_project_desc: "Video game, series, film"
+        new_project_btn: "+ Create"
+        export_title: "Export a project"
+        export_desc: "Format (.pdf, .xml)"
+        export_btn: "↓ Export"
+    projects:
+        title: "Projects in progress"
+        see_more: "View more ↗"
+        empty: "No projects yet. Create one!"
+    activity:
+        title: "Recent activity"
+        see_all: "View all ↗"
+        action: "modified a project"
+        ago: "ago"
+        min: "min."
+
+projects:
+    index:
+        title: "My projects"
+        subtitle: "project(s) in total"
+        btn_new: "+ New project"
+        empty: "No projects yet."
+        empty_btn: "Create my first project"
+        modified: "Modified on"
+        btn_open: "Open"
+        btn_edit: "Edit"
+    new:
+        title: "New project"
+        back: "← My projects"
+        label_title: "Project title"
+        label_type: "Project type"
+        label_desc: "Description"
+        placeholder_title: "Ex: The Shadows of Valoria"
+        placeholder_desc: "Describe your universe in a few sentences..."
+        btn_cancel: "Cancel"
+        btn_submit: "Create project →"
+    edit:
+        title: "Project settings"
+        label_title: "Title"
+        label_type: "Project type"
+        label_desc: "Description"
+        btn_cancel: "Cancel"
+        btn_submit: "Save"
+        danger_title: "Danger zone"
+        danger_desc: "Deletion is irreversible. All project data will be lost."
+        danger_btn: "Delete this project"
+        danger_confirm: "Permanently delete this project?"
+    show:
+        back: "← My projects"
+        btn_settings: "Settings"
+        no_description: "No description."
+        section_structure: "Narrative structure"
+        section_structure_desc: "Acts, sequences, scenes"
+        section_structure_btn: "Open editor"
+        section_characters: "Characters"
+        section_locations: "Locations"
+        section_tags: "Tags"
+        btn_manage: "Manage"
+
+location:
+    index:
+        title: "Locations"
+        new_btn: "+ New location"
+        empty: "No locations yet."
+        empty_create: "Create the first location"
+
+    new:
+        title: "New location"
+        back: "← Locations"
+        submit: "Create location →"
+        cancel: "Cancel"
+
+    edit:
+        title: "Edit location"
+        submit: "Save"
+        cancel: "Cancel"
+        danger_zone: "Danger zone"
+        danger_desc: "Deletion is irreversible."
+        delete_btn: "Delete this location"
+        delete_confirm: "Delete this location?"
+
+    show:
+        back: "← Locations"
+        edit_btn: "Edit"
+        no_description: "No description for this location."
+
+    form:
+        name: "Location name"
+        name_placeholder: "Ex: The Blackwood Manor"
+        type: "Location type"
+        description: "Description"
+        description_placeholder: "Describe this location, its atmosphere, its characteristics..."
+
+    info:
+        title: "Information"
+        type: "Type"
+        created_at: "Created on"
+        updated_at: "Updated on"
+
+character:
+    new:
+        title: "New character"
+        back: "← Characters"
+        submit: "Create character →"
+        cancel: "Cancel"
+
+    edit:
+        title: "Edit character"
+        submit: "Save"
+        cancel: "Cancel"
+        danger_zone: "Danger zone"
+        danger_desc: "Deletion is irreversible."
+        delete_btn: "Delete this character"
+        delete_confirm: "Delete this character?"
+
+    index:
+        title: "Characters"
+        new_btn: "+ New character"
+        empty: "No characters yet."
+        empty_create: "Create the first character"
+
+    show:
+        back: "← Characters"
+        edit_btn: "Edit"
+        no_description: "No description for this character."
+
+    form:
+        section_identity: "Identity"
+        section_psychology: "Psychology"
+        name: "Display name"
+        name_placeholder: "Ex: Marie Dupont"
+        firstname: "First name"
+        firstname_placeholder: "Marie"
+        lastname: "Last name"
+        lastname_placeholder: "Dupont"
+        nickname: "Nickname / Main alias"
+        nickname_placeholder: "The detective"
+        role: "Narrative role"
+        description: "Short description"
+        description_placeholder: "Briefly describe this character..."
+        biography: "Biography"
+        biography_placeholder: "Their history, their past..."
+        goals: "Goals"
+        goals_placeholder: "What do they want to achieve?"
+        motivations: "Motivations"
+        motivations_placeholder: "Why do they act this way?"
+        arc: "Character arc"
+        arc_placeholder: "How do they evolve throughout the story?"
+
+    info:
+        title: "Information"
+        role: "Role"
+        created_at: "Created on"
+        relations: "Relations"
+        no_relations: "No relations defined."

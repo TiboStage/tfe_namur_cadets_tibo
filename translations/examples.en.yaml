@@ -1,0 +1,18 @@
+meta:
+    title: "Examples - Scénart"
+header:
+    tag: "Examples"
+    title: "Projects created on"
+    title_highlight: "SCÉNART"
+    description: "Discover how other creators structure their universes. Each project is unique and illustrates the infinite possibilities of the Workshop."
+filters:
+    all: "All"
+    cinema: "Cinema"
+    serie: "Series"
+    roman: "Novel"
+    video_game: "Video Game"
+    jdr: "TTRPG"
+grid:
+    empty_message: "No projects match this category at the moment."
+    view_project: "Explore project"
+    author: "By"

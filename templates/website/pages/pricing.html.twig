@@ -1,0 +1,152 @@
+{% extends 'website/layout.html.twig' %}
+{% trans_default_domain 'pricing' %}
+
+{% block title %}{{ 'meta.title'|trans }}{% endblock %}
+
+{% block content %}
+    <main class="container pricing-page">
+
+        {# ── EN-TÊTE ─────────────────────────────────────────────────────────── #}
+        <div class="section-header">
+            <span class="section-tag">{{ 'header.tag'|trans }}</span>
+            <h1 class="main-title">
+                {{ 'header.title'|trans }}
+                <span class="highlight">{{ 'header.title_highlight'|trans }}</span>
+            </h1>
+            <p class="section-desc">{{ 'header.subtitle'|trans }}</p>
+        </div>
+
+        {# ── BANNIÈRE EARLY ACCESS ────────────────────────────────────────────── #}
+        <div class="early-access-banner">
+            <p>
+                <strong>{{ 'early_access.title'|trans }}</strong>
+                {{ 'early_access.desc'|trans }}
+            </p>
+            <a href="{{ 'early_access.kofi_url'|trans }}" target="_blank" rel="noopener noreferrer">
+                {{ 'early_access.btn'|trans }}
+            </a>
+        </div>
+
+        {# ── GRILLE DE TARIFS ─────────────────────────────────────────────────── #}
+        <div class="pricing-grid">
+
+            {# Plan Amateur #}
+            <div class="card-pricing">
+                <div class="card-header">
+                    <span class="plan-name">{{ 'plans.amateur.name'|trans }}</span>
+                    <div class="price-tag">
+                        <span>€</span>0<small>{{ 'plans.per_month'|trans }}</small>
+                    </div>
+                    <p class="plan-description">{{ 'plans.amateur.desc'|trans }}</p>
+                    <div class="plan-badge">{{ 'plans.amateur.badge'|trans }}</div>
+                </div>
+
+                <ul class="features-list">
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.amateur.features.projects'|trans|raw }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.amateur.features.entities'|trans|raw }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.amateur.features.script'|trans|raw }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.amateur.features.export'|trans }}</li>
+                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'plans.amateur.features.collab'|trans }}</li>
+                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'plans.amateur.features.graph'|trans }}</li>
+                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'plans.amateur.features.fields'|trans }}</li>
+                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'plans.amateur.features.public'|trans }}</li>
+                </ul>
+
+                {# Bouton désactivé — Early Access #}
+                <span class="btn-outline-pricing disabled">
+                    {{ 'plans.amateur.btn'|trans }}
+                </span>
+            </div>
+
+            {# Plan Pro #}
+            <div class="card-pricing featured">
+                <div class="featured-badge">
+                    <i class="fa-solid fa-diamond"></i>
+                    {{ 'plans.featured_badge'|trans }}
+                </div>
+
+                <div class="card-header">
+                    <span class="plan-name highlight">{{ 'plans.pro.name'|trans }}</span>
+                    <div class="price-tag">
+                        <span>€</span>12<small>{{ 'plans.per_month'|trans }}</small>
+                    </div>
+                    <p class="plan-description">{{ 'plans.pro.desc'|trans }}</p>
+                    <div class="plan-badge highlighted">{{ 'plans.pro.badge'|trans }}</div>
+                </div>
+
+                <ul class="features-list">
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.projects'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.entities'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.script'|trans|raw }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.export'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.collab'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.graph'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.fields'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.public'|trans }}</li>
+                </ul>
+
+                {# Bouton désactivé — Early Access #}
+                <span class="btn-primary-pricing disabled">
+                    {{ 'plans.pro.btn'|trans }}
+                </span>
+            </div>
+
+        </div>
+
+        {# ── FOOTER PRICING ───────────────────────────────────────────────────── #}
+        <div class="pricing-footer">
+            <p>{{ 'footer.not_sure'|trans }} <span>{{ 'footer.no_credit'|trans }}</span></p>
+            <p>{{ 'footer.quote'|trans }} <a href="{{ path('app_contact') }}">{{ 'footer.contact_us'|trans }}</a></p>
+        </div>
+
+        {# ── FAQ ──────────────────────────────────────────────────────────────── #}
+        <section class="faq-section">
+            <h2 class="faq-title">{{ 'faq.title'|trans }}</h2>
+
+            <div class="faq-grid" data-controller="faq">
+
+                <div class="faq-item">
+                    <button class="faq-question" data-action="click->faq#toggle">
+                        {{ 'faq.q1'|trans }}
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>{{ 'faq.a1'|trans }}</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" data-action="click->faq#toggle">
+                        {{ 'faq.q2'|trans }}
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>{{ 'faq.a2'|trans }}</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" data-action="click->faq#toggle">
+                        {{ 'faq.q3'|trans }}
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>{{ 'faq.a3'|trans }}</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" data-action="click->faq#toggle">
+                        {{ 'faq.q4'|trans }}
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>{{ 'faq.a4'|trans }}</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+{% endblock %}

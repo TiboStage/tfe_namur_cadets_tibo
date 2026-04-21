@@ -1,0 +1,25 @@
+meta_title: "Connexion & Inscription - Scénart"
+
+login:
+    title: "Connexion"
+    email: "Email"
+    password: "Mot de passe"
+    submit: "Se connecter"
+
+register:
+    title: "Créer un compte"
+    firstname: "Prénom"
+    lastname: "Nom"
+    username: "Nom d'utilisateur"
+    email: "Email"
+    password: "Mot de passe"
+    agree_terms: "J'accepte les conditions d'utilisation"
+    submit: "S'inscrire"
+
+overlay:
+    welcome: "Bon retour !"
+    desc_login: "Connectez-vous pour retrouver vos histoires."
+    btn_login: "J'ai déjà un compte"
+    hello: "Bienvenue !"
+    desc_register: "Commencez votre aventure d'écrivain dès maintenant."
+    btn_register: "Je suis nouveau"
