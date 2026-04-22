@@ -1,13 +1,13 @@
-{% extends 'workshop/layout.html.twig' %}
+{% extends '../layout.html.twig' %}
 
 {% block title %}{{ character.name }} — {{ project.title }}{% endblock %}
 
-{% block content %}
+{% block project_content %}
 <div class="dashboard-container">
 
     <header class="page-header">
         <div>
-            <a href="{{ path('app_character_index', {project_id: project.id}) }}" class="link-back">← Personnages</a>
+            <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="link-back">← Personnages</a>
             <h1>
                 {{ character.name }}
                 {% if character.role %}
@@ -18,7 +18,7 @@
                 <p class="text-muted">« {{ character.nickname }} »</p>
             {% endif %}
         </div>
-        <a href="{{ path('app_character_edit', {project_id: project.id, id: character.id}) }}" class="btn-export">
+        <a href="{{ path('app_character_edit', {project_slug: project.slug, id: character.id}) }}" class="btn-export">
             Modifier
         </a>
     </header>

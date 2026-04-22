@@ -24,7 +24,7 @@ class LocationController extends AbstractController
     ) {}
 
     public function index(
-        #[MapEntity(id: 'project_id')] Project $project
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response {
         $this->checkProjectAccess($project, 'view');
 
@@ -36,7 +36,7 @@ class LocationController extends AbstractController
 
     public function new(
         Request $request,
-        #[MapEntity(id: 'project_id')] Project $project
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response {
         $this->checkProjectAccess($project, 'edit');
 
@@ -56,8 +56,8 @@ class LocationController extends AbstractController
             );
 
             return $this->redirectToRoute('app_location_show', [
-                'project_id' => $project->getId(),
-                'id'         => $location->getId(),
+                'project_slug' => $project->getSlug(),
+                'id'           => $location->getId(),
             ]);
         }
 
@@ -69,7 +69,7 @@ class LocationController extends AbstractController
     }
 
     public function show(
-        #[MapEntity(id: 'project_id')] Project $project,
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         #[MapEntity(id: 'id')] Location $location
     ): Response {
         $this->checkProjectAccess($project, 'view');
@@ -82,7 +82,7 @@ class LocationController extends AbstractController
 
     public function edit(
         Request $request,
-        #[MapEntity(id: 'project_id')] Project $project,
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         #[MapEntity(id: 'id')] Location $location
     ): Response {
         $this->checkProjectAccess($project, 'edit');
@@ -99,8 +99,8 @@ class LocationController extends AbstractController
             );
 
             return $this->redirectToRoute('app_location_show', [
-                'project_id' => $project->getId(),
-                'id'         => $location->getId(),
+                'project_slug' => $project->getSlug(),
+                'id'           => $location->getId(),
             ]);
         }
 
@@ -113,7 +113,7 @@ class LocationController extends AbstractController
 
     public function delete(
         Request $request,
-        #[MapEntity(id: 'project_id')] Project $project,
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         #[MapEntity(id: 'id')] Location $location
     ): Response {
         $this->checkProjectAccess($project, 'edit');
@@ -129,7 +129,7 @@ class LocationController extends AbstractController
         }
 
         return $this->redirectToRoute('app_location_index', [
-            'project_id' => $project->getId(),
+            'project_slug' => $project->getSlug(),
         ]);
     }
 }

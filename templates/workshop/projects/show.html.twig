@@ -1,64 +1,84 @@
-{% extends 'workshop/layout.html.twig' %}
-{% trans_default_domain 'workshop_interface' %}
+{% extends 'workshop/projects/layout.html.twig' %}
 
-{% block title %}{{ project.title }} — Scénart{% endblock %}
+{% block project_content %}
+    <div class="project-view">
 
-{% block content %}
-    <div class="dashboard-container">
-
-        <header class="page-header">
-            <div>
-                <a href="{{ path('app_project_index') }}" class="link-back">{{ 'projects.show.back'|trans }}</a>
-                <h1>
-                    {{ project.title }}
-                    <span class="project-type-badge">{{ project.projectType }}</span>
-                </h1>
-                <p class="text-muted">
-                    {{ project.description|default('projects.show.no_description'|trans) }}
-                </p>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="btn-export">
-                    {{ 'projects.show.btn_settings'|trans }}
+        {# CONTENU DU DASHBOARD PROJET #}
+        <div class="dashboard-content">
+            <header class="dashboard-header">
+                <div>
+                    <a href="{{ path('app_project_index') }}" class="text-muted">
+                        {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }} Retour aux projets
+                    </a>
+                    <h1>{{ project.title }}</h1>
+                    <p class="text-muted">{{ project.projectType|upper }}</p>
+                </div>
+                <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}" class="btn btn--cta-yellow">
+                    {{ ux_icon('lucide:pen-tool', {class: 'icon-xs'}) }} Ouvrir l'éditeur
                 </a>
+            </header>
+
+            <div class="dashboard-grid">
+                {# STATISTIQUES DU PROJET #}
+                <section class="dashboard-card">
+                    <h3>{{ ux_icon('lucide:bar-chart-2', {class: 'icon-sm'}) }} Statistiques</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-value">{{ stats.scenes_count }}</span>
+                            <span class="stat-label">Scènes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ stats.characters_count }}</span>
+                            <span class="stat-label">Personnages</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ stats.locations_count }}</span>
+                            <span class="stat-label">Lieux</span>
+                        </div>
+                    </div>
+                    <p class="text-muted small mt-3">
+                        Dernière modification : {{ stats.last_update|date('d/m/Y à H:i') }}
+                    </p>
+                </section>
+
+                {# ACTIVITÉ RÉCENTE #}
+
+                <section class="dashboard-card">
+                    <h3>{{ ux_icon('lucide:clock', {class: 'icon-sm'}) }} Activité récente</h3>
+                    {% if recentUpdates is not empty %}
+                        <ul class="recent-list">
+                            {% for item in recentUpdates %}
+                                <li>
+                                    <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: item.id}) }}">
+                                        {{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}
+                                        <span>{{ item.title }}</span>
+                                    </a>
+                                    <small class="text-muted">{{ item.updatedAt|date('d/m H:i') }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Aucune activité récente. Commencez à écrire !</p>
+                    {% endif %}
+                </section>
+
+                {# ACCÈS RAPIDES #}
+
+                <section class="dashboard-card card-yellow">
+                    <h3>{{ ux_icon('lucide:zap', {class: 'icon-sm'}) }} Accès rapides</h3>
+                    <div class="quick-actions">
+                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}" class="btn btn--primary btn--sm">
+                            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }} Créer une scène
+                        </a>
+                        <a href="{{ path('app_character_new', {project_slug: project.slug}) }}" class="btn btn--ghost btn--sm">
+                            {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }} Nouveau personnage
+                        </a>
+                        <a href="{{ path('app_location_new', {project_slug: project.slug}) }}" class="btn btn--ghost btn--sm">
+                            {{ ux_icon('lucide:map-pin-plus', {class: 'icon-xs'}) }} Nouveau lieu
+                        </a>
+                    </div>
+                </section>
             </div>
-        </header>
-
-        <div class="project-sections-grid">
-
-            <div class="project-section-card">
-                <h3>{{ 'projects.show.section_structure'|trans }}</h3>
-                <p class="text-muted">{{ 'projects.show.section_structure_desc'|trans }}</p>
-                <a href="{{ path('app_scenario_index', {project_id: project.id}) }}" class="btn-creat" style="margin-top: auto;">
-                    {{ 'projects.show.section_structure_btn'|trans }}
-                </a>
-            </div>
-
-            <div class="project-section-card">
-                <h3>{{ 'projects.show.section_characters'|trans }}</h3>
-                <p class="text-muted">{{ project.characters|length }} {{ 'projects.show.section_characters'|trans|lower }}</p>
-                <a href="{{ path('app_character_index', {project_id: project.id}) }}"
-                   class="btn-action-small" style="margin-top: auto;">
-                    {{ 'projects.show.btn_manage'|trans }}
-                </a>
-            </div>
-
-            <div class="project-section-card">
-                <h3>{{ 'projects.show.section_locations'|trans }}</h3>
-                <p class="text-muted">{{ project.locations|length }} {{ 'projects.show.section_locations'|trans|lower }}</p>
-                <a href="{{ path('app_location_index', {project_id: project.id}) }}" class="btn-action-small" style="margin-top: auto;">
-                    {{ 'projects.show.btn_manage'|trans }}
-                </a>
-            </div>
-
-            <div class="project-section-card">
-                <h3>{{ 'projects.show.section_tags'|trans }}</h3>
-                <p class="text-muted">{{ project.tags|length }} {{ 'projects.show.section_tags'|trans|lower }}</p>
-                <a href="#" class="btn-action-small" style="margin-top: auto;">
-                    {{ 'projects.show.btn_manage'|trans }}
-                </a>
-            </div>
-
         </div>
     </div>
 {% endblock %}

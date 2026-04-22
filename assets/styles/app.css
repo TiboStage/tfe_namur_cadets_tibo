@@ -22,14 +22,14 @@
 @import "components/website/_profile.css";
 
 /* Composants du WORKSHOP  */
-@import "components/workshop/_subnav.css";
-@import "components/workshop/_topbar.css";
-
-
-/* Pages Workshop */
+@import "./components/workshop/_topbar.css";
+@import "./components/workshop/_subnav.css";
+@import "./components/workshop/_project-nav.css";
+@import "./components/workshop/_project-dashboard.css";
+@import "./components/workshop/_editor.css";
+@import "./components/workshop/_characters.css";
 @import "components/workshop/_dashboard.css";
 @import "components/workshop/_projects.css";
-@import "components/workshop/_characters.css";
 
 /* Pages Erreur */
 @import "components/_scenario.css";

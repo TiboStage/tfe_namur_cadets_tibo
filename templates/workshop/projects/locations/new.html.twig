@@ -1,14 +1,14 @@
-{% extends 'workshop/layout.html.twig' %}
+{% extends '../layout.html.twig' %}
 {% trans_default_domain 'workshop_interface' %}
 
 {% block title %}{{ 'location.new.title'|trans }} — {{ project.title }}{% endblock %}
 
-{% block content %}
+{% block project_content %}
 <div class="dashboard-container">
 
     <header class="page-header">
         <div>
-            <a href="{{ path('app_location_index', {project_id: project.id}) }}" class="link-back">{{ 'location.new.back'|trans }}</a>
+            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="link-back">{{ 'location.new.back'|trans }}</a>
             <h1>{{ 'location.new.title'|trans }}</h1>
         </div>
     </header>
@@ -38,7 +38,7 @@
             </div>
 
             <div class="form-actions">
-                <a href="{{ path('app_location_index', {project_id: project.id}) }}" class="btn-export">{{ 'location.new.cancel'|trans }}</a>
+                <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="btn-export">{{ 'location.new.cancel'|trans }}</a>
                 <button type="submit" class="btn-creat">{{ 'location.new.submit'|trans }}</button>
             </div>
 

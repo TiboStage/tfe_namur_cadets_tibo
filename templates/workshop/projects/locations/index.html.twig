@@ -1,17 +1,17 @@
-{% extends 'workshop/layout.html.twig' %}
+{% extends '../layout.html.twig' %}
 {% trans_default_domain 'workshop_interface' %}
 
 {% block title %}{{ 'location.index.title'|trans }} — {{ project.title }}{% endblock %}
 
-{% block content %}
+{% block project_content %}
 <div class="dashboard-container">
 
     <header class="page-header">
         <div>
-            <a href="{{ path('app_project_show', {id: project.id}) }}" class="link-back">← {{ project.title }}</a>
+            <a href="{{ path('app_project_show', {islug: project.slug}) }}" class="link-back">← {{ project.title }}</a>
             <h1>{{ 'location.index.title'|trans }} <span class="text-muted" style="font-size: 16px; font-weight: 400;">{{ locations|length }}</span></h1>
         </div>
-        <a href="{{ path('app_location_new', {project_id: project.id}) }}" class="btn-creat">
+        <a href="{{ path('app_location_new', {pproject_slug: project.slug}) }}" class="btn-creat">
             {{ 'location.index.new_btn'|trans }}
         </a>
     </header>
@@ -19,14 +19,14 @@
     {% if locations is empty %}
         <div class="empty-projects">
             <p class="text-muted">{{ 'location.index.empty'|trans }}</p>
-            <a href="{{ path('app_location_new', {project_id: project.id}) }}" class="btn-creat">
+            <a href="{{ path('app_location_new', {project_slug: project.slug}) }}" class="btn-creat">
                 {{ 'location.index.empty_create'|trans }}
             </a>
         </div>
     {% else %}
         <div class="characters-grid">
             {% for location in locations %}
-                <a href="{{ path('app_location_show', {project_id: project.id, id: location.id}) }}" class="character-card">
+                <a href="{{ path('app_location_show', {project_slug: project.slug, id: location.id}) }}" class="character-card">
                     <div class="character-card-avatar">
                         {{ location.name|first|upper }}
                     </div>

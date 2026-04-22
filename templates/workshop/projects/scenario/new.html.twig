@@ -1,9 +1,9 @@
-{% extends 'workshop/layout.html.twig' %}
+{% extends '../../layout.html.twig' %}
 
-{% block content %}
+{% block project_content %}
     <div class="dashboard-container form-narrow">
         <header class="page-header">
-            <a href="{{ path('app_scenario_index', {project_id: project.id}) }}">← Retour</a>
+            <a href="{{ path('app_scenario_index', {project_slug: project.slug}) }}">← Retour</a>
             <h1>Nouveau {{ elementType|upper }}</h1>
         </header>
 

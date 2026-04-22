@@ -1,15 +1,15 @@
-{% extends 'workshop/layout.html.twig' %}
+{% extends '../layout.html.twig' %}
 {% trans_default_domain 'workshop_interface' %}
 {% import 'workshop/_macros/form_field.html.twig' as forms %}
 
 {% block title %}{{ 'character.new.title'|trans }} — {{ project.title }}{% endblock %}
 
-{% block content %}
+{% block project_content %}
     <div class="dashboard-container">
 
         <header class="page-header">
             <div>
-                <a href="{{ path('app_character_index', {project_id: project.id}) }}" class="link-back">{{ 'character.new.back'|trans }}</a>
+                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="link-back">{{ 'character.new.back'|trans }}</a>
                 <h1>{{ 'character.new.title'|trans }}</h1>
             </div>
         </header>
@@ -98,7 +98,7 @@
             </div>
 
             <div class="form-actions">
-                <a href="{{ path('app_character_index', {project_id: project.id}) }}" class="btn-export">{{ 'character.new.cancel'|trans }}</a>
+                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="btn-export">{{ 'character.new.cancel'|trans }}</a>
                 <button type="submit" class="btn-creat">{{ 'character.new.submit'|trans }}</button>
             </div>
 

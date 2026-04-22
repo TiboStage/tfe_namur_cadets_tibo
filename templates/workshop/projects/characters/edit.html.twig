@@ -1,4 +1,4 @@
-{% extends 'workshop/layout.html.twig' %}
+{% extends '../layout.html.twig' %}
 {% trans_default_domain 'workshop_interface' %}
 {% import 'workshop/_macros/form_field.html.twig' as forms %}
 
@@ -9,7 +9,7 @@
 
         <header class="page-header">
             <div>
-                <a href="{{ path('app_character_show', {project_id: project.id, id: character.id}) }}" class="link-back">← {{ character.name }}</a>
+                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="link-back">← {{ character.name }}</a>
                 <h1>{{ 'character.edit.title'|trans }}</h1>
             </div>
         </header>
@@ -57,14 +57,14 @@
             </div>
 
             <div class="form-actions">
-                <a href="{{ path('app_character_show', {project_id: project.id, id: character.id}) }}" class="btn-export">{{ 'character.edit.cancel'|trans }}</a>
+                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="btn-export">{{ 'character.edit.cancel'|trans }}</a>
                 <button type="submit" class="btn-creat">{{ 'character.edit.submit'|trans }}</button>
             </div>
 
             {{ form_end(form) }}
 
             {{ forms.danger_zone(
-                path('app_character_delete', {project_id: project.id, id: character.id}),
+                path('app_character_delete', {project_slug: project.slug, id: character.id}),
                 'delete_character_',
                 character.id,
                 'character.edit.delete_confirm'|trans,

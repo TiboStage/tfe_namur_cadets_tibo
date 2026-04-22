@@ -1,59 +1,61 @@
 {% extends 'workshop/layout.html.twig' %}
-{% trans_default_domain 'workshop_interface' %}
-
-{% block title %}{{ 'projects.index.title'|trans }} — Scénart{% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
-
-        <header class="page-header">
+    <div class="projects-page">
+        {# Header #}
+        <div class="page-header">
             <div>
-                <h1>{{ 'projects.index.title'|trans }}</h1>
-                <p class="text-muted">{{ projects|length }} {{ 'projects.index.subtitle'|trans }}</p>
+                <h1>Mes projets</h1>
+                <p class="text-muted">{{ projects|length }} projet(s) au total</p>
             </div>
-            <a href="{{ path('app_project_new') }}" class="btn-creat">
-                {{ 'projects.index.btn_new'|trans }}
+            <a href="{{ path('app_project_new') }}" class="btn btn--cta-yellow">
+                {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }} Nouveau projet
             </a>
-        </header>
+        </div>
 
-        {% if projects is empty %}
-            <div class="empty-projects">
-                <p class="text-muted">{{ 'projects.index.empty'|trans }}</p>
-                <a href="{{ path('app_project_new') }}" class="btn-creat">
-                    {{ 'projects.index.empty_btn'|trans }}
-                </a>
-            </div>
-        {% else %}
+        {# Liste des projets #}
+        {% if projects is not empty %}
             <div class="projects-grid">
                 {% for project in projects %}
-                    <div class="project-card">
+                    <article class="project-card">
                         <div class="project-card-header">
-                            <div class="project-card-thumb">{{ project.title|first|upper }}</div>
-                            <span class="project-type-badge">{{ project.projectType }}</span>
-                        </div>
-                        <div class="project-card-body">
-                            <h3 class="project-card-title">{{ project.title }}</h3>
-                            <p class="project-card-desc text-muted">
-                                {{ project.description|default('...')|slice(0, 100) }}{% if project.description|length > 100 %}…{% endif %}
-                            </p>
-                        </div>
-                        <div class="project-card-footer">
-                        <span class="text-muted" style="font-size: 11px;">
-                            {{ 'projects.index.modified'|trans }} {{ project.updatedAt|date('d/m/Y') }}
-                        </span>
-                            <div class="project-card-actions">
-                                <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="btn-action-small">
-                                    {{ 'projects.index.btn_open'|trans }}
-                                </a>
-                                <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="btn-action-small">
-                                    {{ 'projects.index.btn_edit'|trans }}
-                                </a>
+                            <div class="project-icon">{{ project.title|first|upper }}</div>
+                            <div class="project-meta">
+                                <h3>
+                                    <a href="{{ path('app_project_show', {slug: project.slug}) }}">
+                                        {{ project.title }}
+                                    </a>
+                                </h3>
+                                <p class="text-muted small">
+                                    {{ project.projectType|upper }} • {{ project.updatedAt|date('d/m/Y') }}
+                                </p>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="project-card-body">
+                            {% if project.description %}
+                                <p>{{ project.description|slice(0, 120) }}{% if project.description|length > 120 %}...{% endif %}</p>
+                            {% else %}
+                                <p class="text-muted">Aucune description</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="project-card-footer">
+                            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="btn btn--sm btn--primary">
+                                Ouvrir
+                            </a>
+                            <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="btn btn--sm btn--ghost">
+                                {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
+                            </a>
+                        </div>
+                    </article>
                 {% endfor %}
             </div>
+        {% else %}
+            <div class="empty-state">
+                <p class="text-muted">Vous n'avez encore créé aucun projet.</p>
+                <a href="{{ path('app_project_new') }}" class="btn btn--primary">Créer votre premier projet</a>
+            </div>
         {% endif %}
-
     </div>
 {% endblock %}

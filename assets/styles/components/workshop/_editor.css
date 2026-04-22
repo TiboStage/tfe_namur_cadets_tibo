@@ -1,0 +1,235 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   ÉDITEUR DE SCÉNARIO — Layout 3 colonnes
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.editor-layout-3col {
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    height: calc(100vh - 60px); /* Hauteur totale moins la topbar */
+    overflow: hidden;
+}
+
+/* ─── SIDEBAR GAUCHE : Navigation narrative ──────────────────────────── */
+.sidebar-left {
+    background: var(--color-bg-card);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar-header h3 {
+    margin: 10px 0 0 0;
+    font-size: 16px;
+    color: var(--text-main);
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+}
+
+.btn-back:hover {
+    color: var(--color-primary);
+}
+
+/* ─── Arbre de navigation ──────────────────────────────────────────────*/
+.tree-nav {
+    padding: 15px 0;
+}
+
+.tree-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.tree-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-add-mini {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary);
+    color: var(--text-dark);
+    border-radius: 3px;
+    font-weight: 900;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-add-mini:hover {
+    transform: scale(1.1);
+}
+
+.tree-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.tree-item:hover {
+    background: rgba(255, 184, 0, 0.1);
+    color: var(--color-primary);
+}
+
+.tree-node {
+    margin-left: calc(var(--depth, 0) * 15px);
+}
+
+.tree-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    transition: 0.2s;
+}
+
+.tree-row:hover {
+    background: rgba(255, 184, 0, 0.05);
+}
+
+.tree-row.active {
+    background: rgba(255, 184, 0, 0.15);
+    border-left: 3px solid var(--color-primary);
+}
+
+.node-link {
+    flex: 1;
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.node-link:hover {
+    color: var(--color-primary);
+}
+
+/* ─── ZONE CENTRALE : Éditeur ──────────────────────────────────────────*/
+.editor-main {
+    background: #0f0f11;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.editor-header {
+    background: var(--color-bg-card);
+    border-bottom: 1px solid var(--color-border);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.editor-header h1 {
+    font-size: 18px;
+    margin: 0;
+    color: var(--text-main);
+}
+
+.save-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.editor-container {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+/* Feuille A4 blanche (comme dans ta maquette) */
+.paper-sheet {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #111;
+    padding: 60px 80px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+    line-height: 1.5;
+    outline: none;
+    cursor: text;
+}
+
+.paper-sheet:focus {
+    box-shadow: 0 10px 40px rgba(255, 184, 0, 0.3);
+}
+
+/* ─── SIDEBAR DROITE : Inspecteur ──────────────────────────────────────*/
+.sidebar-right {
+    background: var(--color-bg-card);
+    border-left: 1px solid var(--color-border);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.inspector-title {
+    font-size: 16px;
+    margin: 0 0 20px 0;
+    color: var(--text-main);
+}
+
+.inspector-section {
+    margin-bottom: 25px;
+}
+
+.inspector-section h4 {
+    font-size: 13px;
+    margin: 0 0 10px 0;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.inspector-cards {
+    background: rgba(255, 184, 0, 0.05);
+    border-left: 3px solid var(--color-primary);
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.small {
+    font-size: 12px;
+}
+
+.mt-4 {
+    margin-top: 20px;
+}

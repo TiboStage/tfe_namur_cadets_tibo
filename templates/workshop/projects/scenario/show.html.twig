@@ -1,0 +1,156 @@
+{% extends '../../layout.html.twig' %}
+
+{% block project_content %}
+    <div class="project-view">
+        {# ═══════════════════════════════════════════════════════════════════
+       NAVBAR SECONDAIRE
+       ═══════════════════════════════════════════════════════════════════ #}
+        <nav class="project-nav">
+            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="nav-item">
+                {{ ux_icon('lucide:layout-dashboard', {class: 'icon-xs'}) }} Dashboard
+            </a>
+            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}" class="nav-item active">
+                {{ ux_icon('lucide:pen-tool', {class: 'icon-xs'}) }} Manuscrit
+            </a>
+            <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="nav-item">
+                {{ ux_icon('lucide:users', {class: 'icon-xs'}) }} Personnages
+            </a>
+            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="nav-item">
+                {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }} Lieux
+            </a>
+            <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="nav-item">
+                {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }} Paramètres
+            </a>
+        </nav>
+
+        {# ═══════════════════════════════════════════════════════════════════
+       ÉDITEUR 3 COLONNES
+       ═══════════════════════════════════════════════════════════════════ #}
+        <div class="editor-layout-3col"
+             data-controller="fountain-editor"
+             data-fountain-editor-save-url-value="{{ path('app_manuscript_save', {
+                 project_slug: project.slug,
+                 id: element.id
+             }) }}"
+             data-fountain-editor-element-id-value="{{ element.id }}">
+
+            {# --- SIDEBAR GAUCHE : Navigation --- #}
+            <aside class="sidebar-left">
+                <div class="sidebar-header">
+                    <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}" class="btn-back">
+                        {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }} Retour
+                    </a>
+                    <h3>{{ project.title }}</h3>
+                </div>
+
+                <nav class="tree-nav">
+                    <div class="tree-group">
+                        <span class="tree-label">MANUSCRIT</span>
+                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}" class="btn-add-mini">+</a>
+                    </div>
+
+                    <div class="scenario-tree">
+                        {% for root in rootElements %}
+                            {{ _self.renderTree(root, project, element) }}
+                        {% else %}
+                            <p class="empty-msg">Aucun élément.</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="tree-group mt-4">
+                        <span class="tree-label">ENCYCLOPÉDIE</span>
+                    </div>
+                    <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="tree-item">
+                        {{ ux_icon('lucide:user', {class: 'icon-xs'}) }} Personnages
+                    </a>
+                    <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="tree-item">
+                        {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }} Lieux
+                    </a>
+                </nav>
+            </aside>
+
+            {# --- ZONE CENTRALE : Éditeur feuille A4 --- #}
+            <main class="editor-main">
+                <header class="editor-header">
+                    <h1>{{ element.title }}</h1>
+                    <div class="editor-actions">
+                    <span class="save-indicator" data-fountain-editor-target="saveIndicator">
+                        {{ ux_icon('lucide:check-circle', {class: 'icon-xs'}) }}
+                        Sauvegardé
+                    </span>
+                    </div>
+                </header>
+
+                <div class="editor-container">
+                    <div class="paper-sheet"
+                         contenteditable="true"
+                         data-fountain-editor-target="editor"
+                         spellcheck="false">
+                        {{ rawContent|raw }}
+                    </div>
+                </div>
+            </main>
+
+            {# --- SIDEBAR DROITE : Inspecteur --- #}
+            <aside class="sidebar-right">
+                <h3 class="inspector-title">Inspecteur</h3>
+
+                <div class="inspector-section">
+                    <h4>{{ ux_icon('lucide:users', {class: 'icon-xs'}) }} Personnages détectés</h4>
+                    <div class="inspector-cards">
+                        <p class="text-muted small">
+                            Les personnages mentionnés avec @ apparaîtront ici.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="inspector-section">
+                    <h4>{{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }} Lieux détectés</h4>
+                    <div class="inspector-cards">
+                        <p class="text-muted small">
+                            Les lieux mentionnés avec # apparaîtront ici.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="inspector-section">
+                    <h4>{{ ux_icon('lucide:sticky-note', {class: 'icon-xs'}) }} Notes</h4>
+                    <button class="btn btn--sm btn--ghost">Ajouter une note</button>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    {# ═══════════════════════════════════════════════════════════════════
+   MACRO ARBORESCENCE
+   ═══════════════════════════════════════════════════════════════════ #}
+    {% macro renderTree(item, project, currentElement) %}
+        <div class="tree-node depth-{{ item.depth }}">
+            <div class="tree-row {{ item.id == currentElement.id ? 'active' : '' }}">
+            <span class="node-icon">
+                {% if item.depth == 1 %}{{ ux_icon('lucide:folder', {class: 'icon-xs'}) }}
+                {% elseif item.depth == 2 %}{{ ux_icon('lucide:folder-open', {class: 'icon-xs'}) }}
+                {% else %}{{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}{% endif %}
+            </span>
+                <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: item.id}) }}" class="node-link">
+                    {{ item.title }}
+                </a>
+                {% if item.depth < 3 %}
+                    <a href="{{ path('app_manuscript_new', {
+                        project_slug: project.slug,
+                        depth: item.depth + 1,
+                        parent_id: item.id
+                    }) }}" class="btn-add-mini">+</a>
+                {% endif %}
+            </div>
+
+            {% if item.children is defined and item.children is not empty %}
+                <div class="node-children">
+                    {% for child in item.children %}
+                        {{ _self.renderTree(child, project, currentElement) }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endmacro %}
+{% endblock %}

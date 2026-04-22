@@ -3,15 +3,16 @@
 namespace App\Controller\Workshop;
 
 use App\Entity\Project;
+use App\Entity\ScenarioElement;
 use App\Form\ProjectFormType;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 
 #[IsGranted('ROLE_USER')]
 class ProjectController extends AbstractController
@@ -27,6 +28,7 @@ class ProjectController extends AbstractController
     public function index(): Response
     {
         $user = $this->getUser();
+
         $projects = $this->projectRepository->findBy(
             ['createdBy' => $user],
             ['updatedAt' => 'DESC']
@@ -52,7 +54,6 @@ class ProjectController extends AbstractController
 
             $this->addFlash('success', $this->translator->trans('project.flash.created', [], 'validators'));
 
-            // Correction ICI : on redirige vers le slug, pas l'ID
             return $this->redirectToRoute('app_project_show', [
                 'slug' => $project->slug,
             ]);
@@ -64,14 +65,34 @@ class ProjectController extends AbstractController
         ], new Response(null, $form->isSubmitted() ? 422 : 200));
     }
 
-    // Ajout de MapEntity pour forcer la recherche par Slug
+    /**
+     * Dashboard du projet avec stats et accès rapides
+     */
     public function show(
         #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
     ): Response {
         $this->checkProjectAccess($project, 'view');
 
+        // Stats du projet
+        $stats = [
+            'scenes_count'     => count($project->getScenarioElements()),
+            'characters_count' => count($project->getCharacters()),
+            'locations_count'  => count($project->getLocations()),
+            'last_update'      => $project->getUpdatedAt(),
+        ];
+
+        // Dernières modifications (top 5 éléments narratifs)
+        $recentUpdates = $this->em->getRepository(ScenarioElement::class)
+            ->findBy(
+                ['project' => $project],
+                ['updatedAt' => 'DESC'],
+                5
+            );
+
         return $this->render('workshop/projects/show.html.twig', [
-            'project' => $project,
+            'project'       => $project,
+            'stats'         => $stats,
+            'recentUpdates' => $recentUpdates,
         ]);
     }
 
@@ -89,7 +110,6 @@ class ProjectController extends AbstractController
 
             $this->addFlash('success', $this->translator->trans('project.flash.updated', [], 'validators'));
 
-            // Correction ICI : on redirige vers le slug
             return $this->redirectToRoute('app_project_show', [
                 'slug' => $project->slug,
             ]);
@@ -105,9 +125,8 @@ class ProjectController extends AbstractController
         Request $request,
         #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
     ): Response {
-        $this->checkProjectAccess($project, 'delete');
+        $this->checkProjectAccess($project, 'edit');
 
-        // On garde l'ID uniquement pour le token CSRF (c'est plus sûr car l'ID ne change jamais)
         if ($this->isCsrfTokenValid('delete_project_' . $project->getId(), $request->getPayload()->get('_token'))) {
             $this->em->remove($project);
             $this->em->flush();

@@ -29,7 +29,7 @@ class ScenarioElementController extends AbstractController
      * Affiche la hiérarchie narrative du projet.
      */
     public function index(
-        #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response {
         $this->checkProjectAccess($project, 'view');
 
@@ -46,7 +46,7 @@ class ScenarioElementController extends AbstractController
      */
     public function new(
         Request $request,
-        #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response {
         $this->checkProjectAccess($project, 'edit');
 
@@ -61,7 +61,9 @@ class ScenarioElementController extends AbstractController
 
             if (empty($title)) {
                 $this->addFlash('danger', 'Un titre est requis.');
-                return $this->redirectToRoute('app_scenario_index', ['project_id' => $project->getId()]);
+                return $this->redirectToRoute('app_scenario_index', [
+                    'project_slug' => $project->getSlug(),
+                ]);
             }
 
             $element = new ScenarioElement();
@@ -82,12 +84,14 @@ class ScenarioElementController extends AbstractController
             // Les scènes (has_content) ouvrent l'éditeur directement
             if ($depth >= 3) {
                 return $this->redirectToRoute('app_scenario_show', [
-                    'project_id' => $project->getId(),
-                    'id'         => $element->getId(),
+                    'project_slug' => $project->getSlug(),
+                    'id'           => $element->getId(),
                 ]);
             }
 
-            return $this->redirectToRoute('app_scenario_index', ['project_id' => $project->getId()]);
+            return $this->redirectToRoute('app_scenario_index', [
+                'project_slug' => $project->getSlug(),
+            ]);
         }
 
         return $this->render('workshop/scenario/new.html.twig', [
@@ -102,7 +106,7 @@ class ScenarioElementController extends AbstractController
      * Éditeur de scénario pour une scène.
      */
     public function show(
-        #[MapEntity(mapping: ['slug' => 'slug'])] Project $project,
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         #[MapEntity(id: 'id')] ScenarioElement $element
     ): Response {
         $this->checkProjectAccess($project, 'view');
@@ -131,7 +135,7 @@ class ScenarioElementController extends AbstractController
      */
     public function save(
         Request $request,
-        #[MapEntity(id: 'project_id')] Project $project,
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         #[MapEntity(id: 'id')] ScenarioElement $element
     ): JsonResponse {
         $this->checkProjectAccess($project, 'edit');
@@ -162,7 +166,7 @@ class ScenarioElementController extends AbstractController
      */
     public function delete(
         Request $request,
-        #[MapEntity(id: 'project_id')] Project $project,
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         #[MapEntity(id: 'id')] ScenarioElement $element
     ): Response {
         $this->checkProjectAccess($project, 'edit');
@@ -173,7 +177,9 @@ class ScenarioElementController extends AbstractController
             $this->addFlash('success', 'Élément supprimé.');
         }
 
-        return $this->redirectToRoute('app_scenario_index', ['project_id' => $project->getId()]);
+        return $this->redirectToRoute('app_scenario_index', [
+            'project_slug' => $project->getSlug(),
+        ]);
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────

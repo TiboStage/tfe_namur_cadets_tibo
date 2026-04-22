@@ -7,12 +7,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ORM\Table(name: 'project')]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(
+    fields: ['slug'],
+    message: 'project.slug.already_exists',
+)]
 class Project
 {
     private const VALID_TYPES      = ['film', 'serie', 'jeu_video', 'custom'];
@@ -27,31 +31,59 @@ class Project
     // ─── Propriétés avec Hooks (PHP 8.4) ──────────────────────────────────
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'project.title.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: 'project.title.too_short',
+        maxMessage: 'project.title.too_long',
+    )]
     public string $title = '' {
-        set => $this->title = trim((string)$value);
+        set => $this->title = trim((string) $value);
     }
 
     #[ORM\Column(length: 255, unique: true)]
-    public string $slug = '';
+    #[Assert\Regex(
+        pattern: '/^[a-z0-9-]+$/',
+        message: 'project.slug.invalid_format',
+    )]
+    public string $slug = '' {
+        set => $this->slug = strtolower(trim((string) $value));
+    }
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(
+        max: 5000,
+        maxMessage: 'project.description.too_long',
+    )]
     public string $description = '' {
-        set => $this->description = trim((string)$value);
+        set => $this->description = trim((string) $value);
     }
 
     #[ORM\Column(length: 50)]
+    #[Assert\Choice(
+        choices: ['film', 'serie', 'jeu_video', 'custom'],
+        message: 'project.type.invalid',
+    )]
     public string $projectType = 'custom' {
         set {
-            if (!in_array($value, self::VALID_TYPES)) throw new \InvalidArgumentException("Type invalide");
+            if (!in_array($value, self::VALID_TYPES, true)) {
+                throw new \InvalidArgumentException("Type invalide : $value");
+            }
             $this->projectType = $value;
         }
     }
 
     #[ORM\Column(length: 50)]
+    #[Assert\Choice(
+        choices: ['draft', 'in_progress', 'completed', 'archived'],
+        message: 'project.status.invalid',
+    )]
     public string $status = 'draft' {
         set {
-            if (!in_array($value, self::VALID_STATUSES)) throw new \InvalidArgumentException("Statut invalide");
+            if (!in_array($value, self::VALID_STATUSES, true)) {
+                throw new \InvalidArgumentException("Statut invalide : $value");
+            }
             $this->status = $value;
         }
     }
@@ -59,7 +91,9 @@ class Project
     #[ORM\Column(length: 50)]
     public string $moderationStatus = 'clear' {
         set {
-            if (!in_array($value, self::VALID_MODERATION)) throw new \InvalidArgumentException("Modération invalide");
+            if (!in_array($value, self::VALID_MODERATION, true)) {
+                throw new \InvalidArgumentException("Modération invalide : $value");
+            }
             $this->moderationStatus = $value;
         }
     }
@@ -70,10 +104,10 @@ class Project
     #[ORM\Column]
     public int $reportCount = 0;
 
-    #[ORM\Column(type: Types::JSON)]
+    #[ORM\Column(type: 'jsonb')]
     public array $customStructure = [];
 
-    #[ORM\Column(type: Types::JSON)]
+    #[ORM\Column(type: 'jsonb')]
     public array $settings = [];
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -93,13 +127,18 @@ class Project
     private Collection $scenarioElements;
 
     #[ORM\OneToMany(targetEntity: Character::class, mappedBy: 'project', cascade: ['remove'])]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $characters;
 
     #[ORM\OneToMany(targetEntity: Location::class, mappedBy: 'project', cascade: ['remove'])]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $locations;
 
     #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'project', cascade: ['remove'])]
     private Collection $tags;
+
+    #[ORM\OneToMany(targetEntity: ProjectMember::class, mappedBy: 'project', cascade: ['persist', 'remove'])]
+    private Collection $projectMembers;
 
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
@@ -107,10 +146,7 @@ class Project
     #[ORM\Column]
     private \DateTimeImmutable $updatedAt;
 
-    #[ORM\OneToMany(targetEntity: ProjectMember::class, mappedBy: 'project', cascade: ['persist', 'remove'])]
-    private Collection $projectMembers;
-
-    // ─── Logique et Compatibilité ───────────────────────────────────────────
+    // ─── Constructeur ───────────────────────────────────────────────────────
 
     public function __construct()
     {
@@ -119,9 +155,12 @@ class Project
         $this->characters       = new ArrayCollection();
         $this->locations        = new ArrayCollection();
         $this->tags             = new ArrayCollection();
+        $this->projectMembers   = new ArrayCollection();
         $this->createdAt        = new \DateTimeImmutable();
         $this->updatedAt        = new \DateTimeImmutable();
     }
+
+    // ─── Lifecycle Callbacks ────────────────────────────────────────────────
 
     #[ORM\PrePersist]
     public function onPrePersist(): void
@@ -129,14 +168,9 @@ class Project
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
 
+        // Génération automatique du slug si vide
         if (empty($this->slug)) {
-            $slugger = new AsciiSlugger();
-            $baseSlug = strtolower($slugger->slug($this->title));
-            try {
-                $this->slug = $baseSlug . '-' . bin2hex(random_bytes(3));
-            } catch (\Exception) {
-                $this->slug = $baseSlug . '-' . uniqid();
-            }
+            $this->slug = $this->generateSlug($this->title);
         }
     }
 
@@ -146,16 +180,11 @@ class Project
         $this->updatedAt = new \DateTimeImmutable();
     }
 
-    // --- Getters indispensables (Avec twig et les traits) ---
+    // ─── Getters (requis pour Twig, Forms, ProjectAccessTrait) ─────────────
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function isPublic(): bool
-    {
-        return $this->isPublic;
     }
 
     public function getSlug(): string
@@ -163,42 +192,187 @@ class Project
         return $this->slug;
     }
 
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getProjectType(): string
+    {
+        return $this->projectType;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function getModerationStatus(): string
+    {
+        return $this->moderationStatus;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function getReportCount(): int
+    {
+        return $this->reportCount;
+    }
+
+    public function getCustomStructure(): array
+    {
+        return $this->customStructure;
+    }
+
+    public function getSettings(): array
+    {
+        return $this->settings;
+    }
+
+    public function getCoverFilename(): ?string
+    {
+        return $this->coverFilename;
+    }
+
     public function getCreatedBy(): ?User
     {
         return $this->createdBy;
     }
 
-    public function getCharacters(): Collection
+    public function getCreatedAt(): \DateTimeImmutable
     {
-        return $this->characters;
+        return $this->createdAt;
     }
 
-    public function getLocations(): Collection
+    public function getUpdatedAt(): \DateTimeImmutable
     {
-        return $this->locations;
+        return $this->updatedAt;
     }
 
+    /**
+     * @return Collection<int, ProjectFeature>
+     */
+    public function getProjectFeatures(): Collection
+    {
+        return $this->projectFeatures;
+    }
+
+    /**
+     * @return Collection<int, ScenarioElement>
+     */
     public function getScenarioElements(): Collection
     {
         return $this->scenarioElements;
     }
 
-    // --- Setters ---
+    /**
+     * @return Collection<int, Character>
+     */
+    public function getCharacters(): Collection
+    {
+        return $this->characters;
+    }
+
+    /**
+     * @return Collection<int, Location>
+     */
+    public function getLocations(): Collection
+    {
+        return $this->locations;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @return Collection<int, ProjectMember>
+     */
+    public function getProjectMembers(): Collection
+    {
+        return $this->projectMembers;
+    }
+
+    // ─── Setters ────────────────────────────────────────────────────────────
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
     public function setCreatedBy(?User $user): self
     {
         $this->createdBy = $user;
         return $this;
     }
 
-    public function setIsPublic(bool $v): self
+    public function setIsPublic(bool $isPublic): self
     {
-        $this->isPublic = $v;
+        $this->isPublic = $isPublic;
         return $this;
     }
 
-    public function setSlug(string $v): self
+    public function setCoverFilename(?string $filename): self
     {
-        $this->slug = $v;
+        $this->coverFilename = $filename;
         return $this;
+    }
+
+    public function setModerationStatus(string $status): self
+    {
+        $this->moderationStatus = $status;
+        return $this;
+    }
+
+    public function incrementReportCount(): self
+    {
+        $this->reportCount++;
+        return $this;
+    }
+
+    // ─── Helpers ────────────────────────────────────────────────────────────
+
+    /**
+     * Génère un slug unique à partir d'un titre.
+     * Format : {slug-base}-{8-chars-alphanumeric}
+     * Exemple : "Les Ombres de Bruxelles" → "les-ombres-de-bruxelles-k9m2p8x4"
+     */
+    private function generateSlug(string $title): string
+    {
+        // Normalisation : minuscules, accents virés, espaces → tirets
+        $slug = strtolower(trim($title));
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $slug);
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+        $slug = trim($slug, '-');
+
+        // Suffixe random 8 caractères (alphanumeric)
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+        $suffix = '';
+        for ($i = 0; $i < 8; $i++) {
+            $suffix .= $chars[random_int(0, 35)];
+        }
+
+        return $slug . '-' . $suffix;
+    }
+
+    /**
+     * Vérifie si l'utilisateur donné est le propriétaire du projet.
+     */
+    public function isOwnedBy(?User $user): bool
+    {
+        return $user !== null && $this->createdBy?->getId() === $user->getId();
     }
 }

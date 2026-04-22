@@ -1,0 +1,123 @@
+{% extends '../../layout.html.twig' %}
+
+{% block project_content %}
+    <div class="project-view">
+        {# ═══════════════════════════════════════════════════════════════════
+       NAVBAR SECONDAIRE
+       ═══════════════════════════════════════════════════════════════════ #}
+        <nav class="project-nav">
+            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="nav-item">
+                {{ ux_icon('lucide:layout-dashboard', {class: 'icon-xs'}) }} Dashboard
+            </a>
+            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}" class="nav-item active">
+                {{ ux_icon('lucide:pen-tool', {class: 'icon-xs'}) }} Manuscrit
+            </a>
+            <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="nav-item">
+                {{ ux_icon('lucide:users', {class: 'icon-xs'}) }} Personnages
+            </a>
+            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="nav-item">
+                {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }} Lieux
+            </a>
+            <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="nav-item">
+                {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }} Paramètres
+            </a>
+        </nav>
+
+        {# ═══════════════════════════════════════════════════════════════════
+       LAYOUT 2 COLONNES : Sidebar + Contenu
+       ═══════════════════════════════════════════════════════════════════ #}
+        <div class="workshop-wrapper">
+            {# --- SIDEBAR GAUCHE : NAVIGATION NARRATIVE --- #}
+            <aside class="workshop-sidebar-left">
+                <div class="sidebar-header">
+                    <h3>{{ project.title }}</h3>
+                    <small>{{ project.projectType|upper }}</small>
+                </div>
+
+                <nav class="tree-nav">
+                    <div class="tree-group">
+                        <span class="tree-label">MANUSCRIT</span>
+                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}" class="btn-add-mini">+</a>
+                    </div>
+
+                    <div class="scenario-tree">
+                        {% for root in rootElements %}
+                            {{ _self.renderTree(root, project) }}
+                        {% else %}
+                            <p class="empty-msg">Aucun élément narratif.</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="tree-group mt-4">
+                        <span class="tree-label">ENCYCLOPÉDIE</span>
+                    </div>
+                    <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="tree-item">
+                        {{ ux_icon('lucide:user', {class: 'icon-xs'}) }} Personnages
+                    </a>
+                    <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="tree-item">
+                        {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }} Lieux
+                    </a>
+                </nav>
+            </aside>
+
+            {# --- ZONE CENTRALE --- #}
+            <main class="workshop-main-content">
+                <header class="content-header">
+                    <h1>Tableau de bord narratif</h1>
+                    <div class="header-actions">
+                        <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="btn btn--ghost btn--sm">
+                            {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }} Retour
+                        </a>
+                    </div>
+                </header>
+
+                <div class="dashboard-grid">
+                    <section class="dashboard-card">
+                        <h4>Dernières modifications</h4>
+                        <p class="text-muted">Sélectionnez un élément dans l'arborescence à gauche pour commencer l'écriture.</p>
+                    </section>
+
+                    <section class="dashboard-card card-yellow">
+                        <h4>Astuce</h4>
+                        <p>Créez d'abord vos personnages et lieux pour pouvoir les mentionner avec @ et # dans vos scènes.</p>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    {# ═══════════════════════════════════════════════════════════════════
+   MACRO ARBORESCENCE
+   ═══════════════════════════════════════════════════════════════════ #}
+    {% macro renderTree(element, project) %}
+        <div class="tree-node depth-{{ element.depth }}">
+            <div class="tree-row">
+            <span class="node-icon">
+                {% if element.depth == 1 %}
+                    {{ ux_icon('lucide:folder', {class: 'icon-xs'}) }}
+                {% elseif element.depth == 2 %}
+                    {{ ux_icon('lucide:folder-open', {class: 'icon-xs'}) }}
+                {% else %}
+                    {{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}
+                {% endif %}
+            </span>
+                <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: element.id}) }}" class="node-link">
+                    {{ element.title }}
+                </a>
+                <div class="node-ops">
+                    {% if element.depth < 3 %}
+                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: element.depth + 1, parent_id: element.id}) }}" class="btn-add-mini">+</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if element.children is not empty %}
+                <div class="node-children">
+                    {% for child in element.children %}
+                        {{ _self.renderTree(child, project) }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endmacro %}
+{% endblock %}

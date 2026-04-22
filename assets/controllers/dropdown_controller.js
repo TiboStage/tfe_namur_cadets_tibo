@@ -4,19 +4,25 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['menu'];
 
-    toggle(event) {
-        event.preventDefault();
-        event.stopPropagation(); // <--- TRÈS IMPORTANT : empêche de déclencher le "hide" du window
-
-        this.menuTarget.classList.toggle('hidden');
-        console.log("Menu basculé ! État hidden :", this.menuTarget.classList.contains('hidden'));
+    connect() {
+        this.boundHide = this.hide.bind(this);
     }
 
-    hide(event) {
-        // Si on clique sur la fenêtre mais pas sur le dropdown lui-même
-        if (!this.element.contains(event.target)) {
-            this.menuTarget.classList.add('hidden');
-            console.log("Menu fermé par clic extérieur");
+    toggle(event) {
+        event.stopPropagation();
+        this.menuTarget.classList.toggle('show');
+
+        if (this.menuTarget.classList.contains('show')) {
+            document.addEventListener('click', this.boundHide);
         }
+    }
+
+    hide() {  // ← Renommé de close() à hide()
+        this.menuTarget.classList.remove('show');
+        document.removeEventListener('click', this.boundHide);
+    }
+
+    disconnect() {
+        document.removeEventListener('click', this.boundHide);
     }
 }
