@@ -35,7 +35,7 @@ class ScenarioElementController extends AbstractController
 
         $rootElements = $this->scenarioRepo->findRootElements($project);
 
-        return $this->render('workshop/scenario/index.html.twig', [
+        return $this->render('workshop/projects/scenario/index.html.twig', [
             'project'      => $project,
             'rootElements' => $rootElements,
         ]);
@@ -94,7 +94,7 @@ class ScenarioElementController extends AbstractController
             ]);
         }
 
-        return $this->render('workshop/scenario/new.html.twig', [
+        return $this->render('workshop/projects/scenario/new.html.twig', [
             'project'     => $project,
             'parent'      => $parent,
             'depth'       => $depth,
@@ -121,7 +121,7 @@ class ScenarioElementController extends AbstractController
         // Charge tous les éléments racine pour la sidebar gauche
         $rootElements = $this->scenarioRepo->findRootElementsWithChildren($project);
 
-        return $this->render('workshop/scenario/show.html.twig', [
+        return $this->render('workshop/projects/scenario/show.html.twig', [
             'project'      => $project,
             'element'      => $element,
             'rawContent'   => $rawContent,

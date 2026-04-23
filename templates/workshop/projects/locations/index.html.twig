@@ -1,4 +1,4 @@
-{% extends '../layout.html.twig' %}
+{% extends 'workshop/projects/layout.html.twig' %}
 {% trans_default_domain 'workshop_interface' %}
 
 {% block title %}{{ 'location.index.title'|trans }} — {{ project.title }}{% endblock %}
@@ -8,10 +8,10 @@
 
     <header class="page-header">
         <div>
-            <a href="{{ path('app_project_show', {islug: project.slug}) }}" class="link-back">← {{ project.title }}</a>
+            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="link-back">← {{ project.title }}</a>
             <h1>{{ 'location.index.title'|trans }} <span class="text-muted" style="font-size: 16px; font-weight: 400;">{{ locations|length }}</span></h1>
         </div>
-        <a href="{{ path('app_location_new', {pproject_slug: project.slug}) }}" class="btn-creat">
+        <a href="{{ path('app_location_new', {project_slug: project.slug}) }}" class="btn-creat">
             {{ 'location.index.new_btn'|trans }}
         </a>
     </header>
