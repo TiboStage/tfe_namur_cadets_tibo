@@ -1,0 +1,28 @@
+# SCÉNART — Traductions Dashboard (FR)
+# Statistiques et interface du tableau de bord principal
+
+dashboard:
+    title: 'Tableau de bord'
+    welcome: 'Bienvenue sur votre espace de travail'
+
+    stats:
+        characters: 'Personnages créés'
+        locations: 'Lieux créés'
+        scenes: 'Scènes écrites'
+        projects: 'Projets actifs'
+
+    recent_projects:
+        title: 'Projets récents'
+        no_projects: 'Aucun projet pour le moment'
+        create_first: 'Créez votre premier projet pour commencer'
+        view_all: 'Voir tous les projets'
+
+    activity:
+        title: 'Activité récente'
+        no_activity: 'Aucune activité pour le moment'
+
+    quick_actions:
+        new_project: 'Nouveau projet'
+        new_character: 'Nouveau personnage'
+        new_location: 'Nouveau lieu'
+        new_scene: 'Nouvelle scène'

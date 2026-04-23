@@ -1,5 +1,29 @@
 <?php
 
+/**
+ * SCÉNART — SecurityController
+ *
+ * Gère l'authentification des utilisateurs (connexion et déconnexion).
+ *
+ * FONCTIONNALITÉS :
+ * - Page de connexion/inscription fusionnée (auth.html.twig)
+ * - Toast de bienvenue à la connexion réussie
+ * - Toast d'au revoir à la déconnexion
+ * - Redirection automatique si déjà connecté
+ *
+ * ROUTES :
+ * - /login (app_login) : Affiche le formulaire de connexion
+ * - /logout (app_logout) : Déconnecte l'utilisateur (géré par Symfony Security)
+ *
+ * NOTES TECHNIQUES :
+ * - Le nom app_login est obligatoire (Symfony le cherche par défaut)
+ * - La méthode logout() est interceptée par security.yaml, elle ne s'exécute jamais
+ * - Les toasts sont ajoutés via EventSubscriber qui écoute les événements de sécurité
+ *
+ * @author Thibault (SCÉNART)
+ * @date Avril 2026
+ */
+
 namespace App\Controller\Website;
 
 use App\Entity\User;
@@ -11,7 +35,18 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    // Note : On garde le nom app_login car c'est celui que Symfony cherche par défaut
+    /**
+     * Page de connexion / inscription
+     *
+     * Affiche un formulaire fusionné contenant :
+     * - Connexion (Login) à gauche
+     * - Inscription (Register) à droite
+     *
+     * Si l'utilisateur est déjà connecté, il est redirigé vers le dashboard.
+     *
+     * @param AuthenticationUtils $authenticationUtils Service pour récupérer les erreurs de login
+     * @return Response La page d'authentification
+     */
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -25,11 +60,10 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         // 3. Gestion de la partie INSCRIPTION (Register)
-        // On crée l'objet User et le formulaire pour l'envoyer à la vue
         $user = new User();
         $registrationForm = $this->createForm(RegistrationFormType::class, $user);
 
-        // 4. On envoie tout au template fusionné
+        // 4. Rendu du template fusionné
         return $this->render('website/auth/auth.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
@@ -37,6 +71,16 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * Déconnexion de l'utilisateur
+     *
+     * Cette méthode ne s'exécute JAMAIS car elle est interceptée par Symfony Security
+     * (configuré dans config/packages/security.yaml).
+     *
+     * Le toast d'au revoir est ajouté via LoginSuccessListener / LogoutSuccessListener.
+     *
+     * @throws \LogicException Toujours levée (méthode jamais exécutée)
+     */
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {

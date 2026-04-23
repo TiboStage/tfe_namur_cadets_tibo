@@ -1,0 +1,48 @@
+# SCÉNART — Character Forms Translations (EN)
+# Character creation and editing
+
+character:
+    title:
+        new: 'Create a character'
+        edit: 'Edit character'
+
+    form:
+        name:
+            label: 'Character name'
+            placeholder: 'Ex: John Doe, The Mysterious Stranger...'
+            help: 'The main name of your character'
+
+        aliases:
+            label: 'Aliases'
+            placeholder: 'Nicknames, pseudonyms, other names...'
+            help: 'Comma-separated. Ex: JD, The Boss, Mr. X'
+
+        role:
+            label: 'Role'
+            placeholder: 'Ex: Protagonist, Antagonist, Mentor...'
+            help: 'The narrative function of the character'
+
+        description:
+            label: 'Description'
+            placeholder: 'Physical appearance, personality traits...'
+            help: 'Detailed description of the character'
+
+        backstory:
+            label: 'Backstory'
+            placeholder: 'Past, motivations, defining events...'
+            help: 'The background and psychology of the character'
+
+        notes:
+            label: 'Additional notes'
+            placeholder: 'Extra details, random ideas...'
+            help: 'All your notes about this character'
+
+        submit_new: 'Create character'
+        submit_edit: 'Save changes'
+        cancel: 'Cancel'
+
+    flash:
+        created: 'Character created successfully!'
+        updated: 'Character updated successfully!'
+        deleted: 'Character deleted successfully!'
+        error: 'An error occurred while saving'

@@ -1,0 +1,42 @@
+# SCÉNART — Flash Messages (EN)
+# Toast messages: login, validation, errors
+
+flash:
+    # Login / Logout
+    auth:
+        welcome: 'Welcome {firstName}!'
+        welcome_back: 'Welcome back {firstName}!'
+        logout: 'See you soon!'
+        logout_success: 'You are now logged out'
+
+    # Form validation
+    validation:
+        error: 'Please fix the errors before submitting'
+        required_fields: 'All required fields must be filled'
+        invalid_email: 'Email address is not valid'
+        password_mismatch: 'Passwords do not match'
+
+    # Generic success
+    success:
+        saved: 'Saved successfully!'
+        created: 'Created successfully!'
+        updated: 'Updated successfully!'
+        deleted: 'Deleted successfully!'
+
+    # Generic errors
+    error:
+        generic: 'An error occurred'
+        not_found: 'Item not found'
+        access_denied: 'Access denied'
+        server_error: 'Server error, please try again'
+
+    # Warnings
+    warning:
+        unsaved_changes: 'Unsaved changes'
+        confirm_delete: 'Are you sure you want to delete?'
+
+    # Info
+    info:
+        loading: 'Loading...'
+        processing: 'Processing...'
+        saved_draft: 'Draft saved automatically'

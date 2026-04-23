@@ -1,0 +1,48 @@
+# SCÉNART — Traductions Formulaires Personnages (FR)
+# Création et édition de personnages
+
+character:
+    title:
+        new: 'Créer un personnage'
+        edit: 'Modifier le personnage'
+
+    form:
+        name:
+            label: 'Nom du personnage'
+            placeholder: 'Ex: Jean Dupont, Le Mystérieux Inconnu...'
+            help: 'Le nom principal de votre personnage'
+
+        aliases:
+            label: 'Alias'
+            placeholder: 'Surnoms, pseudonymes, autres noms...'
+            help: 'Séparés par des virgules. Ex: JD, Le Boss, Monsieur X'
+
+        role:
+            label: 'Rôle'
+            placeholder: 'Ex: Protagoniste, Antagoniste, Mentor...'
+            help: 'La fonction narrative du personnage'
+
+        description:
+            label: 'Description'
+            placeholder: 'Apparence physique, traits de personnalité...'
+            help: 'Description détaillée du personnage'
+
+        backstory:
+            label: 'Histoire personnelle'
+            placeholder: 'Passé, motivations, événements marquants...'
+            help: 'Le background et la psychologie du personnage'
+
+        notes:
+            label: 'Notes additionnelles'
+            placeholder: 'Détails supplémentaires, idées en vrac...'
+            help: 'Toutes vos notes concernant ce personnage'
+
+        submit_new: 'Créer le personnage'
+        submit_edit: 'Enregistrer les modifications'
+        cancel: 'Annuler'
+
+    flash:
+        created: 'Personnage créé avec succès !'
+        updated: 'Personnage modifié avec succès !'
+        deleted: 'Personnage supprimé avec succès !'
+        error: 'Une erreur est survenue lors de la sauvegarde'
