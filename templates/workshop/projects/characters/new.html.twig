@@ -1,6 +1,5 @@
 {% extends 'workshop/projects/layout.html.twig' %}
 {% trans_default_domain 'workshop_interface' %}
-{% import 'workshop/_macros/form_field.html.twig' as forms %}
 
 {% block title %}{{ 'character.new.title'|trans }} — {{ project.title }}{% endblock %}
 
@@ -9,7 +8,9 @@
 
         <header class="page-header">
             <div>
-                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="link-back">{{ 'character.new.back'|trans }}</a>
+                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="link-back">
+                    {{ 'character.new.back'|trans }}
+                </a>
                 <h1>{{ 'character.new.title'|trans }}</h1>
             </div>
         </header>
@@ -32,74 +33,95 @@
                 <div>
                     <div class="form-section-title">{{ 'character.form.section_identity'|trans }}</div>
 
-                    {{ forms.field(form.name,
-                        'character.form.name'|trans,
-                        required=true,
-                        placeholder='character.form.name_placeholder'|trans
-                    ) }}
+                    {# AVANT: forms.field() → APRÈS: form_row() #}
+                    {{ form_row(form.name, {
+                        'label': 'character.form.name'|trans,
+                        'attr': {
+                            'placeholder': 'character.form.name_placeholder'|trans
+                        }
+                    }) }}
 
                     <div class="form-row-two">
-                        {{ forms.field(form.firstName,
-                            'character.form.firstname'|trans,
-                            placeholder='character.form.firstname_placeholder'|trans
-                        ) }}
-                        {{ forms.field(form.lastName,
-                            'character.form.lastname'|trans,
-                            placeholder='character.form.lastname_placeholder'|trans
-                        ) }}
+                        {{ form_row(form.firstName, {
+                            'label': 'character.form.firstname'|trans,
+                            'attr': {
+                                'placeholder': 'character.form.firstname_placeholder'|trans
+                            }
+                        }) }}
+                        {{ form_row(form.lastName, {
+                            'label': 'character.form.lastname'|trans,
+                            'attr': {
+                                'placeholder': 'character.form.lastname_placeholder'|trans
+                            }
+                        }) }}
                     </div>
 
-                    {{ forms.field(form.nickname,
-                        'character.form.nickname'|trans,
-                        placeholder='character.form.nickname_placeholder'|trans
-                    ) }}
+                    {{ form_row(form.nickname, {
+                        'label': 'character.form.nickname'|trans,
+                        'attr': {
+                            'placeholder': 'character.form.nickname_placeholder'|trans
+                        }
+                    }) }}
 
-                    {{ forms.select(form.role,
-                        'character.form.role'|trans,
-                        required=true
-                    ) }}
+                    {{ form_row(form.role, {
+                        'label': 'character.form.role'|trans
+                    }) }}
 
-                    {{ forms.textarea(form.description,
-                        'character.form.description'|trans,
-                        placeholder='character.form.description_placeholder'|trans,
-                        rows=3
-                    ) }}
+                    {{ form_row(form.description, {
+                        'label': 'character.form.description'|trans,
+                        'attr': {
+                            'placeholder': 'character.form.description_placeholder'|trans,
+                            'rows': 3
+                        }
+                    }) }}
                 </div>
 
                 {# ── Colonne droite — Psychologie ──────────────────────────────── #}
                 <div>
                     <div class="form-section-title">{{ 'character.form.section_psychology'|trans }}</div>
 
-                    {{ forms.textarea(form.biography,
-                        'character.form.biography'|trans,
-                        placeholder='character.form.biography_placeholder'|trans,
-                        rows=5
-                    ) }}
+                    {{ form_row(form.biography, {
+                        'label': 'character.form.biography'|trans,
+                        'attr': {
+                            'placeholder': 'character.form.biography_placeholder'|trans,
+                            'rows': 5
+                        }
+                    }) }}
 
-                    {{ forms.textarea(form.goals,
-                        'character.form.goals'|trans,
-                        placeholder='character.form.goals_placeholder'|trans,
-                        rows=3
-                    ) }}
+                    {{ form_row(form.goals, {
+                        'label': 'character.form.goals'|trans,
+                        'attr': {
+                            'placeholder': 'character.form.goals_placeholder'|trans,
+                            'rows': 3
+                        }
+                    }) }}
 
-                    {{ forms.textarea(form.motivations,
-                        'character.form.motivations'|trans,
-                        placeholder='character.form.motivations_placeholder'|trans,
-                        rows=3
-                    ) }}
+                    {{ form_row(form.motivations, {
+                        'label': 'character.form.motivations'|trans,
+                        'attr': {
+                            'placeholder': 'character.form.motivations_placeholder'|trans,
+                            'rows': 3
+                        }
+                    }) }}
 
-                    {{ forms.textarea(form.characterArc,
-                        'character.form.arc'|trans,
-                        placeholder='character.form.arc_placeholder'|trans,
-                        rows=3
-                    ) }}
+                    {{ form_row(form.characterArc, {
+                        'label': 'character.form.arc'|trans,
+                        'attr': {
+                            'placeholder': 'character.form.arc_placeholder'|trans,
+                            'rows': 3
+                        }
+                    }) }}
                 </div>
 
             </div>
 
             <div class="form-actions">
-                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="btn-export">{{ 'character.new.cancel'|trans }}</a>
-                <button type="submit" class="btn-creat">{{ 'character.new.submit'|trans }}</button>
+                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="btn-export">
+                    {{ 'character.new.cancel'|trans }}
+                </a>
+                <button type="submit" class="btn-creat">
+                    {{ 'character.new.submit'|trans }}
+                </button>
             </div>
 
             {{ form_end(form) }}

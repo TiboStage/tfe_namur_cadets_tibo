@@ -1,15 +1,16 @@
 {% extends 'workshop/projects/layout.html.twig' %}
 {% trans_default_domain 'workshop_interface' %}
-{% import 'workshop/_macros/form_field.html.twig' as forms %}
 
 {% block title %}{{ 'character.edit.title'|trans }} {{ character.name }} — {{ project.title }}{% endblock %}
 
-{% block content %}
+{% block project_content %}
     <div class="dashboard-container">
 
         <header class="page-header">
             <div>
-                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="link-back">← {{ character.name }}</a>
+                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="link-back">
+                    ← {{ character.name }}
+                </a>
                 <h1>{{ 'character.edit.title'|trans }}</h1>
             </div>
         </header>
@@ -32,46 +33,85 @@
                 <div>
                     <div class="form-section-title">{{ 'character.form.section_identity'|trans }}</div>
 
-                    {{ forms.field(form.name, 'character.form.name'|trans, required=true) }}
+                    {{ form_row(form.name, {
+                        'label': 'character.form.name'|trans
+                    }) }}
 
                     <div class="form-row-two">
-                        {{ forms.field(form.firstName, 'character.form.firstname'|trans) }}
-                        {{ forms.field(form.lastName, 'character.form.lastname'|trans) }}
+                        {{ form_row(form.firstName, {
+                            'label': 'character.form.firstname'|trans
+                        }) }}
+                        {{ form_row(form.lastName, {
+                            'label': 'character.form.lastname'|trans
+                        }) }}
                     </div>
 
-                    {{ forms.field(form.nickname, 'character.form.nickname'|trans) }}
-                    {{ forms.select(form.role, 'character.form.role'|trans, required=true) }}
-                    {{ forms.textarea(form.description, 'character.form.description'|trans, rows=3) }}
+                    {{ form_row(form.nickname, {
+                        'label': 'character.form.nickname'|trans
+                    }) }}
+
+                    {{ form_row(form.role, {
+                        'label': 'character.form.role'|trans
+                    }) }}
+
+                    {{ form_row(form.description, {
+                        'label': 'character.form.description'|trans,
+                        'attr': {'rows': 3}
+                    }) }}
                 </div>
 
                 {# ── Colonne droite — Psychologie ──────────────────────────────── #}
                 <div>
                     <div class="form-section-title">{{ 'character.form.section_psychology'|trans }}</div>
 
-                    {{ forms.textarea(form.biography, 'character.form.biography'|trans, rows=5) }}
-                    {{ forms.textarea(form.goals, 'character.form.goals'|trans, rows=3) }}
-                    {{ forms.textarea(form.motivations, 'character.form.motivations'|trans, rows=3) }}
-                    {{ forms.textarea(form.characterArc, 'character.form.arc'|trans, rows=3) }}
+                    {{ form_row(form.biography, {
+                        'label': 'character.form.biography'|trans,
+                        'attr': {'rows': 5}
+                    }) }}
+
+                    {{ form_row(form.goals, {
+                        'label': 'character.form.goals'|trans,
+                        'attr': {'rows': 3}
+                    }) }}
+
+                    {{ form_row(form.motivations, {
+                        'label': 'character.form.motivations'|trans,
+                        'attr': {'rows': 3}
+                    }) }}
+
+                    {{ form_row(form.characterArc, {
+                        'label': 'character.form.arc'|trans,
+                        'attr': {'rows': 3}
+                    }) }}
                 </div>
 
             </div>
 
             <div class="form-actions">
-                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="btn-export">{{ 'character.edit.cancel'|trans }}</a>
-                <button type="submit" class="btn-creat">{{ 'character.edit.submit'|trans }}</button>
+                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="btn-export">
+                    {{ 'character.edit.cancel'|trans }}
+                </a>
+                <button type="submit" class="btn-creat">
+                    {{ 'character.edit.submit'|trans }}
+                </button>
             </div>
 
             {{ form_end(form) }}
 
-            {{ forms.danger_zone(
-                path('app_character_delete', {project_slug: project.slug, id: character.id}),
-                'delete_character_',
-                character.id,
-                'character.edit.delete_confirm'|trans,
-                'character.edit.delete_btn'|trans,
-                'character.edit.danger_zone'|trans,
-                'character.edit.danger_desc'|trans
-            ) }}
+            {# ── DANGER ZONE (suppression) ──────────────────────────────────── #}
+            <div class="danger-zone">
+                <div class="danger-zone-header">
+                    <h3>{{ 'character.edit.danger_zone'|trans }}</h3>
+                    <p>{{ 'character.edit.danger_desc'|trans }}</p>
+                </div>
+                <form method="post" action="{{ path('app_character_delete', {project_slug: project.slug, id: character.id}) }}"
+                      onsubmit="return confirm('{{ 'character.edit.delete_confirm'|trans }}');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_character_' ~ character.id) }}">
+                    <button type="submit" class="btn-danger">
+                        {{ 'character.edit.delete_btn'|trans }}
+                    </button>
+                </form>
+            </div>
 
         </div>
     </div>

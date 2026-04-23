@@ -1,17 +1,19 @@
 <nav class="workshop-subnav project-nav">
     {# Navigation projet (gauche) #}
     <div class="subnav-links">
-        <a href="{{ path('app_project_show', {slug: project.slug}) }}"
-           class="{{ app.request.attributes.get('_route') == 'app_project_show' ? 'active' : '' }}">
-            {{ ux_icon('lucide:layout-dashboard', {style: 'width: 14px; height: 14px;'}) }}
-            Aperçu
-        </a>
+        {% if project.slug %}
+            <a href="{{ path('app_project_show', {slug: project.slug}) }}"
+               class="{{ app.request.attributes.get('_route') == 'app_project_show' ? 'active' : '' }}">
+                {{ ux_icon('lucide:layout-dashboard', {style: 'width: 14px; height: 14px;'}) }}
+                Aperçu
+            </a>
+        {% endif %}
 
-        <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}"
-           class="{{ app.request.attributes.get('_route') starts with 'app_manuscript' ? 'active' : '' }}">
-            {{ ux_icon('lucide:file-pen-line', {style: 'width: 14px; height: 14px;'}) }}
-            Manuscrit
-        </a>
+        {% if project.slug %}
+            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}">
+                Manuscrit
+            </a>
+
 
         <a href="{{ path('app_character_index', {project_slug: project.slug}) }}"
            class="{{ app.request.attributes.get('_route') starts with 'app_character' ? 'active' : '' }}">
@@ -30,6 +32,7 @@
             {{ ux_icon('lucide:settings', {style: 'width: 14px; height: 14px;'}) }}
             Paramètres
         </a>
+        {% endif %}
     </div>
 
     {# Dropdown projet switcher avec Stimulus #}

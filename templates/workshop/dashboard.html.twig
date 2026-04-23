@@ -1,6 +1,8 @@
 {#
-    Rôle : Dashboard général /atelier (stats, projets récents, activité)
+{# ce fichier est : 'templates/workshop/dashboard.html.twig
+Rôle : Dashboard général /atelier (stats, projets récents, activité)
 #}
+
 {% extends 'workshop/layout.html.twig' %}
 {% trans_default_domain 'workshop_interface' %}
 
@@ -36,21 +38,18 @@
             </div>
 
             <div class="stat-card stat-card--dark">
-                <span class="stat-value">—</span>
-                <span class="stat-desc">{{ 'dashboard.stats.views_value'|trans }}</span>
-                <a href="#" class="stat-footer-link highlight">
-                    {{ 'dashboard.stats.views_link'|trans }}
-                </a>
+                <span class="stat-value">{{ total_characters }}</span>
+                <span class="stat-desc">Personnages créés</span>
             </div>
 
             <div class="stat-card stat-card--dark">
-                <span class="stat-value">—</span>
-                <span class="stat-desc">{{ 'dashboard.stats.entities_value'|trans }}</span>
+                <span class="stat-value">{{ total_locations }}</span>
+                <span class="stat-desc">Lieux créés</span>
             </div>
 
             <div class="stat-card stat-card--dark">
-                <span class="stat-value">—</span>
-                <span class="stat-desc">{{ 'dashboard.stats.entities_value'|trans }}</span>
+                <span class="stat-value">{{ total_scenes }}</span>
+                <span class="stat-desc">Scènes écrites</span>
             </div>
 
             {# Actions rapides #}

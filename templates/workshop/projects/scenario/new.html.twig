@@ -3,7 +3,7 @@
 {% block project_content %}
     <div class="dashboard-container form-narrow">
         <header class="page-header">
-            <a href="{{ path('app_scenario_index', {project_slug: project.slug}) }}">← Retour</a>
+            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}">← Retour</a>
             <h1>Nouveau {{ elementType|upper }}</h1>
         </header>
 
@@ -13,7 +13,7 @@
                 <input type="text" name="title" class="form-control" autofocus required>
             </div>
 
-            <input type="hidden" name="_token" value="{{ csrf_token('new_scenario') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('new_scenarioma') }}">
 
             <div class="form-actions">
                 <button type="submit" class="btn-creat">Créer l'élément</button>

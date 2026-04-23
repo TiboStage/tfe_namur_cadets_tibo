@@ -3,15 +3,14 @@ import { Controller } from '@hotwired/stimulus';
 /**
  * Gestion de la validation frontend des formulaires.
  *
- * 3 niveaux de feedback :
- *   1. Erreur inline  → .field-error sous le champ (au blur ou submit)
- *   2. Toast warning  → .scenart-alert.alert-warning dans #toast-container (au submit)
- *   3. Flash PHP      → géré par alert_controller.js (retour serveur)
+ * 2 niveaux de feedback :
+ *   1. Erreur inline  → .is-invalid / .is-valid sur le champ (au blur ou submit)
+ *   2. Toast warning  → Utilise toast_controller pour afficher le message (au submit)
  */
 export default class extends Controller {
     static values = {
         error: String  // Message affiché dans le toast (data-validator-error-value)
-    }
+    };
 
     // ─── Vérification au blur (champ par champ) ───────────────────────────────
 
@@ -49,15 +48,22 @@ export default class extends Controller {
 
         const value = input.value.trim();
 
+        // Email
         if (input.type === 'email') {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
         }
+
+        // Checkbox
         if (input.type === 'checkbox') {
             return input.checked;
         }
+
+        // Select
         if (input.tagName === 'SELECT') {
             return value !== '' && value !== null;
         }
+
+        // Textarea
         if (input.tagName === 'TEXTAREA') {
             // Textarea optionnel (pas de required) → toujours valide
             if (!input.required && !input.closest('.form-block')?.querySelector('span.required')) {
@@ -66,9 +72,10 @@ export default class extends Controller {
             return value.length >= 2;
         }
 
-        // Champ texte optionnel → valide
+        // Champ texte
         const formBlock = input.closest('.form-block');
         const isRequired = formBlock?.querySelector('span.required') !== null;
+
         if (!isRequired) return true;
 
         return value.length >= 2;
@@ -86,13 +93,37 @@ export default class extends Controller {
         }
     }
 
-    // ─── Toast dans le container global ──────────────────────────────────────
+    // ─── Toast via toast_controller ───────────────────────────────────────────
 
     _showToast(message, type = 'warning') {
         const container = document.getElementById('toast-container');
-        if (!container) return;
+        if (!container) {
+            console.error('Toast container #toast-container not found!');
+            return;
+        }
 
-        // Créer une .scenart-alert avec le bon type
+        // Récupérer ou créer le toast controller
+        let toastController = this.application.getControllerForElementAndIdentifier(container, 'toast');
+
+        if (!toastController) {
+            // Créer un toast controller temporaire
+            container.setAttribute('data-controller', 'toast');
+            toastController = this.application.getControllerForElementAndIdentifier(container, 'toast');
+        }
+
+        // Afficher le toast via le controller
+        if (toastController && toastController.show) {
+            toastController.show(message, type, 4000);
+        } else {
+            // Fallback si toast controller pas disponible
+            console.warn('Toast controller not available, using fallback');
+            this._fallbackToast(container, message, type);
+        }
+    }
+
+    // ─── Fallback si toast_controller pas disponible ──────────────────────────
+
+    _fallbackToast(container, message, type) {
         const toast = document.createElement('div');
         toast.className = `scenart-alert alert-${type}`;
         toast.innerHTML = `

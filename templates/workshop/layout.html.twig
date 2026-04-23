@@ -1,19 +1,9 @@
+{# ce fichier est : 'templates/workshop/layout.html.twig#}
+
 {% extends 'base.html.twig' %}
 
 {% block body %}
 
-    <div class="toast-container" id="main-toast-container">
-        {# Flash messages #}
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                {{ component('Alert', {
-                    type: label,
-                    message: message|trans,
-                    withIcon: true
-                }) }}
-            {% endfor %}
-        {% endfor %}
-    </div>
 
     <div class="workshop-wrapper">
         {% include 'workshop/_partials/_topbar.html.twig' %}

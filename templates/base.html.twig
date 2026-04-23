@@ -9,29 +9,34 @@
         <link rel="icon" type="image/png" href="{{ asset('images/favicons/favicon.png') }}">
     {% endblock %}
 
-    {# 1. APPEL DES JAVASCRIPTS ET PRELOADS (En premier) #}
     {% block javascripts %}
         {{ importmap('app') }}
     {% endblock %}
 
-    {# 2. APPEL DES STYLES (En deuxième) #}
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
 
-{# Flash PHP — centré en haut #}
-<div class="flash-container">
+{% block body %}{% endblock %}
+
+{# ✅ AJOUTE CECI JUSTE AVANT </body> #}
+<div id="toast-container" class="toast-container" data-controller="toast">
     {% for label, messages in app.flashes %}
         {% for message in messages %}
-            <twig:Alert :type="label" :message="message" />
+            <div class="scenart-alert alert-{{ label }}"
+                 data-toast-auto-close-value="true"
+                 data-toast-duration-value="5000">
+                <div class="alert-icon">
+                    <i data-lucide="{% if label == 'success' %}check-circle{% elseif label == 'warning' %}triangle-alert{% elseif label == 'error' %}x-circle{% else %}info{% endif %}"></i>
+                </div>
+                <div class="alert-body">
+                    <p>{{ message|trans }}</p>
+                </div>
+                <button class="alert-close" data-action="click->toast#close">&times;</button>
+            </div>
         {% endfor %}
     {% endfor %}
 </div>
-
-{# Toast Stimulus — coin droit #}
-<div id="toast-container" class="toast-container"></div>
-
-{% block body %}{% endblock %}
 
 </body>
 </html>

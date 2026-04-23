@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Controller\Workshop;
 
 use App\Entity\Project;
@@ -20,47 +19,18 @@ abstract class AbstractProjectResourceController extends AbstractController
     public function __construct(
         protected readonly EntityManagerInterface $em,
         protected readonly TranslatorInterface    $translator,
-    )
-    {
-    }
+    ) {}
 
     // ═══════════════════════════════════════════════════════════════
     // MÉTHODES ABSTRAITES (à définir dans les enfants)
     // ═══════════════════════════════════════════════════════════════
 
-    /**
-     * Classe de l'entité (ex: Character::class)
-     */
     abstract protected function getEntityClass(): string;
-
-    /**
-     * Classe du formulaire (ex: CharacterFormType::class)
-     */
     abstract protected function getFormClass(): string;
-
-    /**
-     * Préfixe des routes (ex: 'app_character')
-     */
     abstract protected function getRoutePrefix(): string;
-
-    /**
-     * Préfixe des templates (ex: 'workshop/projects/characters')
-     */
     abstract protected function getTemplatePrefix(): string;
-
-    /**
-     * Nom de la variable dans le template (ex: 'character')
-     */
     abstract protected function getEntityVariable(): string;
-
-    /**
-     * Nom de la variable au pluriel (ex: 'characters')
-     */
     abstract protected function getEntitiesVariable(): string;
-
-    /**
-     * Clé de traduction pour les flash messages (ex: 'character')
-     */
     abstract protected function getTranslationKey(): string;
 
     // ═══════════════════════════════════════════════════════════════
@@ -86,7 +56,7 @@ abstract class AbstractProjectResourceController extends AbstractController
      * Créer une nouvelle entité
      */
     public function new(
-        Request                                                   $request,
+        Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response
     {
@@ -118,13 +88,26 @@ abstract class AbstractProjectResourceController extends AbstractController
 
     /**
      * Afficher une entité
+     *
+     * CORRECTION : Récupération manuelle de l'entité au lieu de MapEntity
+     * car MapEntity ne fonctionne pas bien avec les classes abstraites.
      */
     public function show(
+        Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
-        #[MapEntity(id: 'id')] object                             $entity
+        int $id
     ): Response
     {
         $this->checkProjectAccess($project, 'view');
+
+        // Récupération manuelle de l'entité
+        $entity = $this->em->getRepository($this->getEntityClass())->find($id);
+
+        if (!$entity || $entity->getProject() !== $project) {
+            throw $this->createNotFoundException(
+                sprintf('%s not found', $this->getEntityVariable())
+            );
+        }
 
         return $this->render($this->getTemplatePrefix() . '/show.html.twig', [
             'project' => $project,
@@ -134,14 +117,25 @@ abstract class AbstractProjectResourceController extends AbstractController
 
     /**
      * Modifier une entité
+     *
+     * CORRECTION : Récupération manuelle de l'entité au lieu de MapEntity
      */
     public function edit(
-        Request                                                   $request,
+        Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
-        #[MapEntity(id: 'id')] object                             $entity
+        int $id
     ): Response
     {
         $this->checkProjectAccess($project, 'edit');
+
+        // Récupération manuelle de l'entité
+        $entity = $this->em->getRepository($this->getEntityClass())->find($id);
+
+        if (!$entity || $entity->getProject() !== $project) {
+            throw $this->createNotFoundException(
+                sprintf('%s not found', $this->getEntityVariable())
+            );
+        }
 
         $form = $this->createForm($this->getFormClass(), $entity);
         $form->handleRequest($request);
@@ -166,14 +160,25 @@ abstract class AbstractProjectResourceController extends AbstractController
 
     /**
      * Supprimer une entité
+     *
+     * CORRECTION : Récupération manuelle de l'entité au lieu de MapEntity
      */
     public function delete(
-        Request                                                   $request,
+        Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
-        #[MapEntity(id: 'id')] object                             $entity
+        int $id
     ): Response
     {
         $this->checkProjectAccess($project, 'edit');
+
+        // Récupération manuelle de l'entité
+        $entity = $this->em->getRepository($this->getEntityClass())->find($id);
+
+        if (!$entity || $entity->getProject() !== $project) {
+            throw $this->createNotFoundException(
+                sprintf('%s not found', $this->getEntityVariable())
+            );
+        }
 
         $tokenName = 'delete_' . $this->getTranslationKey() . '_' . $entity->getId();
 
@@ -195,7 +200,6 @@ abstract class AbstractProjectResourceController extends AbstractController
 
     /**
      * Créer une nouvelle instance de l'entité
-     * Peut être surchargée pour customiser l'initialisation
      */
     protected function createEntity(Project $project): object
     {
@@ -208,7 +212,6 @@ abstract class AbstractProjectResourceController extends AbstractController
 
     /**
      * Récupérer les entités du projet
-     * Peut être surchargée pour customiser la requête
      */
     protected function getEntities(Project $project): iterable
     {

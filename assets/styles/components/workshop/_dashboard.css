@@ -65,6 +65,10 @@
     opacity: 0.7;
 }
 
+.stat-card--yellow .stat-value  {
+    color: #000;
+}
+
 .stat-card--yellow .stat-desc {
     color: #000;
     opacity: 0.6;

@@ -25,20 +25,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     // ─── Champs d'authentification ────────────────────────────────────────────
-
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank(message: 'registration.email.not_blank')]
     #[Assert\Email(message: 'registration.email.invalid')]
-    private ?string $email = null;
-
+    public string $email = '' {
+        set => $this->email = strtolower(trim((string) $value));
+    }
     /**
      * Nom d'utilisateur public affiché sur la plateforme.
      */
     #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank(message: 'registration.username.not_blank')]
     #[Assert\Length(min: 3, max: 30, minMessage: 'registration.username.too_short')]
-    private ?string $username = null;
-
+    public string $username = '' {
+        set => $this->username = strtolower(trim((string) $value));
+    }
     /**
      * Rôles Symfony stockés en JSON.
      * Toujours au moins ["ROLE_USER"].
