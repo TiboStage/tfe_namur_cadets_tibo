@@ -1,0 +1,70 @@
+# ============================================================
+# SCÉNART - Authentication & Profile Traductions (FR)
+# ============================================================
+# Connexion, Inscription, Gestion du profil
+# ============================================================
+
+# ===== META =====
+meta:
+    title: "Connexion & Inscription - Scénart"
+    profile_title: "Mon profil — Scénart"
+
+# ===== CONNEXION =====
+login:
+    title: "Se connecter"
+    email: "Email"
+    password: "Mot de passe"
+    submit: "Se connecter"
+
+# ===== INSCRIPTION =====
+register:
+    browser_title: "Rejoindre Scénart"
+    title: "Créer un compte"
+    subtitle: "Commencez votre aventure narrative aujourd'hui."
+    
+    firstname: "Prénom"
+    lastname: "Nom"
+    username: "Nom d'utilisateur"
+    email: "Adresse email"
+    password: "Mot de passe"
+    agree_terms: "J'accepte les conditions d'utilisation"
+    submit: "L'Atelier vous attend"
+
+# ===== OVERLAY AUTH =====
+overlay:
+    welcome: "Bon retour !"
+    desc_login: "Connectez-vous pour retrouver vos histoires."
+    btn_login: "J'ai déjà un compte"
+    
+    hello: "Bonjour !"
+    desc_register: "Commencez votre aventure d'écriture dès maintenant."
+    btn_register: "Je suis nouveau"
+
+# ===== PROFIL =====
+profile:
+    page:
+        title: "Mon profil"
+        subtitle: "Gérez vos informations personnelles"
+    
+    sections:
+        identity: "Identité"
+        identity_desc: "Vos informations publiques"
+        security: "Sécurité"
+        security_desc: "Modifier votre mot de passe"
+        stats: "Statistiques"
+    
+    form:
+        firstname: "Prénom"
+        lastname: "Nom"
+        username: "Nom d'utilisateur"
+        email: "Adresse email"
+        new_password: "Nouveau mot de passe"
+        confirm_password: "Confirmer le mot de passe"
+        password_hint: "Laissez vide pour conserver votre mot de passe actuel (min. 8 caractères)"
+        btn_save: "Enregistrer les modifications"
+    
+    stats:
+        member_since: "Membre depuis"
+        projects: "Projets créés"
+        last_login: "Dernière connexion"
+        never: "Jamais"

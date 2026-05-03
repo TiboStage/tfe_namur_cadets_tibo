@@ -11,22 +11,16 @@ export default class extends Controller {
         this.hasUnsavedChanges = false;
         this.saveTimeout = null;
 
-        // Détection des modifications
         this.editorTarget.addEventListener('input', () => {
             this.hasUnsavedChanges = true;
             this.scheduleSave();
         });
-
-        console.log('Fountain editor connected');
     }
 
     scheduleSave() {
-        // Annule le timer précédent
         if (this.saveTimeout) {
             clearTimeout(this.saveTimeout);
         }
-
-        // Nouveau timer : sauvegarde dans 2 secondes
         this.saveTimeout = setTimeout(() => {
             this.save();
         }, 2000);
@@ -37,11 +31,15 @@ export default class extends Controller {
 
         const content = this.editorTarget.innerHTML;
 
+        // Récupère le token CSRF depuis la meta tag (ajoutée dans base.html.twig)
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
         try {
             const response = await fetch(this.saveUrlValue, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken,
                 },
                 body: JSON.stringify({
                     content: [
@@ -50,22 +48,43 @@ export default class extends Controller {
                 })
             });
 
-            if (response.ok) {
-                const data = await response.json();
+            if (!response.ok) {
+                throw new Error('Erreur réseau : ' + response.status);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
                 this.hasUnsavedChanges = false;
-                this.showSaveIndicator('Sauvegardé ' + data.updated_at);
-            } else {
-                this.showSaveIndicator('Erreur de sauvegarde', true);
+                this._showSavedIndicator();
             }
         } catch (error) {
-            console.error('Save failed:', error);
-            this.showSaveIndicator('Erreur réseau', true);
+            console.error('Erreur de sauvegarde :', error);
+            this._showErrorIndicator();
         }
     }
 
-    showSaveIndicator(message, isError = false) {
-        // Affiche un petit toast temporaire
-        console.log(message);
-        // Tu pourras améliorer ça plus tard avec une vraie notification visuelle
+    _showSavedIndicator() {
+        // Optionnel : afficher un indicateur visuel "Sauvegardé"
+        const indicator = this.element.querySelector('.save-indicator');
+        if (indicator) {
+            indicator.textContent = '✓ Sauvegardé';
+            indicator.classList.add('saved');
+            setTimeout(() => indicator.classList.remove('saved'), 2000);
+        }
+    }
+
+    _showErrorIndicator() {
+        const indicator = this.element.querySelector('.save-indicator');
+        if (indicator) {
+            indicator.textContent = '⚠ Erreur de sauvegarde';
+            indicator.classList.add('error');
+        }
+    }
+
+    disconnect() {
+        if (this.saveTimeout) {
+            clearTimeout(this.saveTimeout);
+        }
     }
 }

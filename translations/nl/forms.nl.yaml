@@ -1,0 +1,113 @@
+# ============================================================
+# SCÉNART - Forms Vertalingen (NL)
+# ============================================================
+# Alle formulieren: Personage, Locatie, Project
+# ============================================================
+
+# ===== PERSONAGE FORMULIER =====
+character:
+    form:
+        section_identity: "Identiteit"
+        section_psychology: "Psychologie"
+        
+        name:
+            label: "Weergavenaam"
+            placeholder: "Bijv: Marie Dupont"
+            help: "De hoofdnaam van je personage"
+        
+        firstname:
+            label: "Voornaam"
+            placeholder: "Marie"
+        
+        lastname:
+            label: "Achternaam"
+            placeholder: "Dupont"
+        
+        nickname:
+            label: "Bijnaam / Hoofdalias"
+            placeholder: "De detective"
+        
+        role:
+            label: "Narratieve rol"
+            placeholder: "Bijv: Protagonist, Antagonist, Mentor..."
+            help: "De narratieve functie van het personage"
+        
+        description:
+            label: "Korte beschrijving"
+            placeholder: "Beschrijf dit personage kort..."
+            help: "Gedetailleerde beschrijving van het personage"
+        
+        biography:
+            label: "Biografie"
+            placeholder: "Hun geschiedenis, hun verleden..."
+            help: "Het verleden en de psychologie van het personage"
+        
+        goals:
+            label: "Doelen"
+            placeholder: "Wat willen ze bereiken?"
+        
+        motivations:
+            label: "Motivaties"
+            placeholder: "Waarom handelen ze zo?"
+        
+        arc:
+            label: "Personageboog"
+            placeholder: "Hoe evolueren ze tijdens het verhaal?"
+        
+        submit_new: "Personage maken"
+        submit_edit: "Wijzigingen opslaan"
+        cancel: "Annuleren"
+
+# ===== LOCATIE FORMULIER =====
+location:
+    form:
+        name:
+            label: "Locatienaam"
+            placeholder: "Bijv: Het Blackwood Herenhuis"
+            help: "De hoofdnaam van de locatie"
+        
+        type:
+            label: "Locatietype"
+            placeholder: "Bijv: Taverne, Herenhuis, Bos, Stad..."
+            help: "De categorie van de locatie"
+        
+        description:
+            label: "Beschrijving"
+            placeholder: "Beschrijf deze locatie, de sfeer, kenmerken..."
+            help: "Gedetailleerde beschrijving van de locatie"
+        
+        submit_new: "Locatie maken"
+        submit_edit: "Wijzigingen opslaan"
+        cancel: "Annuleren"
+
+# ===== PROJECT FORMULIER =====
+project:
+    form:
+        title:
+            label: "Projecttitel"
+            placeholder: "De naam van je universum..."
+        
+        type:
+            label: "Projecttype"
+        
+        description:
+            label: "Beschrijving"
+            placeholder: "Beschrijf kort je verhaal..."
+        
+        submit_create: "Universum Maken"
+        submit_edit: "Wijzigingen opslaan"
+        cancel: "Annuleren"
+
+# ===== GEMEENSCHAPPELIJKE ELEMENTEN =====
+common:
+    back: "Terug"
+    create: "Maken"
+    save: "Opslaan"
+    cancel: "Annuleren"
+    delete: "Verwijderen"
+    edit: "Bewerken"
+    submit: "Verzenden"
+    close: "Sluiten"
+    confirm: "Bevestigen"
+    required: "Verplicht veld"
+    optional: "Optioneel"

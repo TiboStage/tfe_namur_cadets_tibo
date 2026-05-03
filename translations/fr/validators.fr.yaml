@@ -1,0 +1,96 @@
+# ============================================================
+# SCÉNART - Validators Traductions (FR)
+# ============================================================
+# Messages d'erreur de validation des formulaires
+# ============================================================
+
+# ===== INSCRIPTION =====
+registration:
+    firstname:
+        not_blank: "Veuillez entrer votre prénom."
+
+    lastname:
+        not_blank: "Veuillez entrer votre nom."
+
+    email:
+        not_blank: "Une adresse email est requise."
+        invalid: "Cette adresse email ne semble pas valide."
+        unique: "Cet email est déjà utilisé par un autre créateur."
+
+    username:
+        not_blank: "Veuillez choisir un nom d'utilisateur."
+        too_short: "Votre nom d'utilisateur doit contenir au moins {{ limit }} caractères."
+        too_long: "Votre nom d'utilisateur ne peut pas dépasser {{ limit }} caractères."
+        unique: "Ce nom d'utilisateur est déjà pris. Soyez créatif !"
+
+    password:
+        not_blank: "Un mot de passe est requis."
+        length: "Votre mot de passe doit contenir au moins {{ limit }} caractères."
+
+    terms:
+        must_agree: "Vous devez accepter les conditions d'utilisation."
+
+# ===== PROJET =====
+project:
+    title:
+        not_blank: "Toute grande aventure a besoin d'un nom !"
+        too_short: "Le titre doit contenir au moins {{ limit }} caractères."
+
+    description:
+        not_blank: "Décrivez votre univers en quelques mots."
+
+    type:
+        film: "Film"
+        serie: "Série"
+        jeu_video: "Jeu vidéo"
+        custom: "Personnalisé"
+
+# ===== PERSONNAGE =====
+character:
+    name:
+        not_blank: "Le personnage a besoin d'un nom !"
+
+    role:
+        protagonist: "Protagoniste"
+        antagonist: "Antagoniste"
+        secondary: "Secondaire"
+        figurant: "Figurant"
+
+# ===== LIEU =====
+location:
+    name:
+        not_blank: "Le lieu a besoin d'un nom !"
+
+    type:
+        interior: "Intérieur"
+        exterior: "Extérieur"
+        fantasy: "Fantastique"
+        historical: "Historique"
+        futuristic: "Futuriste"
+
+# ===== ERREURS FORMULAIRE =====
+form:
+    errors:
+        required_invalid: "Veuillez remplir les champs requis."
+
+# ===== CONTACT =====
+contact:
+    email:
+        not_blank: "Une adresse email est requise."
+        invalid: "Cette adresse email ne semble pas valide."
+
+    firstname:
+        not_blank: "Veuillez entrer votre prénom."
+
+    lastname:
+        not_blank: "Veuillez entrer votre nom."
+
+    subject:
+        not_blank: "Veuillez choisir un sujet."
+
+    message:
+        not_blank: "Veuillez écrire votre message."
+        too_short: "Votre message doit contenir au moins {{ limit }} caractères."
+
+    privacy:
+        must_agree: "Vous devez accepter la politique de confidentialité."

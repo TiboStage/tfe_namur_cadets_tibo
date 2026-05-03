@@ -1,36 +1,37 @@
 /* assets/styles/app.css */
 
-/* Configuration de base */
-@import "./_variables.css";
-@import "./_reset.css";
+/* --- 1. BASE (Toujours en premier) --- */
+@import "base/_variables.css";
+@import "base/_reset.css";
 
+/* --- 2. COMPOSANTS GLOBAUX (Les briques réutilisables) --- */
+@import "components/_icons.css";
+@import "components/_buttons.css";
+@import "components/_forms.css";   /* Pour .is-invalid, etc. */
+@import "components/_alerts.css";
 
-/* Composants WEBSITE */
-@import "./components/_buttons.css"; /* Nouveau ! */
-@import "./components/website/_navbar.css";
-@import "./components/website/_footer.css";
-@import "./components/_alerts.css";
-@import "./components/_icons.css";
+/* --- 3. LAYOUTS (La structure commune) --- */
+/* Ici on met ce qui est présent sur TOUTES les pages d'une section */
+@import "layouts/website/_navbar.css";
+@import "layouts/website/_footer.css";
+@import "layouts/workshop/_topbar.css";
+@import "layouts/workshop/_subnav.css";
 
+/* --- 4. PAGES (Le spécifique) --- */
+/* C'est ici que tu devrais déplacer tes fichiers de "layouts" qui sont en fait des pages */
 
-/* Pages Website */
-@import "./components/website/_home.css";
-@import "./components/website/_pricing.css";
-@import "./components/website/_contact.css";
-@import "./components/website/_examples.css";
-@import "./components/website/_auth.css";
-@import "components/website/_profile.css";
+/* Section Website */
+@import "pages/website/_home.css";
+@import "pages/website/_pricing.css";
+@import "pages/website/_examples.css";
+@import "pages/website/_contact.css";
+@import "pages/website/_auth.css";
 
-/* Composants du WORKSHOP  */
-@import "./components/workshop/_topbar.css";
-@import "./components/workshop/_subnav.css";
-@import "./components/workshop/_project-nav.css";
-@import "./components/workshop/_project-dashboard.css";
-@import "./components/workshop/_editor.css";
-@import "./components/workshop/_characters.css";
-@import "components/workshop/_dashboard.css";
-@import "components/workshop/_projects.css";
+/* Section Workshop */
+@import "pages/workshop/_dashboard.css";
+@import "pages/workshop/_editor.css";
+@import "pages/workshop/_projects.css";
+@import "pages/workshop/_characters.css";
 
-/* Pages Erreur */
-@import "components/_scenario.css";
+/* --- 5. EXCEPTIONS & ERREURS --- */
 @import "components/_error-pages.css";

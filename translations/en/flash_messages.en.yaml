@@ -1,0 +1,63 @@
+# ============================================================
+# SCÉNART - Flash Messages Translations (EN)
+# ============================================================
+# Toast notifications: success, error, warning, info
+# ============================================================
+
+# ===== AUTHENTICATION =====
+auth:
+    welcome: "Welcome {firstName}!"
+    welcome_back: "Welcome back {firstName}!"
+    logout: "See you soon!"
+    logout_success: "You are now logged out"
+    register_success: "Account created successfully! Please sign in."
+
+# ===== PROJECT =====
+project:
+    created: "Project created successfully!"
+    updated: "Project updated."
+    deleted: "Project deleted."
+
+# ===== CHARACTER =====
+character:
+    created: "Character created successfully!"
+    updated: "Character updated."
+    deleted: "Character deleted."
+
+# ===== LOCATION =====
+location:
+    created: "Location created successfully!"
+    updated: "Location updated."
+    deleted: "Location deleted."
+
+# ===== FORM VALIDATION =====
+validation:
+    error: "Please fix the errors before submitting"
+    required_fields: "All required fields must be filled"
+    invalid_email: "Email address is not valid"
+    password_mismatch: "Passwords do not match"
+
+# ===== GENERIC SUCCESS =====
+success:
+    saved: "Saved successfully!"
+    created: "Created successfully!"
+    updated: "Updated successfully!"
+    deleted: "Deleted successfully!"
+
+# ===== GENERIC ERRORS =====
+error:
+    generic: "An error occurred"
+    not_found: "Item not found"
+    access_denied: "Access denied"
+    server_error: "Server error, please try again"
+
+# ===== WARNINGS =====
+warning:
+    unsaved_changes: "Unsaved changes"
+    confirm_delete: "Are you sure you want to delete?"
+
+# ===== INFO =====
+info:
+    loading: "Loading..."
+    processing: "Processing..."
+    saved_draft: "Draft saved automatically"

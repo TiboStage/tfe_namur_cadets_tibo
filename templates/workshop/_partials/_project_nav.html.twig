@@ -50,7 +50,7 @@
             {# Dropdown menu #}
             <div class="project-switcher-dropdown" data-dropdown-target="menu">
                 <div class="dropdown-header">
-                    <span class="text-muted">Projets récents</span>
+                    <span class="text-muted">{{ 'nav.recent_projects'|trans }}</span>
                 </div>
 
                 <div class="dropdown-projects">
@@ -61,7 +61,7 @@
                             <span class="project-title">{{ project.title }}</span>
                             <span class="project-meta">{{ project.projectType }}</span>
                         </div>
-                        <span class="badge-current">Actuel</span>
+                        <span class="badge-current">{{ 'nav.current_badge'|trans }}</span>
                     </div>
 
                     {# Autres projets récents #}

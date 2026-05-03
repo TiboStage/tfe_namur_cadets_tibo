@@ -1,3 +1,5 @@
+{# templates/workshop/projects/index.html.twig - VERSION REFACTORISÉE #}
+
 {% extends 'workshop/layout.html.twig' %}
 
 {% block content %}
@@ -5,56 +7,107 @@
         {# Header #}
         <div class="page-header">
             <div>
-                <h1>Mes projets</h1>
+                <h1>
+                    {{ ux_icon('lucide:folder', {style: 'width: 28px; height: 28px;'}) }}
+                    Mes projets
+                </h1>
                 <p class="text-muted">{{ projects|length }} projet(s) au total</p>
             </div>
             <a href="{{ path('app_project_new') }}" class="btn btn--cta-yellow">
-                {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }} Nouveau projet
+                {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
+                Nouveau projet
             </a>
         </div>
 
-        {# Liste des projets #}
+        {# Grille des projets #}
         {% if projects is not empty %}
-            <div class="projects-grid">
+            <div class="projects-grid" data-controller="project-cards">
                 {% for project in projects %}
-                    <article class="project-card">
-                        <div class="project-card-header">
-                            <div class="project-icon">{{ project.title|first|upper }}</div>
-                            <div class="project-meta">
-                                <h3>
-                                    <a href="{{ path('app_project_show', {slug: project.slug}) }}">
-                                        {{ project.title }}
-                                    </a>
-                                </h3>
-                                <p class="text-muted small">
-                                    {{ project.projectType|upper }} • {{ project.updatedAt|date('d/m/Y') }}
+                    <article class="project-card" data-project-cards-target="card">
+                        {# Header : Icône + Type badge #}
+                        <div class="project-card__header">
+                            <div class="project-card__thumb">
+                                {{ project.title|first|upper }}
+                            </div>
+                            <span class="project-type-badge">
+                            {% if project.projectType == 'film' %}
+                                {{ ux_icon('lucide:film', {style: 'width: 12px; height: 12px;'}) }} Film
+                            {% elseif project.projectType == 'serie' %}
+                                {{ ux_icon('lucide:tv', {style: 'width: 12px; height: 12px;'}) }} Série
+                            {% elseif project.projectType == 'jeu_video' %}
+                                {{ ux_icon('lucide:gamepad-2', {style: 'width: 12px; height: 12px;'}) }} Jeu Vidéo
+                            {% else %}
+                                Custom
+                            {% endif %}
+                        </span>
+                        </div>
+
+                        {# Body : Titre + Description #}
+                        <div class="project-card__body">
+                            <h3 class="project-card__title">
+                                <a href="{{ path('app_project_show', {slug: project.slug}) }}">
+                                    {{ project.title }}
+                                </a>
+                            </h3>
+
+                            {% if project.description %}
+                                <p class="project-card__desc">
+                                    {{ project.description|length > 100 ? project.description|slice(0, 100) ~ '...' : project.description }}
                                 </p>
+                            {% else %}
+                                <p class="project-card__desc text-muted">Aucune description</p>
+                            {% endif %}
+
+                            <p class="project-card__date">
+                                {{ ux_icon('lucide:clock', {style: 'width: 12px; height: 12px;'}) }}
+                                Modifié le {{ project.updatedAt|date('d/m/Y') }}
+                            </p>
+                        </div>
+
+                        {# Stats overlay (visible au hover) #}
+                        <div class="project-card__stats">
+                            <div class="stat-item">
+                                <span class="stat-value">{{ project.scenarioElements|length }}</span>
+                                <span class="stat-label">Scènes</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">{{ project.characters|length }}</span>
+                                <span class="stat-label">Persos</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">{{ project.locations|length }}</span>
+                                <span class="stat-label">Lieux</span>
                             </div>
                         </div>
 
-                        <div class="project-card-body">
-                            {% if project.description %}
-                                <p>{{ project.description|slice(0, 120) }}{% if project.description|length > 120 %}...{% endif %}</p>
-                            {% else %}
-                                <p class="text-muted">Aucune description</p>
-                            {% endif %}
-                        </div>
-
-                        <div class="project-card-footer">
-                            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="btn btn--sm btn--primary">
+                        {# Footer : Actions #}
+                        <div class="project-card__footer">
+                            <a href="{{ path('app_project_show', {slug: project.slug}) }}"
+                               class="btn btn--primary btn--sm">
+                                {{ ux_icon('lucide:arrow-right', {style: 'width: 14px; height: 14px;'}) }}
                                 Ouvrir
                             </a>
-                            <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="btn btn--sm btn--ghost">
-                                {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
+                            <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
+                               class="btn btn--ghost btn--sm"
+                               title="Paramètres">
+                                {{ ux_icon('lucide:settings', {style: 'width: 14px; height: 14px;'}) }}
                             </a>
                         </div>
                     </article>
                 {% endfor %}
             </div>
         {% else %}
-            <div class="empty-state">
-                <p class="text-muted">Vous n'avez encore créé aucun projet.</p>
-                <a href="{{ path('app_project_new') }}" class="btn btn--primary">Créer votre premier projet</a>
+            {# État vide #}
+            <div class="empty-projects">
+                {{ ux_icon('lucide:folder-open', {style: 'width: 64px; height: 64px; opacity: 0.3;'}) }}
+                <div>
+                    <h3>Aucun projet pour le moment</h3>
+                    <p class="text-muted">Créez votre premier projet pour commencer à écrire.</p>
+                </div>
+                <a href="{{ path('app_project_new') }}" class="btn btn--cta-yellow">
+                    {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
+                    Créer mon premier projet
+                </a>
             </div>
         {% endif %}
     </div>

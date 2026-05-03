@@ -1,0 +1,262 @@
+/* assets/styles/components/website/_footer.css */
+
+.main-footer {
+    background: var(--color-bg-dark); /* Même noir que la Nav */
+    border-top: 1px solid var(--color-border);
+    margin-top: 100px;
+    width: 100%;
+}
+
+.footer-container {
+    max-width: 1400px; /* Même largeur max que ta nav-container */
+    margin: 0 auto;
+    padding: 60px 50px; /* Aligné sur les 50px de ta Navbar */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: flex-end; /* Pousse les colonnes vers la droite */
+    gap: 100px; /* Grand espace entre les colonnes */
+}
+
+.footer-column h4 {
+    color: var(--text-main);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+}
+
+.footer-column a {
+    display: block;
+    color: var(--text-muted);
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 12px;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.footer-column a:hover {
+    color: var(--color-primary);
+    transform: translateX(3px);
+}
+
+/* --- Barre de Copyright (Style Top-Banner inversé) --- */
+.footer-bottom-bar {
+    background: #000; /* Noir pur ou très sombre */
+    border-top: 1px solid var(--color-border);
+    padding: 20px 0;
+}
+
+.bottom-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.footer-bottom-bar p {
+    color: #444; /* Ton gris discret du screen */
+    font-size: 12px;
+    margin: 0;
+}
+
+.footer-bottom-bar .highlight {
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+/*.language-selector {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 12px;*/
+/*}*/
+
+/*.language-selector i {*/
+/*    color: #444;*/
+/*    font-size: 13px;*/
+/*}*/
+
+/*.lang-links {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 8px;*/
+/*}*/
+
+/*.lang-link {*/
+/*    color: #444;*/
+/*    text-decoration: none;*/
+/*    font-size: 11px;*/
+/*    font-weight: 700;*/
+/*    letter-spacing: 0.5px;*/
+/*    transition: var(--transition);*/
+/*    text-transform: uppercase;*/
+/*}*/
+
+/*.lang-link:hover {*/
+/*    color: var(--text-main);*/
+/*}*/
+
+/*.lang-link.active {*/
+/*    color: var(--color-primary); !* Ton jaune Scénart *!*/
+/*}*/
+
+/*.language-selector .separator {*/
+/*    color: #222; !* Très sombre pour ne pas attirer l'oeil *!*/
+/*    font-size: 10px;*/
+/*    font-weight: 300;*/
+/*}*/
+
+
+/* Remplace ton .language-selector actuel par : */
+
+.language-selector {
+    position: relative;
+}
+
+.language-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid #222;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 12px;
+    color: #444;
+    font-weight: 600;
+}
+
+.language-toggle:hover {
+    border-color: var(--color-border);
+    color: var(--text-muted);
+}
+
+.language-toggle i:first-child {
+    font-size: 13px;
+    color: #444;
+}
+
+.language-toggle .fa-chevron-down {
+    font-size: 10px;
+    transition: transform 0.2s;
+}
+
+.language-toggle:hover .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+.current-lang {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.language-dropdown {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 8px;
+    background: #0a0a0a;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+    min-width: 220px;
+    z-index: 1000;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.language-dropdown.hidden {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: var(--transition);
+    border-bottom: 1px solid #151515;
+}
+
+.language-option:last-child {
+    border-bottom: none;
+}
+
+.language-option:hover {
+    background: #151515;
+    color: var(--text-main);
+}
+
+.language-option.active {
+    background: rgba(255, 208, 0, 0.1);
+    color: var(--color-primary);
+}
+
+.language-option .flag {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.language-option .lang-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.language-option .lang-region {
+    font-size: 11px;
+    color: #444;
+    font-weight: 500;
+}
+
+.language-option.active .lang-region {
+    color: #666;
+}
+
+.flag-img {
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.transition-transform {
+    transition: transform 0.2s ease;
+}
+
+
+/* Ajustement pour que la barre de copyright reste bien alignée */
+.bottom-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 40px;
+        align-items: flex-start;
+    }
+
+    .bottom-flex {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}

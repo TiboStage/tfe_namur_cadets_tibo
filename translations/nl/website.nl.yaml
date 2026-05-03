@@ -1,0 +1,223 @@
+# ============================================================
+# SCÉNART - Website (Public) Vertalingen (NL)
+# ============================================================
+# Homepagina, Voorbeelden, Prijzen, Contact, Publieke Navbar
+# ============================================================
+
+# ===== META TAGS =====
+meta:
+    home_title: "Scénart - Verbeeld, Structureer, Schrijf"
+    examples_title: "Voorbeelden - Scénart"
+    pricing_title: "Scénart - Prijzen"
+    contact_title: "Contact - Scénart"
+
+# ===== NAVBAR (PUBLIEK) =====
+navbar:
+    banner:
+        user: "Klaar om te creëren? "
+        user_link: "Ontdek de Workshop"
+        guest: "Nieuw bij Scénart? "
+        guest_link: "Start gratis!"
+    
+    links:
+        home: "Home"
+        examples: "Voorbeelden"
+        pricing: "Prijzen"
+        contact: "Contact"
+    
+    actions:
+        workshop: "Workshop"
+        login: "Inloggen"
+        register: "Aanmelden"
+
+# ===== HOMEPAGINA =====
+home:
+    hero:
+        badge: "✦ Een tool ontworpen voor wereldbouwers"
+        title: "Verbeeld, Structureer,"
+        title_highlight: "Schrijf."
+        subtitle: "Breng je werelden tot leven, verduidelijk je scripts en verhalen.<br>Je verbeelding, zonder grenzen."
+        mockup_placeholder: "Voorbeeld van de Scénart workshop"
+        actions:
+            register: "Aanmelden"
+            discover: "Ontdekken ↗"
+    
+    features:
+        label: "FUNCTIES"
+        title: "Alles wat je nodig hebt om"
+        title_highlight: "je universum te bouwen"
+        desc: "Tools ontworpen voor serieuze makers.<br>Van ruw idee tot volledig wereld."
+        items:
+            editor_title: "Scenario Editor"
+            editor_desc: "Professioneel scenarioformaat. Sluglines, dialogen, automatische vertelling."
+            characters_title: "Personagefiches"
+            characters_desc: "Biografieën, motivaties, narratieve bogen en portretten voor elk personage."
+            locations_title: "Locatiefiches"
+            locations_desc: "Decors, sferen en metadata voor elke locatie in je universum."
+            timeline_title: "Visuele tijdlijn"
+            timeline_desc: "Visualiseer de volgorde van gebeurtenissen in je verhaal op een interactieve tijdlijn."
+            export_title: "Pro PDF export"
+            export_desc: "Genereer een complete narratieve bijbel klaar om naar een uitgever of producent te sturen."
+            relations_title: "Relatiegrafiek"
+            relations_desc: "Breng de banden tussen je personages in kaart: bondgenoten, vijanden, familie, liefde."
+    
+    for_whom:
+        label: "VOOR WIE?"
+        title: "Een tool voor"
+        title_highlight: "elke maker"
+        cards:
+            cinema:
+                title: "Films & Series"
+                desc: "Scenario's, storyboards, narratieve bogen over meerdere seizoenen."
+            roman:
+                title: "Literatuur"
+                desc: "Hoofdstukorganisatie, personagefiches en worldbuilding."
+            game:
+                title: "Videogames"
+                desc: "Narratief ontwerp, vertakkende quests en interactieve lore."
+            jdr:
+                title: "Rollenspellen"
+                desc: "Campagnes, bestiaria en scenariobeheer voor spelleiders."
+    
+    cta:
+        title: "Klaar om je"
+        title_highlight: "eerste wereld te schrijven?"
+        desc: "Sluit je aan bij honderden makers die hun universums lanceren op Scénart."
+        actions:
+            start: "Start gratis"
+            examples: "Bekijk voorbeelden ↗"
+
+# ===== VOORBEELDEN PAGINA =====
+examples:
+    header:
+        tag: "Voorbeelden"
+        title: "Projecten gemaakt op"
+        title_highlight: "SCÉNART"
+        description: "Ontdek hoe andere makers hun universums structureren. Elk project is uniek en illustreert de oneindige mogelijkheden van de Workshop."
+    
+    filters:
+        all: "Alle"
+        cinema: "Cinema"
+        serie: "Serie"
+        roman: "Roman"
+        video_game: "Videogame"
+        jdr: "Rollenspel"
+    
+    grid:
+        empty_message: "Geen projecten komen overeen met deze categorie op dit moment."
+        view_project: "Project verkennen"
+        author: "Door"
+
+# ===== PRIJZEN PAGINA =====
+pricing:
+    header:
+        tag: "Prijzen"
+        title: "Eenvoudig en"
+        title_highlight: "Transparant."
+        subtitle: "Begin gratis. Upgrade naar Pro naarmate je universums groeien."
+    
+    plans:
+        featured_badge: "AANBEVOLEN"
+        per_month: "/maand"
+        
+        amateur:
+            name: "Amateur"
+            desc: "Om te verkennen & beginnen"
+            badge: "Beginner - Nieuwsgierig - Studenten"
+            btn: "Start gratis"
+            features:
+                projects: "<strong>2 projecten</strong> - Maximum"
+                entities: "<strong>25 entiteiten</strong> - Per project"
+                script: "<strong>Scenario-editor</strong> - Maximum"
+                export: "PDF Export"
+                collab: "Samenwerking"
+                graph: "Relatiegrafiek"
+                fields: "Aangepaste velden"
+                public: "Publieke projecten"
+        
+        pro:
+            name: "Pro"
+            desc: "Voor serieuze makers"
+            badge: "Schrijvers - Scenaristen - Studios"
+            btn: "Start voor €12/maand"
+            features:
+                projects: "Onbeperkte projecten"
+                entities: "Onbeperkte entiteiten"
+                script: "<strong>Scenario-editor</strong> - Geavanceerd"
+                export: "Geavanceerde PDF export"
+                collab: "Samenwerking tot 10 leden"
+                graph: "Interactieve relatiegrafiek"
+                fields: "Onbeperkte aangepaste velden"
+                public: "Publieke projecten & delen"
+    
+    footer:
+        not_sure: "Niet zeker? Begin met het Amateur-plan."
+        no_credit: "Geen creditcard vereist."
+        quote: "Offerte nodig voor een team?"
+        contact_us: "Neem contact op"
+    
+    faq:
+        title: "Veelgestelde vragen"
+        q1: "Kan ik op elk moment upgraden van Amateur naar Pro?"
+        a1: "Ja, de wijziging is direct en pro rata."
+        q2: "Wat gebeurt er met mijn data als ik downgrade naar Amateur?"
+        a2: "Je data wordt bewaard maar sommige bewerkingsfuncties worden alleen-lezen."
+        q3: "Is er een studentenkorting?"
+        a3: "Het Amateur-plan is al ontworpen met studenten in gedachten!"
+        q4: "Heeft het Amateur-plan een tijdslimiet?"
+        a4: "Nee, het Amateur-plan is permanent en gratis. Gebruik het zo lang je wilt zonder creditcard."
+    
+    early_access:
+        title: "Vroege toegang bezig."
+        desc: "De tool is momenteel in actieve ontwikkeling. Als je het project wilt ondersteunen, kun je doneren via Ko-fi — 0% platformkosten."
+        btn: "☕ Steun het project"
+        kofi_url: "https://ko-fi.com/scenart"
+
+# ===== CONTACT PAGINA =====
+contact:
+    info:
+        tag: "Contact"
+        title: "We zijn er om"
+        title_highlight: "je te helpen."
+        description: "Of je nu een technische vraag hebt, een suggestie of een partnerschapsproject, ons team is beschikbaar."
+        cards:
+            response_time: "Reactietijd"
+            response_desc: "Minder dan 24u op weekdagen."
+            response_sub: "Prioritaire ondersteuning voor Pro & Studio abonnees."
+            academic: "Academisch project"
+            academic_desc: "StoryForge — TFE 2024-2025"
+            academic_location: "EAFC Namur-Cadets, België"
+    
+    form:
+        title: "Bericht versturen"
+        labels:
+            email: "EMAIL"
+            firstname: "VOORNAAM"
+            lastname: "ACHTERNAAM"
+            subject: "ONDERWERP"
+            message: "BERICHT"
+        
+        placeholders:
+            firstname: "Jan"
+            lastname: "Jansen"
+            subject: "Kies een onderwerp..."
+            message: "Beschrijf je verzoek in detail..."
+        
+        subjects:
+            support: "Technische ondersteuning"
+            billing: "Facturering"
+            partnership: "Partnerschap"
+        
+        privacy: "Ik ga ermee akkoord dat mijn gegevens worden gebruikt om mijn verzoek te verwerken in overeenstemming met het"
+        privacy_link: "privacybeleid"
+        submit: "Bericht versturen"
+        
+        errors:
+            empty_fields: "Vul alle vereiste velden in en accepteer het privacybeleid."
+            success: "Je bericht is verzonden! Ons team neemt snel contact met je op."
+            email_invalid: "Ongeldig e-mailformaat"
+            required: "Dit veld is verplicht"
+            subject_required: "Selecteer een onderwerp"
+            message_short: "Bericht te kort (min. 10 tekens)"
+            global_invalid: "Vul alle velden correct in."
+            privacy_required: "Je moet het privacybeleid accepteren om door te gaan."

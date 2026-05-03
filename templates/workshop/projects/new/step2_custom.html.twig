@@ -1,0 +1,167 @@
+{# templates/workshop/projects/new/step2_custom.html.twig #}
+
+{% extends 'workshop/projects/new/layout.html.twig' %}
+
+{% block title %}{{ 'project_new.step2.title_custom'|trans({}, 'project_new')   }}{% endblock %}
+
+{% block new_project_content %}
+<div class="project-funnel-container"
+     data-controller="funnel-step2-custom"
+     data-funnel-step2-custom-genres-film-value="{{ {
+         'thriller': 'project_new.genres.film.thriller'|trans({}, 'project_new')  ,
+         'horror': 'project_new.genres.film.horror'|trans({}, 'project_new')  ,
+         'scifi': 'project_new.genres.film.scifi'|trans({}, 'project_new')  ,
+         'drama': 'project_new.genres.film.drama'|trans({}, 'project_new')  ,
+         'comedy': 'project_new.genres.film.comedy'|trans({}, 'project_new')  ,
+         'action': 'project_new.genres.film.action'|trans({}, 'project_new')  ,
+         'fantasy': 'project_new.genres.film.fantasy'|trans({}, 'project_new')
+     }|json_encode }}"
+     data-funnel-step2-custom-genres-serie-value="{{ {
+         'drama': 'project_new.genres.serie.drama'|trans({}, 'project_new')  ,
+         'comedy': 'project_new.genres.serie.comedy'|trans({}, 'project_new')  ,
+         'thriller': 'project_new.genres.serie.thriller'|trans({}, 'project_new')  ,
+         'scifi': 'project_new.genres.serie.scifi'|trans({}, 'project_new')  ,
+         'fantasy': 'project_new.genres.serie.fantasy'|trans,
+         'animation': 'project_new.genres.serie.animation'|trans,
+         'romance': 'project_new.genres.serie.romance'|trans
+     }|json_encode }}"
+     data-funnel-step2-custom-genres-jeu-video-value="{{ {
+         'rpg': 'project_new.genres.jeu_video.rpg'|trans({}, 'project_new')  ,
+         'action': 'project_new.genres.jeu_video.action'|trans({}, 'project_new')  ,
+         'adventure': 'project_new.genres.jeu_video.adventure'|trans({}, 'project_new')  ,
+         'platformer': 'project_new.genres.jeu_video.platformer'|trans({}, 'project_new')  ,
+         'puzzle': 'project_new.genres.jeu_video.puzzle'|trans({}, 'project_new')  ,
+         'visual_novel': 'project_new.genres.jeu_video.visual_novel'|trans({}, 'project_new')  ,
+         'simulation': 'project_new.genres.jeu_video.simulation'|trans({}, 'project_new')
+     }|json_encode }}">
+
+    <div class="funnel-header">
+        <h1>{{ 'project_new.step2.title_custom'|trans({}, 'project_new')   }}</h1>
+        <p class="funnel-subtitle">{{ 'project_new.step2.subtitle'|trans({}, 'project_new')   }}</p>
+    </div>
+
+    <form method="POST" action="{{ path('app_project_new_step3') }}">
+        {# SLIDE 1 : Type de projet #}
+        <div class="custom-slide active" data-funnel-step2-custom-target="slide" data-slide="1">
+            <h2>{{ 'project_new.step2.custom.slide1_title'|trans({}, 'project_new')   }}</h2>
+
+            <div class="type-cards">
+                <label class="type-card">
+                    <input type="radio" name="project_type_temp" value="film"
+                           data-action="change->funnel-step2-custom#enableNextButton" required>
+                    <div class="type-card__content">
+                        {{ ux_icon('lucide:film', {style: 'width: 32px; height: 32px;'}) }}
+                        <strong>{{ 'project_new.step2.type.film.title'|trans({}, 'project_new')   }}</strong>
+                        <small>{{ 'project_new.step2.type.film.subtitle'|trans({}, 'project_new')   }}</small>
+                    </div>
+                </label>
+
+                <label class="type-card">
+                    <input type="radio" name="project_type_temp" value="serie"
+                           data-action="change->funnel-step2-custom#enableNextButton" required>
+                    <div class="type-card__content">
+                        {{ ux_icon('lucide:tv', {style: 'width: 32px; height: 32px;'}) }}
+                        <strong>{{ 'project_new.step2.type.serie.title'|trans({}, 'project_new')   }}</strong>
+                        <small>{{ 'project_new.step2.type.serie.subtitle'|trans({}, 'project_new')   }}</small>
+                    </div>
+                </label>
+
+                <label class="type-card">
+                    <input type="radio" name="project_type_temp" value="jeu_video"
+                           data-action="change->funnel-step2-custom#enableNextButton" required>
+                    <div class="type-card__content">
+                        {{ ux_icon('lucide:gamepad-2', {style: 'width: 32px; height: 32px;'}) }}
+                        <strong>{{ 'project_new.step2.type.jeu_video.title'|trans({}, 'project_new')   }}</strong>
+                        <small>{{ 'project_new.step2.type.jeu_video.subtitle'|trans({}, 'project_new')   }}</small>
+                    </div>
+                </label>
+            </div>
+
+            <div class="slide-navigation">
+                <a href="{{ path('app_project_new_step1') }}" class="btn btn--ghost">
+                    {{ ux_icon('lucide:arrow-left', {style: 'width: 16px; height: 16px;'}) }}
+                    {{ 'project_new.step2.button_back'|trans({}, 'project_new')   }}
+                </a>
+                <button type="button" class="btn btn--cta-yellow"
+                        data-action="click->funnel-step2-custom#goToNextSlide" disabled>
+                    {{ 'project_new.step2.button_next'|trans({}, 'project_new')   }}
+                    {{ ux_icon('lucide:arrow-right', {style: 'width: 16px; height: 16px;'}) }}
+                </button>
+            </div>
+        </div>
+
+        {# SLIDE 2 : Features #}
+        <div class="custom-slide" data-funnel-step2-custom-target="slide" data-slide="2">
+            <h2>{{ 'project_new.step2.custom.slide2_title'|trans({}, 'project_new')   }}</h2>
+            <p class="slide-subtitle">{{ 'project_new.step2.custom.slide2_subtitle'|trans({}, 'project_new')   }}</p>
+
+            <div class="features-groups">
+                <div class="feature-group">
+                    <label class="feature-checkbox">
+                        <input type="checkbox" name="selected_features[]" value="tension_meter">
+                        <span>Le Thermomètre de Tension</span>
+                    </label>
+                    <label class="feature-checkbox">
+                        <input type="checkbox" name="selected_features[]" value="heartbeat">
+                        <span>Le Battement de Cœur</span>
+                    </label>
+                    <label class="feature-checkbox">
+                        <input type="checkbox" name="selected_features[]" value="storyline_tracker">
+                        <span>Le Tracker d'Intrigues</span>
+                    </label>
+                    <label class="feature-checkbox">
+                        <input type="checkbox" name="selected_features[]" value="cliffhanger">
+                        <span>Le Cliffhanger</span>
+                    </label>
+                    <label class="feature-checkbox">
+                        <input type="checkbox" name="selected_features[]" value="interactivity_label">
+                        <span>L'Étiquette d'Interactivité</span>
+                    </label>
+                    <label class="feature-checkbox">
+                        <input type="checkbox" name="selected_features[]" value="reality_conditioner">
+                        <span>Le Conditionneur de Réalité</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="slide-navigation">
+                <button type="button" class="btn btn--ghost"
+                        data-action="click->funnel-step2-custom#goToPreviousSlide">
+                    {{ ux_icon('lucide:arrow-left', {style: 'width: 16px; height: 16px;'}) }}
+                    {{ 'project_new.step2.button_back'|trans({}, 'project_new')   }}
+                </button>
+                <button type="button" class="btn btn--cta-yellow"
+                        data-action="click->funnel-step2-custom#goToNextSlide">
+                    {{ 'project_new.step2.button_next'|trans({}, 'project_new')   }}
+                    {{ ux_icon('lucide:arrow-right', {style: 'width: 16px; height: 16px;'}) }}
+                </button>
+            </div>
+        </div>
+
+        {# SLIDE 3 : Genres + Structure #}
+        <div class="custom-slide" data-funnel-step2-custom-target="slide" data-slide="3">
+            <h2>{{ 'project_new.step2.custom.slide3_title'|trans({}, 'project_new') }}</h2>
+
+            <h3>{{ 'project_new.step2.custom.genres_title'|trans({}, 'project_new') }}</h3>
+            <div data-funnel-step2-custom-target="genresContainer" class="genres-grid">
+                {# Rempli dynamiquement #}
+            </div>
+
+            <input type="hidden" name="project_type" data-funnel-step2-custom-target="projectTypeInput">
+            <input type="hidden" name="mode" value="custom">
+
+            <div class="slide-navigation">
+                <button type="button" class="btn btn--ghost"
+                        data-action="click->funnel-step2-custom#goToPreviousSlide">
+                    {{ ux_icon('lucide:arrow-left', {style: 'width: 16px; height: 16px;'}) }}
+                    {{ 'project_new.step2.button_back'|trans({}, 'project_new')   }}
+                </button>
+                <button type="submit" class="btn btn--cta-yellow">
+                    {{ 'project_new.step2.button_validate'|trans({}, 'project_new')   }}
+                    {{ ux_icon('lucide:arrow-right', {style: 'width: 16px; height: 16px;'}) }}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

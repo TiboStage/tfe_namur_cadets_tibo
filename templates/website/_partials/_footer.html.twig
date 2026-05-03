@@ -1,10 +1,11 @@
+
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-content">
             {# Colonne 1 #}
             <div class="footer-column">
                 <h4>Produit</h4>
-                <a href="{{ path('app_features') }}">Fonctionnalités</a>
+                <a href="#">Fonctionnalités</a>
                 <a href="{{ path('app_pricing') }}">Tarifs</a>
                 <a href="{{ path('app_examples') }}">Exemples</a>
                 <a href="#">Changelog</a>
@@ -32,22 +33,63 @@
 
     <div class="footer-bottom-bar">
         <div class="footer-container bottom-flex">
-            {# Sélecteur de Langue #}
-            <div class="language-selector">
-                <i class="fa-solid fa-globe"></i>
-                <div class="lang-links">
-                    <a href="{{ path(app.request.attributes.get('_route')|default('app_home'), app.request.attributes.get('_route_params')|merge({'_locale': 'fr'})) }}"
-                       class="lang-link {% if app.request.locale == 'fr' %}active{% endif %}">FR</a>
 
-                    <span class="separator">/</span>
+            {# Sélecteur de Langue avec Stimulus #}
+            <div class="language-selector"
+                 data-controller="language"
+                 data-action="click@window->language#close">
 
-                    <a href="{{ path(app.request.attributes.get('_route')|default('app_home'), app.request.attributes.get('_route_params')|merge({'_locale': 'en'})) }}"
-                       class="lang-link {% if app.request.locale == 'en' %}active{% endif %}">EN</a>
+                <button class="language-toggle" data-action="language#toggle" aria-label="Changer de langue">
+                    <span class="current-lang">
+            {% if app.request.locale == 'fr' %}
+                {{ ux_icon('flagpack:fr', { class: 'flag-img' }) }} Français
+            {% elseif app.request.locale == 'en' %}
+                {{ ux_icon('flagpack:gb', { class: 'flag-img' }) }} English
+            {% elseif app.request.locale == 'nl' %}
+                {{ ux_icon('flagpack:nl', { class: 'flag-img' }) }} Nederlands
+            {% endif %}
+        </span>
+                    {{ ux_icon('lucide:chevron-down', { class: 'icon-xs', 'data-language-target': 'arrow' }) }}
+                </button>
+
+                <div class="language-dropdown hidden" data-language-target="dropdown">
+                    {% set current_route = app.request.attributes.get('_route')|default('app_home') %}
+                    {% set current_params = app.request.attributes.get('_route_params')|default({}) %}
+
+                    {# Français #}
+                    <a href="{{ path(current_route, current_params|merge({'_locale': 'fr'})) }}"
+                       class="language-option {% if app.request.locale == 'fr' %}active{% endif %}">
+                        {{ ux_icon('flagpack:fr', { class: 'flag-img' }) }}
+                        <div class="lang-info">
+                            <span class="lang-name">Français</span>
+                            <span class="lang-region">Belgique</span>
+                        </div>
+                    </a>
+
+                    {# Anglais #}
+                    <a href="{{ path(current_route, current_params|merge({'_locale': 'en'})) }}"
+                       class="language-option {% if app.request.locale == 'en' %}active{% endif %}">
+                        {{ ux_icon('flagpack:gb', { class: 'flag-img' }) }}
+                        <div class="lang-info">
+                            <span class="lang-name">English</span>
+                            <span class="lang-region">International</span>
+                        </div>
+                    </a>
+
+                    {# Néerlandais #}
+                    <a href="{{ path(current_route, current_params|merge({'_locale': 'nl'})) }}"
+                       class="language-option {% if app.request.locale == 'nl' %}active{% endif %}">
+                        {{ ux_icon('flagpack:nl', { class: 'flag-img' }) }}
+                        <div class="lang-info">
+                            <span class="lang-name">Nederlands</span>
+                            <span class="lang-region">België</span>
+                        </div>
+                    </a>
                 </div>
             </div>
-
             <p class="copyright">© 2026 — TFE — EAFC Namur Cadets — Thibault Claerhoudt</p>
-            <p class="designer-credit">Design & Développement par <span class="highlight">Thibault CLAERHOUDT</span></p>
         </div>
     </div>
+
 </footer>
+

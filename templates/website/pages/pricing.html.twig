@@ -1,29 +1,29 @@
 {% extends 'website/layout.html.twig' %}
-{% trans_default_domain 'pricing' %}
+{#{% trans_default_domain 'pricing' %}#}
 
-{% block title %}{{ 'meta.title'|trans }}{% endblock %}
+{% block title %}{{ 'pricing.meta.title'|trans({}, 'website')}}{% endblock %}
 
 {% block content %}
     <main class="container pricing-page">
 
         {# ── EN-TÊTE ─────────────────────────────────────────────────────────── #}
         <div class="section-header">
-            <span class="section-tag">{{ 'header.tag'|trans }}</span>
+            <span class="section-tag">{{ 'pricing.header.tag'|trans({}, 'website') }}</span>
             <h1 class="main-title">
-                {{ 'header.title'|trans }}
-                <span class="highlight">{{ 'header.title_highlight'|trans }}</span>
+                {{ 'pricing.header.title'|trans({}, 'website') }}
+                <span class="highlight">{{ 'pricing.header.title_highlight'|trans({}, 'website') }}</span>
             </h1>
-            <p class="section-desc">{{ 'header.subtitle'|trans }}</p>
+            <p class="section-desc">{{ 'pricing.header.subtitle'|trans({}, 'website') }}</p>
         </div>
 
         {# ── BANNIÈRE EARLY ACCESS ────────────────────────────────────────────── #}
         <div class="early-access-banner">
             <p>
-                <strong>{{ 'early_access.title'|trans }}</strong>
-                {{ 'early_access.desc'|trans }}
+                <strong>{{ 'pricing.early_access.title'|trans({}, 'website') }}</strong>
+                {{ 'pricing.early_access.desc'|trans({}, 'website') }}
             </p>
-            <a href="{{ 'early_access.kofi_url'|trans }}" target="_blank" rel="noopener noreferrer">
-                {{ 'early_access.btn'|trans }}
+            <a href="{{ 'pricing.early_access.kofi_url'|trans({}, 'website') }}" target="_blank" rel="noopener noreferrer">
+                {{ 'pricing.early_access.btn'|trans({}, 'website') }}
             </a>
         </div>
 
@@ -33,12 +33,12 @@
             {# Plan Amateur #}
             <div class="card-pricing">
                 <div class="card-header">
-                    <span class="plan-name">{{ 'plans.amateur.name'|trans }}</span>
+                    <span class="plan-name">{{ 'pricing.plans.amateur.name'|trans }}</span>
                     <div class="price-tag">
-                        <span>€</span>0<small>{{ 'plans.per_month'|trans }}</small>
+                        <span>€</span>0<small>{{ 'pricing.plans.per_month'|trans }}</small>
                     </div>
-                    <p class="plan-description">{{ 'plans.amateur.desc'|trans }}</p>
-                    <div class="plan-badge">{{ 'plans.amateur.badge'|trans }}</div>
+                    <p class="plan-description">{{ 'pricing.plans.amateur.desc'|trans }}</p>
+                    <div class="plan-badge">{{ 'pricing.plans.amateur.badge'|trans }}</div>
                 </div>
 
                 <ul class="features-list">

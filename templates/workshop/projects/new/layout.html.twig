@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="forge-tunnel-container">
+        {# NAVBAR / BREADCRUMB DYNAMIQUE #}
+        <nav class="forge-breadcrumb">
+            <div class="breadcrumb-item active">
+                <span class="step-idx">01</span>
+                <span class="step-txt">MODE</span>
+            </div>
+
+            <div class="breadcrumb-separator"></div>
+
+            <div class="breadcrumb-item">
+                <span class="step-idx">02</span>
+                <span class="step-txt">DETAILS</span>
+            </div>
+
+            <div class="breadcrumb-separator"></div>
+
+            <div class="breadcrumb-item">
+                <span class="step-idx">03</span>
+                <span class="step-txt">FINISH</span>
+            </div>
+        </nav>
+
+        {# C'est ici que le contenu de tes étapes va s'injecter #}
+        <div class="forge-step-content">
+            {% block new_project_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

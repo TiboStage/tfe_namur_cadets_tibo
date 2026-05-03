@@ -1,16 +1,16 @@
 {# templates/website/_partials/_navbar.html.twig #}
-{% trans_default_domain 'navbar' %}
+{% trans_default_domain 'website' %}
 
 <div class="top-banner">
     <p>
         {% if app.user %}
             {{ ux_icon('lucide:rocket', { class: 'icon-xs icon-primary' }) }}
-            {{ 'banner.user'|trans }}
-            <a href="{{ path('app_workshop_dashboard') }}" data-turbo="false">{{ 'banner.user_link'|trans }}</a>
+            {{ 'navbar.banner.user'|trans }}
+            <a href="{{ path('app_workshop_dashboard') }}" data-turbo="false">{{ 'navbar.banner.user_link'|trans }}</a>
         {% else %}
             {{ ux_icon('lucide:sparkles', { class: 'icon-xs icon-primary' }) }}
-            {{ 'banner.guest'|trans }}
-            <a href="{{ path('app_login') }}">{{ 'banner.guest_link'|trans }}</a>
+            {{ 'navbar.banner.guest'|trans }}
+            <a href="{{ path('app_login') }}">{{ 'navbar.banner.guest_link'|trans }}</a>
         {% endif %}
     </p>
 </div>
@@ -22,26 +22,26 @@
         <ul class="nav-links">
             <li>
                 <a href="{{ path('app_home') }}"
-                   class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}">
-                    {{ 'links.home'|trans }}
+                   class="{{ app.request.attributes.get('_route') starts with 'app_home' ? 'active' : '' }}">
+                    {{ 'navbar.links.home'|trans }}
                 </a>
             </li>
             <li>
                 <a href="{{ path('app_examples') }}"
-                   class="{{ app.request.attributes.get('_route') == 'app_examples' ? 'active' : '' }}">
-                    {{ 'links.examples'|trans }}
+                   class="{{ app.request.attributes.get('_route') starts with 'app_examples' ? 'active' : '' }}">
+                    {{ 'navbar.links.examples'|trans }}
                 </a>
             </li>
             <li>
                 <a href="{{ path('app_pricing') }}"
-                   class="{{ app.request.attributes.get('_route') == 'app_pricing' ? 'active' : '' }}">
-                    {{ 'links.pricing'|trans }}
+                   class="{{ app.request.attributes.get('_route') starts with 'app_pricing' ? 'active' : '' }}">
+                    {{ 'navbar.links.pricing'|trans }}
                 </a>
             </li>
             <li>
                 <a href="{{ path('app_contact') }}"
-                   class="{{ app.request.attributes.get('_route') == 'app_contact' ? 'active' : '' }}">
-                    {{ 'links.contact'|trans }}
+                   class="{{ app.request.attributes.get('_route') starts with 'app_contact' ? 'active' : '' }}">
+                    {{ 'navbar.links.contact'|trans }}
                 </a>
             </li>
         </ul>
@@ -49,15 +49,13 @@
         <div class="nav-actions">
             {% if app.user %}
                 <a href="{{ path('app_workshop_dashboard') }}" class="btn-atelier" data-turbo="false">
-                    {{ 'actions.workshop'|trans }}
+                    {{ 'navbar.actions.workshop'|trans }}
                     {{ ux_icon('lucide:arrow-up-right', { class: 'icon-xs icon-inline' }) }}
                 </a>
                 <twig:UserProfile />
-
-
             {% else %}
-                <a href="{{ path('app_login') }}" class="btn-login">{{ 'actions.login'|trans }}</a>
-                <a href="{{ path('app_login') }}" class="btn-atelier">{{ 'actions.register'|trans }}</a>
+                <a href="{{ path('app_login') }}" class="btn-login">{{ 'navbar.actions.login'|trans }}</a>
+                <a href="{{ path('app_login') }}" class="btn-atelier">{{ 'navbar.actions.register'|trans }}</a>
             {% endif %}
         </div>
     </div>

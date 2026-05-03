@@ -1,0 +1,63 @@
+# ============================================================
+# SCÉNART - Flash Messages Traductions (FR)
+# ============================================================
+# Notifications toast : succès, erreur, avertissement, info
+# ============================================================
+
+# ===== AUTHENTIFICATION =====
+auth:
+    welcome: "Bienvenue {firstName} !"
+    welcome_back: "Bon retour {firstName} !"
+    logout: "À bientôt !"
+    logout_success: "Vous êtes maintenant déconnecté"
+    register_success: "Compte créé avec succès ! Veuillez vous connecter."
+
+# ===== PROJET =====
+project:
+    created: "Projet créé avec succès !"
+    updated: "Projet mis à jour."
+    deleted: "Projet supprimé."
+
+# ===== PERSONNAGE =====
+character:
+    created: "Personnage créé avec succès !"
+    updated: "Personnage mis à jour."
+    deleted: "Personnage supprimé."
+
+# ===== LIEU =====
+location:
+    created: "Lieu créé avec succès !"
+    updated: "Lieu mis à jour."
+    deleted: "Lieu supprimé."
+
+# ===== VALIDATION FORMULAIRE =====
+validation:
+    error: "Veuillez corriger les erreurs avant de soumettre"
+    required_fields: "Tous les champs requis doivent être remplis"
+    invalid_email: "L'adresse email n'est pas valide"
+    password_mismatch: "Les mots de passe ne correspondent pas"
+
+# ===== SUCCÈS GÉNÉRIQUES =====
+success:
+    saved: "Enregistré avec succès !"
+    created: "Créé avec succès !"
+    updated: "Mis à jour avec succès !"
+    deleted: "Supprimé avec succès !"
+
+# ===== ERREURS GÉNÉRIQUES =====
+error:
+    generic: "Une erreur s'est produite"
+    not_found: "Élément introuvable"
+    access_denied: "Accès refusé"
+    server_error: "Erreur serveur, veuillez réessayer"
+
+# ===== AVERTISSEMENTS =====
+warning:
+    unsaved_changes: "Modifications non enregistrées"
+    confirm_delete: "Êtes-vous sûr de vouloir supprimer ?"
+
+# ===== INFO =====
+info:
+    loading: "Chargement..."
+    processing: "Traitement en cours..."
+    saved_draft: "Brouillon sauvegardé automatiquement"

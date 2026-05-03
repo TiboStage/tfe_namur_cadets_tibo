@@ -1,0 +1,143 @@
+# ============================================================
+# SCÉNART - General Messages Traductions (FR)
+# ============================================================
+# Messages communs utilisés dans toute l'application
+# ============================================================
+
+# ===== ACTIONS COMMUNES =====
+common:
+    back: "Retour"
+    create: "Créer"
+    save: "Enregistrer"
+    cancel: "Annuler"
+    delete: "Supprimer"
+    edit: "Modifier"
+    submit: "Envoyer"
+    close: "Fermer"
+    confirm: "Confirmer"
+    view: "Voir"
+    manage: "Gérer"
+    open: "Ouvrir"
+    
+    required: "Requis"
+    optional: "Optionnel"
+    loading: "Chargement..."
+    processing: "Traitement..."
+    
+    yes: "Oui"
+    no: "Non"
+    or: "ou"
+    
+    search: "Rechercher"
+    filter: "Filtrer"
+    sort_by: "Trier par"
+    
+    created_at: "Créé le"
+    updated_at: "Modifié le"
+    modified_at: "Modifié le"
+
+# ===== DATES & TEMPS =====
+time:
+    ago: "il y a"
+    min: "min."
+    hour: "heure"
+    hours: "heures"
+    day: "jour"
+    days: "jours"
+    week: "semaine"
+    weeks: "semaines"
+    month: "mois"
+    months: "mois"
+    year: "an"
+    years: "ans"
+    never: "Jamais"
+
+# ===== ÉTATS VIDES =====
+empty:
+    no_results: "Aucun résultat"
+    no_projects: "Aucun projet"
+    no_characters: "Aucun personnage"
+    no_locations: "Aucun lieu"
+    no_activity: "Aucune activité"
+    create_first: "Créez votre premier"
+
+# ===== PLACEHOLDERS =====
+placeholder:
+    search: "Rechercher..."
+    select: "Sélectionner..."
+    choose: "Choisir..."
+    type_here: "Tapez ici..."
+
+# ===== STATUTS =====
+status:
+    draft: "Brouillon"
+    in_progress: "En cours"
+    completed: "Terminé"
+    archived: "Archivé"
+
+# ===== VISIBILITÉ =====
+visibility:
+    public: "Public"
+    private: "Privé"
+    unlisted: "Non listé"
+
+# ===== TYPES DE PROJET =====
+project_type:
+    film: "Film"
+    serie: "Série"
+    jeu_video: "Jeu Vidéo"
+    custom: "Personnalisé"
+
+# ===== RÔLES PERSONNAGE =====
+character_role:
+    protagonist: "Protagoniste"
+    antagonist: "Antagoniste"
+    secondary: "Secondaire"
+    figurant: "Figurant"
+
+# ===== TYPES DE LIEU =====
+location_type:
+    interior: "Intérieur"
+    exterior: "Extérieur"
+    fantasy: "Fantastique"
+    historical: "Historique"
+    futuristic: "Futuriste"
+
+# ===== NAVIGATION =====
+navigation:
+    home: "Accueil"
+    dashboard: "Tableau de bord"
+    projects: "Projets"
+    characters: "Personnages"
+    locations: "Lieux"
+    settings: "Paramètres"
+    profile: "Profil"
+    logout: "Déconnexion"
+
+# ===== CONFIRMATIONS =====
+confirm:
+    delete_project: "Supprimer définitivement ce projet ?"
+    delete_character: "Supprimer ce personnage ?"
+    delete_location: "Supprimer ce lieu ?"
+    leave_page: "Vous avez des modifications non enregistrées. Quitter quand même ?"
+    irreversible: "Cette action est irréversible"
+
+# ===== UPLOAD FICHIERS =====
+upload:
+    choose_file: "Choisir un fichier"
+    drag_drop: "Glissez-déposez ou cliquez pour uploader"
+    max_size: "Taille maximale"
+    accepted_formats: "Formats acceptés"
+    uploading: "Upload en cours..."
+    upload_success: "Upload réussi"
+    upload_error: "Échec de l'upload"
+
+# ===== PAGINATION =====
+pagination:
+    previous: "Précédent"
+    next: "Suivant"
+    page: "Page"
+    of: "sur"
+    showing: "Affichage de"
+    to: "à"
+    results: "résultats"

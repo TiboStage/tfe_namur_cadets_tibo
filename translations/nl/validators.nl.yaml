@@ -1,0 +1,55 @@
+# ============================================================
+# SCÉNART - Validators Vertalingen (NL)
+# ============================================================
+# Formuliervalidatie foutmeldingen
+# ============================================================
+
+# ===== REGISTRATIE =====
+registration:
+    firstname:
+        not_blank: "Voer je voornaam in."
+    
+    lastname:
+        not_blank: "Voer je achternaam in."
+    
+    email:
+        not_blank: "Een e-mailadres is vereist."
+        invalid: "Dit e-mailadres lijkt niet geldig."
+        unique: "Deze email wordt al gebruikt door een andere maker."
+    
+    username:
+        not_blank: "Kies een gebruikersnaam."
+        too_short: "Je gebruikersnaam moet minimaal {{ limit }} tekens lang zijn."
+        too_long: "Je gebruikersnaam mag niet langer zijn dan {{ limit }} tekens."
+        unique: "Deze gebruikersnaam is al bezet. Wees creatief!"
+    
+    password:
+        not_blank: "Een wachtwoord is vereist."
+        length: "Je wachtwoord moet minimaal {{ limit }} tekens lang zijn."
+    
+    terms:
+        must_agree: "Je moet akkoord gaan met de gebruiksvoorwaarden."
+
+# ===== PROJECT =====
+project:
+    title:
+        not_blank: "Elk groot avontuur heeft een naam nodig!"
+        too_short: "De titel moet minimaal {{ limit }} tekens lang zijn."
+    
+    description:
+        not_blank: "Beschrijf je universum in een paar woorden."
+
+# ===== PERSONAGE =====
+character:
+    name:
+        not_blank: "Het personage heeft een naam nodig!"
+
+# ===== LOCATIE =====
+location:
+    name:
+        not_blank: "De locatie heeft een naam nodig!"
+
+# ===== FORMULIERFOUTEN =====
+form:
+    errors:
+        required_invalid: "Vul de verplichte velden in."

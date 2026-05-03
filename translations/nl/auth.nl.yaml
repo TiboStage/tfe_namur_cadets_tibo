@@ -1,0 +1,70 @@
+# ============================================================
+# SCÉNART - Authentication & Profile Vertalingen (NL)
+# ============================================================
+# Inloggen, Aanmelden, Profielbeheer
+# ============================================================
+
+# ===== META =====
+meta:
+    title: "Inloggen & Aanmelden - Scénart"
+    profile_title: "Mijn profiel — Scénart"
+
+# ===== INLOGGEN =====
+login:
+    title: "Inloggen"
+    email: "Email"
+    password: "Wachtwoord"
+    submit: "Inloggen"
+
+# ===== AANMELDEN =====
+register:
+    browser_title: "Lid worden van Scénart"
+    title: "Account aanmaken"
+    subtitle: "Begin je narratieve reis vandaag."
+    
+    firstname: "Voornaam"
+    lastname: "Achternaam"
+    username: "Gebruikersnaam"
+    email: "E-mailadres"
+    password: "Wachtwoord"
+    agree_terms: "Ik ga akkoord met de gebruiksvoorwaarden"
+    submit: "De Workshop wacht"
+
+# ===== AUTH OVERLAY =====
+overlay:
+    welcome: "Welkom terug!"
+    desc_login: "Log in om je verhalen terug te vinden."
+    btn_login: "Ik heb al een account"
+    
+    hello: "Hallo!"
+    desc_register: "Begin nu je schrijfavontuur."
+    btn_register: "Ik ben nieuw"
+
+# ===== PROFIEL =====
+profile:
+    page:
+        title: "Mijn profiel"
+        subtitle: "Beheer je persoonlijke informatie"
+    
+    sections:
+        identity: "Identiteit"
+        identity_desc: "Je publieke informatie"
+        security: "Beveiliging"
+        security_desc: "Wijzig je wachtwoord"
+        stats: "Statistieken"
+    
+    form:
+        firstname: "Voornaam"
+        lastname: "Achternaam"
+        username: "Gebruikersnaam"
+        email: "E-mailadres"
+        new_password: "Nieuw wachtwoord"
+        confirm_password: "Bevestig wachtwoord"
+        password_hint: "Laat leeg om je huidige wachtwoord te behouden (min. 8 tekens)"
+        btn_save: "Wijzigingen opslaan"
+    
+    stats:
+        member_since: "Lid sinds"
+        projects: "Gemaakte projecten"
+        last_login: "Laatste login"
+        never: "Nooit"

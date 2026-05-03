@@ -1,0 +1,63 @@
+# ============================================================
+# SCÉNART - Flash Messages Vertalingen (NL)
+# ============================================================
+# Toast meldingen: succes, fout, waarschuwing, info
+# ============================================================
+
+# ===== AUTHENTICATIE =====
+auth:
+    welcome: "Welkom {firstName}!"
+    welcome_back: "Welkom terug {firstName}!"
+    logout: "Tot snel!"
+    logout_success: "Je bent nu uitgelogd"
+    register_success: "Account succesvol aangemaakt! Log in."
+
+# ===== PROJECT =====
+project:
+    created: "Project succesvol aangemaakt!"
+    updated: "Project bijgewerkt."
+    deleted: "Project verwijderd."
+
+# ===== PERSONAGE =====
+character:
+    created: "Personage succesvol aangemaakt!"
+    updated: "Personage bijgewerkt."
+    deleted: "Personage verwijderd."
+
+# ===== LOCATIE =====
+location:
+    created: "Locatie succesvol aangemaakt!"
+    updated: "Locatie bijgewerkt."
+    deleted: "Locatie verwijderd."
+
+# ===== FORMULIERVALIDATIE =====
+validation:
+    error: "Corrigeer de fouten voordat je verzendt"
+    required_fields: "Alle verplichte velden moeten worden ingevuld"
+    invalid_email: "E-mailadres is niet geldig"
+    password_mismatch: "Wachtwoorden komen niet overeen"
+
+# ===== GENERIEK SUCCES =====
+success:
+    saved: "Succesvol opgeslagen!"
+    created: "Succesvol aangemaakt!"
+    updated: "Succesvol bijgewerkt!"
+    deleted: "Succesvol verwijderd!"
+
+# ===== GENERIEKE FOUTEN =====
+error:
+    generic: "Er is een fout opgetreden"
+    not_found: "Item niet gevonden"
+    access_denied: "Toegang geweigerd"
+    server_error: "Serverfout, probeer opnieuw"
+
+# ===== WAARSCHUWINGEN =====
+warning:
+    unsaved_changes: "Niet-opgeslagen wijzigingen"
+    confirm_delete: "Weet je zeker dat je wilt verwijderen?"
+
+# ===== INFO =====
+info:
+    loading: "Laden..."
+    processing: "Verwerken..."
+    saved_draft: "Concept automatisch opgeslagen"

@@ -81,6 +81,12 @@ class ProjectTypeConfig
         }
     }
 
+    // ─── Relations ──────────────────────────────────────────────────────────
+
+    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'projectTypeConfigs')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?Project $project = null;
+
     // ─── Getter id ────────────────────────────────────────────────────────────
 
     public function getId(): ?int { return $this->id; }
@@ -97,6 +103,7 @@ class ProjectTypeConfig
     public function setDefaultDurationSeconds(int $v): static { $this->defaultDurationSeconds = $v; return $this; }
     public function setIcon(string $v): static { $this->icon = trim($v); return $this; }
     public function setColor(string $v): static { $this->color = $v; return $this; }
+    public function setProject(?Project $project): static { $this->project = $project; return $this; }
 
     public function getProjectType(): string { return $this->projectType; }
     public function getDepth(): int { return $this->depth; }
@@ -108,4 +115,5 @@ class ProjectTypeConfig
     public function getDefaultDurationSeconds(): int { return $this->defaultDurationSeconds; }
     public function getIcon(): string { return $this->icon; }
     public function getColor(): string { return $this->color; }
+    public function getProject(): ?Project { return $this->project; }
 }

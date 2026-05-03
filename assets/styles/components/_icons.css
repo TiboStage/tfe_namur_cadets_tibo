@@ -1,46 +1,70 @@
-/* --- Style de base pour UX Icons --- */
+/*!* --- Style de base pour UX Icons --- *!*/
+/*svg.ux-icon {*/
+/*    display: inline-block;*/
+/*    vertical-align: middle;*/
+/*    flex-shrink: 0;*/
+/*}*/
+
+/*!* --- Tailles standards pour Scénart --- *!*/
+/*.icon-xs { width: 14px; height: 14px; }*/
+/*.icon-sm { width: 18px; height: 18px; }*/
+/*.icon-md { width: 24px; height: 24px; }*/
+
+/*!* --- Couleurs --- *!*/
+/*.icon-primary { color: var(--color-primary); } !* Ton jaune #ffb800 *!*/
+/*.icon-white { color: #ffffff; }*/
+
+/*!* --- Animation Hover pour la Navbar --- *!*/
+/*.icon-hover-move {*/
+/*    transition: transform 0.2s ease;*/
+/*}*/
+
+/*a:hover .icon-hover-move {*/
+/*    transform: translateX(3px);*/
+/*}*/
+
+
+/*!* Espace entre l'icône et le texte quand ils sont côte à côte *!*/
+/*.icon-inline {*/
+/*    margin-left: 5px;*/
+/*}*/
+
+/*!* Version pour quand l'icône est avant le texte (dropdown) *!*/
+/*.dropdown-content li a .ux-icon {*/
+/*    margin-right: 10px;*/
+/*}*/
+
+/*!* Couleur pour la flèche du dropdown *!*/
+/*.icon-muted {*/
+/*    color: #444; !* ou la variable que tu utilises *!*/
+/*}*/
+
+/*.d-none { display: none !important; }*/
+/*.text-success { color: #28a745; }*/
+/*.text-danger { color: #dc3545; }*/
+/*.is-invalid { border: 2px solid #dc3545 !important; }*/
+/*.is-valid { border: 2px solid #28a745 !important; }*/
+/* --- Style de base --- */
+
 svg.ux-icon {
     display: inline-block;
     vertical-align: middle;
     flex-shrink: 0;
 }
 
-/* --- Tailles standards pour Scénart --- */
+/* --- Tailles --- */
 .icon-xs { width: 14px; height: 14px; }
 .icon-sm { width: 18px; height: 18px; }
 .icon-md { width: 24px; height: 24px; }
 
-/* --- Couleurs --- */
-.icon-primary { color: var(--color-primary); } /* Ton jaune #ffb800 */
-.icon-white { color: #ffffff; }
-
-/* --- Animation Hover pour la Navbar --- */
+/* --- Animations --- */
 .icon-hover-move {
     transition: transform 0.2s ease;
 }
 
-a:hover .icon-hover-move {
-    transform: translateX(3px);
+/* On utilise l'imbrication native pour la clarté */
+a:hover {
+    .icon-hover-move {
+        transform: translateX(3px);
+    }
 }
-
-
-/* Espace entre l'icône et le texte quand ils sont côte à côte */
-.icon-inline {
-    margin-left: 5px;
-}
-
-/* Version pour quand l'icône est avant le texte (dropdown) */
-.dropdown-content li a .ux-icon {
-    margin-right: 10px;
-}
-
-/* Couleur pour la flèche du dropdown */
-.icon-muted {
-    color: #444; /* ou la variable que tu utilises */
-}
-
-.d-none { display: none !important; }
-.text-success { color: #28a745; }
-.text-danger { color: #dc3545; }
-.is-invalid { border: 2px solid #dc3545 !important; }
-.is-valid { border: 2px solid #28a745 !important; }

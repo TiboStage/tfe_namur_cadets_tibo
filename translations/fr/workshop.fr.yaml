@@ -1,0 +1,323 @@
+# ============================================================
+# SCÉNART - Workshop Interface Traductions (FR)
+# ============================================================
+# Dashboard, Projets, Personnages, Lieux, Création Projet
+# ============================================================
+
+# ===== NAVBAR (ATELIER) =====
+navbar:
+    actions:
+        profile: "Profil"
+        logout: "Déconnexion"
+
+# ===== DASHBOARD =====
+dashboard:
+    greeting: "Bonjour,"
+    subtitle: "projet(s) au total"
+    
+    stats:
+        projects_value: "Projets en cours"
+        projects_link: "↗ Voir tout"
+        views_value: "Vues totales"
+        views_link: "↗ Statistiques"
+        entities_value: "Entités créées"
+        characters: "Personnages créés"
+        locations: "Lieux créés"
+        scenes: "Scènes écrites"
+        projects: "Projets actifs"
+    
+    actions:
+        new_project_title: "Nouveau projet"
+        new_project_desc: "Jeu vidéo, série, film"
+        new_project_btn: "+ Créer"
+        export_title: "Exporter un projet"
+        export_desc: "Format (.pdf, .xml)"
+        export_btn: "↓ Exporter"
+    
+    projects:
+        title: "Projets en cours"
+        see_more: "Voir plus ↗"
+        empty: "Aucun projet pour le moment. Créez-en un !"
+    
+    recent_projects:
+        title: "Projets récents"
+        no_projects: "Aucun projet pour le moment"
+        create_first: "Créez votre premier projet pour commencer"
+        view_all: "Voir tous les projets"
+    
+    activity:
+        title: "Activité récente"
+        see_all: "Voir tout ↗"
+        action: "a modifié un projet"
+        ago: "il y a"
+        min: "min."
+        no_activity: "Aucune activité pour le moment"
+    
+    quick_actions:
+        new_project: "Nouveau projet"
+        new_character: "Nouveau personnage"
+        new_location: "Nouveau lieu"
+        new_scene: "Nouvelle scène"
+
+# ===== PROJETS =====
+projects:
+    index:
+        title: "Mes projets"
+        subtitle: "projet(s) au total"
+        btn_new: "+ Nouveau projet"
+        empty: "Aucun projet pour le moment."
+        empty_btn: "Créer mon premier projet"
+        modified: "Modifié le"
+        btn_open: "Ouvrir"
+        btn_edit: "Modifier"
+    
+    new:
+        title: "Nouveau projet"
+        back: "← Mes projets"
+        label_title: "Titre du projet"
+        label_type: "Type de projet"
+        label_desc: "Description"
+        placeholder_title: "Ex : Les Ombres de Valoria"
+        placeholder_desc: "Décrivez votre univers en quelques phrases..."
+        btn_cancel: "Annuler"
+        btn_submit: "Créer le projet →"
+    
+    edit:
+        title: "Paramètres du projet"
+        label_title: "Titre"
+        label_type: "Type de projet"
+        label_desc: "Description"
+        btn_cancel: "Annuler"
+        btn_submit: "Enregistrer"
+        danger_title: "Zone de danger"
+        danger_desc: "La suppression est irréversible. Toutes les données du projet seront perdues."
+        danger_btn: "Supprimer ce projet"
+        danger_confirm: "Supprimer définitivement ce projet ?"
+    
+    show:
+        back: "← Mes projets"
+        btn_settings: "Paramètres"
+        no_description: "Aucune description."
+        section_structure: "Structure narrative"
+        section_structure_desc: "Actes, séquences, scènes"
+        section_structure_btn: "Ouvrir l'éditeur"
+        section_characters: "Personnages"
+        section_locations: "Lieux"
+        section_tags: "Tags"
+        btn_manage: "Gérer"
+
+# ===== CRÉATION DE PROJET (FUNNEL) =====
+project_new:
+    # ÉTAPE 1 : Sélection du mode
+    step1:
+        title: "Créer un nouveau projet"
+        subtitle: "Choisissez votre mode de création"
+        
+        mode_simplifie:
+            title: "Mode Simplifié"
+            badge: "Recommandé"
+            desc_1: "Création rapide"
+            desc_2: "Configuration guidée"
+            desc_3: "Structure par défaut"
+            button: "Commencer en mode simplifié"
+        
+        mode_custom:
+            title: "Mode Personnalisé"
+            badge: "Avancé"
+            desc_1: "Contrôle total"
+            desc_2: "Sélection des fonctionnalités"
+            desc_3: "Personnalisation avancée"
+            button: "Commencer en mode personnalisé"
+    
+    # ÉTAPE 2 : Type de projet
+    step2:
+        title_simplifie: "Quel type de projet ?"
+        title_custom: "Configuration du projet"
+        subtitle: "Ce choix ne peut pas être modifié"
+        
+        # Types de projet
+        type:
+            film:
+                title: "Film"
+                subtitle: "Court ou long métrage"
+                desc: "L'ARC DRAMATIQUE"
+                structure: "Structure 3 niveaux : Acte → Séquence → Scène"
+                features_title: "FONCTIONNALITÉS SIGNATURE :"
+                feature_1: "Le Thermomètre de Tension"
+                feature_1_desc: "Analysez votre courbe d'intensité narrative"
+                feature_2: "Le Battement de Cœur"
+                feature_2_desc: "Type et rythme de chaque scène (Action, Dialogue, Silence, Exposition)"
+            
+            serie:
+                title: "Série"
+                subtitle: "Web-série ou série TV"
+                desc: "L'ARCHITECTURE MULTI-ARCS"
+                structure: "Structure 4 niveaux : Saison → Épisode → Acte → Scène"
+                features_title: "FONCTIONNALITÉS SIGNATURE :"
+                feature_1: "Le Tracker de Storylines"
+                feature_1_desc: "Suivez vos intrigues et détectez les fils oubliés"
+                feature_2: "Le Cliffhanger"
+                feature_2_desc: "Intensité du suspense en fin d'épisode"
+            
+            jeu_video:
+                title: "Jeu Vidéo"
+                subtitle: "Jeu narratif indé"
+                desc: "LA QUÊTE INTERACTIVE"
+                structure: "Structure 4 niveaux : Chapitre → Type de Quête → Point d'Intérêt → Scène"
+                features_title: "FONCTIONNALITÉS SIGNATURE :"
+                feature_1: "Le Label d'Interactivité"
+                feature_1_desc: "Type de contenu : Cinématique, Choix de dialogue, Gameplay"
+                feature_2: "Le Conditionneur de Réalité"
+                feature_2_desc: "Prérequis narratifs pour débloquer des scènes"
+        
+        # Mode Personnalisé - Slides
+        custom:
+            slide1_title: "ÉTAPE 1/3 : Type de projet"
+            slide2_title: "ÉTAPE 2/3 : Fonctionnalités disponibles"
+            slide2_subtitle: "Vous pouvez mixer les fonctionnalités selon vos besoins"
+            slide3_title: "ÉTAPE 3/3 : Configuration avancée"
+            
+            structure_title: "STRUCTURE NARRATIVE"
+            structure_standard: "Standard (Acte → Séquence → Scène)"
+            structure_custom: "Personnalisée (jusqu'à 5 niveaux)"
+            structure_label_placeholder: "Ex : Partie, Chapitre, Scène..."
+            structure_has_content: "Contient du texte"
+            structure_add_level: "+ Ajouter un niveau (max 5)"
+            
+            genres_title: "GENRES (choix multiples)"
+        
+        # Boutons de navigation
+        button_back: "← Retour"
+        button_next: "Suivant →"
+        button_validate: "Valider →"
+    
+    # ÉTAPE 3 : Finalisation
+    step3:
+        title: "Finalisation"
+        subtitle: "Derniers détails avant création"
+        
+        form:
+            title_label: "Titre du projet *"
+            title_placeholder: "Ex : Les Ombres de Bruxelles"
+            description_label: "Description / Pitch"
+            description_placeholder: "Décrivez votre projet en quelques phrases..."
+            genres_label: "Genres (choix multiples)"
+            cover_label: "Image du projet"
+            cover_help: "(optionnel)"
+            cover_button: "Choisir un fichier"
+        
+        recap:
+            title: "RÉCAPITULATIF"
+            mode: "Mode :"
+            type: "Type :"
+            type_locked: "(ne peut pas être modifié)"
+            structure: "Structure :"
+            genres: "Genres :"
+            features: "Fonctionnalités activées :"
+            visibility: "Visibilité :"
+            visibility_private: "Privé"
+        
+        button_create: "Créer le projet →"
+    
+    # Genres disponibles
+    genres:
+        film:
+            thriller: "Thriller"
+            horror: "Horreur"
+            scifi: "Science-Fiction"
+            drama: "Drame"
+            comedy: "Comédie"
+            action: "Action"
+            fantasy: "Fantasy"
+        
+        serie:
+            drama: "Drame"
+            comedy: "Comédie"
+            thriller: "Thriller"
+            scifi: "Science-Fiction"
+            fantasy: "Fantasy"
+            animation: "Animation"
+            romance: "Romance"
+        
+        jeu_video:
+            rpg: "RPG"
+            action: "Action"
+            adventure: "Aventure"
+            platformer: "Plateforme"
+            puzzle: "Puzzle"
+            visual_novel: "Visual Novel"
+            simulation: "Simulation"
+    
+    # Messages d'erreur
+    error:
+        invalid_data: "Données invalides. Veuillez recommencer."
+        missing_title: "Le titre est requis."
+
+# ===== PERSONNAGES =====
+character:
+    index:
+        title: "Personnages"
+        new_btn: "+ Nouveau personnage"
+        empty: "Aucun personnage pour le moment."
+        empty_create: "Créer le premier personnage"
+    
+    new:
+        title: "Nouveau personnage"
+        back: "← Personnages"
+        submit: "Créer le personnage →"
+        cancel: "Annuler"
+    
+    edit:
+        title: "Modifier le personnage"
+        submit: "Enregistrer"
+        cancel: "Annuler"
+        danger_zone: "Zone de danger"
+        danger_desc: "La suppression est irréversible."
+        delete_btn: "Supprimer ce personnage"
+        delete_confirm: "Supprimer ce personnage ?"
+    
+    show:
+        back: "← Personnages"
+        edit_btn: "Modifier"
+        no_description: "Aucune description pour ce personnage."
+    
+    info:
+        title: "Informations"
+        role: "Rôle"
+        created_at: "Créé le"
+        relations: "Relations"
+        no_relations: "Aucune relation définie."
+
+# ===== LIEUX =====
+location:
+    index:
+        title: "Lieux"
+        new_btn: "+ Nouveau lieu"
+        empty: "Aucun lieu pour le moment."
+        empty_create: "Créer le premier lieu"
+    
+    new:
+        title: "Nouveau lieu"
+        back: "← Lieux"
+        submit: "Créer le lieu →"
+        cancel: "Annuler"
+    
+    edit:
+        title: "Modifier le lieu"
+        submit: "Enregistrer"
+        cancel: "Annuler"
+        danger_zone: "Zone de danger"
+        danger_desc: "La suppression est irréversible."
+        delete_btn: "Supprimer ce lieu"
+        delete_confirm: "Supprimer ce lieu ?"
+    
+    show:
+        back: "← Lieux"
+        edit_btn: "Modifier"
+        no_description: "Aucune description pour ce lieu."
+    
+    info:
+        title: "Informations"
+        type: "Type"
+        created_at: "Créé le"
+        updated_at: "Modifié le"

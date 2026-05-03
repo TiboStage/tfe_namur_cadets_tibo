@@ -1,0 +1,143 @@
+# ============================================================
+# SCÉNART - Forms Traductions (FR)
+# ============================================================
+# Tous les formulaires : Personnage, Lieu, Projet
+# ============================================================
+
+# ===== FORMULAIRE PERSONNAGE =====
+character:
+    form:
+        section_identity: "Identité"
+        section_psychology: "Psychologie"
+        
+        name:
+            label: "Nom d'affichage"
+            placeholder: "Ex : Marie Dupont"
+            help: "Le nom principal de votre personnage"
+        
+        firstname:
+            label: "Prénom"
+            placeholder: "Marie"
+        
+        lastname:
+            label: "Nom de famille"
+            placeholder: "Dupont"
+        
+        nickname:
+            label: "Surnom / Alias principal"
+            placeholder: "La détective"
+        
+        role:
+            label: "Rôle narratif"
+            placeholder: "Ex : Protagoniste, Antagoniste, Mentor..."
+            help: "La fonction narrative du personnage"
+        
+        description:
+            label: "Description courte"
+            placeholder: "Décrivez brièvement ce personnage..."
+            help: "Description détaillée du personnage"
+        
+        biography:
+            label: "Biographie"
+            placeholder: "Son histoire, son passé..."
+            help: "Le passé et la psychologie du personnage"
+        
+        goals:
+            label: "Objectifs"
+            placeholder: "Que veut-il accomplir ?"
+        
+        motivations:
+            label: "Motivations"
+            placeholder: "Pourquoi agit-il ainsi ?"
+        
+        arc:
+            label: "Arc narratif"
+            placeholder: "Comment évolue-t-il au cours de l'histoire ?"
+        
+        aliases:
+            label: "Alias"
+            placeholder: "Surnoms, pseudonymes, autres noms..."
+            help: "Séparés par des virgules. Ex : JD, Le Boss, M. X"
+        
+        backstory:
+            label: "Passé"
+            placeholder: "Passé, motivations, événements marquants..."
+            help: "Le passé et la psychologie du personnage"
+        
+        notes:
+            label: "Notes additionnelles"
+            placeholder: "Détails supplémentaires, idées en vrac..."
+            help: "Toutes vos notes sur ce personnage"
+        
+        submit_new: "Créer le personnage"
+        submit_edit: "Enregistrer les modifications"
+        cancel: "Annuler"
+
+# ===== FORMULAIRE LIEU =====
+location:
+    form:
+        name:
+            label: "Nom du lieu"
+            placeholder: "Ex : Le Manoir de Blackwood"
+            help: "Le nom principal du lieu"
+        
+        type:
+            label: "Type de lieu"
+            placeholder: "Ex : Taverne, Manoir, Forêt, Ville..."
+            help: "La catégorie du lieu"
+        
+        description:
+            label: "Description"
+            placeholder: "Décrivez ce lieu, son ambiance, ses caractéristiques..."
+            help: "Description détaillée du lieu"
+        
+        atmosphere:
+            label: "Ambiance"
+            placeholder: "Atmosphère, émotions ressenties..."
+            help: "L'ambiance et le mood du lieu"
+        
+        aliases:
+            label: "Alias"
+            placeholder: "Autres noms, surnoms..."
+            help: "Séparés par des virgules. Ex : Le Dragon, Chez Marcel"
+        
+        notes:
+            label: "Notes additionnelles"
+            placeholder: "Détails supplémentaires, idées en vrac..."
+            help: "Toutes vos notes sur ce lieu"
+        
+        submit_new: "Créer le lieu"
+        submit_edit: "Enregistrer les modifications"
+        cancel: "Annuler"
+
+# ===== FORMULAIRE PROJET =====
+project:
+    form:
+        title:
+            label: "Titre du projet"
+            placeholder: "Le nom de votre univers..."
+        
+        type:
+            label: "Type de projet"
+        
+        description:
+            label: "Description"
+            placeholder: "Décrivez brièvement votre histoire..."
+        
+        submit_create: "Créer l'Univers"
+        submit_edit: "Enregistrer les modifications"
+        cancel: "Annuler"
+
+# ===== ÉLÉMENTS COMMUNS =====
+common:
+    back: "Retour"
+    create: "Créer"
+    save: "Enregistrer"
+    cancel: "Annuler"
+    delete: "Supprimer"
+    edit: "Modifier"
+    submit: "Envoyer"
+    close: "Fermer"
+    confirm: "Confirmer"
+    required: "Champ requis"
+    optional: "Optionnel"

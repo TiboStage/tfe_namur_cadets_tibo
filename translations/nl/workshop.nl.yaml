@@ -1,0 +1,186 @@
+# ============================================================
+# SCÉNART - Workshop Interface Vertalingen (NL)
+# ============================================================
+# Dashboard, Projecten, Personages, Locaties, Projectcreatie
+# ============================================================
+
+# ===== NAVBAR (WORKSHOP) =====
+navbar:
+    actions:
+        profile: "Profiel"
+        logout: "Uitloggen"
+
+# ===== DASHBOARD =====
+dashboard:
+    greeting: "Hallo,"
+    subtitle: "project(en) in totaal"
+    
+    stats:
+        projects_value: "Projecten in uitvoering"
+        projects_link: "↗ Alles bekijken"
+        views_value: "Totale views"
+        views_link: "↗ Statistieken"
+        entities_value: "Gemaakte entiteiten"
+        characters: "Gemaakte personages"
+        locations: "Gemaakte locaties"
+        scenes: "Geschreven scènes"
+        projects: "Actieve projecten"
+    
+    actions:
+        new_project_title: "Nieuw project"
+        new_project_desc: "Videogame, serie, film"
+        new_project_btn: "+ Creëren"
+        export_title: "Project exporteren"
+        export_desc: "Formaat (.pdf, .xml)"
+        export_btn: "↓ Exporteren"
+    
+    projects:
+        title: "Projecten in uitvoering"
+        see_more: "Meer bekijken ↗"
+        empty: "Nog geen projecten. Maak er een!"
+    
+    recent_projects:
+        title: "Recente projecten"
+        no_projects: "Nog geen projecten"
+        create_first: "Maak je eerste project om te beginnen"
+        view_all: "Alle projecten bekijken"
+    
+    activity:
+        title: "Recente activiteit"
+        see_all: "Alles bekijken ↗"
+        action: "heeft een project gewijzigd"
+        ago: "geleden"
+        min: "min."
+        no_activity: "Nog geen activiteit"
+    
+    quick_actions:
+        new_project: "Nieuw project"
+        new_character: "Nieuw personage"
+        new_location: "Nieuwe locatie"
+        new_scene: "Nieuwe scène"
+
+# ===== PROJECTEN =====
+projects:
+    index:
+        title: "Mijn projecten"
+        subtitle: "project(en) in totaal"
+        btn_new: "+ Nieuw project"
+        empty: "Nog geen projecten."
+        empty_btn: "Mijn eerste project maken"
+        modified: "Gewijzigd op"
+        btn_open: "Openen"
+        btn_edit: "Bewerken"
+    
+    new:
+        title: "Nieuw project"
+        back: "← Mijn projecten"
+        label_title: "Projecttitel"
+        label_type: "Projecttype"
+        label_desc: "Beschrijving"
+        placeholder_title: "Bijv: De Schaduwen van Valoria"
+        placeholder_desc: "Beschrijf je universum in een paar zinnen..."
+        btn_cancel: "Annuleren"
+        btn_submit: "Project maken →"
+    
+    edit:
+        title: "Projectinstellingen"
+        label_title: "Titel"
+        label_type: "Projecttype"
+        label_desc: "Beschrijving"
+        btn_cancel: "Annuleren"
+        btn_submit: "Opslaan"
+        danger_title: "Gevarenzone"
+        danger_desc: "Verwijdering is onomkeerbaar. Alle projectgegevens gaan verloren."
+        danger_btn: "Dit project verwijderen"
+        danger_confirm: "Dit project permanent verwijderen?"
+    
+    show:
+        back: "← Mijn projecten"
+        btn_settings: "Instellingen"
+        no_description: "Geen beschrijving."
+        section_structure: "Narratieve structuur"
+        section_structure_desc: "Akten, sequenties, scènes"
+        section_structure_btn: "Editor openen"
+        section_characters: "Personages"
+        section_locations: "Locaties"
+        section_tags: "Tags"
+        btn_manage: "Beheren"
+
+# ===== PERSONAGES =====
+character:
+    index:
+        title: "Personages"
+        new_btn: "+ Nieuw personage"
+        empty: "Nog geen personages."
+        empty_create: "Eerste personage maken"
+    
+    new:
+        title: "Nieuw personage"
+        back: "← Personages"
+        submit: "Personage maken →"
+        cancel: "Annuleren"
+    
+    edit:
+        title: "Personage bewerken"
+        submit: "Opslaan"
+        cancel: "Annuleren"
+        danger_zone: "Gevarenzone"
+        danger_desc: "Verwijdering is onomkeerbaar."
+        delete_btn: "Dit personage verwijderen"
+        delete_confirm: "Dit personage verwijderen?"
+    
+    show:
+        back: "← Personages"
+        edit_btn: "Bewerken"
+        no_description: "Geen beschrijving voor dit personage."
+    
+    info:
+        title: "Informatie"
+        role: "Rol"
+        created_at: "Aangemaakt op"
+        relations: "Relaties"
+        no_relations: "Geen relaties gedefinieerd."
+
+# ===== LOCATIES =====
+location:
+    index:
+        title: "Locaties"
+        new_btn: "+ Nieuwe locatie"
+        empty: "Nog geen locaties."
+        empty_create: "Eerste locatie maken"
+    
+    new:
+        title: "Nieuwe locatie"
+        back: "← Locaties"
+        submit: "Locatie maken →"
+        cancel: "Annuleren"
+    
+    edit:
+        title: "Locatie bewerken"
+        submit: "Opslaan"
+        cancel: "Annuleren"
+        danger_zone: "Gevarenzone"
+        danger_desc: "Verwijdering is onomkeerbaar."
+        delete_btn: "Deze locatie verwijderen"
+        delete_confirm: "Deze locatie verwijderen?"
+    
+    show:
+        back: "← Locaties"
+        edit_btn: "Bewerken"
+        no_description: "Geen beschrijving voor deze locatie."
+    
+    info:
+        title: "Informatie"
+        type: "Type"
+        created_at: "Aangemaakt op"
+        updated_at: "Gewijzigd op"
+
+# ===== PROJECTCREATIE FUNNEL (vereenvoudigd - volledige versie beschikbaar op aanvraag) =====
+project_new:
+    step1:
+        title: "Een nieuw project maken"
+    step2:
+        title_simplifie: "Welk type project?"
+    step3:
+        title: "Voltooiing"
+        button_create: "Project maken →"

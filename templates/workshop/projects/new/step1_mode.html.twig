@@ -1,0 +1,54 @@
+{# templates/workshop/projects/new/step1_mode.html.twig #}
+
+{% extends 'workshop/projects/new/layout.html.twig' %}
+
+{% block title %}{{ 'project_new.step1.title'|trans({}, 'project_new')  }}{% endblock %}
+
+{% block new_project_content %}
+<div class="project-funnel-container" data-controller="funnel-step1">
+    <div class="funnel-header">
+        <h1>{{ 'project_new.step1.title'|trans({}, 'project_new')  }}</h1>
+        <p class="funnel-subtitle">{{ 'project_new.step1.subtitle'|trans({}, 'project_new')  }}</p>
+    </div>
+
+    <div class="mode-selection">
+        {# Mode Simplifié #}
+        <div class="mode-card mode-card--simplifie" data-funnel-step1-target="card">
+            <div class="mode-card__badge">{{ 'project_new.step1.mode_simplifie.badge'|trans({}, 'project_new')  }}</div>
+            <div class="mode-card__icon">
+                {{ ux_icon('lucide:zap', {style: 'width: 48px; height: 48px;'}) }}
+            </div>
+            <h2 class="mode-card__title">{{ 'project_new.step1.mode_simplifie.title'|trans({}, 'project_new')  }}</h2>
+
+            <ul class="mode-card__features">
+                <li>{{ 'project_new.step1.mode_simplifie.desc_1'|trans({}, 'project_new')  }}</li>
+                <li>{{ 'project_new.step1.mode_simplifie.desc_2'|trans({}, 'project_new')  }}</li>
+                <li>{{ 'project_new.step1.mode_simplifie.desc_3'|trans({}, 'project_new')  }}</li>
+            </ul>
+
+            <a href="{{ path('app_project_new_step2', {mode: 'simplifie'}) }}" class="btn btn--cta-yellow">
+                {{ 'project_new.step1.mode_simplifie.button'|trans({}, 'project_new')  }}
+            </a>
+        </div>
+
+        {# Mode Custom #}
+        <div class="mode-card mode-card--custom" data-funnel-step1-target="card">
+            <div class="mode-card__badge mode-card__badge--advanced">{{ 'project_new.step1.mode_custom.badge'|trans({}, 'project_new')  }}</div>
+            <div class="mode-card__icon">
+                {{ ux_icon('lucide:wrench', {style: 'width: 48px; height: 48px;'}) }}
+            </div>
+            <h2 class="mode-card__title">{{ 'project_new.step1.mode_custom.title'|trans({}, 'project_new')  }}</h2>
+
+            <ul class="mode-card__features">
+                <li>{{ 'project_new.step1.mode_custom.desc_1'|trans({}, 'project_new')  }}</li>
+                <li>{{ 'project_new.step1.mode_custom.desc_2'|trans({}, 'project_new')  }}</li>
+                <li>{{ 'project_new.step1.mode_custom.desc_3'|trans({}, 'project_new')  }}</li>
+            </ul>
+
+            <a href="{{ path('app_project_new_step2', {mode: 'custom'}) }}" class="btn btn--primary">
+                {{ 'project_new.step1.mode_custom.button'|trans({}, 'project_new')  }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,32 +1,36 @@
 {% extends 'website/layout.html.twig' %}
+{% trans_default_domain 'website' %}
 
-{% trans_default_domain 'contact' %}
-
-{% block title %}{{ 'meta.title'|trans }}{% endblock %}
+{% block title %}{{ 'meta.contact_title'|trans }}{% endblock %}
 
 {% block content %}
     <main class="container contact-page section-header">
         <div class="contact-grid">
 
-            {# Partie Gauche : Infos #}
             <div class="contact-info">
-                <span class="section-tag">{{ 'info.tag'|trans }}</span>
-                <h1 class="main-title">{{ 'info.title'|trans }} <br><span class="highlight">{{ 'info.title_highlight'|trans }}</span></h1>
-                <p class="section-desc">{{ 'info.description'|trans }}</p>
+                <span class="section-tag">{{ 'contact.info.tag'|trans }}</span>
+                <h1 class="main-title">{{ 'contact.info.title'|trans }}<br>
+                    <span class="highlight">{{ 'contact.info.title_highlight'|trans }}</span>
+                </h1>
+                <p class="section-desc">{{ 'contact.info.description'|trans }}</p>
 
                 <div class="info-cards-stack">
                     <div class="info-card">
                         <div class="info-icon"><i class="fa-regular fa-clock"></i></div>
                         <div class="info-content">
-                            <h4>{{ 'info.cards.response_time'|trans }}</h4>
-                            <p>{{ 'info.cards.response_desc'|trans }}<br><span>{{ 'info.cards.response_sub'|trans }}</span></p>
+                            <h4>{{ 'contact.info.cards.response_time'|trans }}</h4>
+                            <p>{{ 'contact.info.cards.response_desc'|trans }}<br>
+                                <span>{{ 'contact.info.cards.response_sub'|trans }}</span>
+                            </p>
                         </div>
                     </div>
                     <div class="info-card">
                         <div class="info-icon"><i class="fa-solid fa-graduation-cap"></i></div>
                         <div class="info-content">
-                            <h4>{{ 'info.cards.academic'|trans }}</h4>
-                            <p>{{ 'info.cards.academic_desc'|trans }}<br>{{ 'info.cards.academic_location'|trans }}</p>
+                            <h4>{{ 'contact.info.cards.academic'|trans }}</h4>
+                            <p>{{ 'contact.info.cards.academic_desc'|trans }}<br>
+                                {{ 'contact.info.cards.academic_location'|trans }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -39,128 +43,86 @@
                 </div>
             </div>
 
-            {# Partie Droite : Formulaire #}
             <div class="form-wrapper">
                 <div class="form-card">
-                    <h2 class="form-title">{{ 'form.title'|trans }}</h2>
+                    <h2>{{ 'contact.form.title'|trans }}</h2>
 
-                    {% for label, messages in app.flashes %}
-                        {% for message in messages %}
-                            {{ component('Alert', { type: label, message: message }) }}
-                        {% endfor %}
-                    {% endfor %}
-
-                    {# On garde le controller uniquement ici #}
                     <form action="{{ path('app_contact') }}"
                           method="POST"
-                          class="scenart-form"
                           novalidate
-                          data-controller="validator"
-                          data-validator-error-value="{{ 'form.errors.global_invalid'|trans }}"
-                          data-action="submit->validator#validateForm">
+                          data-controller="contact-form">
 
-                        {# Champ Email #}
                         <div class="form-group full">
-                            <label for="email">
-                                {{ 'form.labels.email'|trans }} <span>*</span>
-                                <span class="error-message d-none text-danger small"> {{ 'form.errors.email_invalid'|trans }}</span>
-                            </label>
-                            <div class="input-wrapper" style="position: relative;">
-                                <input type="email" id="email" name="email" placeholder="john.doe@scenart.be" data-action="blur->validator#check">
-                                <span class="success-icon d-none" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%);">
-                                    {{ ux_icon('lucide:check-circle', {class: 'text-success', style: 'width: 20px; height: 20px;'}) }}
-                                </span>
-                                <span class="error-icon d-none" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%);">
-                                    {{ ux_icon('lucide:alert-circle', {class: 'text-danger', style: 'width: 20px; height: 20px;'}) }}
-                                </span>
-                            </div>
+                            <label for="email">{{ 'contact.form.labels.email'|trans }} <span class="required">*</span></label>
+                            <input type="email" id="email" name="email"
+                                   placeholder="john.doe@scenart.be"
+                                   value="{{ app.request.request.get('email', '') }}"
+                                   data-contact-form-target="email"
+                                   data-action="blur->contact-form#validateEmail">
+                            <span class="error-message" data-contact-form-target="emailError"></span>
                         </div>
 
                         <div class="form-row">
-                            {# Champ Prénom #}
                             <div class="form-group">
-                                <label for="firstname">
-                                    {{ 'form.labels.firstname'|trans }} <span>*</span>
-                                    <span class="error-message d-none text-danger small"> {{ 'form.errors.required'|trans }}</span>
-                                </label>
-                                <div class="input-wrapper" style="position: relative;">
-                                    <input type="text" id="firstname" name="firstname" placeholder="{{ 'form.placeholders.firstname'|trans }}" data-action="blur->validator#check">
-                                    <span class="success-icon d-none" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%);">
-                                        {{ ux_icon('lucide:check-circle', {class: 'text-success', style: 'width: 20px; height: 20px;'}) }}
-                                    </span>
-                                    <span class="error-icon d-none" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%);">
-                                        {{ ux_icon('lucide:alert-circle', {class: 'text-danger', style: 'width: 20px; height: 20px;'}) }}
-                                    </span>
-                                </div>
+                                <label for="firstname">{{ 'contact.form.labels.firstname'|trans }} <span class="required">*</span></label>
+                                <input type="text" id="firstname" name="firstname"
+                                       value="{{ app.request.request.get('firstname', '') }}"
+                                       data-contact-form-target="firstname"
+                                       data-action="blur->contact-form#validateRequired">
+                                <span class="error-message" data-contact-form-target="firstnameError"></span>
                             </div>
-
-                            {# Champ Nom #}
                             <div class="form-group">
-                                <label for="lastname">
-                                    {{ 'form.labels.lastname'|trans }} <span>*</span>
-                                    <span class="error-message d-none text-danger small"> {{ 'form.errors.required'|trans }}</span>
-                                </label>
-                                <div class="input-wrapper" style="position: relative;">
-                                    <input type="text" id="lastname" name="lastname" placeholder="{{ 'form.placeholders.lastname'|trans }}" data-action="blur->validator#check">
-                                    <span class="success-icon d-none" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%);">
-                                        {{ ux_icon('lucide:check-circle', {class: 'text-success', style: 'width: 20px; height: 20px;'}) }}
-                                    </span>
-                                    <span class="error-icon d-none" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%);">
-                                        {{ ux_icon('lucide:alert-circle', {class: 'text-danger', style: 'width: 20px; height: 20px;'}) }}
-                                    </span>
-                                </div>
+                                <label for="lastname">{{ 'contact.form.labels.lastname'|trans }} <span class="required">*</span></label>
+                                <input type="text" id="lastname" name="lastname"
+                                       value="{{ app.request.request.get('lastname', '') }}"
+                                       data-contact-form-target="lastname"
+                                       data-action="blur->contact-form#validateRequired">
+                                <span class="error-message" data-contact-form-target="lastnameError"></span>
                             </div>
                         </div>
 
-                        {# Champ Sujet #}
                         <div class="form-group full">
-                            <label for="subject">
-                                {{ 'form.labels.subject'|trans }} <span>*</span>
-                                <span class="error-message d-none text-danger small"> {{ 'form.errors.subject_required'|trans }}</span>
-                            </label>
-                            <div class="select-wrapper" style="position: relative;">
-                                <select name="subject" id="subject" data-action="change->validator#check">
-                                    <option value="" disabled selected>{{ 'form.placeholders.subject'|trans }}</option>
-                                    <option value="support">{{ 'form.subjects.support'|trans }}</option>
-                                    <option value="billing">{{ 'form.subjects.billing'|trans }}</option>
-                                    <option value="partnership">{{ 'form.subjects.partnership'|trans }}</option>
-                                </select>
-                                <span class="success-icon d-none" style="position: absolute; right: 35px; top: 50%; transform: translateY(-50%);">
-                                    {{ ux_icon('lucide:check-circle', {class: 'text-success', style: 'width: 20px; height: 20px;'}) }}
-                                </span>
-                                <span class="error-icon d-none" style="position: absolute; right: 35px; top: 50%; transform: translateY(-50%);">
-                                    {{ ux_icon('lucide:alert-circle', {class: 'text-danger', style: 'width: 20px; height: 20px;'}) }}
-                                </span>
-                            </div>
+                            <label for="subject">{{ 'contact.form.labels.subject'|trans }} <span class="required">*</span></label>
+                            <select id="subject" name="subject"
+                                    data-contact-form-target="subject"
+                                    data-action="change->contact-form#validateRequired">
+                                <option value="">{{ 'contact.form.placeholders.subject'|trans }}</option>
+                                <option value="support" {{ app.request.request.get('subject') == 'support' ? 'selected' : '' }}>
+                                    {{ 'contact.form.subjects.support'|trans }}
+                                </option>
+                                <option value="billing" {{ app.request.request.get('subject') == 'billing' ? 'selected' : '' }}>
+                                    {{ 'contact.form.subjects.billing'|trans }}
+                                </option>
+                                <option value="partnership" {{ app.request.request.get('subject') == 'partnership' ? 'selected' : '' }}>
+                                    {{ 'contact.form.subjects.partnership'|trans }}
+                                </option>
+                            </select>
+                            <span class="error-message" data-contact-form-target="subjectError"></span>
                         </div>
 
-                        {# Champ Message #}
                         <div class="form-group full">
-                            <label for="message">
-                                {{ 'form.labels.message'|trans }} <span>*</span>
-                                <span class="error-message d-none text-danger small"> {{ 'form.errors.message_short'|trans }}</span>
-                            </label>
-                            <div class="input-wrapper" style="position: relative;">
-                                <textarea id="message" name="message" rows="5" placeholder="{{ 'form.placeholders.message'|trans }}" data-action="blur->validator#check"></textarea>
-                                <span class="success-icon d-none" style="position: absolute; right: 15px; top: 20px;">
-                                    {{ ux_icon('lucide:check-circle', {class: 'text-success', style: 'width: 20px; height: 20px;'}) }}
-                                </span>
-                                <span class="error-icon d-none" style="position: absolute; right: 15px; top: 20px;">
-                                    {{ ux_icon('lucide:alert-circle', {class: 'text-danger', style: 'width: 20px; height: 20px;'}) }}
-                                </span>
-                            </div>
+                            <label for="message">{{ 'contact.form.labels.message'|trans }} <span class="required">*</span></label>
+                            <textarea id="message" name="message" rows="5"
+                                      placeholder="{{ 'contact.form.placeholders.message'|trans }}"
+                                      data-contact-form-target="message"
+                                      data-action="blur->contact-form#validateMessage">{{ app.request.request.get('message', '') }}</textarea>
+                            <span class="error-message" data-contact-form-target="messageError"></span>
                         </div>
 
-                        {# AJOUT : Case Privacy Policy (Indispensable pour la validation serveur) #}
                         <div class="form-checkbox">
-                            <input type="checkbox" name="privacy" id="privacy" data-action="change->validator#check">
+                            <input type="checkbox" id="privacy" name="privacy"
+                                   data-contact-form-target="privacy"
+                                   data-action="change->contact-form#validatePrivacy">
                             <label for="privacy">
-                                {{ 'form.privacy'|trans }} <a href="#">{{ 'form.privacy_link'|trans }}</a>.
-                                <span class="error-message d-none text-danger small"> {{ 'form.errors.privacy_required'|trans }}</span>
+                                {{ 'contact.form.privacy'|trans }}
+                                <a href="#">{{ 'contact.form.privacy_link'|trans }}</a>.
                             </label>
+                            <span class="error-message" data-contact-form-target="privacyError"></span>
                         </div>
 
-                        <button type="submit" class="btn-primary-pricing">{{ 'form.submit'|trans }}</button>
+                        <button type="submit" class="btn-primary-pricing">
+                            {{ 'contact.form.submit'|trans }}
+                        </button>
                     </form>
                 </div>
             </div>

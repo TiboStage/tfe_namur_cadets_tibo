@@ -1,0 +1,262 @@
+{# templates/workshop/projects/new/step2_simplifie.html.twig #}
+
+{% extends 'workshop/projects/new/layout.html.twig' %}
+
+{% block title %}{{ 'project_new.step2.title_simplifie'|trans ({}, 'project_new') }}{% endblock %}
+
+{% block new_project_content %}
+<div class="project-funnel-container"
+     data-controller="funnel-step2-simple"
+     data-funnel-step2-simple-genres-film-value="{{ {
+         'thriller': 'project_new.genres.film.thriller'|trans({}, 'project_new'),
+         'horror': 'project_new.genres.film.horror'|trans({}, 'project_new'),
+         'scifi': 'project_new.genres.film.scifi'|trans({}, 'project_new'),
+         'drama': 'project_new.genres.film.drama'|trans({}, 'project_new'),
+         'comedy': 'project_new.genres.film.comedy'|trans({}, 'project_new'),
+         'action': 'project_new.genres.film.action'|trans({}, 'project_new'),
+         'fantasy': 'project_new.genres.film.fantasy'|trans({}, 'project_new')
+     }|json_encode }}"
+     data-funnel-step2-simple-genres-serie-value="{{ {
+         'drama': 'project_new.genres.serie.drama'|trans({}, 'project_new'),
+         'comedy': 'project_new.genres.serie.comedy'|trans({}, 'project_new'),
+         'thriller': 'project_new.genres.serie.thriller'|trans({}, 'project_new'),
+         'scifi': 'project_new.genres.serie.scifi'|trans({}, 'project_new'),
+         'fantasy': 'project_new.genres.serie.fantasy'|trans({}, 'project_new'),
+         'animation': 'project_new.genres.serie.animation'|trans({}, 'project_new'),
+         'romance': 'project_new.genres.serie.romance'|trans({}, 'project_new')
+     }|json_encode }}"
+     data-funnel-step2-simple-genres-jeu-video-value="{{ {
+         'rpg': 'project_new.genres.jeu_video.rpg'|trans({}, 'project_new'),
+         'action': 'project_new.genres.jeu_video.action'|trans({}, 'project_new'),
+         'adventure': 'project_new.genres.jeu_video.adventure'|trans({}, 'project_new'),
+         'platformer': 'project_new.genres.jeu_video.platformer'|trans({}, 'project_new'),
+         'puzzle': 'project_new.genres.jeu_video.puzzle'|trans({}, 'project_new'),
+         'visual_novel': 'project_new.genres.jeu_video.visual_novel'|trans({}, 'project_new'),
+         'simulation': 'project_new.genres.jeu_video.simulation'|trans ({}, 'project_new')
+     }|json_encode }}">
+
+    <div class="funnel-header">
+        <h1>{{ 'project_new.step2.title_simplifie'|trans ({}, 'project_new') }}</h1>
+        <p class="funnel-subtitle">{{ 'project_new.step2.subtitle'|trans ({}, 'project_new') }}</p>
+    </div>
+
+    <form method="POST" action="{{ path('app_project_new_step3') }}">
+        <div class="type-selection-layout">
+            {# GAUCHE : Choix du type #}
+            <div class="type-selection-left">
+                <h2>{{ 'project_new.step2.title_simplifie'|trans ({}, 'project_new') }}</h2>
+
+                <div class="type-options">
+                    {# FILM #}
+                    <label class="type-option"
+                           data-type="film"
+                           data-action="click->funnel-step2-simple#selectType">
+                        <input type="radio" name="project_type" value="film" required>
+                        <div class="type-option__content">
+                            <span class="type-option__icon">
+                                {{ ux_icon('lucide:film', {style: 'width: 24px; height: 24px;'}) }}
+                            </span>
+                            <div class="type-option__text">
+                                <strong>{{ 'project_new.step2.type.film.title'|trans ({}, 'project_new') }}</strong>
+                                <small>{{ 'project_new.step2.type.film.subtitle'|trans ({}, 'project_new') }}</small>
+                            </div>
+                        </div>
+                    </label>
+
+                    {# SÉRIE #}
+                    <label class="type-option"
+                           data-type="serie"
+                           data-action="click->funnel-step2-simple#selectType">
+                        <input type="radio" name="project_type" value="serie" required>
+                        <div class="type-option__content">
+                            <span class="type-option__icon">
+                                {{ ux_icon('lucide:tv', {style: 'width: 24px; height: 24px;'}) }}
+                            </span>
+                            <div class="type-option__text">
+                                <strong>{{ 'project_new.step2.type.serie.title'|trans ({}, 'project_new') }}</strong>
+                                <small>{{ 'project_new.step2.type.serie.subtitle'|trans ({}, 'project_new') }}</small>
+                            </div>
+                        </div>
+                    </label>
+
+                    {# JEU VIDÉO #}
+                    <label class="type-option"
+                           data-type="jeu_video"
+                           data-action="click->funnel-step2-simple#selectType">
+                        <input type="radio" name="project_type" value="jeu_video" required>
+                        <div class="type-option__content">
+                            <span class="type-option__icon">
+                                {{ ux_icon('lucide:gamepad-2', {style: 'width: 24px; height: 24px;'}) }}
+                            </span>
+                            <div class="type-option__text">
+                                <strong>{{ 'project_new.step2.type.jeu_video.title'|trans ({}, 'project_new') }}</strong>
+                                <small>{{ 'project_new.step2.type.jeu_video.subtitle'|trans ({}, 'project_new') }}</small>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="warning-message">
+                    {{ ux_icon('lucide:alert-triangle', {style: 'width: 16px; height: 16px;'}) }}
+                    {{ 'project_new.step2.subtitle'|trans ({}, 'project_new') }}
+                </div>
+            </div>
+
+            {# DROITE : Zone d'explication dynamique #}
+            <div class="type-selection-right">
+                <div data-funnel-step2-simple-target="explanationZone" class="explanation-zone">
+                    <div class="explanation-empty">
+                        {{ ux_icon('lucide:mouse-pointer-click', {style: 'width: 32px; height: 32px;'}) }}
+                        <p>Sélectionnez un type pour voir les détails</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# GENRES (affichés après sélection du type) #}
+        <div data-funnel-step2-simple-target="genresSection" class="genres-section hidden">
+            <h3>{{ 'project_new.step3.form.genres_label'|trans ({}, 'project_new') }}</h3>
+            <div data-funnel-step2-simple-target="genresContainer" class="genres-grid">
+                {# Rempli dynamiquement par le controller #}
+            </div>
+        </div>
+
+        {# Hidden inputs #}
+        <input type="hidden" name="mode" value="simplifie">
+
+        {# Boutons navigation #}
+        <div class="funnel-navigation">
+            <a href="{{ path('app_project_new_step1') }}" class="btn btn--ghost">
+                {{ ux_icon('lucide:arrow-left', {style: 'width: 16px; height: 16px;'}) }}
+                {{ 'project_new.step2.button_back'|trans ({}, 'project_new') }}
+            </a>
+
+            <button type="submit"
+                    class="btn btn--cta-yellow"
+                    data-funnel-step2-simple-target="submitBtn"
+                    disabled>
+                {{ 'project_new.step2.button_next'|trans ({}, 'project_new') }}
+                {{ ux_icon('lucide:arrow-right', {style: 'width: 16px; height: 16px;'}) }}
+            </button>
+        </div>
+    </form>
+</div>
+
+{# Templates d'explication (cachés - utilisés par le controller) #}
+<template id="explanation-film">
+    <div class="explanation-content">
+        <div class="explanation-header">
+            {{ ux_icon('lucide:film', {class: 'explanation-icon', style: 'width: 32px; height: 32px;'}) }}
+            <div>
+                <h2>{{ 'project_new.step2.type.film.title'|trans ({}, 'project_new') }}</h2>
+                <h3>{{ 'project_new.step2.type.film.desc'|trans ({}, 'project_new') }}</h3>
+            </div>
+        </div>
+
+        <p><strong>Structure :</strong> {{ 'project_new.step2.type.film.structure'|trans ({}, 'project_new') }}</p>
+
+        <div class="features-list">
+            <h4>{{ 'project_new.step2.type.film.features_title'|trans ({}, 'project_new') }}</h4>
+            <ul>
+                <li>
+                    {{ ux_icon('lucide:gauge', {style: 'width: 20px; height: 20px;'}) }}
+                    <div>
+                        <strong>{{ 'project_new.step2.type.film.feature_1'|trans ({}, 'project_new') }}</strong><br>
+                        <small>{{ 'project_new.step2.type.film.feature_1_desc'|trans ({}, 'project_new') }}</small>
+                    </div>
+                </li>
+                <li>
+                    {{ ux_icon('lucide:activity', {style: 'width: 20px; height: 20px;'}) }}
+                    <div>
+                        <strong>{{ 'project_new.step2.type.film.feature_2'|trans ({}, 'project_new') }}</strong><br>
+                        <small>{{ 'project_new.step2.type.film.feature_2_desc'|trans ({}, 'project_new') }}</small>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="warning-badge">
+            {{ ux_icon('lucide:alert-triangle', {style: 'width: 16px; height: 16px;'}) }}
+            {{ 'project_new.step2.subtitle'|trans ({}, 'project_new') }}
+        </div>
+    </div>
+</template>
+
+<template id="explanation-serie">
+    <div class="explanation-content">
+        <div class="explanation-header">
+            {{ ux_icon('lucide:tv', {class: 'explanation-icon', style: 'width: 32px; height: 32px;'}) }}
+            <div>
+                <h2>{{ 'project_new.step2.type.serie.title'|trans ({}, 'project_new') }}</h2>
+                <h3>{{ 'project_new.step2.type.serie.desc'|trans ({}, 'project_new') }}</h3>
+            </div>
+        </div>
+
+        <p><strong>Structure :</strong> {{ 'project_new.step2.type.serie.structure'|trans ({}, 'project_new') }}</p>
+
+        <div class="features-list">
+            <h4>{{ 'project_new.step2.type.serie.features_title'|trans ({}, 'project_new') }}</h4>
+            <ul>
+                <li>
+                    {{ ux_icon('lucide:route', {style: 'width: 20px; height: 20px;'}) }}
+                    <div>
+                        <strong>{{ 'project_new.step2.type.serie.feature_1'|trans ({}, 'project_new') }}</strong><br>
+                        <small>{{ 'project_new.step2.type.serie.feature_1_desc'|trans ({}, 'project_new') }}</small>
+                    </div>
+                </li>
+                <li>
+                    {{ ux_icon('lucide:zap', {style: 'width: 20px; height: 20px;'}) }}
+                    <div>
+                        <strong>{{ 'project_new.step2.type.serie.feature_2'|trans ({}, 'project_new') }}</strong><br>
+                        <small>{{ 'project_new.step2.type.serie.feature_2_desc'|trans ({}, 'project_new') }}</small>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="warning-badge">
+            {{ ux_icon('lucide:alert-triangle', {style: 'width: 16px; height: 16px;'}) }}
+            {{ 'project_new.step2.subtitle'|trans ({}, 'project_new') }}
+        </div>
+    </div>
+</template>
+
+<template id="explanation-jeu_video">
+    <div class="explanation-content">
+        <div class="explanation-header">
+            {{ ux_icon('lucide:gamepad-2', {class: 'explanation-icon', style: 'width: 32px; height: 32px;'}) }}
+            <div>
+                <h2>{{ 'project_new.step2.type.jeu_video.title'|trans ({}, 'project_new') }}</h2>
+                <h3>{{ 'project_new.step2.type.jeu_video.desc'|trans ({}, 'project_new') }}</h3>
+            </div>
+        </div>
+
+        <p><strong>Structure :</strong> {{ 'project_new.step2.type.jeu_video.structure'|trans ({}, 'project_new') }}</p>
+
+        <div class="features-list">
+            <h4>{{ 'project_new.step2.type.jeu_video.features_title'|trans ({}, 'project_new') }}</h4>
+            <ul>
+                <li>
+                    {{ ux_icon('lucide:tag', {style: 'width: 20px; height: 20px;'}) }}
+                    <div>
+                        <strong>{{ 'project_new.step2.type.jeu_video.feature_1'|trans ({}, 'project_new') }}</strong><br>
+                        <small>{{ 'project_new.step2.type.jeu_video.feature_1_desc'|trans ({}, 'project_new') }}</small>
+                    </div>
+                </li>
+                <li>
+                    {{ ux_icon('lucide:lock', {style: 'width: 20px; height: 20px;'}) }}
+                    <div>
+                        <strong>{{ 'project_new.step2.type.jeu_video.feature_2'|trans ({}, 'project_new') }}</strong><br>
+                        <small>{{ 'project_new.step2.type.jeu_video.feature_2_desc'|trans ({}, 'project_new') }}</small>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="warning-badge">
+            {{ ux_icon('lucide:alert-triangle', {style: 'width: 16px; height: 16px;'}) }}
+            {{ 'project_new.step2.subtitle'|trans ({}, 'project_new') }}
+        </div>
+    </div>
+</template>
+{% endblock %}

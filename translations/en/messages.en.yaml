@@ -1,0 +1,143 @@
+# ============================================================
+# SCÉNART - General Messages Translations (EN)
+# ============================================================
+# Common messages used throughout the application
+# ============================================================
+
+# ===== COMMON ACTIONS =====
+common:
+    back: "Back"
+    create: "Create"
+    save: "Save"
+    cancel: "Cancel"
+    delete: "Delete"
+    edit: "Edit"
+    submit: "Submit"
+    close: "Close"
+    confirm: "Confirm"
+    view: "View"
+    manage: "Manage"
+    open: "Open"
+    
+    required: "Required"
+    optional: "Optional"
+    loading: "Loading..."
+    processing: "Processing..."
+    
+    yes: "Yes"
+    no: "No"
+    or: "or"
+    
+    search: "Search"
+    filter: "Filter"
+    sort_by: "Sort by"
+    
+    created_at: "Created on"
+    updated_at: "Updated on"
+    modified_at: "Modified on"
+
+# ===== DATES & TIME =====
+time:
+    ago: "ago"
+    min: "min."
+    hour: "hour"
+    hours: "hours"
+    day: "day"
+    days: "days"
+    week: "week"
+    weeks: "weeks"
+    month: "month"
+    months: "months"
+    year: "year"
+    years: "years"
+    never: "Never"
+
+# ===== EMPTY STATES =====
+empty:
+    no_results: "No results"
+    no_projects: "No projects yet"
+    no_characters: "No characters yet"
+    no_locations: "No locations yet"
+    no_activity: "No activity yet"
+    create_first: "Create your first"
+
+# ===== PLACEHOLDERS =====
+placeholder:
+    search: "Search..."
+    select: "Select..."
+    choose: "Choose..."
+    type_here: "Type here..."
+
+# ===== STATUSES =====
+status:
+    draft: "Draft"
+    in_progress: "In Progress"
+    completed: "Completed"
+    archived: "Archived"
+
+# ===== VISIBILITY =====
+visibility:
+    public: "Public"
+    private: "Private"
+    unlisted: "Unlisted"
+
+# ===== PROJECT TYPES =====
+project_type:
+    film: "Film"
+    serie: "Series"
+    jeu_video: "Video Game"
+    custom: "Custom"
+
+# ===== CHARACTER ROLES =====
+character_role:
+    protagonist: "Protagonist"
+    antagonist: "Antagonist"
+    secondary: "Secondary"
+    figurant: "Extra"
+
+# ===== LOCATION TYPES =====
+location_type:
+    interior: "Interior"
+    exterior: "Exterior"
+    fantasy: "Fantasy"
+    historical: "Historical"
+    futuristic: "Futuristic"
+
+# ===== NAVIGATION =====
+navigation:
+    home: "Home"
+    dashboard: "Dashboard"
+    projects: "Projects"
+    characters: "Characters"
+    locations: "Locations"
+    settings: "Settings"
+    profile: "Profile"
+    logout: "Logout"
+
+# ===== CONFIRMATIONS =====
+confirm:
+    delete_project: "Permanently delete this project?"
+    delete_character: "Delete this character?"
+    delete_location: "Delete this location?"
+    leave_page: "You have unsaved changes. Leave anyway?"
+    irreversible: "This action is irreversible"
+
+# ===== FILE UPLOAD =====
+upload:
+    choose_file: "Choose file"
+    drag_drop: "Drag & drop or click to upload"
+    max_size: "Maximum size"
+    accepted_formats: "Accepted formats"
+    uploading: "Uploading..."
+    upload_success: "Upload successful"
+    upload_error: "Upload failed"
+
+# ===== PAGINATION =====
+pagination:
+    previous: "Previous"
+    next: "Next"
+    page: "Page"
+    of: "of"
+    showing: "Showing"
+    to: "to"
+    results: "results"

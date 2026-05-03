@@ -139,7 +139,8 @@ class Project
 
     #[ORM\OneToMany(targetEntity: ProjectMember::class, mappedBy: 'project', cascade: ['persist', 'remove'])]
     private Collection $projectMembers;
-
+    #[ORM\OneToMany(targetEntity: ProjectTypeConfig::class, mappedBy: 'project', cascade: ['persist', 'remove'])]
+    private Collection $projectTypeConfigs;
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -158,6 +159,7 @@ class Project
         $this->projectMembers   = new ArrayCollection();
         $this->createdAt        = new \DateTimeImmutable();
         $this->updatedAt        = new \DateTimeImmutable();
+        $this->projectTypeConfigs = new ArrayCollection();
     }
 
     // ─── Lifecycle Callbacks ────────────────────────────────────────────────
@@ -303,6 +305,13 @@ class Project
     public function getProjectMembers(): Collection
     {
         return $this->projectMembers;
+    }
+    /**
+     * @return Collection<int, ProjectTypeConfig>
+     */
+    public function getProjectTypeConfigs(): Collection
+    {
+        return $this->projectTypeConfigs;
     }
 
     // ─── Setters ────────────────────────────────────────────────────────────

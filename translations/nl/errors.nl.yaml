@@ -1,0 +1,22 @@
+# ============================================================
+# SCÉNART - Error Pages Vertalingen (NL)
+# ============================================================
+# Foutpagina's 403, 404, 500
+# ============================================================
+
+error_403:
+    title: "Toegang Geweigerd"
+    desc: "Je hebt geen toestemming om toegang te krijgen tot deze bron. Dit project behoort tot een andere maker."
+    btn_back: "← Terug"
+    btn_workshop: "Mijn workshop"
+
+error_404:
+    title: "Pagina Niet Gevonden"
+    desc: "Deze pagina bestaat niet of is verplaatst. Controleer de URL of ga terug naar de homepage."
+    btn_back: "← Terug"
+    btn_home: "Homepage"
+
+error_500:
+    title: "Serverfout"
+    desc: "Er is iets misgegaan aan onze kant. Ons team is op de hoogte gesteld. Probeer het over een paar momenten opnieuw."
+    btn_home: "Terug naar homepage"

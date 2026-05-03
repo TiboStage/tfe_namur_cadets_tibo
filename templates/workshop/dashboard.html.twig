@@ -39,17 +39,17 @@ Rôle : Dashboard général /atelier (stats, projets récents, activité)
 
             <div class="stat-card stat-card--dark">
                 <span class="stat-value">{{ total_characters }}</span>
-                <span class="stat-desc">Personnages créés</span>
+                <span class="stat-desc">{{ 'dashboard.stats.characters'|trans }}</span>
             </div>
 
             <div class="stat-card stat-card--dark">
                 <span class="stat-value">{{ total_locations }}</span>
-                <span class="stat-desc">Lieux créés</span>
+                <span class="stat-desc">{{ 'dashboard.stats.locations'|trans }}</span>
             </div>
 
             <div class="stat-card stat-card--dark">
                 <span class="stat-value">{{ total_scenes }}</span>
-                <span class="stat-desc">Scènes écrites</span>
+                <span class="stat-desc">{{ 'dashboard.stats.scenes'|trans }}</span>
             </div>
 
             {# Actions rapides #}

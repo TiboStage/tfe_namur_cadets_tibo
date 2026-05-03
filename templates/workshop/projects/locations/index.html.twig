@@ -9,7 +9,7 @@
     <header class="page-header">
         <div>
             <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="link-back">← {{ project.title }}</a>
-            <h1>{{ 'location.index.title'|trans }} <span class="text-muted" style="font-size: 16px; font-weight: 400;">{{ locations|length }}</span></h1>
+            <h1>{{ 'location.index.title'|trans }} <span class="text-muted">{{ locations|length }}</span></h1>
         </div>
         <a href="{{ path('app_location_new', {project_slug: project.slug}) }}" class="btn-creat">
             {{ 'location.index.new_btn'|trans }}

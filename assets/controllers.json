@@ -1,5 +1,10 @@
 {
     "controllers": {
+        "@symfony/ux-live-component": {
+            "live": {
+                "enabled": false
+            }
+        },
         "@symfony/ux-turbo": {
             "turbo-core": {
                 "enabled": true,

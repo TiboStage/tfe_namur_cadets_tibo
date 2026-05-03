@@ -4,7 +4,7 @@
      data-action="click@window->dropdown#hide">
 
     {# On groupe l'info et l'avatar dans un conteneur cliquable #}
-    <div class="user-trigger" data-action="click->dropdown#toggle" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+    <div class="user-trigger" data-action="click->dropdown#toggle">
         <div class="user-info">
             <span class="user-name">
                 {{ app.user.firstName|capitalize }} {{ app.user.lastName|slice(0, 1)|upper }}.

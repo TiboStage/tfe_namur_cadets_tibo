@@ -1,0 +1,74 @@
+# ============================================================
+# SCÉNART - Validators Translations (EN)
+# ============================================================
+# Form validation error messages
+# ============================================================
+
+# ===== REGISTRATION =====
+registration:
+    firstname:
+        not_blank: "Please enter your first name."
+    
+    lastname:
+        not_blank: "Please enter your last name."
+    
+    email:
+        not_blank: "An email address is required."
+        invalid: "This email address does not appear to be valid."
+        unique: "This email is already used by another creator."
+    
+    username:
+        not_blank: "Please choose a username."
+        too_short: "Your username must be at least {{ limit }} characters."
+        too_long: "Your username cannot exceed {{ limit }} characters."
+        unique: "This username is already taken. Be creative!"
+    
+    password:
+        not_blank: "A password is required."
+        length: "Your password must be at least {{ limit }} characters."
+    
+    terms:
+        must_agree: "You must agree to the terms of use."
+
+# ===== PROJECT =====
+project:
+    title:
+        not_blank: "Every great adventure needs a name!"
+        too_short: "The title must be at least {{ limit }} characters."
+    
+    description:
+        not_blank: "Describe your universe in a few words."
+    
+    type:
+        film: "Film"
+        serie: "Series"
+        jeu_video: "Video game"
+        custom: "Custom"
+
+# ===== CHARACTER =====
+character:
+    name:
+        not_blank: "The character needs a name!"
+    
+    role:
+        protagonist: "Protagonist"
+        antagonist: "Antagonist"
+        secondary: "Secondary"
+        figurant: "Extra"
+
+# ===== LOCATION =====
+location:
+    name:
+        not_blank: "The location needs a name!"
+    
+    type:
+        interior: "Interior"
+        exterior: "Exterior"
+        fantasy: "Fantasy"
+        historical: "Historical"
+        futuristic: "Futuristic"
+
+# ===== FORM ERRORS =====
+form:
+    errors:
+        required_invalid: "Please fill in the required fields."

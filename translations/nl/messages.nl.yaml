@@ -1,0 +1,143 @@
+# ============================================================
+# SCÉNART - General Messages Vertalingen (NL)
+# ============================================================
+# Gemeenschappelijke berichten in de applicatie
+# ============================================================
+
+# ===== GEMEENSCHAPPELIJKE ACTIES =====
+common:
+    back: "Terug"
+    create: "Maken"
+    save: "Opslaan"
+    cancel: "Annuleren"
+    delete: "Verwijderen"
+    edit: "Bewerken"
+    submit: "Verzenden"
+    close: "Sluiten"
+    confirm: "Bevestigen"
+    view: "Bekijken"
+    manage: "Beheren"
+    open: "Openen"
+    
+    required: "Verplicht"
+    optional: "Optioneel"
+    loading: "Laden..."
+    processing: "Verwerken..."
+    
+    yes: "Ja"
+    no: "Nee"
+    or: "of"
+    
+    search: "Zoeken"
+    filter: "Filteren"
+    sort_by: "Sorteren op"
+    
+    created_at: "Aangemaakt op"
+    updated_at: "Gewijzigd op"
+    modified_at: "Gewijzigd op"
+
+# ===== DATUM & TIJD =====
+time:
+    ago: "geleden"
+    min: "min."
+    hour: "uur"
+    hours: "uren"
+    day: "dag"
+    days: "dagen"
+    week: "week"
+    weeks: "weken"
+    month: "maand"
+    months: "maanden"
+    year: "jaar"
+    years: "jaren"
+    never: "Nooit"
+
+# ===== LEGE STATEN =====
+empty:
+    no_results: "Geen resultaten"
+    no_projects: "Geen projecten"
+    no_characters: "Geen personages"
+    no_locations: "Geen locaties"
+    no_activity: "Geen activiteit"
+    create_first: "Maak je eerste"
+
+# ===== PLACEHOLDERS =====
+placeholder:
+    search: "Zoeken..."
+    select: "Selecteren..."
+    choose: "Kiezen..."
+    type_here: "Typ hier..."
+
+# ===== STATUSSEN =====
+status:
+    draft: "Concept"
+    in_progress: "Bezig"
+    completed: "Voltooid"
+    archived: "Gearchiveerd"
+
+# ===== ZICHTBAARHEID =====
+visibility:
+    public: "Publiek"
+    private: "Privé"
+    unlisted: "Niet vermeld"
+
+# ===== PROJECTTYPES =====
+project_type:
+    film: "Film"
+    serie: "Serie"
+    jeu_video: "Videogame"
+    custom: "Aangepast"
+
+# ===== PERSONAGEROLLEN =====
+character_role:
+    protagonist: "Protagonist"
+    antagonist: "Antagonist"
+    secondary: "Secundair"
+    figurant: "Figurant"
+
+# ===== LOCATIETYPES =====
+location_type:
+    interior: "Binnen"
+    exterior: "Buiten"
+    fantasy: "Fantasy"
+    historical: "Historisch"
+    futuristic: "Futuristisch"
+
+# ===== NAVIGATIE =====
+navigation:
+    home: "Home"
+    dashboard: "Dashboard"
+    projects: "Projecten"
+    characters: "Personages"
+    locations: "Locaties"
+    settings: "Instellingen"
+    profile: "Profiel"
+    logout: "Uitloggen"
+
+# ===== BEVESTIGINGEN =====
+confirm:
+    delete_project: "Dit project permanent verwijderen?"
+    delete_character: "Dit personage verwijderen?"
+    delete_location: "Deze locatie verwijderen?"
+    leave_page: "Je hebt niet-opgeslagen wijzigingen. Toch verlaten?"
+    irreversible: "Deze actie is onomkeerbaar"
+
+# ===== BESTANDSUPLOAD =====
+upload:
+    choose_file: "Bestand kiezen"
+    drag_drop: "Slepen en neerzetten of klik om te uploaden"
+    max_size: "Maximale grootte"
+    accepted_formats: "Geaccepteerde formaten"
+    uploading: "Uploaden..."
+    upload_success: "Upload geslaagd"
+    upload_error: "Upload mislukt"
+
+# ===== PAGINERING =====
+pagination:
+    previous: "Vorige"
+    next: "Volgende"
+    page: "Pagina"
+    of: "van"
+    showing: "Toont"
+    to: "tot"
+    results: "resultaten"

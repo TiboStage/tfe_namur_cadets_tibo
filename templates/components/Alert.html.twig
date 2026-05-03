@@ -1,5 +1,8 @@
 {# templates/components/Alert.html.twig #}
-<div class="scenart-alert alert-{{ type }}" data-controller="alert">
+<div class="scenart-alert alert-{{ type }}"
+     data-controller="alert"
+     data-alert-auto-close-value="true"
+     data-alert-duration-value="5000">
     <div class="alert-icon">
         {{ ux_icon(this.icon, {class: 'icon-alert'}) }}
     </div>

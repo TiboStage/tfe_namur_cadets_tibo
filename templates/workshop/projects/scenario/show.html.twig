@@ -2,26 +2,7 @@
 
 {% block project_content %}
     <div class="project-view">
-        {# ═══════════════════════════════════════════════════════════════════
-       NAVBAR SECONDAIRE
-       ═══════════════════════════════════════════════════════════════════ #}
-        <nav class="project-nav">
-            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="nav-item">
-                {{ ux_icon('lucide:layout-dashboard', {class: 'icon-xs'}) }} Dashboard
-            </a>
-            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}" class="nav-item active">
-                {{ ux_icon('lucide:pen-tool', {class: 'icon-xs'}) }} Manuscrit
-            </a>
-            <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="nav-item">
-                {{ ux_icon('lucide:users', {class: 'icon-xs'}) }} Personnages
-            </a>
-            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="nav-item">
-                {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }} Lieux
-            </a>
-            <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="nav-item">
-                {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }} Paramètres
-            </a>
-        </nav>
+
 
         {# ═══════════════════════════════════════════════════════════════════
        ÉDITEUR 3 COLONNES

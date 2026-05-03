@@ -9,31 +9,20 @@
         <link rel="icon" type="image/png" href="{{ asset('images/favicons/favicon.png') }}">
     {% endblock %}
 
+    {% block stylesheets %}{% endblock %}
+
     {% block javascripts %}
         {{ importmap('app') }}
     {% endblock %}
-
-    {% block stylesheets %}{% endblock %}
 </head>
-<body>
+<body data-turbo="false">
 
 {% block body %}{% endblock %}
 
-{# ✅ AJOUTE CECI JUSTE AVANT </body> #}
-<div id="toast-container" class="toast-container" data-controller="toast">
+<div id="toast-container" class="toast-container">
     {% for label, messages in app.flashes %}
         {% for message in messages %}
-            <div class="scenart-alert alert-{{ label }}"
-                 data-toast-auto-close-value="true"
-                 data-toast-duration-value="5000">
-                <div class="alert-icon">
-                    <i data-lucide="{% if label == 'success' %}check-circle{% elseif label == 'warning' %}triangle-alert{% elseif label == 'error' %}x-circle{% else %}info{% endif %}"></i>
-                </div>
-                <div class="alert-body">
-                    <p>{{ message|trans }}</p>
-                </div>
-                <button class="alert-close" data-action="click->toast#close">&times;</button>
-            </div>
+            <twig:Alert type="{{ label }}" message="{{ message }}" />
         {% endfor %}
     {% endfor %}
 </div>

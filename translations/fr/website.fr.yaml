@@ -1,0 +1,223 @@
+# ============================================================
+# SCÉNART - Website (Public) Traductions (FR)
+# ============================================================
+# Accueil, Exemples, Tarifs, Contact, Navbar Publique
+# ============================================================
+
+# ===== META TAGS =====
+meta:
+    home_title: "Scénart - Imaginez, Structurez, Écrivez"
+    examples_title: "Exemples - Scénart"
+    pricing_title: "Scénart - Tarifs"
+    contact_title: "Contact - Scénart"
+
+# ===== NAVBAR (PUBLIC) =====
+navbar:
+    banner:
+        user: "Prêt à créer ? "
+        user_link: "Découvrez l'Atelier"
+        guest: "Nouveau sur Scénart ? "
+        guest_link: "Commencez gratuitement !"
+
+    links:
+        home: "Accueil"
+        examples: "Exemples"
+        pricing: "Tarifs"
+        contact: "Contact"
+
+    actions:
+        workshop: "Atelier"
+        login: "Connexion"
+        register: "Inscription"
+
+# ===== PAGE D'ACCUEIL =====
+home:
+    hero:
+        badge: "✦ Un outil conçu pour les bâtisseurs de mondes"
+        title: "Imaginez, Structurez,"
+        title_highlight: "Écrivez."
+        subtitle: "Donnez vie à vos mondes, clarifiez vos scripts et histoires.<br>Votre imagination, sans limites."
+        mockup_placeholder: "Aperçu de l'atelier Scénart"
+        actions:
+            register: "S'inscrire"
+            discover: "Découvrir ↗"
+
+    features:
+        label: "FONCTIONNALITÉS"
+        title: "Tout ce qu'il faut pour"
+        title_highlight: "bâtir votre univers"
+        desc: "Des outils pensés pour les créateurs sérieux.<br>De l'idée brute au monde complet."
+        items:
+            editor_title: "Éditeur de scénario"
+            editor_desc: "Format scénaristique professionnel. Sluglines, dialogues, narration automatique."
+            characters_title: "Fiches personnages"
+            characters_desc: "Biographies, motivations, arcs narratifs et portraits pour chaque personnage."
+            locations_title: "Fiches lieux"
+            locations_desc: "Décors, ambiances et métadonnées pour chaque lieu de votre univers."
+            timeline_title: "Timeline visuelle"
+            timeline_desc: "Visualisez l'ordre des événements de votre histoire sur une timeline interactive."
+            export_title: "Export PDF pro"
+            export_desc: "Générez une bible narrative complète prête à envoyer à un éditeur ou producteur."
+            relations_title: "Graphe de relations"
+            relations_desc: "Cartographiez les liens entre vos personnages : alliés, ennemis, famille, amour."
+
+    for_whom:
+        label: "POUR QUI ?"
+        title: "Un outil pour"
+        title_highlight: "chaque créateur"
+        cards:
+            cinema:
+                title: "Films & Séries"
+                desc: "Scénarios, storyboards, arcs narratifs sur plusieurs saisons."
+            roman:
+                title: "Littérature"
+                desc: "Organisation des chapitres, fiches personnages et worldbuilding."
+            game:
+                title: "Jeux Vidéo"
+                desc: "Narrative design, quêtes à embranchements et lore interactif."
+            jdr:
+                title: "JDR"
+                desc: "Campagnes, bestiaires et gestion de scénarios pour MJ."
+
+    cta:
+        title: "Prêt à écrire votre"
+        title_highlight: "premier monde ?"
+        desc: "Rejoignez des centaines de créateurs qui lancent leurs univers sur Scénart."
+        actions:
+            start: "Commencer gratuitement"
+            examples: "Voir des exemples ↗"
+
+# ===== PAGE EXEMPLES =====
+examples:
+    header:
+        tag: "Exemples"
+        title: "Projets créés sur"
+        title_highlight: "SCÉNART"
+        description: "Découvrez comment d'autres créateurs structurent leurs univers. Chaque projet est unique et illustre les possibilités infinies de l'Atelier."
+
+    filters:
+        all: "Tous"
+        cinema: "Cinéma"
+        serie: "Série"
+        roman: "Roman"
+        video_game: "Jeu Vidéo"
+        jdr: "JDR"
+
+    grid:
+        empty_message: "Aucun projet ne correspond à cette catégorie pour le moment."
+        view_project: "Explorer le projet"
+        author: "Par"
+
+# ===== PAGE TARIFS =====
+pricing:
+    header:
+        tag: "Tarifs"
+        title: "Simple et"
+        title_highlight: "Transparent."
+        subtitle: "Commencez gratuitement. Passez Pro à mesure que vos univers grandissent."
+
+    plans:
+        featured_badge: "RECOMMANDÉ"
+        per_month: "/mois"
+
+        amateur:
+            name: "Amateur"
+            desc: "Pour explorer & débuter"
+            badge: "Débutant - Curieux - Étudiants"
+            btn: "Commencer gratuitement"
+            features:
+                projects: "<strong>2 projets</strong> - Maximum"
+                entities: "<strong>25 entités</strong> - Par projet"
+                script: "<strong>Éditeur scénario</strong> - Maximum"
+                export: "Export PDF"
+                collab: "Collaboration"
+                graph: "Graphe de relations"
+                fields: "Champs personnalisés"
+                public: "Projets publics"
+
+        pro:
+            name: "Pro"
+            desc: "Pour créateurs sérieux"
+            badge: "Scénaristes - Auteurs - Studios"
+            btn: "Commencer à 12€/mois"
+            features:
+                projects: "Projets illimités"
+                entities: "Entités illimitées"
+                script: "<strong>Éditeur scénario</strong> - Avancé"
+                export: "Export PDF avancé"
+                collab: "Collaboration jusqu'à 10 membres"
+                graph: "Graphe de relations interactif"
+                fields: "Champs personnalisés illimités"
+                public: "Projets publics & partage"
+
+    footer:
+        not_sure: "Pas sûr ? Commencez avec le plan Amateur."
+        no_credit: "Aucune carte bancaire requise."
+        quote: "Besoin d'un devis pour une équipe ?"
+        contact_us: "Contactez-nous"
+
+    faq:
+        title: "Questions fréquentes"
+        q1: "Puis-je passer d'Amateur à Pro à tout moment ?"
+        a1: "Oui, le changement est instantané et au prorata."
+        q2: "Que se passe-t-il si je redescends vers Amateur ?"
+        a2: "Vos données sont conservées mais certaines fonctionnalités d'édition passent en lecture seule."
+        q3: "Y a-t-il une réduction étudiante ?"
+        a3: "Le plan Amateur est déjà pensé pour les étudiants !"
+        q4: "Le plan Amateur a-t-il une limite de temps ?"
+        a4: "Non, le plan Amateur est permanent et gratuit. Utilisez-le aussi longtemps que vous voulez sans carte bancaire."
+
+    early_access:
+        title: "Accès anticipé en cours."
+        desc: "L'outil est actuellement en développement actif. Si vous souhaitez soutenir le projet, vous pouvez faire un don via Ko-fi — 0% de frais de plateforme."
+        btn: "Soutenir le projet"
+        kofi_url: "https://ko-fi.com/scenart"
+
+# ===== PAGE CONTACT =====
+contact:
+    info:
+        tag: "Contact"
+        title: "Nous sommes là pour"
+        title_highlight: "vous aider."
+        description: "Que vous ayez une question technique, une suggestion ou un projet de partenariat, notre équipe est disponible."
+        cards:
+            response_time: "Temps de réponse"
+            response_desc: "Moins de 24h en semaine."
+            response_sub: "Support prioritaire pour les abonnés Pro & Studio."
+            academic: "Projet académique"
+            academic_desc: "StoryForge — TFE 2024-2025"
+            academic_location: "EAFC Namur-Cadets, Belgique"
+
+    form:
+        title: "Envoyer un message"
+        labels:
+            email: "EMAIL"
+            firstname: "PRÉNOM"
+            lastname: "NOM"
+            subject: "SUJET"
+            message: "MESSAGE"
+
+        placeholders:
+            firstname: "Jean"
+            lastname: "Dupont"
+            subject: "Choisir un sujet..."
+            message: "Décrivez votre demande en détail..."
+
+        subjects:
+            support: "Support technique"
+            billing: "Facturation"
+            partnership: "Partenariat"
+
+        privacy: "J'accepte que mes données soient utilisées pour traiter ma demande conformément à la"
+        privacy_link: "politique de confidentialité"
+        submit: "Envoyer le message"
+
+        errors:
+            empty_fields: "Veuillez remplir tous les champs requis et accepter la politique de confidentialité."
+            success: "Votre message a été envoyé ! Notre équipe vous répondra rapidement."
+            email_invalid: "Format d'email invalide"
+            required: "Ce champ est requis"
+            subject_required: "Veuillez sélectionner un sujet"
+            message_short: "Message trop court (min. 10 car.)"
+            global_invalid: "Veuillez remplir tous les champs correctement."
+            privacy_required: "Vous devez accepter la politique de confidentialité pour continuer."

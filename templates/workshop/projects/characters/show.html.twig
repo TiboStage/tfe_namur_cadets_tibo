@@ -92,7 +92,7 @@
                 <div class="profile-section-header"><h2>Relations</h2></div>
                 {% set relations = character.getAllRelations() %}
                 {% if relations is empty %}
-                    <p class="text-muted" style="font-size: 13px;">Aucune relation définie.</p>
+                    <p class="text-muted">Aucune relation définie.</p>
                 {% else %}
                     {% for relation in relations %}
                         <div class="stat-row">

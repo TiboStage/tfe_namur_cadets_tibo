@@ -1,0 +1,132 @@
+{# templates/workshop/projects/new/step3_final.html.twig #}
+
+{% extends 'workshop/projects/new/layout.html.twig' %}
+
+{% block title %}{{ 'project_new.step3.title'|trans ({}, 'project_new') }}{% endblock %}
+
+{% block new_project_content %}
+<div class="project-funnel-container">
+    <div class="funnel-header">
+        <h1>{{ 'project_new.step3.title'|trans ({}, 'project_new') }}</h1>
+        <p class="funnel-subtitle">{{ 'project_new.step3.subtitle'|trans ({}, 'project_new') }}</p>
+    </div>
+
+    <div class="final-layout">
+        {# GAUCHE : Formulaire #}
+        <div class="final-form">
+            <form method="POST" action="{{ path('app_project_new_step3') }}" enctype="multipart/form-data">
+                {# Titre #}
+                <div class="form-group">
+                    <label for="project_title">{{ 'project_new.step3.form.title_label'|trans ({}, 'project_new') }}</label>
+                    <input type="text"
+                           id="project_title"
+                           name="title"
+                           placeholder="{{ 'project_new.step3.form.title_placeholder'|trans ({}, 'project_new') }}"
+                           required
+                           class="form-control">
+                </div>
+
+                {# Description #}
+                <div class="form-group">
+                    <label for="project_description">{{ 'project_new.step3.form.description_label'|trans ({}, 'project_new') }}</label>
+                    <textarea id="project_description"
+                              name="description"
+                              rows="4"
+                              placeholder="{{ 'project_new.step3.form.description_placeholder'|trans ({}, 'project_new') }}"
+                              class="form-control"></textarea>
+                </div>
+
+                {# Image de couverture #}
+                <div class="form-group">
+                    <label for="cover_image">
+                        {{ 'project_new.step3.form.cover_label'|trans ({}, 'project_new') }}
+                        <small>{{ 'project_new.step3.form.cover_help'|trans ({}, 'project_new') }}</small>
+                    </label>
+                    <input type="file"
+                           id="cover_image"
+                           name="cover_image"
+                           accept="image/*"
+                           class="form-control">
+                </div>
+
+                {# Hidden inputs : données du step2 #}
+                <input type="hidden" name="mode" value="{{ mode }}">
+                <input type="hidden" name="project_type" value="{{ project_type }}">
+
+                {% for genre in genres %}
+                    <input type="hidden" name="genres[]" value="{{ genre }}">
+                {% endfor %}
+
+                {% for key, value in custom_structure %}
+                    <input type="hidden" name="custom_structure[{{ key }}]" value="{{ value }}">
+                {% endfor %}
+
+                {% for feature in selected_features %}
+                    <input type="hidden" name="selected_features[]" value="{{ feature }}">
+                {% endfor %}
+
+                {# Boutons navigation #}
+                <div class="funnel-navigation">
+                    <a href="{{ path('app_project_new_step2', {mode: mode}) }}" class="btn btn--ghost">
+                        {{ ux_icon('lucide:arrow-left', {style: 'width: 16px; height: 16px;'}) }}
+                        {{ 'project_new.step2.button_back'|trans }}
+                    </a>
+
+                    <button type="submit" class="btn btn--cta-yellow">
+                        {{ 'project_new.step3.button_create'|trans ({}, 'project_new') }}
+                        {{ ux_icon('lucide:check', {style: 'width: 16px; height: 16px;'}) }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {# DROITE : Récapitulatif #}
+        <div class="final-recap">
+            <h3>{{ 'project_new.step3.recap.title'|trans ({}, 'project_new') }}</h3>
+
+            <div class="recap-item">
+                <strong>{{ 'project_new.step3.recap.mode'|trans ({}, 'project_new') }}</strong>
+                <span>{{ mode == 'simplifie' ? 'project_new.step1.mode_simplifie.title'|trans : 'project_new.step1.mode_custom.title'|trans ({}, 'project_new') }}</span>
+            </div>
+
+            <div class="recap-item">
+                <strong>{{ 'project_new.step3.recap.type'|trans ({}, 'project_new') }}</strong>
+                <span>
+                    {{ ('project_new.step2.type.' ~ project_type ~ '.title')|trans ({}, 'project_new') }}
+                    <small>{{ 'project_new.step3.recap.type_locked'|trans ({}, 'project_new') }}</small>
+                </span>
+            </div>
+
+            {% if genres is not empty %}
+            <div class="recap-item">
+                <strong>{{ 'project_new.step3.recap.genres'|trans ({}, 'project_new') }}</strong>
+                <div class="recap-genres">
+                    {% for genre in genres %}
+                        <span class="badge">{{ genre }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if selected_features is not empty %}
+            <div class="recap-item">
+                <strong>{{ 'project_new.step3.recap.features'|trans }}</strong>
+                <ul>
+                    {% for feature in selected_features %}
+                        <li>{{ feature }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="recap-item">
+                <strong>{{ 'project_new.step3.recap.visibility'|trans }}</strong>
+                <span>
+                    {{ ux_icon('lucide:lock', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ 'project_new.step3.recap.visibility_private'|trans }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

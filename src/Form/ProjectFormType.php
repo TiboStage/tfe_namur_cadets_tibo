@@ -40,10 +40,10 @@ class ProjectFormType extends AbstractType
                     'project.type.film'      => 'film',
                     'project.type.serie'     => 'serie',
                     'project.type.jeu_video' => 'jeu_video',
-                    'project.type.custom'    => 'custom',
                 ],
+                'placeholder' => 'project.form.type_placeholder',
             ])
-        ;
+            ->add('description');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -14,33 +14,37 @@ app_home:
     path:
         fr: /{_locale}/accueil
         en: /{_locale}/home
+        nl: /{_locale}/home
     controller: App\Controller\Website\PagesController::index
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
 
 app_examples:
     path:
         fr: /{_locale}/exemples
         en: /{_locale}/examples
+        nl: /{_locale}/voorbeelden
     controller: App\Controller\Website\PagesController::examples
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
 
 app_pricing:
     path:
         fr: /{_locale}/tarifs
         en: /{_locale}/pricing
+        nl: /{_locale}/prijzen
     controller: App\Controller\Website\PagesController::pricing
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
 
 app_contact:
     path:
         fr: /{_locale}/contact
         en: /{_locale}/contact
+        nl: /{_locale}/contact
     controller: App\Controller\Website\PagesController::contact
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
 
 # ═══════════════════════════════════════════════════════════════════
 # WORKSHOP — Projets
@@ -50,53 +54,90 @@ app_workshop_dashboard:
     path:
         fr: /{_locale}/atelier
         en: /{_locale}/workshop
+        nl: /{_locale}/werkplaats
     controller: App\Controller\Workshop\DashboardController::index
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
 
 app_project_index:
     path:
         fr: /{_locale}/atelier/projets
         en: /{_locale}/workshop/projects
+        nl: /{_locale}/werkplaats/projecten
     controller: App\Controller\Workshop\ProjectController::index
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
 
-# IMPORTANT : "nouveau" AVANT "{slug}" pour éviter collision
 app_project_new:
     path:
         fr: /{_locale}/atelier/projets/nouveau
         en: /{_locale}/workshop/projects/new
-    controller: App\Controller\Workshop\ProjectController::new
+        nl: /{_locale}/werkplaats/projecten/nieuw
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+    defaults:
+        route: app_project_new_step1
+        permanent: false
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
 
-# Dashboard projet (page d'accueil du projet avec stats)
+app_project_new_step1:
+    path:
+        fr: /{_locale}/atelier/projets/nouveau/etape-1
+        en: /{_locale}/workshop/projects/new/step-1
+        nl: /{_locale}/werkplaats/projecten/nieuw/stap-1
+    controller: App\Controller\Workshop\ProjectController::newStep1
+    requirements:
+        _locale: en|fr|nl
+    methods: [GET]
+
+app_project_new_step2:
+    path:
+        fr: /{_locale}/atelier/projets/nouveau/etape-2
+        en: /{_locale}/workshop/projects/new/step-2
+        nl: /{_locale}/werkplaats/projecten/nieuw/stap-2
+    controller: App\Controller\Workshop\ProjectController::newStep2
+    requirements:
+        _locale: en|fr|nl
+    methods: [GET]
+
+app_project_new_step3:
+    path:
+        fr: /{_locale}/atelier/projets/nouveau/etape-3
+        en: /{_locale}/workshop/projects/new/step-3
+        nl: /{_locale}/werkplaats/projecten/nieuw/stap-3
+    controller: App\Controller\Workshop\ProjectController::newStep3
+    requirements:
+        _locale: en|fr|nl
+    methods: [GET, POST]
+
 app_project_show:
     path:
         fr: /{_locale}/atelier/projets/{slug}
         en: /{_locale}/workshop/projects/{slug}
+        nl: /{_locale}/werkplaats/projecten/{slug}
     controller: App\Controller\Workshop\ProjectController::show
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         slug: '[a-z0-9-]+'
 
 app_project_edit:
     path:
         fr: /{_locale}/atelier/projets/{slug}/parametres
         en: /{_locale}/workshop/projects/{slug}/settings
+        nl: /{_locale}/werkplaats/projecten/{slug}/instellingen
     controller: App\Controller\Workshop\ProjectController::edit
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         slug: '[a-z0-9-]+'
 
 app_project_delete:
     path:
         fr: /{_locale}/atelier/projets/{slug}/supprimer
         en: /{_locale}/workshop/projects/{slug}/delete
+        nl: /{_locale}/werkplaats/projecten/{slug}/verwijderen
     controller: App\Controller\Workshop\ProjectController::delete
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         slug: '[a-z0-9-]+'
     methods: [POST]
 
@@ -104,30 +145,33 @@ app_profile:
     path:
         fr: /{_locale}/profil
         en: /{_locale}/profile
+        nl: /{_locale}/profiel
     controller: App\Controller\Website\ProfileController::show
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
 
 # ═══════════════════════════════════════════════════════════════════
-# MANUSCRIT (éditeur narratif) — renommé depuis "editeur"
+# MANUSCRIT
 # ═══════════════════════════════════════════════════════════════════
 
 app_manuscript_index:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/manuscrit
         en: /{_locale}/workshop/projects/{project_slug}/manuscript
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/manuscript
     controller: App\Controller\Workshop\ScenarioElementController::index
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
 
 app_manuscript_new:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/manuscrit/nouveau
         en: /{_locale}/workshop/projects/{project_slug}/manuscript/new
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/manuscript/nieuw
     controller: App\Controller\Workshop\ScenarioElementController::new
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
     methods: [GET, POST]
 
@@ -135,9 +179,10 @@ app_manuscript_show:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/manuscrit/{id}
         en: /{_locale}/workshop/projects/{project_slug}/manuscript/{id}
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/manuscript/{id}
     controller: App\Controller\Workshop\ScenarioElementController::show
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
         id: \d+
 
@@ -145,9 +190,10 @@ app_manuscript_save:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/manuscrit/{id}/sauvegarder
         en: /{_locale}/workshop/projects/{project_slug}/manuscript/{id}/save
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/manuscript/{id}/opslaan
     controller: App\Controller\Workshop\ScenarioElementController::save
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
         id: \d+
     methods: [POST]
@@ -156,9 +202,10 @@ app_manuscript_delete:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/manuscrit/{id}/supprimer
         en: /{_locale}/workshop/projects/{project_slug}/manuscript/{id}/delete
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/manuscript/{id}/verwijderen
     controller: App\Controller\Workshop\ScenarioElementController::delete
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
         id: \d+
     methods: [POST]
@@ -171,27 +218,30 @@ app_character_index:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/personnages
         en: /{_locale}/workshop/projects/{project_slug}/characters
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/personages
     controller: App\Controller\Workshop\CharacterController::index
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
 
 app_character_new:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/personnages/nouveau
         en: /{_locale}/workshop/projects/{project_slug}/characters/new
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/personages/nieuw
     controller: App\Controller\Workshop\CharacterController::new
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
 
 app_character_show:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/personnages/{id}
         en: /{_locale}/workshop/projects/{project_slug}/characters/{id}
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/personages/{id}
     controller: App\Controller\Workshop\CharacterController::show
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
         id: \d+
 
@@ -199,9 +249,10 @@ app_character_edit:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/personnages/{id}/modifier
         en: /{_locale}/workshop/projects/{project_slug}/characters/{id}/edit
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/personages/{id}/bewerken
     controller: App\Controller\Workshop\CharacterController::edit
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
         id: \d+
 
@@ -209,9 +260,10 @@ app_character_delete:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/personnages/{id}/supprimer
         en: /{_locale}/workshop/projects/{project_slug}/characters/{id}/delete
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/personages/{id}/verwijderen
     controller: App\Controller\Workshop\CharacterController::delete
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
         id: \d+
     methods: [POST]
@@ -224,27 +276,30 @@ app_location_index:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/lieux
         en: /{_locale}/workshop/projects/{project_slug}/locations
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/locaties
     controller: App\Controller\Workshop\LocationController::index
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
 
 app_location_new:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/lieux/nouveau
         en: /{_locale}/workshop/projects/{project_slug}/locations/new
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/locaties/nieuw
     controller: App\Controller\Workshop\LocationController::new
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
 
 app_location_show:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/lieux/{id}
         en: /{_locale}/workshop/projects/{project_slug}/locations/{id}
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/locaties/{id}
     controller: App\Controller\Workshop\LocationController::show
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
         id: \d+
 
@@ -252,9 +307,10 @@ app_location_edit:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/lieux/{id}/modifier
         en: /{_locale}/workshop/projects/{project_slug}/locations/{id}/edit
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/locaties/{id}/bewerken
     controller: App\Controller\Workshop\LocationController::edit
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
         id: \d+
 
@@ -262,9 +318,10 @@ app_location_delete:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/lieux/{id}/supprimer
         en: /{_locale}/workshop/projects/{project_slug}/locations/{id}/delete
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/locaties/{id}/verwijderen
     controller: App\Controller\Workshop\LocationController::delete
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
         id: \d+
     methods: [POST]
@@ -278,6 +335,6 @@ controllers:
     type: attribute
     prefix: '/{_locale}'
     requirements:
-        _locale: en|fr
+        _locale: en|fr|nl
     defaults:
         _locale: fr

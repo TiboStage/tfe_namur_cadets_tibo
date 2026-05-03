@@ -33,7 +33,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request && $session = $request->getSession()) {
-            $message = $this->translator->trans('flash.auth.welcome', [
+            $message = $this->translator->trans('auth.welcome', [
                 '{firstName}' => $firstName
             ], 'flash_messages');  // ← DOMAINE AJOUTÉ
 
@@ -46,7 +46,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
 
         if ($session = $request->getSession()) {
-            $message = $this->translator->trans('flash.auth.logout', [], 'flash_messages');  // ← DOMAINE AJOUTÉ
+            $message = $this->translator->trans('auth.logout', [], 'flash_messages');  // ← DOMAINE AJOUTÉ
             $session->getFlashBag()->add('info', $message);
         }
     }

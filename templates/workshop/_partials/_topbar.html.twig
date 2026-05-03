@@ -15,7 +15,7 @@
 
     <div class="nav-right">
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="#" class="btn-admin">Administration</a>
+            <a href="#" class="btn-admin">{{ 'topbar.admin'|trans }}</a>
         {% endif %}
 
         <div class="notification-wrapper">
