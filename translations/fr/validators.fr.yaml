@@ -78,19 +78,19 @@ contact:
     email:
         not_blank: "Une adresse email est requise."
         invalid: "Cette adresse email ne semble pas valide."
-
     firstname:
         not_blank: "Veuillez entrer votre prénom."
-
     lastname:
         not_blank: "Veuillez entrer votre nom."
-
     subject:
         not_blank: "Veuillez choisir un sujet."
-
     message:
         not_blank: "Veuillez écrire votre message."
         too_short: "Votre message doit contenir au moins {{ limit }} caractères."
-
     privacy:
         must_agree: "Vous devez accepter la politique de confidentialité."
+    error:
+        csrf: "Le jeton de sécurité a expiré, veuillez réessayer."
+    flash:
+        success: "Votre message a bien été enregistré et envoyé !"
+        mail_error: "Message enregistré, mais l'envoi de l'email a échoué."

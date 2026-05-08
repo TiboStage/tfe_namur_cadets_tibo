@@ -8,25 +8,25 @@
 registration:
     firstname:
         not_blank: "Voer je voornaam in."
-    
+
     lastname:
         not_blank: "Voer je achternaam in."
-    
+
     email:
         not_blank: "Een e-mailadres is vereist."
         invalid: "Dit e-mailadres lijkt niet geldig."
         unique: "Deze email wordt al gebruikt door een andere maker."
-    
+
     username:
         not_blank: "Kies een gebruikersnaam."
         too_short: "Je gebruikersnaam moet minimaal {{ limit }} tekens lang zijn."
         too_long: "Je gebruikersnaam mag niet langer zijn dan {{ limit }} tekens."
         unique: "Deze gebruikersnaam is al bezet. Wees creatief!"
-    
+
     password:
         not_blank: "Een wachtwoord is vereist."
         length: "Je wachtwoord moet minimaal {{ limit }} tekens lang zijn."
-    
+
     terms:
         must_agree: "Je moet akkoord gaan met de gebruiksvoorwaarden."
 
@@ -35,7 +35,7 @@ project:
     title:
         not_blank: "Elk groot avontuur heeft een naam nodig!"
         too_short: "De titel moet minimaal {{ limit }} tekens lang zijn."
-    
+
     description:
         not_blank: "Beschrijf je universum in een paar woorden."
 
@@ -53,3 +53,24 @@ location:
 form:
     errors:
         required_invalid: "Vul de verplichte velden in."
+
+contact:
+    email:
+        not_blank: "Een e-mailadres is verplicht."
+        invalid: "Dit e-mailadres lijkt niet geldig te zijn."
+    firstname:
+        not_blank: "Vul uw voornaam in."
+    lastname:
+        not_blank: "Vul uw achternaam in."
+    subject:
+        not_blank: "Kies een onderwerp."
+    message:
+        not_blank: "Schrijf uw bericht."
+        too_short: "Uw bericht moet ten minste {{ limit }} tekens bevatten."
+    privacy:
+        must_agree: "U moet het privacybeleid accepteren."
+    error:
+        csrf: "Beveiligingstoken verlopen, probeer het opnieuw."
+    flash:
+        success: "Uw bericht is succesvol opgeslagen en verzonden!"
+        mail_error: "Bericht opgeslagen, maar het verzenden van de e-mail is mislukt."

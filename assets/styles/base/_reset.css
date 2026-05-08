@@ -51,6 +51,7 @@ html, body {
 }
 
 /* On s'assure que le wrapper prend bien toute la largeur */
+
 .site-wrapper {
     width: 100%;
     display: flex;

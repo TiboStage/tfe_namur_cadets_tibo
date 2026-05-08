@@ -1,0 +1,44 @@
+<article class="project-card" data-project-type="{{ project.projectType }}">
+    {# Zone Image / Placeholder #}
+    <div class="project-card__image-container">
+        {% if project.coverFilename %}
+            <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}" alt="{{ project.title }}" class="project-card__image">
+        {% else %}
+            {# Design du Figma si pas d'image #}
+            <div class="project-card__placeholder">
+                <div class="placeholder-icon">
+                    {{ ux_icon('lucide:image', {width: 40, height: 40}) }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="project-card__content">
+        <div class="project-card__body">
+            <h3 class="project-card__title">
+                <a href="{{ path('app_project_show', {slug: project.slug}) }}">{{ project.title }}</a>
+            </h3>
+            <p class="project-card__meta text-muted">
+                {{ project.projectType|capitalize }} — {{ project.scenarioElements|length }} entités
+            </p>
+        </div>
+
+        <div class="project-card__footer">
+            <div class="footer-left">
+                <div class="user-avatar--owner" title="Propriétaire : {{ project.owner.username }}">
+                    {{ project.owner.username|first|upper }}
+                </div>
+                {# Bulle pour le nombre de membres additionnels si tu en as #}
+                {% if project.projectMembers|length > 0 %}
+                    <div class="member-count-badge">
+                        {{ project.projectMembers|length }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="link-view-all">
+                {{ ux_icon('lucide:arrow-up-right') }} Voir tous
+            </a>
+        </div>
+    </div>
+</article>

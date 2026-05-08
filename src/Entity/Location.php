@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\LocationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * aliases (JSONB) : variantes de nom détectées dans l'éditeur.
  * Ex : ["Le manoir", "Le manoir des Blackwood", "la vieille bâtisse"]
+ *
+ * parent : hiérarchie des lieux (ex: Continent > Pays > Ville > Quartier)
  */
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
 #[ORM\Table(name: 'location')]
@@ -27,7 +33,18 @@ class Location
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Project $project = null;
 
-    // ─── Scalaires — property hooks PHP 8.4 ──────────────────────────────────
+    // ─── Hiérarchie ─────────────────────────────────────────────────────────
+
+    /** Lieu parent (ex: une ville contient des quartiers) */
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?self $parent = null;
+
+    /** Sous-lieux */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
+    private Collection $children;
+
+    // ─── Scalaires — property hooks PHP 8.4 ────────────────────────────────
 
     #[ORM\Column(type: 'string', length: 255)]
     public string $name = '' {
@@ -41,14 +58,11 @@ class Location
         set => $this->description = trim($value);
     }
 
-    /**
-     * Catégorie : 'interior' | 'exterior' | 'fantasy' | 'historical' | 'futuristic'
-     */
     #[ORM\Column(type: 'string', length: 50)]
     public string $type = '' {
         get => $this->type;
         set {
-            if ($value !== '' && !in_array($value, self::VALID_TYPES)) {
+            if ($value !== '' && !in_array($value, self::VALID_TYPES, strict: true)) {
                 throw new \InvalidArgumentException("Type de lieu invalide : $value");
             }
             $this->type = $value;
@@ -61,12 +75,12 @@ class Location
     #[ORM\Column(type: 'json')]
     public array $metadata = [];
 
-    // ─── Nullable (getter/setter classiques) ──────────────────────────────────
+    // ─── Nullable ────────────────────────────────────────────────────────────
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageFilename = null;
 
-    // ─── Timestamps ───────────────────────────────────────────────────────────
+    // ─── Timestamps ─────────────────────────────────────────────────────────
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
@@ -74,12 +88,11 @@ class Location
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $updatedAt;
 
-    // ─── Constructeur ─────────────────────────────────────────────────────────
-
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->children  = new ArrayCollection();
     }
 
     #[ORM\PreUpdate]
@@ -88,11 +101,44 @@ class Location
         $this->updatedAt = new \DateTimeImmutable();
     }
 
-    // ─── Getters read-only ────────────────────────────────────────────────────
+    // ─── Getters read-only ───────────────────────────────────────────────────
 
     public function getId(): ?int { return $this->id; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
+
+    // ─── Hiérarchie ─────────────────────────────────────────────────────────
+
+    public function getParent(): ?self { return $this->parent; }
+    public function setParent(?self $parent): static
+    {
+        // Évite les boucles (un lieu ne peut pas être son propre parent)
+        if ($parent === $this) {
+            throw new \InvalidArgumentException('Un lieu ne peut pas être son propre parent.');
+        }
+        $this->parent = $parent;
+        return $this;
+    }
+
+    /** @return Collection<int, self> */
+    public function getChildren(): Collection { return $this->children; }
+
+    public function hasChildren(): bool { return !$this->children->isEmpty(); }
+
+    /**
+     * Retourne le chemin complet du lieu.
+     * Ex: "Europe > France > Paris > Montmartre"
+     */
+    public function getFullPath(string $separator = ' > '): string
+    {
+        $parts = [$this->name];
+        $current = $this->parent;
+        while ($current !== null) {
+            array_unshift($parts, $current->getName());
+            $current = $current->getParent();
+        }
+        return implode($separator, $parts);
+    }
 
     // ─── Nullable ────────────────────────────────────────────────────────────
 
@@ -112,7 +158,7 @@ class Location
     public function setAliases(array $v): static { $this->aliases = $v; return $this; }
     public function setMetadata(array $v): static { $this->metadata = $v; return $this; }
 
-    // ─── Getters compat Twig/code existant ───────────────────────────────────
+    // ─── Getters compat Twig ─────────────────────────────────────────────────
 
     public function getName(): string { return $this->name; }
     public function getDescription(): string { return $this->description; }

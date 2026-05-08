@@ -1,11 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Character;
+use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Character>
+ */
 class CharacterRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -14,52 +20,64 @@ class CharacterRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne tous les personnages d'un projet, triés par nom.
+     * Récupère tous les ScenarioElements et Notes où ce personnage est cité
+     * via la table entity_mention.
      *
-     * @return Character[]
+     * Retourne un tableau structuré :
+     * [
+     *   'scenario_elements' => ScenarioElement[],
+     *   'notes'             => Note[],
+     * ]
      */
-    public function findByProject(int $projectId): array
+    public function findMentions(Character $character): array
     {
-        return $this->createQueryBuilder('c')
-            ->where('c.project = :projectId')
-            ->setParameter('projectId', $projectId)
-            ->orderBy('c.name', 'ASC')
-            ->getQuery()
-            ->getResult();
+        $conn = $this->getEntityManager()->getConnection();
+
+        // Récupère les IDs des sources via une requête native (plus performant qu'un DQL polymorphique)
+        $sql = <<<SQL
+            SELECT source_type, source_id
+            FROM entity_mention
+            WHERE target_type = 'character'
+              AND target_id   = :characterId
+        SQL;
+
+        $rows = $conn->executeQuery($sql, ['characterId' => $character->getId()])->fetchAllAssociative();
+
+        // Groupe par source_type
+        $scenarioElementIds = [];
+        $noteIds = [];
+
+        foreach ($rows as $row) {
+            match ($row['source_type']) {
+                'scenario_element' => $scenarioElementIds[] = (int) $row['source_id'],
+                'note'             => $noteIds[]            = (int) $row['source_id'],
+                default            => null,
+            };
+        }
+
+        $em = $this->getEntityManager();
+
+        return [
+            'scenario_elements' => empty($scenarioElementIds) ? [] :
+                $em->getRepository(\App\Entity\ScenarioElement::class)
+                    ->findBy(['id' => $scenarioElementIds]),
+
+            'notes' => empty($noteIds) ? [] :
+                $em->getRepository(\App\Entity\Note::class)
+                    ->findBy(['id' => $noteIds]),
+        ];
     }
 
     /**
-     * Recherche full-text dans les noms et biographies des personnages.
+     * Récupère tous les personnages d'un projet.
      *
      * @return Character[]
      */
-    public function search(int $projectId, string $query): array
+    public function findByProject(Project $project): array
     {
         return $this->createQueryBuilder('c')
-            ->where('c.project = :projectId')
-            ->andWhere(
-                'c.name LIKE :q OR c.firstName LIKE :q OR c.lastName LIKE :q
-                 OR c.nickname LIKE :q OR c.biography LIKE :q'
-            )
-            ->setParameter('projectId', $projectId)
-            ->setParameter('q', '%' . $query . '%')
-            ->orderBy('c.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Retourne les personnages par rôle narratif (protagonist, antagonist...).
-     *
-     * @return Character[]
-     */
-    public function findByProjectAndRole(int $projectId, string $role): array
-    {
-        return $this->createQueryBuilder('c')
-            ->where('c.project = :projectId')
-            ->andWhere('c.role = :role')
-            ->setParameter('projectId', $projectId)
-            ->setParameter('role', $role)
+            ->where('c.project = :project')
+            ->setParameter('project', $project)
             ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->getResult();

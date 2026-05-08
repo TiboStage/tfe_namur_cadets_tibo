@@ -1,114 +1,81 @@
-{# templates/workshop/projects/index.html.twig - VERSION REFACTORISÉE #}
-
 {% extends 'workshop/layout.html.twig' %}
 
 {% block content %}
-    <div class="projects-page">
-        {# Header #}
-        <div class="page-header">
+    <div class="wksh-container">
+
+        <div class="title-projects">
+            {# 1. Header de la page #}
             <div>
-                <h1>
-                    {{ ux_icon('lucide:folder', {style: 'width: 28px; height: 28px;'}) }}
-                    Mes projets
-                </h1>
+                <h1>Mes projets</h1>
                 <p class="text-muted">{{ projects|length }} projet(s) au total</p>
             </div>
-            <a href="{{ path('app_project_new') }}" class="btn btn--cta-yellow">
-                {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
-                Nouveau projet
-            </a>
+
+            {# 2. Barre d'actions #}
+            <div class="view-actions" data-controller="view-switcher">
+                <div class="btn-group">
+                    <button class="btn btn--sm active" data-action="click->view-switcher#switch" data-view="grid">
+                        {{ ux_icon('lucide:layout-grid') }}
+                    </button>
+                    <button class="btn btn--sm" data-action="click->view-switcher#switch" data-view="list">
+                        {{ ux_icon('lucide:list') }}
+                    </button>
+                </div>
+            </div>
         </div>
 
-        {# Grille des projets #}
-        {% if projects is not empty %}
-            <div class="projects-grid" data-controller="project-cards">
-                {% for project in projects %}
-                    <article class="project-card" data-project-cards-target="card">
-                        {# Header : Icône + Type badge #}
-                        <div class="project-card__header">
-                            <div class="project-card__thumb">
-                                {{ project.title|first|upper }}
-                            </div>
-                            <span class="project-type-badge">
-                            {% if project.projectType == 'film' %}
-                                {{ ux_icon('lucide:film', {style: 'width: 12px; height: 12px;'}) }} Film
-                            {% elseif project.projectType == 'serie' %}
-                                {{ ux_icon('lucide:tv', {style: 'width: 12px; height: 12px;'}) }} Série
-                            {% elseif project.projectType == 'jeu_video' %}
-                                {{ ux_icon('lucide:gamepad-2', {style: 'width: 12px; height: 12px;'}) }} Jeu Vidéo
-                            {% else %}
-                                Custom
-                            {% endif %}
-                        </span>
-                        </div>
 
-                        {# Body : Titre + Description #}
-                        <div class="project-card__body">
-                            <h3 class="project-card__title">
-                                <a href="{{ path('app_project_show', {slug: project.slug}) }}">
-                                    {{ project.title }}
-                                </a>
-                            </h3>
+        {# 3. Conteneur principal #}
+        <div id="projects-container" class="projects-grid">
 
-                            {% if project.description %}
-                                <p class="project-card__desc">
-                                    {{ project.description|length > 100 ? project.description|slice(0, 100) ~ '...' : project.description }}
-                                </p>
-                            {% else %}
-                                <p class="project-card__desc text-muted">Aucune description</p>
-                            {% endif %}
-
-                            <p class="project-card__date">
-                                {{ ux_icon('lucide:clock', {style: 'width: 12px; height: 12px;'}) }}
-                                Modifié le {{ project.updatedAt|date('d/m/Y') }}
-                            </p>
-                        </div>
-
-                        {# Stats overlay (visible au hover) #}
-                        <div class="project-card__stats">
-                            <div class="stat-item">
-                                <span class="stat-value">{{ project.scenarioElements|length }}</span>
-                                <span class="stat-label">Scènes</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-value">{{ project.characters|length }}</span>
-                                <span class="stat-label">Persos</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-value">{{ project.locations|length }}</span>
-                                <span class="stat-label">Lieux</span>
-                            </div>
-                        </div>
-
-                        {# Footer : Actions #}
-                        <div class="project-card__footer">
-                            <a href="{{ path('app_project_show', {slug: project.slug}) }}"
-                               class="btn btn--primary btn--sm">
-                                {{ ux_icon('lucide:arrow-right', {style: 'width: 14px; height: 14px;'}) }}
-                                Ouvrir
-                            </a>
-                            <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
-                               class="btn btn--ghost btn--sm"
-                               title="Paramètres">
-                                {{ ux_icon('lucide:settings', {style: 'width: 14px; height: 14px;'}) }}
-                            </a>
-                        </div>
-                    </article>
-                {% endfor %}
+            {# Header du Tableau (Visible uniquement en mode liste) #}
+            <div class="project-list-header">
+                <div class="col-main">Projets</div>
+                <div class="col-status">Status</div>
+                <div class="col-progression">Progression</div>
+                <div class="col-entities">Entités</div>
+                <div class="col-date">Modifié</div>
+                <div class="col-actions"></div>
             </div>
-        {% else %}
-            {# État vide #}
-            <div class="empty-projects">
-                {{ ux_icon('lucide:folder-open', {style: 'width: 64px; height: 64px; opacity: 0.3;'}) }}
-                <div>
-                    <h3>Aucun projet pour le moment</h3>
-                    <p class="text-muted">Créez votre premier projet pour commencer à écrire.</p>
+
+            {% for project in projects %}
+                {# --- VUE GRILLE (Card) --- #}
+                <div class="grid-only">
+                    {{ component('project_card', { project: project }) }}
                 </div>
-                <a href="{{ path('app_project_new') }}" class="btn btn--cta-yellow">
-                    {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
-                    Créer mon premier projet
-                </a>
-            </div>
-        {% endif %}
+
+                {# --- VUE LISTE (Row) --- #}
+                <div class="project-list-row list-only">
+                    <div class="col-main">
+                        <div class="project-mini-thumb">
+                            {{ ux_icon('lucide:image', {class: 'icon-xs'}) }}
+                        </div>
+                        <div class="project-info">
+                            <span class="project-name">{{ project.title }}</span>
+                            <span class="project-sub">{{ project.projectType|capitalize }} - Catégorie</span>
+                        </div>
+                    </div>
+
+                    <div class="col-status">
+                    <span class="badge-status badge--{{ project.status|default('draft') }}">
+                        {{ project.status|default('Brouillon') }}
+                    </span>
+                    </div>
+
+                    <div class="col-progression">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 45%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-entities">
+                        <strong>{{ project.scenarioElements|length + project.characters|length }}</strong>
+                    </div>
+
+                    <div class="col-date">{{ project.updatedAt|date('d/m/Y') }}</div>
+
+                    <div class="col-actions">{{ ux_icon('lucide:more-horizontal') }}</div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

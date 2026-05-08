@@ -15,9 +15,7 @@
         {{ importmap('app') }}
     {% endblock %}
 </head>
-<body data-turbo="false">
-
-{% block body %}{% endblock %}
+<body>
 
 <div id="toast-container" class="toast-container">
     {% for label, messages in app.flashes %}
@@ -26,6 +24,8 @@
         {% endfor %}
     {% endfor %}
 </div>
+
+{% block body %}{% endblock %}
 
 </body>
 </html>

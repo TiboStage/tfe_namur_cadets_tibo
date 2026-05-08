@@ -2,19 +2,21 @@
 
 {% extends 'base.html.twig' %}
 
+{% block favicon %}
+    <link rel="icon" type="image/png" href="{{ asset('images/favicons/favicon_workshop.png') }}">
+{% endblock %}
+
 {% block body %}
 
+    {#  Bar avec recherche et retour au site  #}
+    {% include 'workshop/_partials/_topbar.html.twig' %}
 
-    <div class="workshop-wrapper">
-        {% include 'workshop/_partials/_topbar.html.twig' %}
+    {# SUBNAV dans un block pour la rendre optionnelle #}
+    {% block subnav %}{% include 'workshop/_partials/_subnav.html.twig' %}{% endblock %}
 
-        {# SUBNAV dans un block pour la rendre optionnelle #}
-        {% block subnav %}
-            {% include 'workshop/_partials/_subnav.html.twig' %}
+    <main>
+        {% block content %}
         {% endblock %}
+    </main>
 
-        <main class="workshop-content" data-turbo="false">
-            {% block content %}{% endblock %}
-        </main>
-    </div>
 {% endblock %}

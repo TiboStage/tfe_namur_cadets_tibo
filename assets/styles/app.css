@@ -11,14 +11,11 @@
 @import "components/_alerts.css";
 
 /* --- 3. LAYOUTS (La structure commune) --- */
-/* Ici on met ce qui est présent sur TOUTES les pages d'une section */
 @import "layouts/website/_navbar.css";
 @import "layouts/website/_footer.css";
 @import "layouts/workshop/_topbar.css";
 @import "layouts/workshop/_subnav.css";
 
-/* --- 4. PAGES (Le spécifique) --- */
-/* C'est ici que tu devrais déplacer tes fichiers de "layouts" qui sont en fait des pages */
 
 /* Section Website */
 @import "pages/website/_home.css";
@@ -31,7 +28,11 @@
 @import "pages/workshop/_dashboard.css";
 @import "pages/workshop/_editor.css";
 @import "pages/workshop/_projects.css";
+@import "pages/workshop/_projects_cards.css";
 @import "pages/workshop/_characters.css";
+
+/* Section Profile */
+@import "pages/profile/_profile.css";
 
 /* --- 5. EXCEPTIONS & ERREURS --- */
 @import "components/_error-pages.css";

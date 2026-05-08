@@ -39,7 +39,7 @@ class Project
         maxMessage: 'project.title.too_long',
     )]
     public string $title = '' {
-        set => $this->title = trim((string) $value);
+        set => trim((string) $value);
     }
 
     #[ORM\Column(length: 255, unique: true)]
@@ -244,6 +244,11 @@ class Project
         return $this->coverFilename;
     }
 
+    // Alias pour faciliter l'accès dans Twig
+    public function getOwner(): ?User
+    {
+        return $this->getCreatedBy();
+    }
     public function getCreatedBy(): ?User
     {
         return $this->createdBy;

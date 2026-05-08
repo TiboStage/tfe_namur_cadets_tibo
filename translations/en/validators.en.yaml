@@ -8,25 +8,25 @@
 registration:
     firstname:
         not_blank: "Please enter your first name."
-    
+
     lastname:
         not_blank: "Please enter your last name."
-    
+
     email:
         not_blank: "An email address is required."
         invalid: "This email address does not appear to be valid."
         unique: "This email is already used by another creator."
-    
+
     username:
         not_blank: "Please choose a username."
         too_short: "Your username must be at least {{ limit }} characters."
         too_long: "Your username cannot exceed {{ limit }} characters."
         unique: "This username is already taken. Be creative!"
-    
+
     password:
         not_blank: "A password is required."
         length: "Your password must be at least {{ limit }} characters."
-    
+
     terms:
         must_agree: "You must agree to the terms of use."
 
@@ -35,10 +35,10 @@ project:
     title:
         not_blank: "Every great adventure needs a name!"
         too_short: "The title must be at least {{ limit }} characters."
-    
+
     description:
         not_blank: "Describe your universe in a few words."
-    
+
     type:
         film: "Film"
         serie: "Series"
@@ -49,7 +49,7 @@ project:
 character:
     name:
         not_blank: "The character needs a name!"
-    
+
     role:
         protagonist: "Protagonist"
         antagonist: "Antagonist"
@@ -60,7 +60,7 @@ character:
 location:
     name:
         not_blank: "The location needs a name!"
-    
+
     type:
         interior: "Interior"
         exterior: "Exterior"
@@ -72,3 +72,24 @@ location:
 form:
     errors:
         required_invalid: "Please fill in the required fields."
+
+contact:
+    email:
+        not_blank: "An email address is required."
+        invalid: "This email address does not seem valid."
+    firstname:
+        not_blank: "Please enter your first name."
+    lastname:
+        not_blank: "Please enter your last name."
+    subject:
+        not_blank: "Please choose a subject."
+    message:
+        not_blank: "Please write your message."
+        too_short: "Your message must contain at least {{ limit }} characters."
+    privacy:
+        must_agree: "You must accept the privacy policy."
+    error:
+        csrf: "Security token expired, please try again."
+    flash:
+        success: "Your message has been successfully saved and sent!"
+        mail_error: "Message saved, but the email delivery failed."

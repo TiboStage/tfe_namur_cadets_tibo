@@ -1,19 +1,13 @@
-{#
-{# ce fichier est : 'templates/workshop/dashboard.html.twig
-Rôle : Dashboard général /atelier (stats, projets récents, activité)
-#}
-
 {% extends 'workshop/layout.html.twig' %}
-{% trans_default_domain 'workshop_interface' %}
+
+{% trans_default_domain 'workshop' %}
 
 {% block title %}L'Atelier - Scénart{% endblock %}
 
-{% block favicon %}
-    <link rel="icon" type="image/png" href="{{ asset('images/favicons/favicon_workshop.png') }}">
-{% endblock %}
+
 
 {% block content %}
-    <div class="dashboard-container">
+    <div class="wksh-container">
 
         {# ── EN-TÊTE ──────────────────────────────────────────────────────── #}
         <header class="dashboard-intro">
@@ -81,7 +75,7 @@ Rôle : Dashboard général /atelier (stats, projets récents, activité)
             <section class="dashboard-section">
                 <div class="dashboard-section-header">
                     <h2>{{ 'dashboard.projects.title'|trans }}</h2>
-                    <a href="{{ path('app_project_index') }}" class="highlight link-more">
+                    <a href="{{ path('app_project_index') }}" class="link-more">
                         {{ 'dashboard.projects.see_more'|trans }}
                     </a>
                 </div>
@@ -114,7 +108,7 @@ Rôle : Dashboard général /atelier (stats, projets récents, activité)
             <section class="dashboard-section">
                 <div class="dashboard-section-header">
                     <h2>{{ 'dashboard.activity.title'|trans }}</h2>
-                    <a href="#" class="highlight link-more">{{ 'dashboard.activity.see_all'|trans }}</a>
+                    <a href="#" class="link-more">{{ 'dashboard.activity.see_all'|trans }}</a>
                 </div>
 
                 <div class="activity-list">
@@ -134,7 +128,35 @@ Rôle : Dashboard général /atelier (stats, projets récents, activité)
                     {% endfor %}
                 </div>
             </section>
-
         </div>
+
+        {# ── PROJETS RÉCENTS (Cartes horizontales) ────────────────────────── #}
+        <section class="dashboard-section recent-projects-full">
+            <div class="dashboard-section-header">
+                <h2>Projets récents</h2>
+                <a href="{{ path('app_project_index') }}" class="link-more">
+                    Voir tous <i class="ph-arrow-right"></i>
+                </a>
+            </div>
+
+            {# Cette classe doit avoir le minmax(400px) dans ton CSS #}
+            <div class="project-cards-grid-large">
+                {% if projects is empty %}
+                    <p class="text-muted">{{ 'dashboard.projects.empty'|trans }}</p>
+                {% else %}
+                    {% for project in projects|slice(0, 4) %}
+                        {{ component('project_card', { project: project }) }}
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="load-more-container">
+                <a href="{{ path('app_project_index') }}" class="btn-load-more">
+                    {{ ux_icon('lucide:chevron-down', {width: 18, height: 18}) }}
+                    Voir plus de projets
+                </a>
+            </div>
+
+        </section>
     </div>
 {% endblock %}

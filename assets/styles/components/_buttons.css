@@ -1,7 +1,6 @@
 /* ============================================================
    BOUTONS — _buttons.css
    Tous les boutons du projet centralisés ici.
-   Zéro border-radius — design sharp.
    ============================================================
 
    INDEX :
@@ -274,4 +273,72 @@
 .btn-action-small:hover {
     border-color: var(--text-muted);
     color: var(--text-main);
+}
+
+
+/* Barre d'actions */
+.view-actions {
+    display: flex;
+    justify-content: flex-end; /* Aligne à droite */
+    margin-bottom: 30px;
+}
+
+/* Groupe de boutons */
+.btn-group {
+    display: inline-flex;
+    background: #1a1a1e;
+    border: 1px solid #2a2a2e;
+    padding: 4px;
+}
+
+/* Bouton individuel dans le groupe */
+.btn-group .btn {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    width: 40px;  /* On force une largeur carrée pour l'icône */
+    height: 36px;
+}
+
+.btn-group .btn:hover {
+    color: #f5f5f5;
+}
+
+/* État actif (le bouton sélectionné) */
+.btn-group .btn.active {
+    background: #2a2a2e;
+    color: #FFB800;
+}
+
+/* Taille de l'icône à l'intérieur */
+.btn-group .btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.load-more-container{
+    justify-self: center;
+}
+
+.btn-load-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Espace entre l'icône et le texte */
+    background: transparent;
+    border: 1px solid #2a2a2e;
+    color: #888;
+    padding: 12px 24px;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.btn-load-more:hover {
+    color: #fff;
+    border-color: #FFB800;
 }

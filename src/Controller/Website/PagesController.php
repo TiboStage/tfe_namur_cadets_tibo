@@ -2,12 +2,15 @@
 
 namespace App\Controller\Website;
 
+use App\Entity\Contact;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 
 final class PagesController extends AbstractController
 {
@@ -30,9 +33,14 @@ final class PagesController extends AbstractController
     {
         return $this->render('website/pages/features.html.twig');
     }
+    public function contact(
+        Request $request,
+        MailerInterface $mailer,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): Response {
+        $locale = $request->getLocale();
 
-    public function contact(Request $request, MailerInterface $mailer): Response
-    {
         if ($request->isMethod('POST')) {
             $emailSender = $request->request->get('email');
             $firstname = $request->request->get('firstname');
@@ -41,35 +49,60 @@ final class PagesController extends AbstractController
             $messageContent = $request->request->get('message');
             $privacy = $request->request->get('privacy');
 
-            if (
-                empty($emailSender) || !filter_var($emailSender, FILTER_VALIDATE_EMAIL) ||
-                empty($firstname) ||
-                empty($lastname) ||
-                empty($subject) ||
-                empty($messageContent) || strlen($messageContent) < 10 ||
-                !$privacy
-            ) {
-                $this->addFlash('danger', 'Veuillez remplir correctement tous les champs.');
-                return $this->redirectToRoute('app_contact');
+            // 1. Sécurité CSRF
+            if (!$this->isCsrfTokenValid('contact-form', $request->request->get('_token'))) {
+                $this->addFlash('danger', $translator->trans('contact.error.csrf', [], 'validators'));
+                return $this->redirectToRoute('app_contact', ['_locale' => $locale]);
             }
 
-            $email = new Email()
+            // 2. Validations
+            if (empty($emailSender)) {
+                $this->addFlash('danger', $translator->trans('contact.email.not_blank', [], 'validators'));
+                return $this->redirectToRoute('app_contact', ['_locale' => $locale]);
+            }
+
+            if (empty($messageContent) || strlen($messageContent) < 10) {
+                $this->addFlash('danger', $translator->trans('contact.message.too_short', ['{{ limit }}' => 10], 'validators'));
+                return $this->redirectToRoute('app_contact', ['_locale' => $locale]);
+            }
+
+            if (!$privacy) {
+                $this->addFlash('danger', $translator->trans('contact.privacy.must_agree', [], 'validators'));
+                return $this->redirectToRoute('app_contact', ['_locale' => $locale]);
+            }
+
+            // 3. Sauvegarde
+            $contact = new Contact();
+            $contact->setFirstname($firstname)
+                ->setLastname($lastname)
+                ->setEmail($emailSender)
+                ->setSubject($subject)
+                ->setMessage($messageContent);
+
+            $em->persist($contact);
+            $em->flush();
+
+            // 4. Email
+            $email = (new Email())
                 ->from('system@scenart.be')
                 ->replyTo($emailSender)
                 ->to('admin@scenart.be')
-                ->subject('Contact [' . $subject . '] - ' . $firstname . ' ' . $lastname)
-                ->text("De : $firstname $lastname ($emailSender)\nSujet : $subject\n\nMessage :\n$messageContent");
+                ->subject('Contact [' . $subject . '] - ' . $firstname)
+                ->html("<p>Message de <b>$firstname $lastname</b> ($emailSender)</p><p>$messageContent</p>");
 
             try {
                 $mailer->send($email);
-                $this->addFlash('success', 'Votre message a bien été envoyé !');
+                // Message de succès traduit
+                $this->addFlash('success', $translator->trans('contact.flash.success', [], 'validators'));
             } catch (\Exception $e) {
-                $this->addFlash('danger', 'Erreur lors de l\'envoi. Veuillez réessayer plus tard.');
+                // Message d'avertissement traduit
+                $this->addFlash('warning', $translator->trans('contact.flash.mail_error', [], 'validators'));
             }
 
-            return $this->redirectToRoute('app_contact');
+            return $this->redirectToRoute('app_contact', ['_locale' => $locale]);
         }
 
         return $this->render('website/pages/contact.html.twig');
     }
+
 }

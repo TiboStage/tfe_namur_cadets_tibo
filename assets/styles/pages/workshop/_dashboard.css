@@ -3,10 +3,20 @@
    Sharp design, zéro border-radius
    ============================================================ */
 
-.dashboard-container {
+.wksh-container {
     padding: 40px;
-    max-width: 1600px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
 }
+
+/*.workshop-content {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    flex: 1;*/
+/*    width: 100%;*/
+/*    min-height: 0; !* Important pour éviter les bugs de scroll flexbox *!*/
+/*}*/
 
 /* ── En-tête ─────────────────────────────────────────────── */
 
@@ -15,7 +25,7 @@
 }
 
 .dashboard-intro h1 {
-    font-size: 28px;
+    font-size: clamp(24px, 2vw, 36px);
     font-weight: 900;
     margin-bottom: 6px;
 }
@@ -29,9 +39,9 @@
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr) 280px;
-    gap: 10px;
-    margin-bottom: 10px;
+    grid-template-columns: repeat(4, 1fr) 1.2fr;
+    gap: 15px;
+    margin-bottom: 15px;
 }
 
 .stat-card {
@@ -46,6 +56,7 @@
 .stat-card--yellow {
     background: var(--color-primary);
     color: #000;
+
 }
 
 .stat-card--dark {
@@ -53,16 +64,14 @@
 }
 
 .stat-value {
-    font-size: 32px;
-    font-weight: 900;
+    font-size: clamp(30px, 2.5vw, 40px);
+    font-weight: 700;
     line-height: 1;
-    margin-top: auto;
 }
 
 .stat-desc {
-    font-size: 13px;
+    font-size: clamp(15px, 2.5vw, 20px);
     color: inherit;
-    opacity: 0.7;
 }
 
 .stat-card--yellow .stat-value  {
@@ -71,21 +80,17 @@
 
 .stat-card--yellow .stat-desc {
     color: #000;
-    opacity: 0.6;
-}
-
-.stat-footer-link {
-    margin-top: auto;
-    font-weight: 700;
-    font-size: 12px;
-    text-decoration: none;
-    color: inherit;
-    opacity: 0.8;
 }
 
 .stat-card--yellow .stat-footer-link {
-    color: #000;
+    color: #0A0A0A;
+    font-size: clamp(12px, 2.5vw, 18px);
+    font-weight: 700;
+    text-decoration: none;
+    margin-top: 10px;
+    align-self: self-end;
 }
+
 
 /* ── Actions rapides ─────────────────────────────────────── */
 
@@ -127,8 +132,8 @@
 
 .dashboard-lower-grid {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 10px;
+    grid-template-columns: 1fr;
+    gap: 15px;
 }
 
 /* ── Sections ────────────────────────────────────────────── */
@@ -157,6 +162,23 @@
     font-weight: 700;
     color: var(--color-primary);
     text-decoration: none;
+}
+
+
+.recent-projects-full{
+    margin: 40px 0;
+    background-color: transparent;
+    border: none;
+}
+.project-cards-grid-large{
+    margin: 0;
+}
+.recent-projects-full .dashboard-section-header{
+    padding: 0;
+    border-bottom: none;
+}
+.recent-projects-full .dashboard-section-header h2{
+    font-size: clamp(24px, 2vw, 36px);
 }
 
 /* ── Liste de projets ────────────────────────────────────── */
@@ -275,9 +297,50 @@
     color: var(--text-muted);
 }
 
+
+/* 1. Le style "Liste compacte" pour le haut du Dashboard */
+.project-list-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: #16161a;
+    border: 1px solid #2a2a2e;
+    margin-bottom: 8px;
+    text-decoration: none;
+}
+
+/* 2. Le style "Grandes Cartes" pour le bas (Ton souhait du 400px) */
+.project-cards-grid-large {
+    display: grid;
+    /* On applique ici ton idée de 400px */
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+/* On s'assure que le composant prend bien toute la place dans sa colonne */
+.project-cards-grid-large .project-card {
+    width: 100%;
+}
+
+
+
+
+
 /* ── Utilitaires locaux ──────────────────────────────────── */
 
 .text-bold { font-weight: 700; }
 .text-muted { color: var(--text-muted); }
-.highlight { color: var(--color-primary); }
-.mb-30 { margin-bottom: 30px; }
+.highlight {
+    color: var(--color-primary);
+    font-style: italic;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+
+/* À partir du desktop, on repasse en deux colonnes proportionnelles */
+@media (min-width: 1024px) {
+    .dashboard-lower-grid {
+        grid-template-columns: 1.3fr 0.7fr;
+    }
+}
