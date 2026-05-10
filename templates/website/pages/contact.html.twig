@@ -7,16 +7,22 @@
     <main class="container contact-page section-header">
         <div class="contact-grid">
 
+            {# ══════════════════════════════════════════════════════════ #}
+            {# COLONNE GAUCHE                                              #}
+            {# ══════════════════════════════════════════════════════════ #}
             <div class="contact-info">
                 <span class="section-tag">{{ 'contact.info.tag'|trans }}</span>
-                <h1 class="main-title">{{ 'contact.info.title'|trans }}<br>
+                <h1 class="main-title">
+                    {{ 'contact.info.title'|trans }}<br>
                     <span class="highlight">{{ 'contact.info.title_highlight'|trans }}</span>
                 </h1>
                 <p class="section-desc">{{ 'contact.info.description'|trans }}</p>
 
                 <div class="info-cards-stack">
                     <div class="info-card">
-                        <div class="info-icon"><i class="fa-regular fa-clock"></i></div>
+                        <div class="info-icon">
+                            {{ ux_icon('lucide:clock', {class: 'icon-md'}) }}
+                        </div>
                         <div class="info-content">
                             <h4>{{ 'contact.info.cards.response_time'|trans }}</h4>
                             <p>{{ 'contact.info.cards.response_desc'|trans }}<br>
@@ -25,7 +31,9 @@
                         </div>
                     </div>
                     <div class="info-card">
-                        <div class="info-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div class="info-icon">
+                            {{ ux_icon('lucide:graduation-cap', {class: 'icon-md'}) }}
+                        </div>
                         <div class="info-content">
                             <h4>{{ 'contact.info.cards.academic'|trans }}</h4>
                             <p>{{ 'contact.info.cards.academic_desc'|trans }}<br>
@@ -36,131 +44,112 @@
                 </div>
 
                 <div class="social-links">
-                    <a href="#" class="social-box"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="#" class="social-box"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="social-box"><i class="fa-brands fa-discord"></i></a>
-                    <a href="#" class="social-box"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" class="social-box">{{ ux_icon('lucide:twitter', {class: 'icon-sm'}) }}</a>
+                    <a href="#" class="social-box">{{ ux_icon('lucide:instagram', {class: 'icon-sm'}) }}</a>
+                    <a href="#" class="social-box">{{ ux_icon('lucide:message-circle', {class: 'icon-sm'}) }}</a>
+                    <a href="#" class="social-box">{{ ux_icon('lucide:linkedin', {class: 'icon-sm'}) }}</a>
                 </div>
             </div>
 
+            {# ══════════════════════════════════════════════════════════ #}
+            {# COLONNE DROITE                                              #}
+            {# ══════════════════════════════════════════════════════════ #}
             <div class="form-wrapper">
                 <div class="form-card">
                     <h2>{{ 'contact.form.title'|trans }}</h2>
 
-                    {# ── Formulaire Symfony avec design personnalisé ────────── #}
                     {{ form_start(form, {
                         'attr': {
                             'novalidate': 'novalidate',
-                            'data-controller': 'contact-form',
+                            'class': 'contact-form',
+                            'data-controller': 'form-validation',
+                            'data-action': 'submit->form-validation#submit',
                             'data-turbo': 'false'
                         }
                     }) }}
 
-                    {# ── Email (pleine largeur) ────────────────────────── #}
-                    <div class="form-group full">
-                        <label for="{{ form.email.vars.id }}">
-                            {{ 'contact.form.labels.email'|trans }}
-                            <span class="required">*</span>
-                        </label>
-                        {{ form_widget(form.email, {
+                    {# ── Email ─────────────────────────────────── #}
+                    <div class="form-group-full">
+                        {{ form_row(form.email, {
+                            'label': 'contact.form.labels.email'|trans,
                             'attr': {
-                                'placeholder': 'john.doe@scenart.be',
-                                'data-contact-form-target': 'email',
-                                'data-action': 'blur->contact-form#validateEmail'
+                                'placeholder': 'contact.form.placeholders.email'|trans,
+                                'data-form-validation-target': 'field',
+                                'data-action': 'blur->form-validation#validate',
+                                'data-error-required': 'contact.email.not_blank'|trans({}, 'validators'),
+                                'data-error-email':    'contact.email.invalid'|trans({}, 'validators')
                             }
                         }) }}
-                        <span class="error-message" data-contact-form-target="emailError">
-                                {{ form_errors(form.email) }}
-                            </span>
                     </div>
 
-                    {# ── Prénom & Nom (deux colonnes) ──────────────────── #}
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="{{ form.firstname.vars.id }}">
-                                {{ 'contact.form.labels.firstname'|trans }}
-                                <span class="required">*</span>
-                            </label>
-                            {{ form_widget(form.firstname, {
-                                'attr': {
-                                    'data-contact-form-target': 'firstname',
-                                    'data-action': 'blur->contact-form#validateRequired'
-                                }
-                            }) }}
-                            <span class="error-message" data-contact-form-target="firstnameError">
-                                    {{ form_errors(form.firstname) }}
-                                </span>
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.lastname.vars.id }}">
-                                {{ 'contact.form.labels.lastname'|trans }}
-                                <span class="required">*</span>
-                            </label>
-                            {{ form_widget(form.lastname, {
-                                'attr': {
-                                    'data-contact-form-target': 'lastname',
-                                    'data-action': 'blur->contact-form#validateRequired'
-                                }
-                            }) }}
-                            <span class="error-message" data-contact-form-target="lastnameError">
-                                    {{ form_errors(form.lastname) }}
-                                </span>
-                        </div>
-                    </div>
-
-                    {# ── Sujet (select) ─────────────────────────────────── #}
-                    <div class="form-group full">
-                        <label for="{{ form.subject.vars.id }}">
-                            {{ 'contact.form.labels.subject'|trans }}
-                            <span class="required">*</span>
-                        </label>
-                        {{ form_widget(form.subject, {
+                    {# ── Prénom & Nom ───────────────────────────── #}
+                    {# minlength: 2 = identique à la contrainte Length(min: 2) dans ContactType #}
+                    <div class="form-row-two">
+                        {{ form_row(form.firstname, {
+                            'label': 'contact.form.labels.firstname'|trans,
                             'attr': {
-                                'data-contact-form-target': 'subject',
-                                'data-action': 'change->contact-form#validateRequired'
+                                'placeholder':  'contact.form.placeholders.firstname'|trans,
+                                'minlength': 2,
+                                'data-form-validation-target': 'field',
+                                'data-action': 'blur->form-validation#validate',
+                                'data-error-required':  'contact.firstname.not_blank'|trans({}, 'validators'),
+                                'data-error-minlength': 'contact.firstname.too_short'|trans({}, 'validators')
                             }
                         }) }}
-                        <span class="error-message" data-contact-form-target="subjectError">
-                                {{ form_errors(form.subject) }}
-                            </span>
+
+                        {{ form_row(form.lastname, {
+                            'label': 'contact.form.labels.lastname'|trans,
+                            'attr': {
+                                'placeholder':  'contact.form.placeholders.lastname'|trans,
+                                'minlength': 2,
+                                'data-form-validation-target': 'field',
+                                'data-action': 'blur->form-validation#validate',
+                                'data-error-required':  'contact.lastname.not_blank'|trans({}, 'validators'),
+                                'data-error-minlength': 'contact.lastname.too_short'|trans({}, 'validators')
+                            }
+                        }) }}
                     </div>
 
-                    {# ── Message (textarea) ─────────────────────────────── #}
-                    <div class="form-group full">
-                        <label for="{{ form.message.vars.id }}">
-                            {{ 'contact.form.labels.message'|trans }}
-                            <span class="required">*</span>
-                        </label>
-                        {{ form_widget(form.message, {
+                    {# ── Sujet ─────────────────────────────────── #}
+                    <div class="form-group-full">
+                        {{ form_row(form.subject, {
+                            'label': 'contact.form.labels.subject'|trans,
+                            'attr': {
+                                'data-form-validation-target': 'field',
+                                'data-action': 'change->form-validation#validate',
+                                'data-error-required': 'contact.subject.not_blank'|trans({}, 'validators')
+                            }
+                        }) }}
+                    </div>
+
+                    {# ── Message ───────────────────────────────── #}
+                    {# minlength: 10 = identique à la contrainte Length(min: 10) dans ContactType #}
+                    <div class="form-group-full">
+                        {{ form_row(form.message, {
+                            'label': 'contact.form.labels.message'|trans,
                             'attr': {
                                 'rows': '5',
-                                'data-contact-form-target': 'message',
-                                'data-action': 'blur->contact-form#validateMessage'
+                                'placeholder': 'contact.form.placeholders.message'|trans,
+                                'minlength': 10,
+                                'data-form-validation-target': 'field',
+                                'data-action': 'blur->form-validation#validate',
+                                'data-error-required':  'contact.message.not_blank'|trans({}, 'validators'),
+                                'data-error-minlength': 'contact.message.too_short'|trans({}, 'validators')
                             }
                         }) }}
-                        <span class="error-message" data-contact-form-target="messageError">
-                                {{ form_errors(form.message) }}
-                            </span>
                     </div>
 
-                    {# ── Checkbox Politique de confidentialité ──────────── #}
-                    <div class="form-checkbox">
-                        {{ form_widget(form.privacy, {
-                            'attr': {
-                                'data-contact-form-target': 'privacy',
-                                'data-action': 'change->contact-form#validatePrivacy'
-                            }
-                        }) }}
-                        <label for="{{ form.privacy.vars.id }}">
-                            {{ 'contact.form.privacy'|trans }}
-                            <a href="#">{{ 'contact.form.privacy_link'|trans }}</a>.
-                        </label>
-                        <span class="error-message" data-contact-form-target="privacyError">
-                                {{ form_errors(form.privacy) }}
-                            </span>
-                    </div>
+                    {# ── Checkbox privacy ──────────────────────── #}
+                    {{ form_row(form.privacy, {
+                        'label_html': true,
+                        'label': 'contact.form.privacy'|trans ~ ' <a href="#">' ~ 'contact.form.privacy_link'|trans ~ '</a>.',
+                        'attr': {
+                            'data-form-validation-target': 'field',
+                            'data-action': 'change->form-validation#validate',
+                            'data-error-required': 'contact.privacy.must_agree'|trans({}, 'validators')
+                        }
+                    }) }}
 
-                    {# ── Bouton Submit ──────────────────────────────────── #}
                     <button type="submit" class="btn-primary-pricing">
                         {{ 'contact.form.submit'|trans }}
                     </button>

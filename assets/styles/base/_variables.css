@@ -1,22 +1,64 @@
 :root {
-    /* Couleurs principales */
+    /* ═══════════════════════════════════════════════════════════ */
+    /* COULEURS PRINCIPALES                                         */
+    /* ═══════════════════════════════════════════════════════════ */
+
     --color-primary: #FFB800;    /* Jaune Scénart */
-    --color-bg-dark: #0A0A0A;   /* Noir de fond */
-    --color-bg-card: #15151A;   /* Gris foncé des cartes/menus */
-    --color-border: #222222;    /* Bordures subtiles */
+    --color-bg-dark: #0A0A0A;    /* Noir de fond */
+    --color-bg-card: #15151A;    /* Gris foncé des cartes/menus */
+    --color-border: #222222;     /* Bordures subtiles */
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* COULEURS DE TEXTE                                            */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --text-main: #FFFFFF;        /* Texte principal (blanc) */
+    --text-muted: #888888;       /* Texte secondaire (gris moyen) */
+    --text-muted-light: #666666; /* Texte secondaire clair */
+    --text-muted-dark: #444444;  /* Texte secondaire foncé */
+    --text-dark: #000000;        /* Texte noir (sur fond clair) */
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* ÉTATS DE VALIDATION (Formulaires)                            */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --color-error: #FF4444;      /* Erreurs de validation */
+    --color-error-bg: rgba(255, 68, 68, 0.1);  /* Fond erreur */
+    --color-error-light: rgba(255, 68, 68, 0.05); /* Fond erreur léger */
+
+    --color-success: #4CAF50;    /* Validation réussie */
+    --color-success-bg: rgba(76, 175, 80, 0.1);  /* Fond succès */
+
+    --color-warning: #FFC107;    /* Avertissements */
+    --color-warning-bg: rgba(255, 193, 7, 0.1);  /* Fond warning */
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* NUANCES DE GRIS (Backgrounds & Borders)                      */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --color-bg-input: #111114;   /* Fond des inputs */
+    --color-border-light: #333333; /* Bordures claires */
+    --color-border-focus: #444444; /* Bordures au focus */
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* LAYOUT & RESPONSIVE                                          */
+    /* ═══════════════════════════════════════════════════════════ */
+
     --container-width: 1400px;
     --container-padding: 50px;
 
-    /* Couleurs de texte */
-    --text-main: #FFFFFF;
-    --text-muted: #888888;
-    --text-dark: #000000;
+    /* ═══════════════════════════════════════════════════════════ */
+    /* TRANSITIONS                                                  */
+    /* ═══════════════════════════════════════════════════════════ */
 
-    /* Espacements & Rayons */
     --transition: all 0.3s ease;
+    --transition-fast: all 0.2s ease;
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* BREAKPOINTS                                                  */
+    /* ═══════════════════════════════════════════════════════════ */
 
     --breakpoint-mobile: 640px;
     --breakpoint-tablet: 768px;
     --breakpoint-desktop: 1024px;
-
 }

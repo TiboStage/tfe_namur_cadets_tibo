@@ -3,7 +3,6 @@
 .form-card {
     background: var(--color-bg-card);
     padding: 40px;
-    border-radius: var(--radius-md);
     border: 1px solid var(--color-border);
 }
 
@@ -37,7 +36,6 @@
     border: 1px solid var(--color-border);
     color: var(--text-main);
     padding: 14px;
-    border-radius: var(--radius-sm);
     font-family: inherit;
     box-sizing: border-box;
 }
@@ -46,3 +44,169 @@
     outline: none;
     border-color: var(--color-primary);
 }
+/* ═══════════════════════════════════════════════════════════════ */
+/* FORMULAIRES - ERREURS & VALIDATION (RÉUTILISABLE)               */
+/* ═══════════════════════════════════════════════════════════════ */
+
+/* ── Labels des champs ─────────────────────────────────────────── */
+label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    font-family: 'DM Sans', sans-serif;
+}
+
+label .required {
+    color: var(--color-primary);
+    margin-left: 2px;
+}
+
+/* ── Inputs de formulaire ──────────────────────────────────────── */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+    width: 100%;
+    padding: 15px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    color: var(--text-main);
+    font-size: 14px;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: var(--transition-fast);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-border-focus);
+}
+
+/* ── ERREURS (Symfony + JavaScript) ────────────────────────────── */
+
+/* Input en erreur */
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+    border-color: var(--color-error);
+    background: var(--color-error-light);
+}
+
+/* Conteneur d'erreur (généré par Symfony OU par JS) */
+.invalid-feedback {
+    display: block;
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: var(--color-error-bg);
+    border-left: 2px solid var(--color-error);
+    color: var(--color-error);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* ── CAS 1 : Erreur Symfony (ul li) ────────────────────────────── */
+.invalid-feedback ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.invalid-feedback ul li {
+    position: relative;
+    padding-left: 12px;
+    margin-bottom: 4px;
+}
+
+.invalid-feedback ul li:last-child {
+    margin-bottom: 0;
+}
+
+.invalid-feedback ul li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-error);
+}
+
+/* ── CAS 2 : Erreur JavaScript (texte simple) ───────────────────── */
+/* Pas de style supplémentaire nécessaire, le texte s'affiche directement */
+
+/* ── INPUT VALIDE (bordure verte) ──────────────────────────────── */
+input.is-valid,
+select.is-valid,
+textarea.is-valid {
+    border-color: var(--color-success);
+}
+
+/* ── CHECKBOX & RADIO ──────────────────────────────────────────── */
+.form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 10px 0;
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: var(--color-primary);
+}
+
+.form-check-label {
+    font-size: 12px;
+    color: var(--text-muted-light);
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+/* Erreur sur checkbox */
+.form-check-input.is-invalid {
+    border-color: var(--color-error);
+}
+
+.form-check .invalid-feedback {
+    margin-left: 30px; /* Aligné avec le label */
+}
+
+/* ── FLASH MESSAGES (après soumission Symfony) ─────────────────── */
+.alert {
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    border-left: 3px solid;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: var(--color-success-bg);
+    border-color: var(--color-success);
+    color: var(--color-success);
+}
+
+.alert-danger {
+    background: var(--color-error-bg);
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+.alert-warning {
+    background: var(--color-warning-bg);
+    border-color: var(--color-warning);
+    color: var(--color-warning);
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* FIN FORMULAIRES                                                  */
+/* ═══════════════════════════════════════════════════════════════ */
