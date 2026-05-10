@@ -95,7 +95,7 @@ Support multilingue (FR/EN/NL)
 
 **Thibault**  
 Étudiant - EAFC Namur-Cadets  
-TFE 2024-2025
+TFE 2025-2026
 
 ---
 
