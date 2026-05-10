@@ -4,10 +4,6 @@
 ![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat&logo=php)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?style=flat&logo=postgresql)
 
-![Build](https://img.shields.io/badge/Build-Passing-success)
-![Coverage](https://img.shields.io/badge/Coverage-85%25-green)
-![PRs](https://img.shields.io/badge/PRs-Welcome-brightgreen)
-
 **Plateforme collaborative pour créateurs narratifs**
 
 Projet de Travail de Fin d'Études (TFE) 2025-2026  
