@@ -74,22 +74,52 @@ form:
         required_invalid: "Please fill in the required fields."
 
 contact:
-    email:
-        not_blank: "An email address is required."
-        invalid: "This email address does not seem valid."
+    label:
+        firstname: 'First name'
+        lastname: 'Last name'
+        email: 'Email address'
+        subject: 'Subject'
+        message: 'Your message'
+        privacy: 'I accept the privacy policy'
+
+    placeholder:
+        firstname: 'e.g. Jane'
+        lastname: 'e.g. Smith'
+        email: 'e.g. jane.smith@example.com'
+        subject: 'e.g. Question about features'
+        message: 'Describe your request in a few lines...'
+
     firstname:
-        not_blank: "Please enter your first name."
+        not_blank: 'First name is required.'
+        too_short: 'First name must be at least {{ limit }} characters long.'
+        too_long: 'First name cannot exceed {{ limit }} characters.'
+
     lastname:
-        not_blank: "Please enter your last name."
+        not_blank: 'Last name is required.'
+        too_short: 'Last name must be at least {{ limit }} characters long.'
+        too_long: 'Last name cannot exceed {{ limit }} characters.'
+
+    email:
+        not_blank: 'Email address is required.'
+        invalid: 'The email address is not valid.'
+
     subject:
-        not_blank: "Please choose a subject."
+        not_blank: 'Subject is required.'
+        too_short: 'Subject must be at least {{ limit }} characters long.'
+        too_long: 'Subject cannot exceed {{ limit }} characters.'
+
     message:
-        not_blank: "Please write your message."
-        too_short: "Your message must contain at least {{ limit }} characters."
+        not_blank: 'Message is required.'
+        too_short: 'Message must be at least {{ limit }} characters long.'
+        too_long: 'Message cannot exceed {{ limit }} characters.'
+
     privacy:
-        must_agree: "You must accept the privacy policy."
-    error:
-        csrf: "Security token expired, please try again."
+        must_agree: 'You must accept the privacy policy to continue.'
+
     flash:
-        success: "Your message has been successfully saved and sent!"
-        mail_error: "Message saved, but the email delivery failed."
+        success: 'Your message has been sent successfully! We will get back to you as soon as possible.'
+        mail_error: 'Your message was saved, but the email could not be sent. We will respond as soon as possible.'
+
+    error:
+        csrf: 'The form has expired. Please try again.'
+        rate_limit: 'Too many messages sent. Please wait an hour before trying again.'

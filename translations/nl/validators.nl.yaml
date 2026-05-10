@@ -53,24 +53,53 @@ location:
 form:
     errors:
         required_invalid: "Vul de verplichte velden in."
-
 contact:
-    email:
-        not_blank: "Een e-mailadres is verplicht."
-        invalid: "Dit e-mailadres lijkt niet geldig te zijn."
+    label:
+        firstname: 'Voornaam'
+        lastname: 'Achternaam'
+        email: 'E-mailadres'
+        subject: 'Onderwerp'
+        message: 'Uw bericht'
+        privacy: 'Ik ga akkoord met het privacybeleid'
+
+    placeholder:
+        firstname: 'Bijv. Emma'
+        lastname: 'Bijv. Janssens'
+        email: 'Bijv. emma.janssens@voorbeeld.be'
+        subject: 'Bijv. Vraag over de functionaliteiten'
+        message: 'Beschrijf uw aanvraag in een paar regels...'
+
     firstname:
-        not_blank: "Vul uw voornaam in."
+        not_blank: 'Voornaam is verplicht.'
+        too_short: 'Voornaam moet minimaal {{ limit }} tekens bevatten.'
+        too_long: 'Voornaam mag niet langer zijn dan {{ limit }} tekens.'
+
     lastname:
-        not_blank: "Vul uw achternaam in."
+        not_blank: 'Achternaam is verplicht.'
+        too_short: 'Achternaam moet minimaal {{ limit }} tekens bevatten.'
+        too_long: 'Achternaam mag niet langer zijn dan {{ limit }} tekens.'
+
+    email:
+        not_blank: 'E-mailadres is verplicht.'
+        invalid: 'Het e-mailadres is niet geldig.'
+
     subject:
-        not_blank: "Kies een onderwerp."
+        not_blank: 'Onderwerp is verplicht.'
+        too_short: 'Onderwerp moet minimaal {{ limit }} tekens bevatten.'
+        too_long: 'Onderwerp mag niet langer zijn dan {{ limit }} tekens.'
+
     message:
-        not_blank: "Schrijf uw bericht."
-        too_short: "Uw bericht moet ten minste {{ limit }} tekens bevatten."
+        not_blank: 'Bericht is verplicht.'
+        too_short: 'Bericht moet minimaal {{ limit }} tekens bevatten.'
+        too_long: 'Bericht mag niet langer zijn dan {{ limit }} tekens.'
+
     privacy:
-        must_agree: "U moet het privacybeleid accepteren."
-    error:
-        csrf: "Beveiligingstoken verlopen, probeer het opnieuw."
+        must_agree: 'U moet akkoord gaan met het privacybeleid om door te gaan.'
+
     flash:
-        success: "Uw bericht is succesvol opgeslagen en verzonden!"
-        mail_error: "Bericht opgeslagen, maar het verzenden van de e-mail is mislukt."
+        success: 'Uw bericht is succesvol verzonden! We nemen zo snel mogelijk contact met u op.'
+        mail_error: 'Uw bericht is opgeslagen, maar het verzenden van de e-mail is mislukt. We antwoorden u zo snel mogelijk.'
+
+    error:
+        csrf: 'Het formulier is verlopen. Probeer het opnieuw.'
+        rate_limit: 'U heeft te veel berichten verzonden. Wacht een uur voordat u het opnieuw probeert.'

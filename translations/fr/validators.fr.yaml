@@ -74,23 +74,64 @@ form:
         required_invalid: "Veuillez remplir les champs requis."
 
 # ===== CONTACT =====
+# translations/fr/validators.fr.yaml
+#
+# Traductions du formulaire de contact
+#
+# À AJOUTER dans ton fichier translations/fr/validators.fr.yaml existant
+# (ou translations/en/validators.en.yaml pour l'anglais)
+
+# ══════════════════════════════════════════════════════════════════════
+# LABELS DU FORMULAIRE
+# ══════════════════════════════════════════════════════════════════════
+
 contact:
-    email:
-        not_blank: "Une adresse email est requise."
-        invalid: "Cette adresse email ne semble pas valide."
+    label:
+        firstname: 'Prénom'
+        lastname: 'Nom'
+        email: 'Adresse email'
+        subject: 'Sujet'
+        message: 'Votre message'
+        privacy: "J'accepte la politique de confidentialité"
+
+    placeholder:
+        firstname: 'Ex: Marie'
+        lastname: 'Ex: Dubois'
+        email: 'Ex: marie.dubois@exemple.fr'
+        subject: 'Ex: Question sur les fonctionnalités'
+        message: 'Décrivez votre demande en quelques lignes...'
+
     firstname:
-        not_blank: "Veuillez entrer votre prénom."
+        not_blank: 'Le prénom est requis.'
+        too_short: 'Le prénom doit contenir au moins {{ limit }} caractères.'
+        too_long: 'Le prénom ne peut pas dépasser {{ limit }} caractères.'
+
     lastname:
-        not_blank: "Veuillez entrer votre nom."
+        not_blank: 'Le nom est requis.'
+        too_short: 'Le nom doit contenir au moins {{ limit }} caractères.'
+        too_long: 'Le nom ne peut pas dépasser {{ limit }} caractères.'
+
+    email:
+        not_blank: "L'adresse email est requise."
+        invalid: "L'adresse email n'est pas valide."
+
     subject:
-        not_blank: "Veuillez choisir un sujet."
+        not_blank: 'Le sujet est requis.'
+        too_short: 'Le sujet doit contenir au moins {{ limit }} caractères.'
+        too_long: 'Le sujet ne peut pas dépasser {{ limit }} caractères.'
+
     message:
-        not_blank: "Veuillez écrire votre message."
-        too_short: "Votre message doit contenir au moins {{ limit }} caractères."
+        not_blank: 'Le message est requis.'
+        too_short: 'Le message doit contenir au moins {{ limit }} caractères.'
+        too_long: 'Le message ne peut pas dépasser {{ limit }} caractères.'
+
     privacy:
-        must_agree: "Vous devez accepter la politique de confidentialité."
-    error:
-        csrf: "Le jeton de sécurité a expiré, veuillez réessayer."
+        must_agree: 'Vous devez accepter la politique de confidentialité pour continuer.'
+
     flash:
-        success: "Votre message a bien été enregistré et envoyé !"
-        mail_error: "Message enregistré, mais l'envoi de l'email a échoué."
+        success: 'Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.'
+        mail_error: 'Votre message a été enregistré, mais l''envoi de l''email a échoué. Nous vous répondrons dès que possible.'
+
+    error:
+        csrf: 'Le formulaire a expiré. Veuillez réessayer.'
+        rate_limit: 'Vous avez envoyé trop de messages. Veuillez patienter une heure avant de réessayer.'

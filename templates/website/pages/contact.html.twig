@@ -47,85 +47,125 @@
                 <div class="form-card">
                     <h2>{{ 'contact.form.title'|trans }}</h2>
 
-                    <form action="{{ path('app_contact') }}"
-                          method="POST"
-                          novalidate
-                          data-controller="contact-form">
+                    {# ── Formulaire Symfony avec design personnalisé ────────── #}
+                    {{ form_start(form, {
+                        'attr': {
+                            'novalidate': 'novalidate',
+                            'data-controller': 'contact-form',
+                            'data-turbo': 'false'
+                        }
+                    }) }}
 
-                        <input type="hidden" name="_token" value="{{ csrf_token('contact-form') }}">
+                    {# ── Email (pleine largeur) ────────────────────────── #}
+                    <div class="form-group full">
+                        <label for="{{ form.email.vars.id }}">
+                            {{ 'contact.form.labels.email'|trans }}
+                            <span class="required">*</span>
+                        </label>
+                        {{ form_widget(form.email, {
+                            'attr': {
+                                'placeholder': 'john.doe@scenart.be',
+                                'data-contact-form-target': 'email',
+                                'data-action': 'blur->contact-form#validateEmail'
+                            }
+                        }) }}
+                        <span class="error-message" data-contact-form-target="emailError">
+                                {{ form_errors(form.email) }}
+                            </span>
+                    </div>
 
-                        <div class="form-group full">
-                            <label for="email">{{ 'contact.form.labels.email'|trans }} <span class="required">*</span></label>
-                            <input type="email" id="email" name="email"
-                                   placeholder="john.doe@scenart.be"
-                                   value="{{ app.request.request.get('email', '') }}"
-                                   data-contact-form-target="email"
-                                   data-action="blur->contact-form#validateEmail">
-                            <span class="error-message" data-contact-form-target="emailError"></span>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="firstname">{{ 'contact.form.labels.firstname'|trans }} <span class="required">*</span></label>
-                                <input type="text" id="firstname" name="firstname"
-                                       value="{{ app.request.request.get('firstname', '') }}"
-                                       data-contact-form-target="firstname"
-                                       data-action="blur->contact-form#validateRequired">
-                                <span class="error-message" data-contact-form-target="firstnameError"></span>
-                            </div>
-                            <div class="form-group">
-                                <label for="lastname">{{ 'contact.form.labels.lastname'|trans }} <span class="required">*</span></label>
-                                <input type="text" id="lastname" name="lastname"
-                                       value="{{ app.request.request.get('lastname', '') }}"
-                                       data-contact-form-target="lastname"
-                                       data-action="blur->contact-form#validateRequired">
-                                <span class="error-message" data-contact-form-target="lastnameError"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group full">
-                            <label for="subject">{{ 'contact.form.labels.subject'|trans }} <span class="required">*</span></label>
-                            <select id="subject" name="subject"
-                                    data-contact-form-target="subject"
-                                    data-action="change->contact-form#validateRequired">
-                                <option value="">{{ 'contact.form.placeholders.subject'|trans }}</option>
-                                <option value="support" {{ app.request.request.get('subject') == 'support' ? 'selected' : '' }}>
-                                    {{ 'contact.form.subjects.support'|trans }}
-                                </option>
-                                <option value="billing" {{ app.request.request.get('subject') == 'billing' ? 'selected' : '' }}>
-                                    {{ 'contact.form.subjects.billing'|trans }}
-                                </option>
-                                <option value="partnership" {{ app.request.request.get('subject') == 'partnership' ? 'selected' : '' }}>
-                                    {{ 'contact.form.subjects.partnership'|trans }}
-                                </option>
-                            </select>
-                            <span class="error-message" data-contact-form-target="subjectError"></span>
-                        </div>
-
-                        <div class="form-group full">
-                            <label for="message">{{ 'contact.form.labels.message'|trans }} <span class="required">*</span></label>
-                            <textarea id="message" name="message" rows="5"
-                                      placeholder="{{ 'contact.form.placeholders.message'|trans }}"
-                                      data-contact-form-target="message"
-                                      data-action="blur->contact-form#validateMessage">{{ app.request.request.get('message', '') }}</textarea>
-                            <span class="error-message" data-contact-form-target="messageError"></span>
-                        </div>
-
-                        <div class="form-checkbox">
-                            <input type="checkbox" id="privacy" name="privacy"
-                                   data-contact-form-target="privacy"
-                                   data-action="change->contact-form#validatePrivacy">
-                            <label for="privacy">
-                                {{ 'contact.form.privacy'|trans }}
-                                <a href="#">{{ 'contact.form.privacy_link'|trans }}</a>.
+                    {# ── Prénom & Nom (deux colonnes) ──────────────────── #}
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.firstname.vars.id }}">
+                                {{ 'contact.form.labels.firstname'|trans }}
+                                <span class="required">*</span>
                             </label>
-                            <span class="error-message" data-contact-form-target="privacyError"></span>
+                            {{ form_widget(form.firstname, {
+                                'attr': {
+                                    'data-contact-form-target': 'firstname',
+                                    'data-action': 'blur->contact-form#validateRequired'
+                                }
+                            }) }}
+                            <span class="error-message" data-contact-form-target="firstnameError">
+                                    {{ form_errors(form.firstname) }}
+                                </span>
                         </div>
+                        <div class="form-group">
+                            <label for="{{ form.lastname.vars.id }}">
+                                {{ 'contact.form.labels.lastname'|trans }}
+                                <span class="required">*</span>
+                            </label>
+                            {{ form_widget(form.lastname, {
+                                'attr': {
+                                    'data-contact-form-target': 'lastname',
+                                    'data-action': 'blur->contact-form#validateRequired'
+                                }
+                            }) }}
+                            <span class="error-message" data-contact-form-target="lastnameError">
+                                    {{ form_errors(form.lastname) }}
+                                </span>
+                        </div>
+                    </div>
 
-                        <button type="submit" class="btn-primary-pricing">
-                            {{ 'contact.form.submit'|trans }}
-                        </button>
-                    </form>
+                    {# ── Sujet (select) ─────────────────────────────────── #}
+                    <div class="form-group full">
+                        <label for="{{ form.subject.vars.id }}">
+                            {{ 'contact.form.labels.subject'|trans }}
+                            <span class="required">*</span>
+                        </label>
+                        {{ form_widget(form.subject, {
+                            'attr': {
+                                'data-contact-form-target': 'subject',
+                                'data-action': 'change->contact-form#validateRequired'
+                            }
+                        }) }}
+                        <span class="error-message" data-contact-form-target="subjectError">
+                                {{ form_errors(form.subject) }}
+                            </span>
+                    </div>
+
+                    {# ── Message (textarea) ─────────────────────────────── #}
+                    <div class="form-group full">
+                        <label for="{{ form.message.vars.id }}">
+                            {{ 'contact.form.labels.message'|trans }}
+                            <span class="required">*</span>
+                        </label>
+                        {{ form_widget(form.message, {
+                            'attr': {
+                                'rows': '5',
+                                'data-contact-form-target': 'message',
+                                'data-action': 'blur->contact-form#validateMessage'
+                            }
+                        }) }}
+                        <span class="error-message" data-contact-form-target="messageError">
+                                {{ form_errors(form.message) }}
+                            </span>
+                    </div>
+
+                    {# ── Checkbox Politique de confidentialité ──────────── #}
+                    <div class="form-checkbox">
+                        {{ form_widget(form.privacy, {
+                            'attr': {
+                                'data-contact-form-target': 'privacy',
+                                'data-action': 'change->contact-form#validatePrivacy'
+                            }
+                        }) }}
+                        <label for="{{ form.privacy.vars.id }}">
+                            {{ 'contact.form.privacy'|trans }}
+                            <a href="#">{{ 'contact.form.privacy_link'|trans }}</a>.
+                        </label>
+                        <span class="error-message" data-contact-form-target="privacyError">
+                                {{ form_errors(form.privacy) }}
+                            </span>
+                    </div>
+
+                    {# ── Bouton Submit ──────────────────────────────────── #}
+                    <button type="submit" class="btn-primary-pricing">
+                        {{ 'contact.form.submit'|trans }}
+                    </button>
+
+                    {{ form_end(form) }}
                 </div>
             </div>
 

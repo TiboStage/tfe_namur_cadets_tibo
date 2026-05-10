@@ -1,0 +1,24 @@
+# config/packages/rate_limiter.yaml
+#
+# Configuration du rate limiting (limitation de débit)
+#
+# Protège contre le spam et les abus sur le formulaire de contact
+# Limite : 5 messages par heure par adresse IP
+
+framework:
+    rate_limiter:
+        # ── Limiteur pour le formulaire de contact ──────────────────────
+        contact:
+            # Politique : fenêtre glissante (sliding window)
+            # Plus précis que fixed_window car prend en compte l'historique
+            policy: 'sliding_window'
+
+            # Limite : 5 requêtes maximum
+            limit: 5
+
+            # Période : 1 heure (3600 secondes)
+            interval: '1 hour'
+
+            # Stockage : cache (plus rapide que la DB)
+            # Alternative : 'lock_factory' pour Redis en production
+#            storage_service: 'cache.rate_limiter'
