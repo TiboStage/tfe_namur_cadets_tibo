@@ -1,4 +1,4 @@
-# 🎬 ScénArt - Plateforme Collaborative pour Créateurs Narratifs
+# ScénArt - Plateforme Collaborative pour Créateurs Narratifs
 
 ![Symfony](https://img.shields.io/badge/Symfony-8.0-000000?style=flat&logo=symfony)
 ![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat&logo=php)
@@ -12,7 +12,7 @@ EAFC Namur-Cadets - Technicien Informatique
 
 ---
 
-## 📖 À propos
+## À propos
 
 **ScénArt** est une application web permettant aux scénaristes, game designers et auteurs de structurer et développer leurs projets créatifs (films, séries, jeux vidéo) de manière collaborative.
 
@@ -25,7 +25,7 @@ EAFC Namur-Cadets - Technicien Informatique
 
 ---
 
-## 🛠️ Stack Technique
+## Stack Technique
 
 - **Framework** : Symfony 8.0
 - **Langage** : PHP 8.4
@@ -35,7 +35,7 @@ EAFC Namur-Cadets - Technicien Informatique
 
 ---
 
-## 💻 Installation
+## Installation
 
 ### Prérequis
 
@@ -75,14 +75,14 @@ DATABASE_URL="postgresql://user:password@127.0.0.1:5432/storyforge?serverVersion
 
 ---
 
-## 🎨 Design
+## Design
 
 Interface moderne avec design brutalist dark  
 Support multilingue (FR/EN/NL)
 
 ---
 
-## 📝 Conventions de code
+## Conventions de code
 
 - Architecture MVC Symfony
 - Validation côté serveur (Symfony Validator)
@@ -91,7 +91,7 @@ Support multilingue (FR/EN/NL)
 
 ---
 
-## 👨‍💻 Auteur
+## Auteur
 
 **Thibault**  
 Étudiant - EAFC Namur-Cadets  
@@ -99,7 +99,7 @@ TFE 2024-2025
 
 ---
 
-## 📄 Licence
+## Licence
 
 Projet académique © 2025
 
