@@ -37,12 +37,6 @@
 
 /* ── Grille de stats ──────────────────────────────────────── */
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr) 1.2fr;
-    gap: 15px;
-    margin-bottom: 15px;
-}
 
 .stat-card {
     padding: 28px 30px;
@@ -134,6 +128,7 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 15px;
+    padding-top: 15px;
 }
 
 /* ── Sections ────────────────────────────────────────────── */
@@ -171,6 +166,7 @@
     border: none;
 }
 .project-cards-grid-large{
+    padding-bottom: 15px;
     margin: 0;
 }
 .recent-projects-full .dashboard-section-header{
@@ -184,7 +180,7 @@
 /* ── Liste de projets ────────────────────────────────────── */
 
 .project-list {
-    padding: 0 25px;
+    /*padding: 0 25px;*/
 }
 
 .project-list-item {
@@ -304,7 +300,6 @@
     align-items: center;
     padding: 12px;
     background: #16161a;
-    border: 1px solid #2a2a2e;
     margin-bottom: 8px;
     text-decoration: none;
 }
@@ -313,7 +308,7 @@
 .project-cards-grid-large {
     display: grid;
     /* On applique ici ton idée de 400px */
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 24px;
     margin-top: 20px;
 }
@@ -322,10 +317,6 @@
 .project-cards-grid-large .project-card {
     width: 100%;
 }
-
-
-
-
 
 /* ── Utilitaires locaux ──────────────────────────────────── */
 

@@ -158,7 +158,6 @@
     text-decoration: none;
     display: inline-block;
     transition: opacity 0.2s ease;
-    width: 100%;
 }
 
 .btn--cta-yellow:hover {

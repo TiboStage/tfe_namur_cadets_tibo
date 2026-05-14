@@ -28,6 +28,8 @@
 @import "pages/workshop/_dashboard.css";
 @import "pages/workshop/_editor.css";
 @import "pages/workshop/_projects.css";
+@import "pages/workshop/_project-funnel.css";
+@import "pages/workshop/_project-dashboard.css";
 @import "pages/workshop/_projects_cards.css";
 @import "pages/workshop/_characters.css";
 

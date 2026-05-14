@@ -9,12 +9,21 @@ navbar:
     actions:
         profile: "Profile"
         logout: "Logout"
+    links:               # ← AJOUTER CE BLOC
+        dashboard:      "Dashboard"
+        projects:       "My projects"
+        collaborations: "Collaborations"
+        explore:        "Explore"
+        news:           "News"
+        create:         "+ Create"
+    recent_projects: "Recent projects"
+    current_badge:      "Current"
 
 # ===== DASHBOARD =====
 dashboard:
     greeting: "Hello,"
     subtitle: "project(s) in total"
-    
+
     stats:
         projects_value: "Projects in progress"
         projects_link: "↗ View all"
@@ -25,7 +34,7 @@ dashboard:
         locations: "Locations created"
         scenes: "Scenes written"
         projects: "Active projects"
-    
+
     actions:
         new_project_title: "New project"
         new_project_desc: "Video game, series, film"
@@ -33,18 +42,18 @@ dashboard:
         export_title: "Export a project"
         export_desc: "Format (.pdf, .xml)"
         export_btn: "↓ Export"
-    
+
     projects:
         title: "Projects in progress"
         see_more: "View more ↗"
         empty: "No projects yet. Create one!"
-    
+
     recent_projects:
         title: "Recent projects"
         no_projects: "No projects yet"
         create_first: "Create your first project to get started"
         view_all: "View all projects"
-    
+
     activity:
         title: "Recent activity"
         see_all: "View all ↗"
@@ -52,7 +61,7 @@ dashboard:
         ago: "ago"
         min: "min."
         no_activity: "No activity yet"
-    
+
     quick_actions:
         new_project: "New project"
         new_character: "New character"
@@ -70,7 +79,7 @@ projects:
         modified: "Modified on"
         btn_open: "Open"
         btn_edit: "Edit"
-    
+
     new:
         title: "New project"
         back: "← My projects"
@@ -81,7 +90,7 @@ projects:
         placeholder_desc: "Describe your universe in a few sentences..."
         btn_cancel: "Cancel"
         btn_submit: "Create project →"
-    
+
     edit:
         title: "Project settings"
         label_title: "Title"
@@ -93,7 +102,7 @@ projects:
         danger_desc: "Deletion is irreversible. All project data will be lost."
         danger_btn: "Delete this project"
         danger_confirm: "Permanently delete this project?"
-    
+
     show:
         back: "← My projects"
         btn_settings: "Settings"
@@ -105,6 +114,8 @@ projects:
         section_locations: "Locations"
         section_tags: "Tags"
         btn_manage: "Manage"
+        btn_overview: "Overview"
+        btn_manuscript: "Manuscript"
 
 # ===== PROJECT CREATION FUNNEL =====
 project_new:
@@ -112,7 +123,7 @@ project_new:
     step1:
         title: "Create a new project"
         subtitle: "Choose your creation mode"
-        
+
         mode_simplifie:
             title: "Simplified Mode"
             badge: "Recommended"
@@ -120,7 +131,7 @@ project_new:
             desc_2: "Guided configuration"
             desc_3: "Default structure"
             button: "Start in simplified mode"
-        
+
         mode_custom:
             title: "Custom Mode"
             badge: "Advanced"
@@ -128,13 +139,13 @@ project_new:
             desc_2: "Feature selection"
             desc_3: "Advanced customization"
             button: "Start in custom mode"
-    
+
     # STEP 2: Project type
     step2:
         title_simplifie: "What type of project?"
         title_custom: "Project configuration"
         subtitle: "This choice cannot be changed"
-        
+
         # Project types
         type:
             film:
@@ -147,7 +158,7 @@ project_new:
                 feature_1_desc: "Analyze your narrative intensity curve"
                 feature_2: "The Heartbeat"
                 feature_2_desc: "Type and rhythm of each scene (Action, Dialogue, Silence, Exposition)"
-            
+
             serie:
                 title: "Series"
                 subtitle: "Web series or TV show"
@@ -158,7 +169,7 @@ project_new:
                 feature_1_desc: "Track your storylines and detect forgotten threads"
                 feature_2: "The Cliffhanger"
                 feature_2_desc: "Suspense intensity at episode end"
-            
+
             jeu_video:
                 title: "Video Game"
                 subtitle: "Narrative indie game"
@@ -169,33 +180,33 @@ project_new:
                 feature_1_desc: "Content type: Cinematic, Dialogue choices, Gameplay"
                 feature_2: "The Reality Conditioner"
                 feature_2_desc: "Narrative prerequisites to unlock scenes"
-        
+
         # Custom Mode Slides
         custom:
             slide1_title: "STEP 1/3: Project type"
             slide2_title: "STEP 2/3: Available features"
             slide2_subtitle: "You can mix features according to your needs"
             slide3_title: "STEP 3/3: Advanced configuration"
-            
+
             structure_title: "NARRATIVE STRUCTURE"
             structure_standard: "Standard (Act → Sequence → Scene)"
             structure_custom: "Custom (up to 5 levels)"
             structure_label_placeholder: "Ex: Part, Chapter, Scene..."
             structure_has_content: "Contains text"
             structure_add_level: "+ Add level (max 5)"
-            
+
             genres_title: "GENRES (multiple choices)"
-        
+
         # Navigation buttons
         button_back: "← Back"
         button_next: "Next →"
         button_validate: "Validate →"
-    
+
     # STEP 3: Finalization
     step3:
         title: "Finalization"
         subtitle: "Last details before creation"
-        
+
         form:
             title_label: "Project title *"
             title_placeholder: "Ex: The Shadows of Brussels"
@@ -205,7 +216,7 @@ project_new:
             cover_label: "Project image"
             cover_help: "(optional)"
             cover_button: "Choose file"
-        
+
         recap:
             title: "SUMMARY"
             mode: "Mode:"
@@ -216,9 +227,9 @@ project_new:
             features: "Activated features:"
             visibility: "Visibility:"
             visibility_private: "Private"
-        
+
         button_create: "Create project →"
-    
+
     # Available genres
     genres:
         film:
@@ -229,7 +240,7 @@ project_new:
             comedy: "Comedy"
             action: "Action"
             fantasy: "Fantasy"
-        
+
         serie:
             drama: "Drama"
             comedy: "Comedy"
@@ -238,7 +249,7 @@ project_new:
             fantasy: "Fantasy"
             animation: "Animation"
             romance: "Romance"
-        
+
         jeu_video:
             rpg: "RPG"
             action: "Action"
@@ -247,7 +258,7 @@ project_new:
             puzzle: "Puzzle"
             visual_novel: "Visual Novel"
             simulation: "Simulation"
-    
+
     # Error messages
     error:
         invalid_data: "Invalid data. Please start over."
@@ -260,13 +271,13 @@ character:
         new_btn: "+ New character"
         empty: "No characters yet."
         empty_create: "Create the first character"
-    
+
     new:
         title: "New character"
         back: "← Characters"
         submit: "Create character →"
         cancel: "Cancel"
-    
+
     edit:
         title: "Edit character"
         submit: "Save"
@@ -275,18 +286,25 @@ character:
         danger_desc: "Deletion is irreversible."
         delete_btn: "Delete this character"
         delete_confirm: "Delete this character?"
-    
+
     show:
         back: "← Characters"
         edit_btn: "Edit"
         no_description: "No description for this character."
-    
+        description: "Description"
+        biography: "Biography"
+        goals: "Goals"
+        motivations: "Motivations"
+        arc: "Character arc"
+
     info:
         title: "Information"
         role: "Role"
         created_at: "Created on"
         relations: "Relations"
         no_relations: "No relations defined."
+        firstname: "First name"
+        lastname: "Last name"
 
 # ===== LOCATIONS =====
 location:
@@ -295,13 +313,13 @@ location:
         new_btn: "+ New location"
         empty: "No locations yet."
         empty_create: "Create the first location"
-    
+
     new:
         title: "New location"
         back: "← Locations"
         submit: "Create location →"
         cancel: "Cancel"
-    
+
     edit:
         title: "Edit location"
         submit: "Save"
@@ -310,12 +328,12 @@ location:
         danger_desc: "Deletion is irreversible."
         delete_btn: "Delete this location"
         delete_confirm: "Delete this location?"
-    
+
     show:
         back: "← Locations"
         edit_btn: "Edit"
         no_description: "No description for this location."
-    
+
     info:
         title: "Information"
         type: "Type"

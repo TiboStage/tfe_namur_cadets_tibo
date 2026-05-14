@@ -8,6 +8,12 @@
     transition: border-color 0.3s ease;
 }
 
+.project-card__status{
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+}
+
 /* Zone du haut (Image ou Placeholder) */
 .project-card__image-container {
     position: relative;

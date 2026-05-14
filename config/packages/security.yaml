@@ -26,9 +26,14 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
+            # ── Protection brute force sur le login ─────────────
+            login_throttling:
+                max_attempts: 5
+                interval: '15 minutes'
 
     access_control:
-        - { path: ^/workshop, roles: ROLE_USER }
+        # ── Couvre les 3 langues (fr/en/nl) + tous les noms de route ──
+        - { path: ^/(fr|en|nl)/(atelier|workshop|werkplaats), roles: ROLE_USER }
 
 when@test:
     security:
@@ -38,3 +43,9 @@ when@test:
                 cost: 4
                 time_cost: 3
                 memory_cost: 10
+
+when@prod:
+    security:
+        access_control:
+            - { path: ^/, requires_channel: https }
+            - { path: ^/(fr|en|nl)/(atelier|workshop|werkplaats), roles: ROLE_USER }

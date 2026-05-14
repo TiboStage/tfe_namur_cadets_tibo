@@ -1,29 +1,29 @@
 {% extends 'workshop/projects/layout.html.twig' %}
-{% trans_default_domain 'workshop_interface' %}
+{% trans_default_domain 'workshop' %}
 
-{% block title %}{{ 'character.new.title'|trans }} — {{ project.title }}{% endblock %}
+{% block title %}{{ 'character.edit.title'|trans }} {{ character.name }} — {{ project.title }}{% endblock %}
 
 {% block project_content %}
     <div class="dashboard-container">
 
         <header class="page-header">
             <div>
-                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="link-back">
-                    {{ 'character.new.back'|trans }}
+                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="link-back">
+                    ← {{ character.name }}
                 </a>
-                <h1>{{ 'character.new.title'|trans }}</h1>
+                <h1>{{ 'character.edit.title'|trans }}</h1>
             </div>
         </header>
 
-        <div class="form-page-wrapper" >
+        <div class="form-page-wrapper">
 
             {{ form_start(form, {
                 'attr': {
                     'novalidate': 'novalidate',
                     'class': 'project-form',
-                    'data-controller': 'validator',
-                    'data-validator-error-value': 'form.errors.required_invalid'|trans({}, 'validators'),
-                    'data-action': 'submit->validator#validateForm'
+                    'data-controller': 'form-validation',
+                    'data-action': 'submit->form-validation#submit',
+                    'data-turbo': 'false'
                 }
             }) }}
 
@@ -33,34 +33,28 @@
                 <div>
                     <div class="form-section-title">{{ 'character.form.section_identity'|trans }}</div>
 
-                    {# AVANT: forms.field() → APRÈS: form_row() #}
                     {{ form_row(form.name, {
                         'label': 'character.form.name'|trans,
                         'attr': {
-                            'placeholder': 'character.form.name_placeholder'|trans
+                            'minlength': 2,
+                            'data-form-validation-target': 'field',
+                            'data-action': 'blur->form-validation#validate',
+                            'data-error-required':  'character.name.required'|trans({}, 'validators'),
+                            'data-error-minlength': 'character.name.too_short'|trans({}, 'validators')
                         }
                     }) }}
 
                     <div class="form-row-two">
                         {{ form_row(form.firstName, {
-                            'label': 'character.form.firstname'|trans,
-                            'attr': {
-                                'placeholder': 'character.form.firstname_placeholder'|trans
-                            }
+                            'label': 'character.form.firstname'|trans
                         }) }}
                         {{ form_row(form.lastName, {
-                            'label': 'character.form.lastname'|trans,
-                            'attr': {
-                                'placeholder': 'character.form.lastname_placeholder'|trans
-                            }
+                            'label': 'character.form.lastname'|trans
                         }) }}
                     </div>
 
                     {{ form_row(form.nickname, {
-                        'label': 'character.form.nickname'|trans,
-                        'attr': {
-                            'placeholder': 'character.form.nickname_placeholder'|trans
-                        }
+                        'label': 'character.form.nickname'|trans
                     }) }}
 
                     {{ form_row(form.role, {
@@ -69,10 +63,7 @@
 
                     {{ form_row(form.description, {
                         'label': 'character.form.description'|trans,
-                        'attr': {
-                            'placeholder': 'character.form.description_placeholder'|trans,
-                            'rows': 3
-                        }
+                        'attr': {'rows': 3}
                     }) }}
                 </div>
 
@@ -82,49 +73,55 @@
 
                     {{ form_row(form.biography, {
                         'label': 'character.form.biography'|trans,
-                        'attr': {
-                            'placeholder': 'character.form.biography_placeholder'|trans,
-                            'rows': 5
-                        }
+                        'attr': {'rows': 5}
                     }) }}
 
                     {{ form_row(form.goals, {
                         'label': 'character.form.goals'|trans,
-                        'attr': {
-                            'placeholder': 'character.form.goals_placeholder'|trans,
-                            'rows': 3
-                        }
+                        'attr': {'rows': 3}
                     }) }}
 
                     {{ form_row(form.motivations, {
                         'label': 'character.form.motivations'|trans,
-                        'attr': {
-                            'placeholder': 'character.form.motivations_placeholder'|trans,
-                            'rows': 3
-                        }
+                        'attr': {'rows': 3}
                     }) }}
 
                     {{ form_row(form.characterArc, {
                         'label': 'character.form.arc'|trans,
-                        'attr': {
-                            'placeholder': 'character.form.arc_placeholder'|trans,
-                            'rows': 3
-                        }
+                        'attr': {'rows': 3}
                     }) }}
                 </div>
 
             </div>
 
             <div class="form-actions">
-                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="btn-export">
-                    {{ 'character.new.cancel'|trans }}
+                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="btn-export">
+                    {{ 'character.edit.cancel'|trans }}
                 </a>
                 <button type="submit" class="btn-creat">
-                    {{ 'character.new.submit'|trans }}
+                    {{ 'character.edit.submit'|trans }}
                 </button>
             </div>
 
             {{ form_end(form) }}
+
+            {# ── DANGER ZONE ────────────────────────────────────────────────── #}
+            {# data-turbo-confirm remplace le vieux onsubmit="return confirm()" #}
+            <div class="danger-zone">
+                <div class="danger-zone-header">
+                    <h3>{{ 'character.edit.danger_zone'|trans }}</h3>
+                    <p>{{ 'character.edit.danger_desc'|trans }}</p>
+                </div>
+                <form method="post"
+                      action="{{ path('app_character_delete', {project_slug: project.slug, id: character.id}) }}"
+                      data-turbo-confirm="{{ 'character.edit.delete_confirm'|trans }}"
+                      data-turbo="false">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_character_' ~ character.id) }}">
+                    <button type="submit" class="btn-danger">
+                        {{ 'character.edit.delete_btn'|trans }}
+                    </button>
+                </form>
+            </div>
 
         </div>
     </div>

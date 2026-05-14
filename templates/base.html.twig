@@ -5,13 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Scénart{% endblock %}</title>
 
+    {# 1. Empêche Turbo d'afficher des "previews" (aperçus) buguées du Profiler #}
+    <meta name="turbo-cache-control" content="no-cache">
+
     {% block favicon %}
         <link rel="icon" type="image/png" href="{{ asset('images/favicons/favicon.png') }}">
     {% endblock %}
 
-    {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    {% endblock %}
 
     {% block javascripts %}
+        {# 2. ON ACTIVE l'importmap pour charger assets/app.js #}
         {{ importmap('app') }}
     {% endblock %}
 </head>

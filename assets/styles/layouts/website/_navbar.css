@@ -124,7 +124,7 @@
 /* --- 4. Menu Déroulant (Dropdown Content) --- */
 .dropdown-content {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 0px);
     right: 0;
     background: #111114;
     border: 1px solid #222;

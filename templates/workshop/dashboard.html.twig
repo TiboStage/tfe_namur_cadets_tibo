@@ -84,7 +84,7 @@
                     {% if projects is empty %}
                         <p class="text-muted empty-state">{{ 'dashboard.projects.empty'|trans }}</p>
                     {% else %}
-                        {% for project in projects %}
+                        {% for project in projects|slice(0, 4) %}
                             <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="project-list-item">
                                 <div class="project-thumb">
                                     {{ project.title|first|upper }}
@@ -144,7 +144,7 @@
                 {% if projects is empty %}
                     <p class="text-muted">{{ 'dashboard.projects.empty'|trans }}</p>
                 {% else %}
-                    {% for project in projects|slice(0, 4) %}
+                    {% for project in projects|slice(0, 5) %}
                         {{ component('project_card', { project: project }) }}
                     {% endfor %}
                 {% endif %}

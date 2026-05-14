@@ -38,16 +38,13 @@
     position: relative;
     background: #1a1a1e;
     border: 1px solid #2a2a2e;
-    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
     min-height: 280px;
     transition: all 0.3s ease;
 }
 
 .project-card:hover {
-    transform: translateY(-5px);
     border-color: #FFB800;
 }
 

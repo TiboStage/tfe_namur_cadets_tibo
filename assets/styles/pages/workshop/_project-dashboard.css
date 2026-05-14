@@ -51,7 +51,6 @@
 .dashboard-card {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
-    border-radius: 8px;
     padding: 24px;
 }
 
@@ -72,8 +71,8 @@
 /* ─── Statistiques ──────────────────────────────────────────────────── */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
 }
 
 .stat-item {
@@ -82,7 +81,6 @@
     align-items: center;
     padding: 16px;
     background: rgba(255, 184, 0, 0.05);
-    border-radius: 6px;
 }
 
 .stat-value {

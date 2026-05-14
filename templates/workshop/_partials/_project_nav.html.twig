@@ -1,59 +1,68 @@
+{% trans_default_domain 'workshop' %}
+
 <nav class="workshop-subnav project-nav">
-    {# Navigation projet (gauche) #}
+
+    {# ── Navigation projet (gauche) ───────────────────────────── #}
     <div class="subnav-links">
+        <a href="{{ path('app_project_index') }}" class="text-muted">
+            {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }} Retour aux projets
+        </a>
         {% if project.slug %}
+
             <a href="{{ path('app_project_show', {slug: project.slug}) }}"
                class="{{ app.request.attributes.get('_route') == 'app_project_show' ? 'active' : '' }}">
-                {{ ux_icon('lucide:layout-dashboard', {style: 'width: 14px; height: 14px;'}) }}
-                Aperçu
-            </a>
-        {% endif %}
-
-        {% if project.slug %}
-            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}">
-                Manuscrit
+                {{ ux_icon('lucide:layout-dashboard', {class: 'icon-xs'}) }}
+                {{ 'projects.show.btn_overview'|trans }}
             </a>
 
+            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_manuscript' ? 'active' : '' }}">
+                {{ ux_icon('lucide:scroll-text', {class: 'icon-xs'}) }}
+                {{ 'projects.show.btn_manuscript'|trans }}
+            </a>
 
-        <a href="{{ path('app_character_index', {project_slug: project.slug}) }}"
-           class="{{ app.request.attributes.get('_route') starts with 'app_character' ? 'active' : '' }}">
-            {{ ux_icon('lucide:users', {style: 'width: 14px; height: 14px;'}) }}
-            Personnages
-        </a>
+            <a href="{{ path('app_character_index', {project_slug: project.slug}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_character' ? 'active' : '' }}">
+                {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
+                {{ 'character.index.title'|trans }}
+            </a>
 
-        <a href="{{ path('app_location_index', {project_slug: project.slug}) }}"
-           class="{{ app.request.attributes.get('_route') starts with 'app_location' ? 'active' : '' }}">
-            {{ ux_icon('lucide:map-pin', {style: 'width: 14px; height: 14px;'}) }}
-            Lieux
-        </a>
+            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_location' ? 'active' : '' }}">
+                {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }}
+                {{ 'location.index.title'|trans }}
+            </a>
 
-        <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
-           class="{{ app.request.attributes.get('_route') == 'app_project_edit' ? 'active' : '' }}">
-            {{ ux_icon('lucide:settings', {style: 'width: 14px; height: 14px;'}) }}
-            Paramètres
-        </a>
+            <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
+               class="{{ app.request.attributes.get('_route') == 'app_project_edit' ? 'active' : '' }}">
+                {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
+                {{ 'projects.edit.title'|trans }}
+            </a>
+
         {% endif %}
     </div>
 
-    {# Dropdown projet switcher avec Stimulus #}
+    {# ── Project switcher (droite) ────────────────────────────── #}
     <div class="subnav-actions">
         <div class="project-switcher" data-controller="dropdown">
-            <button
-                class="project-switcher-btn"
-                data-action="click->dropdown#toggle"
-                type="button">
+
+            <button class="project-switcher-btn"
+                    data-action="click->dropdown#toggle"
+                    type="button">
                 <span class="project-icon">{{ project.title|first|upper }}</span>
                 <span class="project-name">{{ project.title }}</span>
-                {{ ux_icon('lucide:chevron-down', {style: 'width: 14px; height: 14px;'}) }}
+                {{ ux_icon('lucide:chevron-down', {class: 'icon-xs'}) }}
             </button>
 
-            {# Dropdown menu #}
+            {# Le controller dropdown toggle .show sur cet élément #}
             <div class="project-switcher-dropdown" data-dropdown-target="menu">
+
                 <div class="dropdown-header">
-                    <span class="text-muted">{{ 'nav.recent_projects'|trans }}</span>
+                    {{ 'navbar.recent_projects'|trans }}
                 </div>
 
                 <div class="dropdown-projects">
+
                     {# Projet actuel #}
                     <div class="dropdown-project-item current">
                         <span class="project-icon-sm">{{ project.title|first|upper }}</span>
@@ -61,12 +70,11 @@
                             <span class="project-title">{{ project.title }}</span>
                             <span class="project-meta">{{ project.projectType }}</span>
                         </div>
-                        <span class="badge-current">{{ 'nav.current_badge'|trans }}</span>
+                        <span class="badge-current">{{ 'navbar.current_badge'|trans }}</span>
                     </div>
 
-                    {# Autres projets récents #}
-                    {% set recent_projects = app.user.projects|slice(0, 4) %}
-                    {% for other_project in recent_projects %}
+                    {# Autres projets (max 4, exclu le projet actuel) #}
+                    {% for other_project in app.user.projects|slice(0, 4) %}
                         {% if other_project.id != project.id %}
                             <a href="{{ path('app_project_show', {slug: other_project.slug}) }}"
                                class="dropdown-project-item">
@@ -78,15 +86,18 @@
                             </a>
                         {% endif %}
                     {% endfor %}
+
                 </div>
 
                 <div class="dropdown-footer">
                     <a href="{{ path('app_project_index') }}" class="dropdown-link">
-                        {{ ux_icon('lucide:folder', {style: 'width: 14px; height: 14px;'}) }}
-                        Voir tous les projets
+                        {{ ux_icon('lucide:folder', {class: 'icon-xs'}) }}
+                        {{ 'dashboard.recent_projects.view_all'|trans }}
                     </a>
                 </div>
+
             </div>
         </div>
     </div>
+
 </nav>

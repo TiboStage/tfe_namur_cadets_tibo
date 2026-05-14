@@ -1,5 +1,14 @@
 <article class="project-card" data-project-type="{{ project.projectType }}">
     {# Zone Image / Placeholder #}
+    <div class="project-card__status">
+        <div>
+            <span>{{ project.projectType|capitalize }}</span>
+        </div>
+        <div>
+            <span class="badge-status badge--draft">{{ project.status }}</span>
+        </div>
+    </div>
+
     <div class="project-card__image-container">
         {% if project.coverFilename %}
             <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}" alt="{{ project.title }}" class="project-card__image">
@@ -19,7 +28,7 @@
                 <a href="{{ path('app_project_show', {slug: project.slug}) }}">{{ project.title }}</a>
             </h3>
             <p class="project-card__meta text-muted">
-                {{ project.projectType|capitalize }} — {{ project.scenarioElements|length }} entités
+                {{ project.scenarioElements|length }} entités
             </p>
         </div>
 

@@ -21,7 +21,6 @@
 {#           class="{{ app.request.attributes.get('_route') == 'app_activity' ? 'active' : '' }}">#}
 {#            Activité#}
 {#        </a>#}
-
 {#        <a href="#"#}
 {#           class="{{ app.request.attributes.get('_route') == 'app_documentation' ? 'active' : '' }}">#}
 {#            Documentation#}
@@ -41,12 +40,14 @@
             <a href="#">Actualités</a>
         </div>
 
+        <div class="subnav-links">
+            <a href="#">|  Documentation</a>
+        </div>
 
 {#        <button class="btn-export">#}
 {#            {{ ux_icon('lucide:download', {style: 'width: 14px; height: 14px;'}) }}#}
 {#            Export#}
 {#        </button>#}
-
         <a href="{{ path('app_project_new_step1') }}" class="btn-creat">
             + Créer
         </a>

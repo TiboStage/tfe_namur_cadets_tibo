@@ -1,44 +1,144 @@
 {% extends 'workshop/projects/layout.html.twig' %}
-{% trans_default_domain 'workshop_interface' %}
+{% trans_default_domain 'workshop' %}
 
-{% block title %}Personnages — {{ project.title }}{% endblock %}
+{% block title %}{{ 'character.index.title'|trans }} — {{ project.title }}{% endblock %}
 
-{% block content %}
-<div class="dashboard-container">
+{% block project_content %}
+    <div class="dashboard-container">
 
-    <header class="page-header">
-        <div>
-            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="link-back">← {{ project.title }}</a>
-            <h1>Personnages <span class="text-muted" >{{ characters|length }}</span></h1>
-        </div>
-        <a href="{{ path('app_character_new', {project_slug: project.slug}) }}" class="btn-creat">
-            + Nouveau personnage
-        </a>
-    </header>
-
-    {% if characters is empty %}
-        <div class="empty-projects">
-            <p class="text-muted">Aucun personnage pour l'instant.</p>
-            <a href="{{ path('app_character_new', {project_slug: project.slug}) }}" class="btn-creat">
-                Créer le premier personnage
-            </a>
-        </div>
-    {% else %}
-        <div class="characters-grid">
-            {% for character in characters %}
-                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="character-card">
-                    <div class="character-card-avatar">
-                        {{ character.name|first|upper }}
-                    </div>
-                    <div class="character-card-info">
-                        <span class="character-card-name">{{ character.name }}</span>
-                        <span class="character-card-role text-muted">{{ character.role|default('—') }}</span>
-                    </div>
-                    <span class="project-type-badge">{{ character.role }}</span>
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="link-back">
+                    ← {{ project.title }}
                 </a>
-            {% endfor %}
-        </div>
-    {% endif %}
+                <h1>
+                    {{ 'character.index.title'|trans }}
+                    <span class="text-muted">{{ characters|length }}</span>
+                </h1>
+            </div>
+            <div class="header-actions">
+                {# ── Switcher grille / liste ──────────────────────── #}
+                {# data-view-switcher-container-id-value pointe vers   #}
+                {# le bon conteneur, rétrocompatible avec les projets   #}
+                <div class="btn-group"
+                     data-controller="view-switcher"
+                     data-view-switcher-container-id-value="characters-container">
+                    <button class="btn btn--sm active"
+                            data-action="click->view-switcher#switch"
+                            data-view="grid">
+                        {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
+                    </button>
+                    <button class="btn btn--sm"
+                            data-action="click->view-switcher#switch"
+                            data-view="list">
+                        {{ ux_icon('lucide:list', {class: 'icon-xs'}) }}
+                    </button>
+                </div>
+                <a href="{{ path('app_character_new', {project_slug: project.slug}) }}" class="btn-creat">
+                    {{ 'character.index.new_btn'|trans }}
+                </a>
+            </div>
+        </header>
 
-</div>
+        {% if characters is empty %}
+
+            <div class="empty-projects">
+                <p class="text-muted">{{ 'character.index.empty'|trans }}</p>
+                <a href="{{ path('app_character_new', {project_slug: project.slug}) }}" class="btn-creat">
+                    {{ 'character.index.empty_create'|trans }}
+                </a>
+            </div>
+
+        {% else %}
+
+            {# ── Conteneur principal (même pattern que #projects-container) ── #}
+            <div id="characters-container" class="characters-grid">
+
+                {# ── Header liste (masqué en vue grille) ──────────── #}
+                <div class="character-list-header">
+                    <div>{{ 'character.index.title'|trans }}</div>
+                    <div>{{ 'character.info.role'|trans }}</div>
+                    <div>{{ 'character.info.created_at'|trans }}</div>
+                    <div></div>
+                </div>
+
+                {% for character in characters %}
+
+                    {# ── VUE GRILLE ────────────────────────────────── #}
+                    <div class="grid-only">
+                        <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}"
+                           class="character-card">
+
+                            <div class="character-card-header">
+                                <div class="character-card-avatar">
+                                    {{ character.name|first|upper }}
+                                </div>
+                                <div class="character-card-identity">
+                                    <span class="character-card-name">{{ character.name }}</span>
+                                    {% if character.nickname %}
+                                        <span class="character-card-nickname">« {{ character.nickname }} »</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="character-card-body">
+                                {% if character.role %}
+                                    <span class="character-card-role-badge">
+                                    {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
+                                        {{ character.role }}
+                                </span>
+                                {% endif %}
+                                {% if character.description %}
+                                    <p class="character-card-excerpt">{{ character.description }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="character-card-footer">
+                            <span class="character-card-meta">
+                                {{ character.createdAt|date('d/m/Y') }}
+                            </span>
+                                <span class="character-card-arrow">
+                                {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
+                            </span>
+                            </div>
+
+                        </a>
+                    </div>
+
+                    {# ── VUE LISTE ──────────────────────────────────── #}
+                    <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}"
+                       class="character-list-row list-only">
+
+                        <div class="character-list-main">
+                            <div class="character-list-avatar">
+                                {{ character.name|first|upper }}
+                            </div>
+                            <div>
+                                <div class="character-list-name">{{ character.name }}</div>
+                                {% if character.nickname %}
+                                    <div class="character-list-nickname">« {{ character.nickname }} »</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="character-list-role">
+                            {{ character.role|default('—') }}
+                        </div>
+
+                        <div class="character-list-date">
+                            {{ character.createdAt|date('d/m/Y') }}
+                        </div>
+
+                        <div class="character-list-action">
+                            {{ ux_icon('lucide:chevron-right', {class: 'icon-xs'}) }}
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+            </div>
+
+        {% endif %}
+
+    </div>
 {% endblock %}
