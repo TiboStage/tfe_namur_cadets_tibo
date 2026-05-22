@@ -4,8 +4,11 @@
     /* ═══════════════════════════════════════════════════════════ */
 
     --color-primary: #FFB800;    /* Jaune Scénart */
-    --color-bg-dark: #0A0A0A;    /* Noir de fond */
+
+    --color-bg-dark: #0d0d12;    /* Noir de fond */
     --color-bg-card: #15151A;    /* Gris foncé des cartes/menus */
+    --color-bg-elevated: #07070a; /* Modales / menus */
+
     --color-border: #222222;     /* Bordures subtiles */
 
     /* ═══════════════════════════════════════════════════════════ */

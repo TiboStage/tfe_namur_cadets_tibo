@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <div class="wksh-container">
+    <div class="workshop-container">
         <div class="title-projects">
             {# 1. Header de la page #}
             <div>
@@ -10,8 +10,17 @@
                 <p class="text-muted">{{ projects|length }} projet(s) au total</p>
             </div>
 
+
             {# 2. Barre d'actions #}
             <div class="view-actions" data-controller="view-switcher">
+
+                {# Bouton créé nouveau project #}
+                <div>
+                    <a href="{{ path('app_project_new_step1') }}" class="btn-creat">
+                        + Créer
+                    </a>
+                </div>
+
                 <div class="btn-group">
                     <button class="btn btn--sm active" data-action="click->view-switcher#switch" data-view="grid">
                         {{ ux_icon('lucide:layout-grid') }}
@@ -21,6 +30,8 @@
                     </button>
                 </div>
             </div>
+
+
         </div>
 
 

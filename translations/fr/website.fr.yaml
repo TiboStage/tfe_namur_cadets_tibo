@@ -30,6 +30,25 @@ navbar:
         login: "Connexion"
         register: "Inscription"
 
+# ===== FOOTER =====
+
+footer:
+    produit:
+        title_section: "Produit"
+        features: "Fonctionnalités"
+        pricing: "Tarifs"
+        examples: "Exemples"
+    resort:
+        title_section: "Ressources"
+        documents: "Documentation"
+        template: "Template"
+        tutorial: "Tutoriels"
+    legal:
+        title_section: "Légal"
+        conf: "Confidentialité"
+        cookies: "Cookies"
+        contact: "Contact"
+
 # ===== PAGE D'ACCUEIL =====
 home:
     hero:
@@ -99,9 +118,7 @@ examples:
         all: "Tous"
         cinema: "Cinéma"
         serie: "Série"
-        roman: "Roman"
         video_game: "Jeu Vidéo"
-        jdr: "JDR"
 
     grid:
         empty_message: "Aucun projet ne correspond à cette catégorie pour le moment."
@@ -198,6 +215,7 @@ contact:
             message: "MESSAGE"
 
         placeholders:
+            email: "exemple@exemple.be"
             firstname: "Jean"
             lastname: "Dupont"
             subject: "Choisir un sujet..."

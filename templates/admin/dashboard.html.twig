@@ -1,0 +1,59 @@
+{# templates/admin/dashboard.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Admin - Vue d'ensemble{% endblock %}
+
+{% block admin_content %}
+    {# CARTES DE STATISTIQUES (KPI) #}
+    <div class="admin-stats-grid">
+        <div class="stat-card">
+            <span class="stat-title">Utilisateurs totaux</span>
+            <span class="stat-number">1,240</span>
+            <span class="stat-detail">Table <code class="db-code">user</code></span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">Projets créés</span>
+            <span class="stat-number">342</span>
+            <span class="stat-detail">Table <code class="db-code">project</code></span>
+        </div>
+        <div class="stat-card card-alert">
+            <span class="stat-title">Signalements actifs</span>
+            <span class="stat-number text-error">5</span>
+            <span class="stat-detail">Table <code class="db-code">report</code></span>
+        </div>
+    </div>
+
+    {# ZONE DE CONTENU : RECENT LOGS & MODERATION #}
+    <div class="admin-dashboard-panels">
+        <div class="panel-box">
+            <h3>🚨 Derniers signalements à traiter</h3>
+            <div class="table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                    <tr>
+                        <th>Projet</th>
+                        <th>Raison</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {# Ici tu feras une boucle {% for report in reports %} plus tard #}
+                    <tr>
+                        <td><strong>L'Ombre du Passé</strong></td>
+                        <td><span class="tag-reason">Contenu inapproprié</span></td>
+                        <td class="text-muted">Il y a 2 heures</td>
+                        <td><button class="btn-table">Inspecter</button></td>
+                    </tr>
+                    <tr>
+                        <td>Le Fléau de Glace</td>
+                        <td><span class="tag-reason">Harcèlement</span></td>
+                        <td class="text-muted">Il y a 5 heures</td>
+                        <td><button class="btn-table">Inspecter</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

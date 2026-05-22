@@ -1,11 +1,34 @@
-{% extends 'workshop/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block subnav %}
-    {# ✅ AFFICHER la navbar projet à la place #}
-    {% include 'workshop/_partials/_project_nav.html.twig' %}
-{% endblock %}
+{# ══════════════════════════════════════════════════════════
+   LAYOUT WORKSPACE PROJET
 
-{# Contenu du projet #}
-{% block content %}
-    {% block project_content %}{% endblock %}
+   Ce layout affiche :
+   - Sidebar projet (gauche)
+   - Zone de contenu (droite)
+
+   La navbar principale (Mes projets, etc.) n'est PAS affichée
+   ══════════════════════════════════════════════════════════ #}
+
+{% block body_class %}workspace-layout{% endblock %}
+
+
+{% block body %}
+    {% include 'workshop/_partials/_topbar.html.twig' %}
+
+
+    <div class="workspace-container">
+
+        {# ── SIDEBAR (navigation projet) ───────────────────── #}
+        {% include 'workshop/_partials/_project_nav.html.twig' %}
+
+        {# ── CONTENT AREA ──────────────────────────────────── #}
+        <main class="workspace-main">
+
+            {# Contenu de la page projet #}
+            {% block project_content %}{% endblock %}
+
+        </main>
+
+    </div>
 {% endblock %}

@@ -17,6 +17,7 @@
 @import "layouts/workshop/_subnav.css";
 
 
+
 /* Section Website */
 @import "pages/website/_home.css";
 @import "pages/website/_pricing.css";
@@ -32,6 +33,15 @@
 @import "pages/workshop/_project-dashboard.css";
 @import "pages/workshop/_projects_cards.css";
 @import "pages/workshop/_characters.css";
+
+
+/* Project Pages */
+@import "pages/workshop/project-page/_project-layout.css";
+@import "pages/workshop/project-page/_project-sidebar.css";
+@import "pages/workshop/project-page/_project-dashboard.css";
+
+/* Section Admin*/
+@import "layouts/admin/_structure-admin.css";
 
 /* Section Profile */
 @import "pages/profile/_profile.css";

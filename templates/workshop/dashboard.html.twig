@@ -7,128 +7,149 @@
 
 
 {% block content %}
-    <div class="wksh-container">
+    <div class="workshop-container">
+<div class="container-dashboard-structure">
 
-        {# ── EN-TÊTE ──────────────────────────────────────────────────────── #}
-        <header class="dashboard-intro">
-            <h1>
-                {{ 'dashboard.greeting'|trans }}
-                <span class="highlight">{{ app.user.firstName|default('Auteur') }}</span>
-            </h1>
-            <p class="text-muted">
-                {{ "now"|date("l d F Y") }} — {{ projects_count }} {{ 'dashboard.subtitle'|trans }}
-            </p>
-        </header>
+        <div class="intro-dashboard-structure">
+            {# ── EN-TÊTE ──────────────────────────────────────────────────────── #}
+            <header class="dashboard-intro">
+                <h1>
+                    {{ 'dashboard.greeting'|trans }}
+                    <span class="highlight">{{ app.user.firstName|default('Auteur') }}</span>
+                </h1>
+                <p class="text-muted">
+                    {{ "now"|date("l d F Y") }} — {{ projects_count }} {{ 'dashboard.subtitle'|trans }}
+                </p>
+            </header>
 
-        {# ── STATS ────────────────────────────────────────────────────────── #}
-        <section class="stats-grid">
+            {# ── STATS ────────────────────────────────────────────────────────── #}
+            <section class="stats-grid">
 
-            <div class="stat-card stat-card--yellow">
-                <span class="stat-value">{{ projects_count }}</span>
-                <span class="stat-desc">{{ 'dashboard.stats.projects_value'|trans }}</span>
-                <a href="{{ path('app_project_index') }}" class="stat-footer-link">
-                    {{ 'dashboard.stats.projects_link'|trans }}
-                </a>
+                <div class="stat-card stat-card--yellow">
+                    <span class="stat-value">{{ projects_count }}</span>
+                    <span class="stat-desc">{{ 'dashboard.stats.projects_value'|trans }}</span>
+                    <a href="{{ path('app_project_index') }}" class="stat-footer-link">
+                        {{ 'dashboard.stats.projects_link'|trans }}
+                    </a>
+                </div>
+
+                <div class="stat-card stat-card--dark">
+                    <span class="stat-value">{{ total_characters }}</span>
+                    <span class="stat-desc">{{ 'dashboard.stats.characters'|trans }}</span>
+                </div>
+
+                <div class="stat-card stat-card--dark">
+                    <span class="stat-value">{{ total_locations }}</span>
+                    <span class="stat-desc">{{ 'dashboard.stats.locations'|trans }}</span>
+                </div>
+
+                <div class="stat-card stat-card--dark">
+                    <span class="stat-value">{{ total_scenes }}</span>
+                    <span class="stat-desc">{{ 'dashboard.stats.scenes'|trans }}</span>
+                </div>
+
+
+            </section>
+
+            {# ── GRILLE BASSE ─────────────────────────────────────────────────── #}
+            <div class="dashboard-lower-grid">
+
+                {# Projets en cours #}
+                <section class="dashboard-section">
+                    <div class="dashboard-section-header">
+                        <h2>{{ 'dashboard.projects.title'|trans }}</h2>
+                        <a href="{{ path('app_project_index') }}" class="link-more">
+                            {{ 'dashboard.projects.see_more'|trans }}
+                        </a>
+                    </div>
+
+                    <div class="project-list">
+                        {% if projects is empty %}
+                            <p class="text-muted empty-state">{{ 'dashboard.projects.empty'|trans }}</p>
+                        {% else %}
+                            {% for project in projects|slice(0, 4) %}
+                                <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="project-list-item">
+                                    <div class="project-thumb">
+                                        {{ project.title|first|upper }}
+                                    </div>
+                                    <div class="project-info">
+                                        <span class="project-title">{{ project.title }}</span>
+                                        <span class="project-meta text-muted">
+                                        {{ project.projectType }} — {{ project.updatedAt|date('d/m/Y') }}
+                                    </span>
+                                    </div>
+                                    <span class="status-badge status-badge--{{ project.status }}">
+                                    {{ project.status }}
+                                </span>
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </section>
+
+                {# Activité récente #}
+                <section class="dashboard-section">
+                    <div class="dashboard-section-header">
+                        <h2>{{ 'dashboard.activity.title'|trans }}</h2>
+                        <a href="#" class="link-more">{{ 'dashboard.activity.see_all'|trans }}</a>
+                    </div>
+
+                    <div class="activity-list">
+                        {% for i in 1..4 %}
+                            <div class="activity-item">
+                                <span class="activity-dot"></span>
+                                <div class="activity-text">
+                                    <p>
+                                        <strong>{{ app.user.firstName }}</strong>
+                                        {{ 'dashboard.activity.action'|trans }}
+                                    </p>
+                                    <span class="text-muted">
+                                    {{ 'dashboard.activity.ago'|trans }} {{ i * 12 }} {{ 'dashboard.activity.min'|trans }}
+                                </span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
             </div>
 
-            <div class="stat-card stat-card--dark">
-                <span class="stat-value">{{ total_characters }}</span>
-                <span class="stat-desc">{{ 'dashboard.stats.characters'|trans }}</span>
-            </div>
+        </div>
 
-            <div class="stat-card stat-card--dark">
-                <span class="stat-value">{{ total_locations }}</span>
-                <span class="stat-desc">{{ 'dashboard.stats.locations'|trans }}</span>
-            </div>
+        {# Partie de droite #}
 
-            <div class="stat-card stat-card--dark">
-                <span class="stat-value">{{ total_scenes }}</span>
-                <span class="stat-desc">{{ 'dashboard.stats.scenes'|trans }}</span>
-            </div>
+        <div class="child-dashboard-structure">
 
             {# Actions rapides #}
             <div class="action-stack">
-                <div class="quick-action-card">
-                    <div class="quick-action-info">
-                        <span class="text-bold">{{ 'dashboard.actions.new_project_title'|trans }}</span>
-                        <span class="text-muted">{{ 'dashboard.actions.new_project_desc'|trans }}</span>
-                    </div>
-                    <a href="{{ path('app_project_new') }}" class="btn-creat">
-                        {{ 'dashboard.actions.new_project_btn'|trans }}
-                    </a>
+                <div class="dashboard-section-header">
+                    <h2>Racourci</h2>
                 </div>
-                <div class="quick-action-card">
-                    <div class="quick-action-info">
-                        <span class="text-bold">{{ 'dashboard.actions.export_title'|trans }}</span>
-                        <span class="text-muted">{{ 'dashboard.actions.export_desc'|trans }}</span>
+                <div class="quick-action-card-structure">
+
+                    <div class="quick-action-card">
+                        {#                    <div class="quick-action-info">#}
+                        {#                        <span class="text-bold">{{ 'dashboard.actions.new_project_title'|trans }}</span>#}
+                        {#                        <span class="text-muted">{{ 'dashboard.actions.new_project_desc'|trans }}</span>#}
+                        {#                    </div>#}
+                        <a href="{{ path('app_project_new') }}" class="btn-creat">
+                            {{ 'dashboard.actions.new_project_btn'|trans }}
+                        </a>
                     </div>
-                    <button class="btn-export">{{ 'dashboard.actions.export_btn'|trans }}</button>
+                    <div class="quick-action-card">
+                        {#                    <div class="quick-action-info">#}
+                        {#                        <span class="text-bold">{{ 'dashboard.actions.export_title'|trans }}</span>#}
+                        {#                        <span class="text-muted">{{ 'dashboard.actions.export_desc'|trans }}</span>#}
+                        {#                    </div>#}
+                        <button class="btn-export">{{ 'dashboard.actions.export_btn'|trans }}</button>
+                    </div>
+
                 </div>
+
             </div>
-
-        </section>
-
-        {# ── GRILLE BASSE ─────────────────────────────────────────────────── #}
-        <div class="dashboard-lower-grid">
-
-            {# Projets en cours #}
-            <section class="dashboard-section">
-                <div class="dashboard-section-header">
-                    <h2>{{ 'dashboard.projects.title'|trans }}</h2>
-                    <a href="{{ path('app_project_index') }}" class="link-more">
-                        {{ 'dashboard.projects.see_more'|trans }}
-                    </a>
-                </div>
-
-                <div class="project-list">
-                    {% if projects is empty %}
-                        <p class="text-muted empty-state">{{ 'dashboard.projects.empty'|trans }}</p>
-                    {% else %}
-                        {% for project in projects|slice(0, 4) %}
-                            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="project-list-item">
-                                <div class="project-thumb">
-                                    {{ project.title|first|upper }}
-                                </div>
-                                <div class="project-info">
-                                    <span class="project-title">{{ project.title }}</span>
-                                    <span class="project-meta text-muted">
-                                        {{ project.projectType }} — {{ project.updatedAt|date('d/m/Y') }}
-                                    </span>
-                                </div>
-                                <span class="status-badge status-badge--{{ project.status }}">
-                                    {{ project.status }}
-                                </span>
-                            </a>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-            </section>
-
-            {# Activité récente #}
-            <section class="dashboard-section">
-                <div class="dashboard-section-header">
-                    <h2>{{ 'dashboard.activity.title'|trans }}</h2>
-                    <a href="#" class="link-more">{{ 'dashboard.activity.see_all'|trans }}</a>
-                </div>
-
-                <div class="activity-list">
-                    {% for i in 1..4 %}
-                        <div class="activity-item">
-                            <span class="activity-dot"></span>
-                            <div class="activity-text">
-                                <p>
-                                    <strong>{{ app.user.firstName }}</strong>
-                                    {{ 'dashboard.activity.action'|trans }}
-                                </p>
-                                <span class="text-muted">
-                                    {{ 'dashboard.activity.ago'|trans }} {{ i * 12 }} {{ 'dashboard.activity.min'|trans }}
-                                </span>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
         </div>
+
+</div>
+
 
         {# ── PROJETS RÉCENTS (Cartes horizontales) ────────────────────────── #}
         <section class="dashboard-section recent-projects-full">
@@ -144,7 +165,7 @@
                 {% if projects is empty %}
                     <p class="text-muted">{{ 'dashboard.projects.empty'|trans }}</p>
                 {% else %}
-                    {% for project in projects|slice(0, 5) %}
+                    {% for project in projects|slice(0, 4) %}
                         {{ component('project_card', { project: project }) }}
                     {% endfor %}
                 {% endif %}
@@ -159,4 +180,6 @@
 
         </section>
     </div>
+
+
 {% endblock %}

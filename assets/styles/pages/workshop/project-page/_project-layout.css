@@ -1,0 +1,70 @@
+/* =========================================================
+   WORKSPACE LAYOUT (sidebar + content)
+   ========================================================= */
+
+.workspace-container {
+    display: flex;
+
+    width: 100%;
+    height: calc(100vh - 80px);
+
+    background: #0D0D0D;
+
+    overflow: hidden;
+}
+
+/* ── Main content area ────────────────────────────────── */
+
+.workspace-main {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    height: 100vh;
+
+    overflow-y: auto;
+
+    background: #0D0D0D;
+}
+
+/* ── Masquer la navbar principale dans le workspace ──── */
+
+/*.workspace-layout .main-navbar {*/
+/*    display: none;*/
+/*}*/
+
+/* Alternative : si tu veux garder une petite topbar dans le workspace */
+.workspace-layout .workspace-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 24px;
+    height: 56px;
+
+    background: rgba(13, 13, 13, 0.95);
+    border-bottom: 1px solid rgba(245, 196, 0, 0.12);
+
+    backdrop-filter: blur(8px);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .workspace-container {
+        flex-direction: column;
+    }
+
+    .workspace-sidebar {
+        position: fixed;
+        left: -280px;
+        z-index: 1000;
+    }
+
+    .workspace-sidebar.open {
+        left: 0;
+    }
+}

@@ -8,7 +8,7 @@ error_403:
     title: "Toegang Geweigerd"
     desc: "Je hebt geen toestemming om toegang te krijgen tot deze bron. Dit project behoort tot een andere maker."
     btn_back: "← Terug"
-    btn_workshop: "Mijn workshop"
+    btn_workshop: "Mijn Werkplaats"
 
 error_404:
     title: "Pagina Niet Gevonden"

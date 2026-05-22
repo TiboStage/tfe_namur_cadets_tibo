@@ -7,6 +7,14 @@
    3. Flash PHP         → .flash-container .scenart-alert (centré en haut)
    ============================================================ */
 
+.toast-container .scenart-alert,
+.flash-container .scenart-alert {
+    background: #15151A !important; /* Le !important est un test rapide pour confirmer */
+    display: flex;
+    align-items: center;
+    /* ... reste du code ... */
+}
+
 /* ─── Flash container — centré en haut ──────────────────────────────────────── */
 
 .flash-container {

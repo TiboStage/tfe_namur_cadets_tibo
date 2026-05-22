@@ -4,11 +4,10 @@
 {% block title %}{{ 'projects.edit.title'|trans }} — {{ project.title }}{% endblock %}
 
 {% block project_content %}
-    <div class="dashboard-container">
+    <div class="workshop-container">
 
         <header class="page-header">
             <div>
-                <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="link-back">← {{ project.title }}</a>
                 <h1>{{ 'projects.edit.title'|trans }}</h1>
             </div>
         </header>

@@ -1,23 +1,45 @@
 <header class="top-nav">
 
-    <div class="nav-left">
-        <a href="{{ path('app_workshop_dashboard') }}" class="topbar-logo">
+    <div class="subnav-links">
+        <a href="{{ path('app_home') }}" class="topbar-logo">
             <img src="{{ asset('images/favicons/favicon_workshop.png') }}" alt="Scénart" width="28">
         </a>
-        <a href="{{ path('app_home') }}" class="link-back">← Retour au site</a>
+        <a href="{{ path('app_workshop_dashboard') }}"
+           class="{{ app.request.attributes.get('_route') starts with 'app_workshop_dashboard' ? 'active' : '' }}">
+            Tableau de bord
+        </a>
+
+        <a href="{{ path('app_project_index') }}"
+           class="{{ app.request.attributes.get('_route') starts with 'app_project_' ? 'active' : '' }}">
+            Mes projets
+            <span class="nav-count">{{ projects_count|default(0) }}</span>
+        </a>
+
+        <a href="#"
+           class="{{ app.request.attributes.get('_route') == 'app_recent' ? 'active' : '' }}">
+            Explorer
+        </a>
+        <div class="subnav-links">
+            <a href="#">Documentation</a>
+        </div>
     </div>
+
 
     <div class="nav-center">
         <div class="search-bar">
-            <input type="text" placeholder="Recherche...">
+            {{ ux_icon('lucide:search', {style: 'width: 18px; height: 18px;'}) }}
+                <input type="text" placeholder="Recherche...">
         </div>
     </div>
 
     <div class="nav-right">
 
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="#" class="btn-admin">{{ 'topbar.admin'|trans }}</a>
+            <a href="#" class="btn-admin">
+                {{ ux_icon('lucide:shield-cog-corner', {style: 'width: 18px; height: 18px;'}) }}
+                {{ 'topbar.admin'|trans }}</a>
         {% endif %}
+
 
         <div class="notification-wrapper">
             <button class="notification-btn" aria-label="Notifications">

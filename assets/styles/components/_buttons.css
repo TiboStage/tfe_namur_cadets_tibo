@@ -213,11 +213,14 @@
     background: var(--color-primary);
     color: #000;
     border: none;
-    padding: 8px 20px;
+    padding: 0 25px 0 20px;
     font-weight: 800;
-    cursor: pointer;
-    font-size: 14px;
+    height: 50px;
+    display: flex;
+    place-items: center;
     transition: opacity 0.2s ease;
+    width: 100%;
+    justify-content: center;
 }
 
 .btn-creat:hover {
@@ -226,13 +229,15 @@
 
 /* Export / Action secondaire */
 .btn-export {
-    background: #15151A;
+    background: var(--color-bg-card);
     color: var(--text-main);
     border: 1px solid var(--color-border);
     padding: 8px 15px;
     cursor: pointer;
     font-size: 14px;
     transition: border-color 0.2s ease;
+    width: 100%;
+    height: 50px;
 }
 
 .btn-export:hover {
@@ -244,15 +249,20 @@
     background: transparent;
     border: 1px solid var(--color-border);
     color: var(--text-muted);
-    padding: 10px 15px;
     font-size: 13px;
     cursor: pointer;
     transition: border-color 0.2s ease, color 0.2s ease;
+    display: flex;
+    gap: 5px;
+    padding: 0 20px 0 18px;
+    height: 50px;
+    align-items: center;
 }
 
 .btn-admin:hover {
-    border-color: var(--text-muted);
-    color: var(--text-main);
+    border-color: var(--color-error);
+    color: var(--color-error);
+    background-color: var(--color-error-bg);
 }
 
 /* Petites actions inline */

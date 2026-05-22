@@ -1,0 +1,583 @@
+/* =========================================================
+   WORKSPACE SIDEBAR (vertical)
+   ========================================================= */
+
+.workspace-sidebar {
+    width: 280px;
+    height: calc(100vh - 80px);
+
+    display: flex;
+    flex-direction: column;
+
+    background: #0D0D0D;
+
+    border-right: 1px solid var(--color-border);
+}
+
+/* =========================================================
+   PROJECT SWITCHER (dropdown)
+   ========================================================= */
+
+.sidebar-header {
+    padding: 20px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.project-switcher {
+    position: relative;
+}
+
+.project-switcher-btn {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 12px;
+
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    color: white;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: all 0.16s ease;
+}
+
+.project-switcher-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(245, 196, 0, 0.3);
+}
+
+.project-icon {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(245, 196, 0, 0.1);
+    border: 1px solid rgba(245, 196, 0, 0.5);
+
+    color: #F5C400;
+
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.project-name {
+    flex: 1;
+    min-width: 0;
+
+    color: rgba(255, 255, 255, 0.9);
+
+    font-size: 14px;
+    font-weight: 500;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    text-align: left;
+}
+
+.project-switcher-btn .icon-xs {
+    width: 16px;
+    height: 16px;
+
+    flex-shrink: 0;
+
+    opacity: 0.5;
+
+    transition: transform 0.2s ease;
+}
+
+.project-switcher-btn[aria-expanded="true"] .icon-xs {
+    transform: rotate(180deg);
+}
+
+/* ── Dropdown ─────────────────────────────────────────── */
+
+.project-switcher-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+
+    background: #0D0D0D;
+    border: 1px solid rgba(245, 196, 0, 0.3);
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(245, 196, 0, 0.1);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+
+    transition: all 0.2s ease;
+
+    z-index: 1000;
+}
+
+.project-switcher-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Header */
+
+.dropdown-header {
+    padding: 12px 14px;
+
+    background: rgba(245, 196, 0, 0.05);
+    border-bottom: 1px solid rgba(245, 196, 0, 0.12);
+
+    color: rgba(255, 255, 255, 0.4);
+
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Projects list */
+
+.dropdown-projects {
+    padding: 6px;
+
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dropdown-project-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px;
+    margin-bottom: 2px;
+
+    color: white;
+    text-decoration: none;
+
+    border: 1px solid transparent;
+
+    transition: all 0.14s ease;
+}
+
+.dropdown-project-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Current project */
+
+.dropdown-project-item.current {
+    background: rgba(245, 196, 0, 0.08);
+    border-color: rgba(245, 196, 0, 0.2);
+    cursor: default;
+}
+
+.dropdown-project-item.current:hover {
+    background: rgba(245, 196, 0, 0.08);
+    border-color: rgba(245, 196, 0, 0.2);
+}
+
+/* Icon */
+
+.project-icon-sm {
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(245, 196, 0, 0.1);
+    border: 1px solid rgba(245, 196, 0, 0.3);
+
+    color: #F5C400;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* Info */
+
+
+.project-meta {
+    color: rgba(255, 255, 255, 0.4);
+
+    font-size: 11px;
+    font-weight: 400;
+}
+
+/* Current badge */
+
+.badge-current {
+    padding: 3px 7px;
+
+    background: rgba(245, 196, 0, 0.15);
+    border: 1px solid rgba(245, 196, 0, 0.3);
+
+    border-radius: 3px;
+
+    color: #F5C400;
+
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Footer */
+
+.dropdown-footer {
+    padding: 6px;
+
+    border-top: 1px solid rgba(245, 196, 0, 0.12);
+}
+
+.dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 10px;
+
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    border: 1px solid transparent;
+
+    transition: all 0.14s ease;
+}
+
+.dropdown-link:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(245, 196, 0, 0.15);
+    color: #F5C400;
+}
+
+.dropdown-link .icon-xs {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+}
+
+/* Scrollbar dropdown */
+
+.dropdown-projects::-webkit-scrollbar {
+    width: 4px;
+}
+
+.dropdown-projects::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.dropdown-projects::-webkit-scrollbar-thumb {
+    background: rgba(245, 196, 0, 0.2);
+}
+
+.dropdown-projects::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 196, 0, 0.3);
+}
+
+/* =========================================================
+   ADMIN BUTTON
+   ========================================================= */
+
+.sidebar-admin {
+    padding: 16px;
+}
+
+.admin-btn {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 12px 16px;
+
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.5);
+
+    color: #DC2626;
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    transition: all 0.16s ease;
+}
+
+.admin-btn:hover {
+    background: rgba(220, 38, 38, 0.15);
+    border-color: rgba(220, 38, 38, 0.7);
+}
+
+.admin-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.sidebar-nav {
+    flex: 1;
+
+    padding: 8px 0;
+
+    overflow-y: auto;
+}
+
+/* ── Section groups ───────────────────────────────────── */
+
+.nav-group {
+    margin-bottom: 24px;
+}
+
+.nav-label {
+    display: block;
+
+    padding: 8px 20px;
+    margin-bottom: 4px;
+
+    color: rgba(255, 255, 255, 0.3);
+
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+/* ── Navigation items ─────────────────────────────────── */
+
+.nav-item {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 11px 20px;
+    margin: 0 8px 2px 8px;
+
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    border: 1px solid transparent;
+
+    transition: all 0.14s ease;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Active state */
+
+.nav-item.active {
+    background: rgba(122, 122, 0, 0.15);
+    border-color: rgba(122, 122, 0, 0.3);
+    color: #F5C400;
+}
+
+.nav-item.active::before {
+    content: "";
+
+    position: absolute;
+    left: -8px;
+    top: 8px;
+    bottom: 8px;
+
+    width: 3px;
+
+    background: #F5C400;
+}
+
+/* Icons */
+
+.nav-item svg {
+    width: 18px;
+    height: 18px;
+
+    flex-shrink: 0;
+
+    opacity: 0.7;
+}
+
+.nav-item.active svg {
+    opacity: 1;
+}
+
+/* Badge */
+
+.nav-badge {
+    margin-left: auto;
+
+    min-width: 22px;
+    height: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 7px;
+
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    border-radius: 12px;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.nav-item.active .nav-badge {
+    background: rgba(245, 196, 0, 0.15);
+    border-color: rgba(245, 196, 0, 0.3);
+    color: #F5C400;
+}
+
+/* Action icons (right side) */
+
+.nav-action {
+    margin-left: auto;
+
+    width: 18px;
+    height: 18px;
+
+    opacity: 0.4;
+
+    transition: opacity 0.14s ease;
+}
+
+.nav-item:hover .nav-action {
+    opacity: 0.7;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.sidebar-footer {
+    padding: 16px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 12px;
+
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    border: 1px solid transparent;
+
+    transition: all 0.14s ease;
+}
+
+.footer-settings:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.footer-settings svg {
+    width: 16px;
+    height: 16px;
+}
+
+.sidebar-version {
+    display: block;
+
+    margin-top: 12px;
+    padding-left: 12px;
+
+    color: rgba(255, 255, 255, 0.25);
+
+    font-size: 11px;
+    font-weight: 500;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(245, 196, 0, 0.2);
+    border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 196, 0, 0.3);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .workspace-sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+
+        z-index: 1000;
+
+        transition: left 0.3s ease;
+    }
+
+    .workspace-sidebar.open {
+        left: 0;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+    }
+}

@@ -4,13 +4,10 @@
 {% block title %}{{ character.name }} — {{ project.title }}{% endblock %}
 
 {% block project_content %}
-    <div class="dashboard-container">
+    <div class="workshop-container">
 
         <header class="page-header">
             <div>
-                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="link-back">
-                    {{ 'character.show.back'|trans }}
-                </a>
                 <h1>
                     {{ character.name }}
                     {% if character.role %}

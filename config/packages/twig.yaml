@@ -1,6 +1,9 @@
 twig:
     file_name_pattern: '*.twig'
 
+    globals:
+        app_version: '@App\Service\VersionService'
+
 when@test:
     twig:
         strict_variables: true

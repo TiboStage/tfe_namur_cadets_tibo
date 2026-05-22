@@ -1,49 +1,9 @@
 {% trans_default_domain 'workshop' %}
 
-<nav class="workshop-subnav project-nav">
+<aside class="workspace-sidebar">
 
-    {# ── Navigation projet (gauche) ───────────────────────────── #}
-    <div class="subnav-links">
-        <a href="{{ path('app_project_index') }}" class="text-muted">
-            {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }} Retour aux projets
-        </a>
-        {% if project.slug %}
-
-            <a href="{{ path('app_project_show', {slug: project.slug}) }}"
-               class="{{ app.request.attributes.get('_route') == 'app_project_show' ? 'active' : '' }}">
-                {{ ux_icon('lucide:layout-dashboard', {class: 'icon-xs'}) }}
-                {{ 'projects.show.btn_overview'|trans }}
-            </a>
-
-            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}"
-               class="{{ app.request.attributes.get('_route') starts with 'app_manuscript' ? 'active' : '' }}">
-                {{ ux_icon('lucide:scroll-text', {class: 'icon-xs'}) }}
-                {{ 'projects.show.btn_manuscript'|trans }}
-            </a>
-
-            <a href="{{ path('app_character_index', {project_slug: project.slug}) }}"
-               class="{{ app.request.attributes.get('_route') starts with 'app_character' ? 'active' : '' }}">
-                {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
-                {{ 'character.index.title'|trans }}
-            </a>
-
-            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}"
-               class="{{ app.request.attributes.get('_route') starts with 'app_location' ? 'active' : '' }}">
-                {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }}
-                {{ 'location.index.title'|trans }}
-            </a>
-
-            <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
-               class="{{ app.request.attributes.get('_route') == 'app_project_edit' ? 'active' : '' }}">
-                {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
-                {{ 'projects.edit.title'|trans }}
-            </a>
-
-        {% endif %}
-    </div>
-
-    {# ── Project switcher (droite) ────────────────────────────── #}
-    <div class="subnav-actions">
+    {# ── Header avec project switcher dropdown ────────────── #}
+    <div class="sidebar-header">
         <div class="project-switcher" data-controller="dropdown">
 
             <button class="project-switcher-btn"
@@ -100,4 +60,114 @@
         </div>
     </div>
 
-</nav>
+    {# ── Bouton Administration ──────────────────────────── #}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="sidebar-admin">
+            <a href="{{ path('admin_dashboard') }}" class="admin-btn">
+                {{ ux_icon('lucide:shield-alert') }}
+                Administration
+                {{ ux_icon('lucide:external-link') }}
+            </a>
+        </div>
+    {% endif %}
+
+    {# ── Navigation principale ──────────────────────────── #}
+    <nav class="sidebar-nav">
+
+        {# Section ÉCRITURE #}
+        <div class="nav-group">
+            <span class="nav-label">Écriture</span>
+
+            <a href="{{ path('app_project_show', {slug: project.slug}) }}"
+               class="nav-item {{ app.request.attributes.get('_route') == 'app_project_show' ? 'active' : '' }}">
+                {{ ux_icon('lucide:layout-grid') }}
+                Aperçu
+            </a>
+
+            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}"
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_manuscript' ? 'active' : '' }}">
+                {{ ux_icon('lucide:book-open') }}
+                Manuscript
+                {{ ux_icon('lucide:corner-right-down', {class: 'nav-action'}) }}
+            </a>
+            <a href="#" class="nav-item">{{ ux_icon('lucide:network') }}Structure</a>
+{#            <a href="{{ path('app_structure_index', {project_slug: project.slug}) }}"#}
+{#               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_structure' ? 'active' : '' }}">#}
+{#                {{ ux_icon('lucide:network') }}#}
+{#                Structure#}
+{#            </a>#}
+        </div>
+
+        {# Section UNIVERS #}
+        <div class="nav-group">
+            <span class="nav-label">Univers</span>
+
+            <a href="{{ path('app_character_index', {project_slug: project.slug}) }}"
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_character' ? 'active' : '' }}">
+                {{ ux_icon('lucide:user') }}
+                Personnage
+                <span class="nav-badge">{{ project.characters|length }}</span>
+            </a>
+
+            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}"
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_location' ? 'active' : '' }}">
+                {{ ux_icon('lucide:map-pin') }}
+                Lieux
+                <span class="nav-badge">{{ project.locations|length }}</span>
+            </a>
+
+            <a href="#" class="nav-item">{{ ux_icon('lucide:git-branch') }}Relation</a>
+            {#            <a href="{{ path('app_relation_index', {project_slug: project.slug}) }}"#}
+{#               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_relation' ? 'active' : '' }}">#}
+{#                {{ ux_icon('lucide:git-branch') }}#}
+{#                Relations#}
+{#            </a>#}
+
+            <a href="#" class="nav-item">{{ ux_icon('lucide:file-text') }}Documentation</a>
+            {#            <a href="{{ path('app_documentation_index', {project_slug: project.slug}) }}"#}
+{#               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_documentation' ? 'active' : '' }}">#}
+{#                {{ ux_icon('lucide:file-text') }}#}
+{#                Documentation#}
+{#            </a>#}
+        </div>
+
+        {# Section PRODUCTION #}
+        <div class="nav-group">
+            <span class="nav-label">Production</span>
+
+
+            <a href="#" class="nav-item">{{ ux_icon('lucide:check-check') }}Taches
+                <span class="nav-badge">2</span>
+            </a>
+
+            {#            <a href="{{ path('app_task_index', {project_slug: project.slug}) }}"#}
+{#               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_task' ? 'active' : '' }}">#}
+{#                {{ ux_icon('lucide:check-square') }}#}
+{#                Tâches#}
+{#                <span class="nav-badge">{{ project.tasks|filter(t => not t.completed)|length }}</span>#}
+{#            </a>#}
+
+            <a href="#" class="nav-item">{{ ux_icon('lucide:file-edit') }}Notes</a>
+
+            {#            <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"#}
+{#               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_note' ? 'active' : '' }}">#}
+{#                {{ ux_icon('lucide:file-edit') }}#}
+{#                Notes#}
+{#            </a>#}
+        </div>
+
+    </nav>
+
+    {# ── Footer ─────────────────────────────────────────── #}
+    <footer class="sidebar-footer">
+
+        <a href="#" class="nav-item">{{ ux_icon('lucide:settings') }}Paramètre du projet</a>
+
+        {#        <a href="{{ path('app_project_settings', {slug: project.slug}) }}" class="footer-settings">#}
+{#            {{ ux_icon('lucide:settings') }}#}
+{#            Paramètres projet#}
+{#        </a>#}
+        <span class="sidebar-version">Version {{ app_version.version }}</span>
+    </footer>
+
+</aside>

@@ -23,7 +23,7 @@ class ProfileController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $hasher,
     ): Response {
-        /** @var \App\Entity\User $user */
+//        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         $form = $this->createForm(ProfileFormType::class, $user);

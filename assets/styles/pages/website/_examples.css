@@ -20,7 +20,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 40px;
 }
 
 .filter-btn {
@@ -47,17 +46,18 @@
 }
 
 /* --- Grille de projets --- */
-.projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
-    min-height: 300px;
-}
+/*.projects-grid {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));*/
+/*    gap: 30px;*/
+/*    min-height: 300px;*/
+/*}*/
 
-.no-projects {
+.no-items {
     grid-column: 1 / -1;
     text-align: center;
     padding: 100px;
     border: 2px dashed #222;
     color: var(--text-muted);
+    margin:40px 0 ;
 }

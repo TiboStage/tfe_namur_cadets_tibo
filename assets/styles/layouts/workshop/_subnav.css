@@ -4,7 +4,7 @@
 
 /* ── Barre de navigation principale workshop ──────────────────── */
 .workshop-subnav {
-    padding: 0 40px;
+    padding: 0 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;

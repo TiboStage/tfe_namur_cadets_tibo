@@ -45,7 +45,7 @@
 
 /* --- Barre de Copyright (Style Top-Banner inversé) --- */
 .footer-bottom-bar {
-    background: #000; /* Noir pur ou très sombre */
+    background: var(--color-bg-elevated); /* Noir pur ou très sombre */
     border-top: 1px solid var(--color-border);
     padding: 20px 0;
 }

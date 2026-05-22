@@ -1,83 +1,180 @@
 {% extends 'workshop/projects/layout.html.twig' %}
 
 {% block project_content %}
-    <div class="project-view">
+    <div class="project-dashboard">
 
-
-        {# CONTENU DU DASHBOARD PROJET #}
-        <div class="dashboard-content">
-            <header class="dashboard-header">
-                <div>
-
-                    <h1>{{ project.title }}</h1>
-                    <p class="text-muted">{{ project.projectType|upper }}</p>
-                </div>
-                <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}" class="btn btn--cta-yellow">
-                    {{ ux_icon('lucide:pen-tool', {class: 'icon-xs'}) }} Ouvrir l'éditeur
-                </a>
-            </header>
-
-            <div class="dashboard-grid">
-                {# STATISTIQUES DU PROJET #}
-                <section class="dashboard-card">
-                    <h3>{{ ux_icon('lucide:bar-chart-2', {class: 'icon-sm'}) }} Statistiques</h3>
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <span class="stat-value">{{ stats.scenes_count }}</span>
-                            <span class="stat-label">Scènes</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">{{ stats.characters_count }}</span>
-                            <span class="stat-label">Personnages</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">{{ stats.locations_count }}</span>
-                            <span class="stat-label">Lieux</span>
-                        </div>
+        {# ── Header projet ────────────────────────────────────── #}
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="project-meta">
+                    <span class="project-icon-lg">{{ project.title|first|upper }}</span>
+                    <div>
+                        <h1 class="project-title">{{ project.title }}</h1>
+                        <span class="project-type">{{ project.projectType }}</span>
                     </div>
-                    <p class="text-muted small mt-3">
-                        Dernière modification : {{ stats.last_update|date('d/m/Y à H:i') }}
-                    </p>
-                </section>
+                </div>
+            </div>
+            <p class="project-description">
+                {% if project.description %}
+                    {{ project.description }}
+                {% else %}
+                    Aucune description pour ce projet.
+                {% endif %}
+            </p>
+        </header>
 
-                {# ACTIVITÉ RÉCENTE #}
+        {# ── Grille statistiques ──────────────────────────────── #}
+        <section class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    {{ ux_icon('lucide:file-text') }}
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">{{ stats.scenes_count }}</span>
+                    <span class="stat-label">Scènes</span>
+                </div>
+            </div>
 
+            <div class="stat-card">
+                <div class="stat-icon">
+                    {{ ux_icon('lucide:users') }}
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">{{ stats.characters_count }}</span>
+                    <span class="stat-label">Personnages</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    {{ ux_icon('lucide:map-pin') }}
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">{{ stats.locations_count }}</span>
+                    <span class="stat-label">Lieux</span>
+                </div>
+            </div>
+
+            <div class="stat-card stat-highlight">
+                <div class="stat-icon">
+                    {{ ux_icon('lucide:clock') }}
+                </div>
+                <div class="stat-content">
+                <span class="stat-value">
+                    {{ stats.last_update|date('d/m/Y') }}
+                </span>
+                    <span class="stat-label">Dernière modification</span>
+                </div>
+            </div>
+        </section>
+
+        {# ── Contenu principal (2 colonnes) ───────────────────── #}
+        <div class="dashboard-grid">
+
+            {# Colonne gauche #}
+            <div class="grid-main">
+
+                {# Activité récente #}
                 <section class="dashboard-card">
-                    <h3>{{ ux_icon('lucide:clock', {class: 'icon-sm'}) }} Activité récente</h3>
+                    <h2 class="card-title">
+                        {{ ux_icon('lucide:activity') }}
+                        Activité récente
+                    </h2>
+
                     {% if recentUpdates is not empty %}
-                        <ul class="recent-list">
+                        <div class="activity-list">
                             {% for item in recentUpdates %}
-                                <li>
-                                    <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: item.id}) }}">
-                                        {{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}
-                                        <span>{{ item.title }}</span>
-                                    </a>
-                                    <small class="text-muted">{{ item.updatedAt|date('d/m H:i') }}</small>
-                                </li>
+                                <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: item.id}) }}"
+                                   class="activity-item">
+                                    <div class="activity-icon">
+                                        {{ ux_icon('lucide:file-text') }}
+                                    </div>
+                                    <div class="activity-content">
+                                        <span class="activity-title">{{ item.title }}</span>
+                                        <span class="activity-time">{{ item.updatedAt|date('d/m/Y à H:i') }}</span>
+                                    </div>
+                                    <div class="activity-arrow">
+                                        {{ ux_icon('lucide:chevron-right') }}
+                                    </div>
+                                </a>
                             {% endfor %}
-                        </ul>
+                        </div>
                     {% else %}
-                        <p class="text-muted">Aucune activité récente. Commencez à écrire !</p>
+                        <div class="empty-state">
+                            {{ ux_icon('lucide:inbox') }}
+                            <p>Aucune activité récente</p>
+                            <span>Commencez à écrire pour voir vos modifications ici</span>
+                        </div>
                     {% endif %}
                 </section>
 
-                {# ACCÈS RAPIDES #}
+            </div>
 
-                <section class="dashboard-card card-yellow">
-                    <h3>{{ ux_icon('lucide:zap', {class: 'icon-sm'}) }} Accès rapides</h3>
+            {# Colonne droite #}
+            <div class="grid-sidebar">
+
+                {# Accès rapides #}
+                <section class="dashboard-card card-accent">
+                    <h2 class="card-title">
+                        {{ ux_icon('lucide:zap') }}
+                        Accès rapides
+                    </h2>
+
                     <div class="quick-actions">
-                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}" class="btn btn--primary btn--sm">
-                            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }} Créer une scène
+                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}"
+                           class="quick-action-btn">
+                            {{ ux_icon('lucide:plus') }}
+                            <span>Créer une scène</span>
                         </a>
-                        <a href="{{ path('app_character_new', {project_slug: project.slug}) }}" class="btn btn--ghost btn--sm">
-                            {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }} Nouveau personnage
+
+                        <a href="{{ path('app_character_new', {project_slug: project.slug}) }}"
+                           class="quick-action-btn">
+                            {{ ux_icon('lucide:user-plus') }}
+                            <span>Nouveau personnage</span>
                         </a>
-                        <a href="{{ path('app_location_new', {project_slug: project.slug}) }}" class="btn btn--ghost btn--sm">
-                            {{ ux_icon('lucide:map-pin-plus', {class: 'icon-xs'}) }} Nouveau lieu
+
+                        <a href="{{ path('app_location_new', {project_slug: project.slug}) }}"
+                           class="quick-action-btn">
+                            {{ ux_icon('lucide:map-pin-plus') }}
+                            <span>Nouveau lieu</span>
                         </a>
                     </div>
                 </section>
+
+                {# Informations projet #}
+                <section class="dashboard-card">
+                    <h2 class="card-title">
+                        {{ ux_icon('lucide:info') }}
+                        Informations
+                    </h2>
+
+                    <div class="project-infos">
+                        <div class="info-item">
+                            <span class="info-label">Type de projet</span>
+                            <span class="info-value">{{ project.projectType }}</span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-label">Créé le</span>
+                            <span class="info-value">{{ project.createdAt|date('d/m/Y') }}</span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-label">Statut</span>
+                            <span class="info-badge info-badge-draft">Brouillon</span>
+                        </div>
+                    </div>
+
+                    <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
+                       class="btn-settings">
+                        {{ ux_icon('lucide:settings') }}
+                        Paramètres du projet
+                    </a>
+                </section>
+
             </div>
+
         </div>
+
     </div>
 {% endblock %}

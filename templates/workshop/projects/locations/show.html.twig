@@ -1,14 +1,13 @@
 {% extends 'workshop/projects/layout.html.twig' %}
-{% trans_default_domain 'workshop_interface' %}
+{% trans_default_domain 'workshop' %}
 
 {% block title %}{{ location.name }} — {{ project.title }}{% endblock %}
 
 {% block project_content %}
-<div class="dashboard-container">
+<div class="workshop-container">
 
     <header class="page-header">
         <div>
-            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="link-back">{{ 'location.show.back'|trans }}</a>
             <h1>
                 {{ location.name }}
                 {% if location.type %}

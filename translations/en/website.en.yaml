@@ -30,6 +30,25 @@ navbar:
         login: "Login"
         register: "Sign Up"
 
+# ===== FOOTER =====
+
+footer:
+    produit:
+        title_section: "Product"
+        features: "Features"
+        pricing: "Pricing"
+        examples: "Examples"
+    resort:
+        title_section: "Resources"
+        documents: "Documentation"
+        template: "Template"
+        tutorial: "Tutorials"
+    legal:
+        title_section: "Legal"
+        conf: "Privacy"
+        cookies: "Cookies"
+        contact: "Contact"
+
 # ===== HOMEPAGE =====
 home:
     hero:
@@ -99,9 +118,7 @@ examples:
         all: "All"
         cinema: "Cinema"
         serie: "Series"
-        roman: "Novel"
         video_game: "Video Game"
-        jdr: "TTRPG"
 
     grid:
         empty_message: "No projects match this category at the moment."
@@ -198,6 +215,7 @@ contact:
             message: "MESSAGE"
 
         placeholders:
+            email: "example@example.en"
             firstname: "John"
             lastname: "Doe"
             subject: "Choose a subject..."

@@ -10,14 +10,15 @@ navbar:
         profile: "Profiel"
         logout: "Uitloggen"
     links:               # ← AJOUTER CE BLOC
-        dashboard:      "Dashboard"
-        projects:       "Mijn projecten"
+        dashboard: "Dashboard"
+        projects: "Mijn projecten"
         collaborations: "Samenwerkingen"
-        explore:        "Verkennen"
-        news:           "Nieuws"
-        create:         "+ Maken"
+        explore: "Verkennen"
+        news: "Nieuws"
+        create: "+ Maken"
     recent_projects: "Recente projecten"
-    current_badge:      "Huidig"
+    current_badge: "Huidig"
+
 # ===== DASHBOARD =====
 dashboard:
     greeting: "Hallo,"

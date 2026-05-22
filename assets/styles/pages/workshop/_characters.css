@@ -344,17 +344,17 @@
 /* 6. ÉTAT VIDE                                                    */
 /* ══════════════════════════════════════════════════════════════ */
 
-.empty-projects {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 80px 20px;
-    text-align: center;
-    border: 1px solid var(--color-border);
-    background: var(--color-bg-card);
-}
+/*.empty-projects {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    gap: 16px;*/
+/*    padding: 80px 20px;*/
+/*    text-align: center;*/
+/*    border: 1px solid var(--color-border);*/
+/*    background: var(--color-bg-card);*/
+/*}*/
 
 /* ══════════════════════════════════════════════════════════════ */
 /* 7. RESPONSIVE                                                   */

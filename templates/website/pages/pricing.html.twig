@@ -1,17 +1,17 @@
 {% extends 'website/layout.html.twig' %}
-{#{% trans_default_domain 'pricing' %}#}
+{% trans_default_domain 'website' %}
 
-{% block title %}{{ 'pricing.meta.title'|trans({}, 'website')}}{% endblock %}
+{% block title %}{{ 'meta.pricing_title'|trans({}, 'website')}}{% endblock %}
 
 {% block content %}
     <main class="container pricing-page">
 
         {# ── EN-TÊTE ─────────────────────────────────────────────────────────── #}
         <div class="section-header">
-            <span class="section-tag">{{ 'pricing.header.tag'|trans({}, 'website') }}</span>
+            <span class="section-tag">{{ 'pricing.header.tag'|trans }}</span>
             <h1 class="main-title">
-                {{ 'pricing.header.title'|trans({}, 'website') }}
-                <span class="highlight">{{ 'pricing.header.title_highlight'|trans({}, 'website') }}</span>
+                {{ 'pricing.header.title'|trans }}
+                <span class="highlight">{{ 'pricing.header.title_highlight'|trans }}</span>
             </h1>
             <p class="section-desc">{{ 'pricing.header.subtitle'|trans({}, 'website') }}</p>
         </div>
@@ -19,11 +19,11 @@
         {# ── BANNIÈRE EARLY ACCESS ────────────────────────────────────────────── #}
         <div class="early-access-banner">
             <p>
-                <strong>{{ 'pricing.early_access.title'|trans({}, 'website') }}</strong>
-                {{ 'pricing.early_access.desc'|trans({}, 'website') }}
+                <strong>{{ 'pricing.early_access.title'|trans }}</strong>
+                {{ 'pricing.early_access.desc'|trans }}
             </p>
-            <a href="{{ 'pricing.early_access.kofi_url'|trans({}, 'website') }}" target="_blank" rel="noopener noreferrer">
-                {{ 'pricing.early_access.btn'|trans({}, 'website') }}
+            <a href="{{ 'pricing.early_access.kofi_url'|trans }}" target="_blank" rel="noopener noreferrer">
+                {{ 'pricing.early_access.btn'|trans }}
             </a>
         </div>
 
@@ -42,19 +42,19 @@
                 </div>
 
                 <ul class="features-list">
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.amateur.features.projects'|trans|raw }}</li>
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.amateur.features.entities'|trans|raw }}</li>
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.amateur.features.script'|trans|raw }}</li>
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.amateur.features.export'|trans }}</li>
-                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'plans.amateur.features.collab'|trans }}</li>
-                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'plans.amateur.features.graph'|trans }}</li>
-                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'plans.amateur.features.fields'|trans }}</li>
-                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'plans.amateur.features.public'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.amateur.features.projects'|trans|raw }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.amateur.features.entities'|trans|raw }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.amateur.features.script'|trans|raw }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.amateur.features.export'|trans }}</li>
+                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'pricing.plans.amateur.features.collab'|trans }}</li>
+                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'pricing.plans.amateur.features.graph'|trans }}</li>
+                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'pricing.plans.amateur.features.fields'|trans }}</li>
+                    <li class="disabled"><i class="fa-solid fa-minus"></i> {{ 'pricing.plans.amateur.features.public'|trans }}</li>
                 </ul>
 
                 {# Bouton désactivé — Early Access #}
                 <span class="btn-outline-pricing disabled">
-                    {{ 'plans.amateur.btn'|trans }}
+                    {{ 'pricing.plans.amateur.btn'|trans }}
                 </span>
             </div>
 
@@ -62,32 +62,32 @@
             <div class="card-pricing featured">
                 <div class="featured-badge">
                     <i class="fa-solid fa-diamond"></i>
-                    {{ 'plans.featured_badge'|trans }}
+                    {{ 'pricing.plans.featured_badge'|trans }}
                 </div>
 
                 <div class="card-header">
-                    <span class="plan-name highlight">{{ 'plans.pro.name'|trans }}</span>
+                    <span class="plan-name highlight">{{ 'pricing.plans.pro.name'|trans }}</span>
                     <div class="price-tag">
-                        <span>€</span>12<small>{{ 'plans.per_month'|trans }}</small>
+                        <span>€</span>12<small>{{ 'pricing.plans.per_month'|trans }}</small>
                     </div>
-                    <p class="plan-description">{{ 'plans.pro.desc'|trans }}</p>
-                    <div class="plan-badge highlighted">{{ 'plans.pro.badge'|trans }}</div>
+                    <p class="plan-description">{{ 'pricing.plans.pro.desc'|trans }}</p>
+                    <div class="plan-badge highlighted">{{ 'pricing.plans.pro.badge'|trans }}</div>
                 </div>
 
                 <ul class="features-list">
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.projects'|trans }}</li>
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.entities'|trans }}</li>
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.script'|trans|raw }}</li>
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.export'|trans }}</li>
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.collab'|trans }}</li>
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.graph'|trans }}</li>
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.fields'|trans }}</li>
-                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'plans.pro.features.public'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.pro.features.projects'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.pro.features.entities'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.pro.features.script'|trans|raw }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.pro.features.export'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.pro.features.collab'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.pro.features.graph'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.pro.features.fields'|trans }}</li>
+                    <li class="active"><i class="fa-solid fa-circle-check"></i> {{ 'pricing.plans.pro.features.public'|trans }}</li>
                 </ul>
 
                 {# Bouton désactivé — Early Access #}
                 <span class="btn-primary-pricing disabled">
-                    {{ 'plans.pro.btn'|trans }}
+                    {{ 'pricing.plans.pro.btn'|trans }}
                 </span>
             </div>
 
@@ -95,53 +95,53 @@
 
         {# ── FOOTER PRICING ───────────────────────────────────────────────────── #}
         <div class="pricing-footer">
-            <p>{{ 'footer.not_sure'|trans }} <span>{{ 'footer.no_credit'|trans }}</span></p>
-            <p>{{ 'footer.quote'|trans }} <a href="{{ path('app_contact') }}">{{ 'footer.contact_us'|trans }}</a></p>
+            <p>{{ 'pricing.footer.not_sure'|trans }} <span>{{ 'pricing.footer.no_credit'|trans }}</span></p>
+            <p>{{ 'pricing.footer.quote'|trans }} <a href="{{ path('app_contact') }}">{{ 'pricing.footer.contact_us'|trans }}</a></p>
         </div>
 
         {# ── FAQ ──────────────────────────────────────────────────────────────── #}
         <section class="faq-section">
-            <h2 class="faq-title">{{ 'faq.title'|trans }}</h2>
+            <h2 class="faq-title">{{ 'pricing.faq.title'|trans }}</h2>
 
             <div class="faq-grid" data-controller="faq">
 
                 <div class="faq-item">
                     <button class="faq-question" data-action="click->faq#toggle">
-                        {{ 'faq.q1'|trans }}
+                        {{ 'pricing.faq.q1'|trans }}
                         <i class="fa-solid fa-plus"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>{{ 'faq.a1'|trans }}</p>
+                        <p>{{ 'pricing.faq.a1'|trans }}</p>
                     </div>
                 </div>
 
                 <div class="faq-item">
                     <button class="faq-question" data-action="click->faq#toggle">
-                        {{ 'faq.q2'|trans }}
+                        {{ 'pricing.faq.q2'|trans }}
                         <i class="fa-solid fa-plus"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>{{ 'faq.a2'|trans }}</p>
+                        <p>{{ 'pricing.faq.a2'|trans }}</p>
                     </div>
                 </div>
 
                 <div class="faq-item">
                     <button class="faq-question" data-action="click->faq#toggle">
-                        {{ 'faq.q3'|trans }}
+                        {{ 'pricing.faq.q3'|trans }}
                         <i class="fa-solid fa-plus"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>{{ 'faq.a3'|trans }}</p>
+                        <p>{{ 'pricing.faq.a3'|trans }}</p>
                     </div>
                 </div>
 
                 <div class="faq-item">
                     <button class="faq-question" data-action="click->faq#toggle">
-                        {{ 'faq.q4'|trans }}
+                        {{ 'pricing.faq.q4'|trans }}
                         <i class="fa-solid fa-plus"></i>
                     </button>
                     <div class="faq-answer">
-                        <p>{{ 'faq.a4'|trans }}</p>
+                        <p>{{ 'pricing.faq.a4'|trans }}</p>
                     </div>
                 </div>
 

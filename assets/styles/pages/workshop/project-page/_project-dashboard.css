@@ -1,0 +1,468 @@
+/* =========================================================
+   PROJECT DASHBOARD
+   ========================================================= */
+
+.project-dashboard {
+    padding: 40px;
+    max-width: 1600px;
+}
+
+/* ── Header projet ────────────────────────────────────── */
+
+.dashboard-header {
+    margin-bottom: 40px;
+
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    margin-bottom: 16px;
+}
+
+.project-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.project-icon-lg {
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(245, 196, 0, 0.1);
+    border: 2px solid rgba(245, 196, 0, 0.5);
+
+    color: #F5C400;
+
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+
+.project-type {
+    display: inline-block;
+
+    margin-top: 4px;
+    padding: 4px 12px;
+
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    color: rgba(255, 255, 255, 0.6);
+
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.project-description {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.6);
+
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+
+/* ── Statistiques ─────────────────────────────────────── */
+
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+
+    margin-bottom: 40px;
+}
+
+
+.stat-highlight {
+    background: rgba(245, 196, 0, 0.05);
+    border-color: rgba(245, 196, 0, 0.2);
+}
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(245, 196, 0, 0.1);
+    border: 1px solid rgba(245, 196, 0, 0.3);
+
+    color: #F5C400;
+}
+
+.stat-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+
+
+/* ── Dashboard grid ───────────────────────────────────── */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 24px;
+}
+
+/* ── Cards ────────────────────────────────────────────── */
+
+.dashboard-card {
+    padding: 28px;
+
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    margin-bottom: 24px;
+}
+
+.card-accent {
+    background: rgba(245, 196, 0, 0.05);
+    border-color: rgba(245, 196, 0, 0.2);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin: 0 0 24px 0;
+
+    color: white;
+
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-title svg {
+    width: 20px;
+    height: 20px;
+    color: #F5C400;
+}
+
+/* ── Activité récente ─────────────────────────────────── */
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    padding: 14px;
+
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    color: white;
+    text-decoration: none;
+
+    transition: all 0.14s ease;
+}
+
+.activity-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(245, 196, 0, 0.2);
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(245, 196, 0, 0.1);
+    border: 1px solid rgba(245, 196, 0, 0.2);
+
+    color: #F5C400;
+}
+
+.activity-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.activity-content {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.activity-title {
+    color: rgba(255, 255, 255, 0.9);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.activity-time {
+    color: rgba(255, 255, 255, 0.4);
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.activity-arrow {
+    width: 24px;
+    height: 24px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: rgba(255, 255, 255, 0.3);
+
+    transition: all 0.14s ease;
+}
+
+.activity-item:hover .activity-arrow {
+    color: #F5C400;
+    transform: translateX(4px);
+}
+
+.activity-arrow svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ── Empty state ──────────────────────────────────────── */
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    padding: 48px 24px;
+
+    text-align: center;
+}
+
+.empty-state svg {
+    width: 48px;
+    height: 48px;
+
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.empty-state p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.6);
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.empty-state span {
+    color: rgba(255, 255, 255, 0.4);
+
+    font-size: 14px;
+}
+
+/* ── Accès rapides ────────────────────────────────────── */
+
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px 16px;
+
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(245, 196, 0, 0.2);
+
+    color: white;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: all 0.14s ease;
+}
+
+.quick-action-btn:hover {
+    background: rgba(245, 196, 0, 0.1);
+    border-color: rgba(245, 196, 0, 0.4);
+    color: #F5C400;
+}
+
+.quick-action-btn svg {
+    width: 18px;
+    height: 18px;
+
+    color: #F5C400;
+}
+
+/* ── Informations projet ──────────────────────────────── */
+
+.project-infos {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    margin-bottom: 24px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    padding-bottom: 16px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.info-item:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.info-label {
+    color: rgba(255, 255, 255, 0.4);
+
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    color: rgba(255, 255, 255, 0.9);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.info-badge {
+    display: inline-block;
+
+    padding: 4px 10px;
+
+    border-radius: 4px;
+
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-badge-draft {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-settings {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 12px 16px;
+
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    color: white;
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: all 0.14s ease;
+}
+
+.btn-settings:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(245, 196, 0, 0.3);
+    color: #F5C400;
+}
+
+.btn-settings svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ── Responsive ───────────────────────────────────────── */
+
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-sidebar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .project-dashboard {
+        padding: 20px;
+    }
+
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .stats-section {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-sidebar {
+        grid-template-columns: 1fr;
+    }
+}

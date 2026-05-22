@@ -12,11 +12,14 @@
     {% include 'workshop/_partials/_topbar.html.twig' %}
 
     {# SUBNAV dans un block pour la rendre optionnelle #}
-    {% block subnav %}{% include 'workshop/_partials/_subnav.html.twig' %}{% endblock %}
+    {% block subnav %}
+        {% include 'workshop/_partials/_subnav.html.twig' %}
+    {% endblock %}
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+    {% block content %}
+    {% endblock %}
+
+
+    {% include 'website/_partials/_selector.html.twig' %}
 
 {% endblock %}
