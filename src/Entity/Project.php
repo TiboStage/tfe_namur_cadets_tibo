@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\WorldEvent;
+use App\Entity\Task;
+use App\Entity\Note;
 use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -139,8 +142,22 @@ class Project
 
     #[ORM\OneToMany(targetEntity: ProjectMember::class, mappedBy: 'project', cascade: ['persist', 'remove'])]
     private Collection $projectMembers;
+
     #[ORM\OneToMany(targetEntity: ProjectTypeConfig::class, mappedBy: 'project', cascade: ['persist', 'remove'])]
     private Collection $projectTypeConfigs;
+
+    #[ORM\OneToMany(targetEntity: WorldEvent::class, mappedBy: 'project', cascade: ['remove'])]
+    #[ORM\OrderBy(['year' => 'ASC', 'month' => 'ASC', 'day' => 'ASC'])]
+    private Collection $worldEvents;
+
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'project', cascade: ['remove'])]
+    #[ORM\OrderBy(['priority' => 'DESC', 'createdAt' => 'DESC'])]
+    private Collection $tasks;
+
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'project', cascade: ['remove'])]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
+    private Collection $notes;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -151,15 +168,18 @@ class Project
 
     public function __construct()
     {
-        $this->projectFeatures  = new ArrayCollection();
-        $this->scenarioElements = new ArrayCollection();
-        $this->characters       = new ArrayCollection();
-        $this->locations        = new ArrayCollection();
-        $this->tags             = new ArrayCollection();
-        $this->projectMembers   = new ArrayCollection();
-        $this->createdAt        = new \DateTimeImmutable();
-        $this->updatedAt        = new \DateTimeImmutable();
+        $this->projectFeatures    = new ArrayCollection();
+        $this->scenarioElements   = new ArrayCollection();
+        $this->characters         = new ArrayCollection();
+        $this->locations          = new ArrayCollection();
+        $this->tags               = new ArrayCollection();
+        $this->projectMembers     = new ArrayCollection();
         $this->projectTypeConfigs = new ArrayCollection();
+        $this->worldEvents        = new ArrayCollection();
+        $this->tasks              = new ArrayCollection();
+        $this->notes              = new ArrayCollection();
+        $this->createdAt          = new \DateTimeImmutable();
+        $this->updatedAt          = new \DateTimeImmutable();
     }
 
     // ─── Lifecycle Callbacks ────────────────────────────────────────────────
@@ -249,6 +269,7 @@ class Project
     {
         return $this->getCreatedBy();
     }
+
     public function getCreatedBy(): ?User
     {
         return $this->createdBy;
@@ -311,12 +332,37 @@ class Project
     {
         return $this->projectMembers;
     }
+
     /**
      * @return Collection<int, ProjectTypeConfig>
      */
     public function getProjectTypeConfigs(): Collection
     {
         return $this->projectTypeConfigs;
+    }
+
+    /**
+     * @return Collection<int, WorldEvent>
+     */
+    public function getWorldEvents(): Collection
+    {
+        return $this->worldEvents;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
     }
 
     // ─── Setters ────────────────────────────────────────────────────────────

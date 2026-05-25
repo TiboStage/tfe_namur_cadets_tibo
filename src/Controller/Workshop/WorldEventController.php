@@ -13,7 +13,6 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -23,7 +22,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * WorldEvent permet de créer une timeline d'événements avec dates narratives
  * (année, mois, jour) et de les lier à des lieux.
  */
-#[Route('/workshop/projects/{project_slug}/timeline')]
 #[IsGranted('ROLE_USER')]
 class WorldEventController extends AbstractController
 {
@@ -38,7 +36,6 @@ class WorldEventController extends AbstractController
     /**
      * Liste chronologique des événements du projet
      */
-    #[Route('', name: 'app_world_event_index', methods: ['GET'])]
     public function index(
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response
@@ -56,7 +53,6 @@ class WorldEventController extends AbstractController
     /**
      * Créer un nouvel événement
      */
-    #[Route('/new', name: 'app_world_event_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
@@ -96,7 +92,6 @@ class WorldEventController extends AbstractController
     /**
      * Afficher un événement
      */
-    #[Route('/{id}', name: 'app_world_event_show', methods: ['GET'])]
     public function show(
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         WorldEvent $event
@@ -117,7 +112,6 @@ class WorldEventController extends AbstractController
     /**
      * Éditer un événement
      */
-    #[Route('/{id}/edit', name: 'app_world_event_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
@@ -160,7 +154,6 @@ class WorldEventController extends AbstractController
     /**
      * Supprimer un événement
      */
-    #[Route('/{id}/delete', name: 'app_world_event_delete', methods: ['POST'])]
     public function delete(
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,

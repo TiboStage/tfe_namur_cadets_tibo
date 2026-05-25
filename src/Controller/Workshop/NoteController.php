@@ -13,7 +13,6 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -23,7 +22,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Les notes peuvent être des simples annotations, des todos, ou des notes
  * liées à des entités spécifiques (personnages, lieux, scènes).
  */
-#[Route('/workshop/projects/{project_slug}/notes')]
 #[IsGranted('ROLE_USER')]
 class NoteController extends AbstractController
 {
@@ -38,7 +36,6 @@ class NoteController extends AbstractController
     /**
      * Liste des notes du projet
      */
-    #[Route('', name: 'app_note_index', methods: ['GET'])]
     public function index(
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response
@@ -59,7 +56,6 @@ class NoteController extends AbstractController
     /**
      * Filtrer les notes par statut
      */
-    #[Route('/filter/{status}', name: 'app_note_filter', methods: ['GET'])]
     public function filter(
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         string $status
@@ -89,7 +85,6 @@ class NoteController extends AbstractController
     /**
      * Créer une nouvelle note
      */
-    #[Route('/new', name: 'app_note_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
@@ -130,7 +125,6 @@ class NoteController extends AbstractController
     /**
      * Afficher une note
      */
-    #[Route('/{id}', name: 'app_note_show', methods: ['GET'])]
     public function show(
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         Note $note
@@ -151,7 +145,6 @@ class NoteController extends AbstractController
     /**
      * Éditer une note
      */
-    #[Route('/{id}/edit', name: 'app_note_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
@@ -194,7 +187,6 @@ class NoteController extends AbstractController
     /**
      * Supprimer une note
      */
-    #[Route('/{id}/delete', name: 'app_note_delete', methods: ['POST'])]
     public function delete(
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,

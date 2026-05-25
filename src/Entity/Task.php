@@ -21,7 +21,7 @@ class Task
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'task')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Project $project = null;
 

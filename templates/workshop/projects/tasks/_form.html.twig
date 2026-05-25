@@ -1,0 +1,95 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}
+    {% if task is defined and task.id %}
+        {{ 'task.edit.title'|trans }}
+    {% else %}
+        {{ 'task.new.title'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block project_content %}
+    <div class="dashboard-container">
+
+        {# Header #}
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_task_index', {project_slug: project.slug}) }}" class="link-back">
+                    {{ ux_icon('lucide:arrow-left', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ 'task.back'|trans }}
+                </a>
+                <h1>
+                    {% if task is defined and task.id %}
+                        {{ 'task.edit.title'|trans }}
+                    {% else %}
+                        {{ 'task.new.title'|trans }}
+                    {% endif %}
+                </h1>
+            </div>
+        </header>
+
+        {# Formulaire #}
+        <div class="form-page-wrapper">
+
+            {{ form_start(form, {
+                'attr': {
+                    'novalidate': 'novalidate',
+                    'class': 'project-form',
+                    'data-turbo': 'false'
+                }
+            }) }}
+
+            {# Section : Informations principales #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    {{ 'task.form.section_main'|trans }}
+                </div>
+
+                {{ form_row(form.title, {
+                    'attr': {
+                        'placeholder': 'task.form.title.placeholder'|trans
+                    }
+                }) }}
+
+                {{ form_row(form.description, {
+                    'attr': {
+                        'placeholder': 'task.form.description.placeholder'|trans,
+                        'rows': 4
+                    }
+                }) }}
+            </div>
+
+            {# Section : Organisation #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    {{ 'task.form.section_organization'|trans }}
+                </div>
+
+                <div class="form-row-group">
+                    {{ form_row(form.status) }}
+                    {{ form_row(form.priority) }}
+                </div>
+
+                {{ form_row(form.assignedTo) }}
+            </div>
+
+            {# Actions #}
+            <div class="form-actions">
+                <a href="{{ path('app_task_index', {project_slug: project.slug}) }}" class="btn-export">
+                    {{ 'common.cancel'|trans }}
+                </a>
+                <button type="submit" class="btn-creat">
+                    {% if task is defined and task.id %}
+                        {{ 'common.update'|trans }}
+                    {% else %}
+                        {{ 'common.create'|trans }}
+                    {% endif %}
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}{{ note.title }}{% endblock %}
+
+{% block project_content %}
+    <div class="dashboard-container">
+
+        {# Header #}
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_note_index', {project_slug: project.slug}) }}" class="link-back">
+                    {{ ux_icon('lucide:arrow-left', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ 'note.back'|trans }}
+                </a>
+                <h1>{{ note.title }}</h1>
+            </div>
+
+            <div class="page-header-actions">
+                <a href="{{ path('app_note_edit', {project_slug: project.slug, id: note.id}) }}"
+                   class="btn-export">
+                    {{ ux_icon('lucide:pencil', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ 'common.edit'|trans }}
+                </a>
+
+                <form method="post"
+                      action="{{ path('app_note_delete', {project_slug: project.slug, id: note.id}) }}"
+                      onsubmit="return confirm('{{ 'note.confirm_delete'|trans }}');"
+                      style="display: inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ note.id) }}">
+                    <button type="submit" class="btn-delete">
+                        {{ ux_icon('lucide:trash-2', {style: 'width: 14px; height: 14px;'}) }}
+                        {{ 'common.delete'|trans }}
+                    </button>
+                </form>
+            </div>
+        </header>
+
+        {# Contenu principal #}
+        <div class="content-wrapper">
+
+            <div class="info-card">
+
+                {# Statut et priorité #}
+                <div class="info-card-section">
+                    <div class="task-badges">
+                        <span class="badge-status badge-status-{{ note.status }}">
+                            {{ ('note.status.' ~ note.status)|trans }}
+                        </span>
+                        <span class="badge-priority badge-priority-{{ note.priority }}">
+                            {{ ('note.priority.' ~ note.priority)|trans }}
+                        </span>
+                    </div>
+                </div>
+
+                {# Contenu #}
+                <div class="info-card-section">
+                    <h3 class="info-card-title">
+                        {{ ux_icon('lucide:file-text', {style: 'width: 18px; height: 18px;'}) }}
+                        {{ 'note.show.content'|trans }}
+                    </h3>
+                    <div class="note-content">
+                        {{ note.content|nl2br }}
+                    </div>
+                </div>
+
+                {# Assignation #}
+                {% if note.assignedTo %}
+                    <div class="info-card-section">
+                        <h3 class="info-card-title">
+                            {{ ux_icon('lucide:user', {style: 'width: 18px; height: 18px;'}) }}
+                            {{ 'note.show.assigned_to'|trans }}
+                        </h3>
+                        <div class="note-assignee-display">
+                            <div class="assignee-avatar-large">
+                                {{ note.assignedTo.username|first|upper }}
+                            </div>
+                            <div>
+                                <div class="assignee-name">{{ note.assignedTo.username }}</div>
+                                {% if note.assignedTo.email %}
+                                    <div class="assignee-email">{{ note.assignedTo.email }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# Auteur #}
+                <div class="info-card-section">
+                    <h3 class="info-card-title">
+                        {{ ux_icon('lucide:user-check', {style: 'width: 18px; height: 18px;'}) }}
+                        {{ 'note.show.author'|trans }}
+                    </h3>
+                    <div class="note-author">
+                        <span class="author-name">{{ note.author.username }}</span>
+                        <span class="author-date">{{ note.createdAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}

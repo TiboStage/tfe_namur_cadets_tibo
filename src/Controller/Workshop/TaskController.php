@@ -14,7 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -24,7 +23,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Les tâches permettent de suivre l'avancement du travail en équipe
  * avec statuts (todo, in_progress, review, done) et priorités.
  */
-#[Route('/workshop/projects/{project_slug}/tasks')]
 #[IsGranted('ROLE_USER')]
 class TaskController extends AbstractController
 {
@@ -39,7 +37,6 @@ class TaskController extends AbstractController
     /**
      * Liste des tâches en vue Kanban
      */
-    #[Route('', name: 'app_task_index', methods: ['GET'])]
     public function index(
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response
@@ -76,7 +73,6 @@ class TaskController extends AbstractController
     /**
      * Créer une nouvelle tâche
      */
-    #[Route('/new', name: 'app_task_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
@@ -117,7 +113,6 @@ class TaskController extends AbstractController
     /**
      * Afficher une tâche
      */
-    #[Route('/{id}', name: 'app_task_show', methods: ['GET'])]
     public function show(
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         Task $task
@@ -138,7 +133,6 @@ class TaskController extends AbstractController
     /**
      * Éditer une tâche
      */
-    #[Route('/{id}/edit', name: 'app_task_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
@@ -181,7 +175,6 @@ class TaskController extends AbstractController
     /**
      * Supprimer une tâche
      */
-    #[Route('/{id}/delete', name: 'app_task_delete', methods: ['POST'])]
     public function delete(
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
@@ -214,7 +207,6 @@ class TaskController extends AbstractController
     /**
      * Changer rapidement le statut d'une tâche (AJAX)
      */
-    #[Route('/{id}/status', name: 'app_task_change_status', methods: ['POST'])]
     public function changeStatus(
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
@@ -235,7 +227,6 @@ class TaskController extends AbstractController
 
             return $this->json(['success' => true, 'status' => $newStatus]);
         }
-
         return $this->json(['success' => false], 400);
     }
 }

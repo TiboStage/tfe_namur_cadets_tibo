@@ -1,0 +1,105 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}{{ 'world_event.edit.title'|trans }}{% endblock %}
+
+{% block project_content %}
+    <div class="dashboard-container">
+
+        {# Header #}
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_world_event_index', {project_slug: project.slug}) }}" class="link-back">
+                    {{ ux_icon('lucide:arrow-left', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ 'world_event.back'|trans }}
+                </a>
+                <h1>{{ 'world_event.edit.title'|trans }}</h1>
+            </div>
+        </header>
+
+        {# Formulaire #}
+        <div class="form-page-wrapper">
+
+            {{ form_start(form, {
+                'attr': {
+                    'novalidate': 'novalidate',
+                    'class': 'project-form',
+                    'data-turbo': 'false'
+                }
+            }) }}
+
+            {# Section : Informations principales #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    {{ 'world_event.form.section_main'|trans }}
+                </div>
+
+                {{ form_row(form.title, {
+                    'attr': {
+                        'placeholder': 'world_event.form.title.placeholder'|trans
+                    }
+                }) }}
+
+                {{ form_row(form.description, {
+                    'attr': {
+                        'placeholder': 'world_event.form.description.placeholder'|trans,
+                        'rows': 5
+                    }
+                }) }}
+            </div>
+
+            {# Section : Date narrative #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    {{ 'world_event.form.section_date'|trans }}
+                </div>
+
+                <div class="form-section-help">
+                    {{ 'world_event.form.date_help'|trans }}
+                </div>
+
+                <div class="form-row-group">
+                    {{ form_row(form.year, {
+                        'attr': {
+                            'placeholder': 'world_event.form.year.placeholder'|trans
+                        }
+                    }) }}
+
+                    {{ form_row(form.month, {
+                        'attr': {
+                            'placeholder': 'world_event.form.month.placeholder'|trans
+                        }
+                    }) }}
+
+                    {{ form_row(form.day, {
+                        'attr': {
+                            'placeholder': 'world_event.form.day.placeholder'|trans
+                        }
+                    }) }}
+                </div>
+            </div>
+
+            {# Section : Localisation #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    {{ 'world_event.form.section_location'|trans }}
+                </div>
+
+                {{ form_row(form.location) }}
+            </div>
+
+            {# Actions #}
+            <div class="form-actions">
+                <a href="{{ path('app_world_event_index', {project_slug: project.slug}) }}" class="btn-export">
+                    {{ 'common.cancel'|trans }}
+                </a>
+                <button type="submit" class="btn-creat">
+                    {{ 'common.update'|trans }}
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+{% endblock %}
