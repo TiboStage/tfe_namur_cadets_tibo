@@ -9,7 +9,10 @@ navbar:
     actions:
         profile: "Profile"
         logout: "Logout"
-    links:               # ← AJOUTER CE BLOC
+        admin: "Administration"
+        search:
+            placeholder: "Search for a scene, a character..."
+    links:
         dashboard:      "Dashboard"
         projects:       "My projects"
         collaborations: "Collaborations"

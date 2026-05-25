@@ -1,3 +1,5 @@
+{% trans_default_domain 'workshop' %}
+
 <header class="top-nav">
 
     <div class="subnav-links">
@@ -6,21 +8,23 @@
         </a>
         <a href="{{ path('app_workshop_dashboard') }}"
            class="{{ app.request.attributes.get('_route') starts with 'app_workshop_dashboard' ? 'active' : '' }}">
-            Tableau de bord
+            {{ 'navbar.links.dashboard'|trans }}
         </a>
 
         <a href="{{ path('app_project_index') }}"
            class="{{ app.request.attributes.get('_route') starts with 'app_project_' ? 'active' : '' }}">
-            Mes projets
+            {{ 'navbar.links.projects'|trans }}
             <span class="nav-count">{{ projects_count|default(0) }}</span>
         </a>
 
         <a href="#"
            class="{{ app.request.attributes.get('_route') == 'app_recent' ? 'active' : '' }}">
-            Explorer
+            {{ 'navbar.links.explore'|trans }}
         </a>
         <div class="subnav-links">
-            <a href="#">Documentation</a>
+            <a href="#">
+                {{ 'navbar.links.files'|trans }}
+            </a>
         </div>
     </div>
 
@@ -28,16 +32,18 @@
     <div class="nav-center">
         <div class="search-bar">
             {{ ux_icon('lucide:search', {style: 'width: 18px; height: 18px;'}) }}
-                <input type="text" placeholder="Recherche...">
+            <label>
+                <input type="text" placeholder="{{ 'navbar.actions.search.placeholder'|trans }}">
+            </label>
         </div>
     </div>
 
     <div class="nav-right">
 
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="#" class="btn-admin">
+            <a href="{{ path('admin_dashboard') }}" class="btn-admin">
                 {{ ux_icon('lucide:shield-cog-corner', {style: 'width: 18px; height: 18px;'}) }}
-                {{ 'topbar.admin'|trans }}</a>
+                {{ 'navbar.actions.admin'|trans }}</a>
         {% endif %}
 
 

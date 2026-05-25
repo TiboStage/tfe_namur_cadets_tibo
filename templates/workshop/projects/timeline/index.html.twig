@@ -1,0 +1,109 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}{{ 'world_event.index.title'|trans }}{% endblock %}
+
+{% block project_content %}
+    <div class="dashboard-container">
+
+        {# Header avec titre et bouton création #}
+        <header class="page-header">
+            <div>
+                <h1>{{ 'world_event.index.title'|trans }}</h1>
+                <p class="page-subtitle">{{ 'world_event.index.subtitle'|trans }}</p>
+            </div>
+            <a href="{{ path('app_world_event_new', {project_slug: project.slug}) }}" class="btn-creat">
+                {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
+                {{ 'world_event.index.create'|trans }}
+            </a>
+        </header>
+
+        {# État vide #}
+        {% if events is empty %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    {{ ux_icon('lucide:calendar', {style: 'width: 48px; height: 48px;'}) }}
+                </div>
+                <h3>{{ 'world_event.index.empty.title'|trans }}</h3>
+                <p>{{ 'world_event.index.empty.message'|trans }}</p>
+                <a href="{{ path('app_world_event_new', {project_slug: project.slug}) }}" class="btn-primary">
+                    {{ 'world_event.index.create_first'|trans }}
+                </a>
+            </div>
+
+        {% else %}
+
+            {# Timeline chronologique #}
+            <div class="timeline-container">
+                {% for event in events %}
+                    <div class="timeline-item">
+                        {# Date narrative #}
+                        <div class="timeline-date">
+                            <div class="timeline-marker"></div>
+                            <span class="timeline-date-text">
+                                {% if event.day and event.month %}
+                                    {{ event.day }}/{{ event.month }}/{{ event.year }}
+                                {% elseif event.month %}
+                                    {{ event.month }}/{{ event.year }}
+                                {% else %}
+                                    {{ 'world_event.year'|trans }} {{ event.year }}
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        {# Contenu de l'événement #}
+                        <div class="timeline-content">
+                            <div class="timeline-card">
+                                <div class="timeline-card-header">
+                                    <h3>
+                                        <a href="{{ path('app_world_event_show', {project_slug: project.slug, id: event.id}) }}">
+                                            {{ event.title }}
+                                        </a>
+                                    </h3>
+
+                                    {# Actions #}
+                                    <div class="timeline-card-actions">
+                                        <a href="{{ path('app_world_event_edit', {project_slug: project.slug, id: event.id}) }}"
+                                           class="btn-icon"
+                                           title="{{ 'common.edit'|trans }}">
+                                            {{ ux_icon('lucide:pencil', {style: 'width: 14px; height: 14px;'}) }}
+                                        </a>
+
+                                        <form method="post"
+                                              action="{{ path('app_world_event_delete', {project_slug: project.slug, id: event.id}) }}"
+                                              onsubmit="return confirm('{{ 'world_event.confirm_delete'|trans }}');"
+                                              style="display: inline;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                                            <button type="submit" class="btn-icon btn-icon-danger" title="{{ 'common.delete'|trans }}">
+                                                {{ ux_icon('lucide:trash-2', {style: 'width: 14px; height: 14px;'}) }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                {# Description #}
+                                {% if event.description %}
+                                    <div class="timeline-card-body">
+                                        <p>{{ event.description|striptags|slice(0, 200) }}...</p>
+                                    </div>
+                                {% endif %}
+
+                                {# Lieu lié #}
+                                {% if event.location %}
+                                    <div class="timeline-card-meta">
+                                        {{ ux_icon('lucide:map-pin', {style: 'width: 14px; height: 14px;'}) }}
+                                        <a href="{{ path('app_location_show', {project_slug: project.slug, id: event.location.id}) }}">
+                                            {{ event.location.name }}
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% endif %}
+
+    </div>
+{% endblock %}

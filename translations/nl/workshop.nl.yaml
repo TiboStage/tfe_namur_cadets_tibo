@@ -9,7 +9,9 @@ navbar:
     actions:
         profile: "Profiel"
         logout: "Uitloggen"
-    links:               # ← AJOUTER CE BLOC
+        search:
+            placeholder: "Zoek een scène, een personage..."
+    links:
         dashboard: "Dashboard"
         projects: "Mijn projecten"
         collaborations: "Samenwerkingen"

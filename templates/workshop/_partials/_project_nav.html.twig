@@ -34,7 +34,7 @@
                     </div>
 
                     {# Autres projets (max 4, exclu le projet actuel) #}
-                    {% for other_project in app.user.projects|slice(0, 4) %}
+                    {% for other_project in app.user.projects %}
                         {% if other_project.id != project.id %}
                             <a href="{{ path('app_project_show', {slug: other_project.slug}) }}"
                                class="dropdown-project-item">
@@ -140,20 +140,20 @@
                 <span class="nav-badge">2</span>
             </a>
 
-            {#            <a href="{{ path('app_task_index', {project_slug: project.slug}) }}"#}
-{#               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_task' ? 'active' : '' }}">#}
-{#                {{ ux_icon('lucide:check-square') }}#}
-{#                Tâches#}
-{#                <span class="nav-badge">{{ project.tasks|filter(t => not t.completed)|length }}</span>#}
-{#            </a>#}
+            <a href="{{ path('app_task_index', {project_slug: project.slug}) }}"
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_task' ? 'active' : '' }}">
+                {{ ux_icon('lucide:check-square') }}
+                Tâches
+                <span class="nav-badge">{{ project.tasks|filter(t => not t.completed)|length }}</span>
+            </a>
 
-            <a href="#" class="nav-item">{{ ux_icon('lucide:file-edit') }}Notes</a>
+{#            <a href="#" class="nav-item">{{ ux_icon('lucide:file-edit') }}Notes</a>#}
 
-            {#            <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"#}
-{#               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_note' ? 'active' : '' }}">#}
-{#                {{ ux_icon('lucide:file-edit') }}#}
-{#                Notes#}
-{#            </a>#}
+            <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_note' ? 'active' : '' }}">
+                {{ ux_icon('lucide:file-edit') }}
+                Notes
+            </a>
         </div>
 
     </nav>

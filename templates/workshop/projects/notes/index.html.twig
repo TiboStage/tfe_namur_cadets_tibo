@@ -1,0 +1,80 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}{{ 'note.index.title'|trans }}{% endblock %}
+
+{% block project_content %}
+    <div class="dashboard-container">
+
+        <header class="page-header">
+            <div>
+                <h1>{{ 'note.index.title'|trans }}</h1>
+                <p class="page-subtitle">{{ 'note.index.subtitle'|trans }}</p>
+            </div>
+            <a href="{{ path('app_note_new', {project_slug: project.slug}) }}" class="btn-creat">
+                {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
+                {{ 'note.index.create'|trans }}
+            </a>
+        </header>
+
+        {# Filtres par statut #}
+        <div class="filter-tabs">
+            <a href="{{ path('app_note_index', {project_slug: project.slug, status: 'all'}) }}"
+               class="filter-tab {% if currentStatus == 'all' %}active{% endif %}">
+                {{ 'note.filter.all'|trans }}
+            </a>
+            <a href="{{ path('app_note_index', {project_slug: project.slug, status: 'note'}) }}"
+               class="filter-tab {% if currentStatus == 'note' %}active{% endif %}">
+                {{ 'note.filter.notes'|trans }}
+            </a>
+            <a href="{{ path('app_note_index', {project_slug: project.slug, status: 'todo'}) }}"
+               class="filter-tab {% if currentStatus == 'todo' %}active{% endif %}">
+                {{ 'note.filter.todos'|trans }}
+            </a>
+            <a href="{{ path('app_note_index', {project_slug: project.slug, status: 'done'}) }}"
+               class="filter-tab {% if currentStatus == 'done' %}active{% endif %}">
+                {{ 'note.filter.done'|trans }}
+            </a>
+        </div>
+
+        {% if notes is empty %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    {{ ux_icon('lucide:sticky-note', {style: 'width: 48px; height: 48px;'}) }}
+                </div>
+                <h3>{{ 'note.index.empty.title'|trans }}</h3>
+                <p>{{ 'note.index.empty.message'|trans }}</p>
+                <a href="{{ path('app_note_new', {project_slug: project.slug}) }}" class="btn-primary">
+                    {{ 'note.index.create_first'|trans }}
+                </a>
+            </div>
+        {% else %}
+            <div class="notes-grid">
+                {% for note in notes %}
+                    <div class="note-card note-priority-{{ note.priority }}">
+                        <div class="note-card-header">
+                            <a href="{{ path('app_note_show', {project_slug: project.slug, id: note.id}) }}">
+                                {{ note.title }}
+                            </a>
+                            <span class="badge-status badge-status-{{ note.status }}">
+                                {{ ('note.status.' ~ note.status)|trans }}
+                            </span>
+                        </div>
+                        <div class="note-card-body">
+                            <p>{{ note.content|striptags|slice(0, 150) }}...</p>
+                        </div>
+                        <div class="note-card-footer">
+                            <span class="note-meta">{{ note.author.username }} • {{ note.createdAt|date('d/m/Y') }}</span>
+                            <div class="note-actions">
+                                <a href="{{ path('app_note_edit', {project_slug: project.slug, id: note.id}) }}">
+                                    {{ ux_icon('lucide:pencil', {style: 'width: 14px; height: 14px;'}) }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

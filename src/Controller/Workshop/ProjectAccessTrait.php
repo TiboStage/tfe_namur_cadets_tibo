@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 trait ProjectAccessTrait
 {
-    private function checkProjectAccess(Project $project, string $attribute = 'view'): void
+    protected function checkProjectAccess(Project $project, string $attribute = 'view'): void
     {
         /** @var User $user */
         $user = $this->getUser();

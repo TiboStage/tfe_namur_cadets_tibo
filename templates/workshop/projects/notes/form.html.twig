@@ -1,0 +1,49 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}
+    {% if note.id %}{{ 'note.edit.title'|trans }}{% else %}{{ 'note.new.title'|trans }}{% endif %}
+{% endblock %}
+
+{% block project_content %}
+    <div class="dashboard-container">
+
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_note_index', {project_slug: project.slug}) }}" class="link-back">
+                    {{ ux_icon('lucide:arrow-left', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ 'note.back'|trans }}
+                </a>
+                <h1>{% if note.id %}{{ 'note.edit.title'|trans }}{% else %}{{ 'note.new.title'|trans }}{% endif %}</h1>
+            </div>
+        </header>
+
+        <div class="form-page-wrapper">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form', 'data-turbo': 'false'}}) }}
+
+                <div class="form-section">
+                    <div class="form-section-title">{{ 'note.form.section_main'|trans }}</div>
+                    {{ form_row(form.title, {'attr': {'placeholder': 'note.form.title.placeholder'|trans}}) }}
+                    {{ form_row(form.content, {'attr': {'placeholder': 'note.form.content.placeholder'|trans, 'rows': 6}}) }}
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">{{ 'note.form.section_organization'|trans }}</div>
+                    <div class="form-row-group">
+                        {{ form_row(form.status) }}
+                        {{ form_row(form.priority) }}
+                    </div>
+                    {{ form_row(form.assignedTo) }}
+                </div>
+
+                <div class="form-actions">
+                    <a href="{{ path('app_note_index', {project_slug: project.slug}) }}" class="btn-export">{{ 'common.cancel'|trans }}</a>
+                    <button type="submit" class="btn-creat">
+                        {% if note.id %}{{ 'common.update'|trans }}{% else %}{{ 'common.create'|trans }}{% endif %}
+                    </button>
+                </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

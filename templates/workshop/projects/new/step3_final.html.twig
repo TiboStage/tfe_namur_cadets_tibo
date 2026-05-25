@@ -1,14 +1,15 @@
 {# templates/workshop/projects/new/step3_final.html.twig #}
+{% trans_default_domain 'workshop' %}
 
 {% extends 'workshop/projects/new/layout.html.twig' %}
 
-{% block title %}{{ 'project_new.step3.title'|trans ({}, 'project_new') }}{% endblock %}
+{% block title %}{{ 'project_new.step3.title'|trans }}{% endblock %}
 
 {% block new_project_content %}
 <div class="project-funnel-container">
     <div class="funnel-header">
-        <h1>{{ 'project_new.step3.title'|trans ({}, 'project_new') }}</h1>
-        <p class="funnel-subtitle">{{ 'project_new.step3.subtitle'|trans ({}, 'project_new') }}</p>
+        <h1>{{ 'project_new.step3.title'|trans }}</h1>
+        <p class="funnel-subtitle">{{ 'project_new.step3.subtitle'|trans }}</p>
     </div>
 
     <div class="final-layout">
@@ -17,30 +18,30 @@
             <form method="POST" action="{{ path('app_project_new_step3') }}" enctype="multipart/form-data">
                 {# Titre #}
                 <div class="form-group">
-                    <label for="project_title">{{ 'project_new.step3.form.title_label'|trans ({}, 'project_new') }}</label>
+                    <label for="project_title">{{ 'project_new.step3.form.title_label'|trans }}</label>
                     <input type="text"
                            id="project_title"
                            name="title"
-                           placeholder="{{ 'project_new.step3.form.title_placeholder'|trans ({}, 'project_new') }}"
+                           placeholder="{{ 'project_new.step3.form.title_placeholder'|trans }}"
                            required
                            class="form-control">
                 </div>
 
                 {# Description #}
                 <div class="form-group">
-                    <label for="project_description">{{ 'project_new.step3.form.description_label'|trans ({}, 'project_new') }}</label>
+                    <label for="project_description">{{ 'project_new.step3.form.description_label'|trans }}</label>
                     <textarea id="project_description"
                               name="description"
                               rows="4"
-                              placeholder="{{ 'project_new.step3.form.description_placeholder'|trans ({}, 'project_new') }}"
+                              placeholder="{{ 'project_new.step3.form.description_placeholder'|trans }}"
                               class="form-control"></textarea>
                 </div>
 
                 {# Image de couverture #}
                 <div class="form-group">
                     <label for="cover_image">
-                        {{ 'project_new.step3.form.cover_label'|trans ({}, 'project_new') }}
-                        <small>{{ 'project_new.step3.form.cover_help'|trans ({}, 'project_new') }}</small>
+                        {{ 'project_new.step3.form.cover_label'|trans }}
+                        <small>{{ 'project_new.step3.form.cover_help'|trans }}</small>
                     </label>
                     <input type="file"
                            id="cover_image"
@@ -73,7 +74,7 @@
                     </a>
 
                     <button type="submit" class="btn btn--cta-yellow">
-                        {{ 'project_new.step3.button_create'|trans ({}, 'project_new') }}
+                        {{ 'project_new.step3.button_create'|trans }}
                         {{ ux_icon('lucide:check', {style: 'width: 16px; height: 16px;'}) }}
                     </button>
                 </div>
@@ -82,24 +83,24 @@
 
         {# DROITE : Récapitulatif #}
         <div class="final-recap">
-            <h3>{{ 'project_new.step3.recap.title'|trans ({}, 'project_new') }}</h3>
+            <h3>{{ 'project_new.step3.recap.title'|trans }}</h3>
 
             <div class="recap-item">
-                <strong>{{ 'project_new.step3.recap.mode'|trans ({}, 'project_new') }}</strong>
-                <span>{{ mode == 'simplifie' ? 'project_new.step1.mode_simplifie.title'|trans : 'project_new.step1.mode_custom.title'|trans ({}, 'project_new') }}</span>
+                <strong>{{ 'project_new.step3.recap.mode'|trans }}</strong>
+                <span>{{ mode == 'simplifie' ? 'project_new.step1.mode_simplifie.title'|trans : 'project_new.step1.mode_custom.title'|trans  }}</span>
             </div>
 
             <div class="recap-item">
-                <strong>{{ 'project_new.step3.recap.type'|trans ({}, 'project_new') }}</strong>
+                <strong>{{ 'project_new.step3.recap.type'|trans }}</strong>
                 <span>
-                    {{ ('project_new.step2.type.' ~ project_type ~ '.title')|trans ({}, 'project_new') }}
-                    <small>{{ 'project_new.step3.recap.type_locked'|trans ({}, 'project_new') }}</small>
+                    {{ ('project_new.step2.type.' ~ project_type ~ '.title')|trans }}
+                    <small>{{ 'project_new.step3.recap.type_locked'|trans }}</small>
                 </span>
             </div>
 
             {% if genres is not empty %}
             <div class="recap-item">
-                <strong>{{ 'project_new.step3.recap.genres'|trans ({}, 'project_new') }}</strong>
+                <strong>{{ 'project_new.step3.recap.genres'|trans }}</strong>
                 <div class="recap-genres">
                     {% for genre in genres %}
                         <span class="badge">{{ genre }}</span>

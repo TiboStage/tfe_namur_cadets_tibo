@@ -1,0 +1,107 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}{{ task.title }}{% endblock %}
+
+{% block project_content %}
+    <div class="dashboard-container">
+
+        {# Header #}
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_task_index', {project_slug: project.slug}) }}" class="link-back">
+                    {{ ux_icon('lucide:arrow-left', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ 'task.back'|trans }}
+                </a>
+                <h1>{{ task.title }}</h1>
+            </div>
+
+            <div class="page-header-actions">
+                <a href="{{ path('app_task_edit', {project_slug: project.slug, id: task.id}) }}"
+                   class="btn-export">
+                    {{ ux_icon('lucide:pencil', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ 'common.edit'|trans }}
+                </a>
+
+                <form method="post"
+                      action="{{ path('app_task_delete', {project_slug: project.slug, id: task.id}) }}"
+                      onsubmit="return confirm('{{ 'task.confirm_delete'|trans }}');"
+                      style="display: inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
+                    <button type="submit" class="btn-delete">
+                        {{ ux_icon('lucide:trash-2', {style: 'width: 14px; height: 14px;'}) }}
+                        {{ 'common.delete'|trans }}
+                    </button>
+                </form>
+            </div>
+        </header>
+
+        {# Contenu principal #}
+        <div class="content-wrapper">
+
+            <div class="info-card">
+
+                {# Statut et priorité #}
+                <div class="info-card-section">
+                    <div class="task-badges">
+                        <span class="badge-status badge-status-{{ task.status }}">
+                            {{ ('task.status.' ~ task.status)|trans }}
+                        </span>
+                        <span class="badge-priority badge-priority-{{ task.priority }}">
+                            {{ ('task.priority.' ~ task.priority)|trans }}
+                        </span>
+                    </div>
+                </div>
+
+                {# Description #}
+                <div class="info-card-section">
+                    <h3 class="info-card-title">
+                        {{ ux_icon('lucide:file-text', {style: 'width: 18px; height: 18px;'}) }}
+                        {{ 'task.show.description'|trans }}
+                    </h3>
+                    <div class="task-description">
+                        {{ task.description|nl2br }}
+                    </div>
+                </div>
+
+                {# Assignation #}
+                <div class="info-card-section">
+                    <h3 class="info-card-title">
+                        {{ ux_icon('lucide:user', {style: 'width: 18px; height: 18px;'}) }}
+                        {{ 'task.show.assigned_to'|trans }}
+                    </h3>
+                    {% if task.assignedTo %}
+                        <div class="task-assignee-display">
+                            <div class="assignee-avatar-large">
+                                {{ task.assignedTo.username|first|upper }}
+                            </div>
+                            <div>
+                                <div class="assignee-name">{{ task.assignedTo.username }}</div>
+                                {% if task.assignedTo.email %}
+                                    <div class="assignee-email">{{ task.assignedTo.email }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">{{ 'task.unassigned'|trans }}</p>
+                    {% endif %}
+                </div>
+
+                {# Créateur #}
+                <div class="info-card-section">
+                    <h3 class="info-card-title">
+                        {{ ux_icon('lucide:user-check', {style: 'width: 18px; height: 18px;'}) }}
+                        {{ 'task.show.created_by'|trans }}
+                    </h3>
+                    <div class="task-creator">
+                        <span class="creator-name">{{ task.createdBy.username }}</span>
+                        <span class="creator-date">{{ task.createdAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}

@@ -327,6 +327,204 @@ app_location_delete:
     methods: [POST]
 
 # ═══════════════════════════════════════════════════════════════════
+# CHRONOLOGIE NARRATIVE (WorldEvent)
+# ═══════════════════════════════════════════════════════════════════
+
+app_world_event_index:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/chronologie
+        en: /{_locale}/workshop/projects/{project_slug}/timeline
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/tijdlijn
+    controller: App\Controller\Workshop\WorldEventController::index
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+
+app_world_event_new:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/chronologie/nouveau
+        en: /{_locale}/workshop/projects/{project_slug}/timeline/new
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/tijdlijn/nieuw
+    controller: App\Controller\Workshop\WorldEventController::new
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+
+app_world_event_show:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/chronologie/{id}
+        en: /{_locale}/workshop/projects/{project_slug}/timeline/{id}
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/tijdlijn/{id}
+    controller: App\Controller\Workshop\WorldEventController::show
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+
+app_world_event_edit:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/chronologie/{id}/modifier
+        en: /{_locale}/workshop/projects/{project_slug}/timeline/{id}/edit
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/tijdlijn/{id}/bewerken
+    controller: App\Controller\Workshop\WorldEventController::edit
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+
+app_world_event_delete:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/chronologie/{id}/supprimer
+        en: /{_locale}/workshop/projects/{project_slug}/timeline/{id}/delete
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/tijdlijn/{id}/verwijderen
+    controller: App\Controller\Workshop\WorldEventController::delete
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+    methods: [POST]
+
+# ═══════════════════════════════════════════════════════════════════
+# TÂCHES (Task)
+# ═══════════════════════════════════════════════════════════════════
+
+app_task_index:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/taches
+        en: /{_locale}/workshop/projects/{project_slug}/tasks
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/taken
+    controller: App\Controller\Workshop\TaskController::index
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+
+app_task_new:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/taches/nouveau
+        en: /{_locale}/workshop/projects/{project_slug}/tasks/new
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/taken/nieuw
+    controller: App\Controller\Workshop\TaskController::new
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+
+app_task_show:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/taches/{id}
+        en: /{_locale}/workshop/projects/{project_slug}/tasks/{id}
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/taken/{id}
+    controller: App\Controller\Workshop\TaskController::show
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+
+app_task_edit:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/taches/{id}/modifier
+        en: /{_locale}/workshop/projects/{project_slug}/tasks/{id}/edit
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/taken/{id}/bewerken
+    controller: App\Controller\Workshop\TaskController::edit
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+
+app_task_delete:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/taches/{id}/supprimer
+        en: /{_locale}/workshop/projects/{project_slug}/tasks/{id}/delete
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/taken/{id}/verwijderen
+    controller: App\Controller\Workshop\TaskController::delete
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+    methods: [POST]
+
+app_task_change_status:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/taches/{id}/statut
+        en: /{_locale}/workshop/projects/{project_slug}/tasks/{id}/status
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/taken/{id}/status
+    controller: App\Controller\Workshop\TaskController::changeStatus
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+    methods: [POST]
+
+# ═══════════════════════════════════════════════════════════════════
+# NOTES (Note)
+# ═══════════════════════════════════════════════════════════════════
+
+app_note_index:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/notes
+        en: /{_locale}/workshop/projects/{project_slug}/notes
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/notities
+    controller: App\Controller\Workshop\NoteController::index
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+
+app_note_filter:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/notes/filtre/{status}
+        en: /{_locale}/workshop/projects/{project_slug}/notes/filter/{status}
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/notities/filter/{status}
+    controller: App\Controller\Workshop\NoteController::filter
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        status: '[a-z_]+'
+
+app_note_new:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/notes/nouveau
+        en: /{_locale}/workshop/projects/{project_slug}/notes/new
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/notities/nieuw
+    controller: App\Controller\Workshop\NoteController::new
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+
+app_note_show:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/notes/{id}
+        en: /{_locale}/workshop/projects/{project_slug}/notes/{id}
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/notities/{id}
+    controller: App\Controller\Workshop\NoteController::show
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+
+app_note_edit:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/notes/{id}/modifier
+        en: /{_locale}/workshop/projects/{project_slug}/notes/{id}/edit
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/notities/{id}/bewerken
+    controller: App\Controller\Workshop\NoteController::edit
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+
+app_note_delete:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/notes/{id}/supprimer
+        en: /{_locale}/workshop/projects/{project_slug}/notes/{id}/delete
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/notities/{id}/verwijderen
+    controller: App\Controller\Workshop\NoteController::delete
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+    methods: [POST]
+
+
+# ═══════════════════════════════════════════════════════════════════
 # CHARGEMENT AUTOMATIQUE DU RESTE
 # ═══════════════════════════════════════════════════════════════════
 

@@ -9,10 +9,13 @@ navbar:
     actions:
         profile: "Profil"
         logout: "Déconnexion"
-    links:               # ← AJOUTER CE BLOC
+        search:
+            placeholder: "Rechercher une scène, un personnage..."
+    links:
         dashboard:      "Tableau de bord"
         projects:       "Mes projets"
-        collaborations: "Collaborations"
+#        collaborations: "Collaborations"
+        files: "Documentations"
         explore:        "Exploration"
         news:           "Actualités"
         create:         "+ Créer"
@@ -79,16 +82,16 @@ projects:
         btn_open: "Ouvrir"
         btn_edit: "Modifier"
 
-    new:
-        title: "Nouveau projet"
-        back: "← Mes projets"
-        label_title: "Titre du projet"
-        label_type: "Type de projet"
-        label_desc: "Description"
-        placeholder_title: "Ex : Les Ombres de Valoria"
-        placeholder_desc: "Décrivez votre univers en quelques phrases..."
-        btn_cancel: "Annuler"
-        btn_submit: "Créer le projet →"
+#    new:
+#        title: "Nouveau projet"
+#        back: "← Mes projets"
+#        label_title: "Titre du projet"
+#        label_type: "Type de projet"
+#        label_desc: "Description"
+#        placeholder_title: "Ex : Les Ombres de Valoria"
+#        placeholder_desc: "Décrivez votre univers en quelques phrases..."
+#        btn_cancel: "Annuler"
+#        btn_submit: "Créer le projet →"
 
     edit:
         title: "Paramètres du projet"

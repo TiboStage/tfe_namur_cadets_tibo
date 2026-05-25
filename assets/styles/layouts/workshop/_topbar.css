@@ -52,6 +52,8 @@
     transition: border-color 0.2s ease;
 }
 
+
+
 .search-bar:focus-within {
     border-color: var(--text-muted);
 }

@@ -1,0 +1,141 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}{{ 'task.index.title'|trans }}{% endblock %}
+
+{% block project_content %}
+    <div class="dashboard-container">
+
+        {# Header #}
+        <header class="page-header">
+            <div>
+                <h1>{{ 'task.index.title'|trans }}</h1>
+                <p class="page-subtitle">{{ 'task.index.subtitle'|trans }}</p>
+            </div>
+            <a href="{{ path('app_task_new', {project_slug: project.slug}) }}" class="btn-creat">
+                {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
+                {{ 'task.index.create'|trans }}
+            </a>
+        </header>
+
+        {# État vide #}
+        {% if allTasks is empty %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    {{ ux_icon('lucide:check-square', {style: 'width: 48px; height: 48px;'}) }}
+                </div>
+                <h3>{{ 'task.index.empty.title'|trans }}</h3>
+                <p>{{ 'task.index.empty.message'|trans }}</p>
+                <a href="{{ path('app_task_new', {project_slug: project.slug}) }}" class="btn-primary">
+                    {{ 'task.index.create_first'|trans }}
+                </a>
+            </div>
+
+        {% else %}
+
+            {# Vue Kanban #}
+            <div class="kanban-board">
+
+                {# Colonne TODO #}
+                <div class="kanban-column">
+                    <div class="kanban-column-header kanban-header-todo">
+                        <h3>{{ 'task.status.todo'|trans }}</h3>
+                        <span class="kanban-count">{{ tasksByStatus.todo|length }}</span>
+                    </div>
+                    <div class="kanban-column-content">
+                        {% for task in tasksByStatus.todo %}
+                            {{ _self.renderTaskCard(task, project) }}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# Colonne IN PROGRESS #}
+                <div class="kanban-column">
+                    <div class="kanban-column-header kanban-header-progress">
+                        <h3>{{ 'task.status.in_progress'|trans }}</h3>
+                        <span class="kanban-count">{{ tasksByStatus.in_progress|length }}</span>
+                    </div>
+                    <div class="kanban-column-content">
+                        {% for task in tasksByStatus.in_progress %}
+                            {{ _self.renderTaskCard(task, project) }}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# Colonne REVIEW #}
+                <div class="kanban-column">
+                    <div class="kanban-column-header kanban-header-review">
+                        <h3>{{ 'task.status.review'|trans }}</h3>
+                        <span class="kanban-count">{{ tasksByStatus.review|length }}</span>
+                    </div>
+                    <div class="kanban-column-content">
+                        {% for task in tasksByStatus.review %}
+                            {{ _self.renderTaskCard(task, project) }}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# Colonne DONE #}
+                <div class="kanban-column">
+                    <div class="kanban-column-header kanban-header-done">
+                        <h3>{{ 'task.status.done'|trans }}</h3>
+                        <span class="kanban-count">{{ tasksByStatus.done|length }}</span>
+                    </div>
+                    <div class="kanban-column-content">
+                        {% for task in tasksByStatus.done %}
+                            {{ _self.renderTaskCard(task, project) }}
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+{# Macro pour afficher une carte de tâche #}
+{% macro renderTaskCard(task, project) %}
+    <div class="kanban-card kanban-priority-{{ task.priority }}">
+        <div class="kanban-card-header">
+            <a href="{{ path('app_task_show', {project_slug: project.slug, id: task.id}) }}" class="kanban-card-title">
+                {{ task.title }}
+            </a>
+
+            {# Badge priorité #}
+            {% if task.priority in ['high', 'urgent'] %}
+                <span class="badge-priority badge-priority-{{ task.priority }}">
+                    {{ ('task.priority.' ~ task.priority)|trans }}
+                </span>
+            {% endif %}
+        </div>
+
+        {# Description courte #}
+        <div class="kanban-card-body">
+            <p>{{ task.description|striptags|slice(0, 100) }}...</p>
+        </div>
+
+        {# Footer avec assignation et actions #}
+        <div class="kanban-card-footer">
+            {% if task.assignedTo %}
+                <div class="task-assignee">
+                    <div class="assignee-avatar">
+                        {{ task.assignedTo.username|first|upper }}
+                    </div>
+                    <span class="assignee-name">{{ task.assignedTo.username }}</span>
+                </div>
+            {% else %}
+                <span class="text-muted">{{ 'task.unassigned'|trans }}</span>
+            {% endif %}
+
+            <div class="kanban-card-actions">
+                <a href="{{ path('app_task_edit', {project_slug: project.slug, id: task.id}) }}"
+                   class="btn-icon-sm"
+                   title="{{ 'common.edit'|trans }}">
+                    {{ ux_icon('lucide:pencil', {style: 'width: 12px; height: 12px;'}) }}
+                </a>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

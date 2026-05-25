@@ -15,6 +15,7 @@ html, body {
     /* L'astuce magique : overlay pour que la barre flotte sans pousser le contenu */
     overflow-y: overlay;
 }
+
 /* ─── Utilitaires globaux ─── */
 .container {
     max-width: var(--container-width);

@@ -1,0 +1,112 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block project_content %}
+    <div class="dashboard-container">
+
+        {# Header #}
+        <header class="page-header">
+            <div>
+                <a href="{{ path('app_world_event_index', {project_slug: project.slug}) }}" class="link-back">
+                    {{ ux_icon('lucide:arrow-left', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ 'world_event.back'|trans }}
+                </a>
+                <h1>{{ event.title }}</h1>
+            </div>
+
+            <div class="page-header-actions">
+                <a href="{{ path('app_world_event_edit', {project_slug: project.slug, id: event.id}) }}"
+                   class="btn-export">
+                    {{ ux_icon('lucide:pencil', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ 'common.edit'|trans }}
+                </a>
+
+                <form method="post"
+                      action="{{ path('app_world_event_delete', {project_slug: project.slug, id: event.id}) }}"
+                      onsubmit="return confirm('{{ 'world_event.confirm_delete'|trans }}');"
+                      style="display: inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                    <button type="submit" class="btn-delete">
+                        {{ ux_icon('lucide:trash-2', {style: 'width: 14px; height: 14px;'}) }}
+                        {{ 'common.delete'|trans }}
+                    </button>
+                </form>
+            </div>
+        </header>
+
+        {# Contenu principal #}
+        <div class="content-wrapper">
+
+            {# Card avec les informations #}
+            <div class="info-card">
+
+                {# Date narrative #}
+                <div class="info-card-section">
+                    <h3 class="info-card-title">
+                        {{ ux_icon('lucide:calendar', {style: 'width: 18px; height: 18px;'}) }}
+                        {{ 'world_event.show.date'|trans }}
+                    </h3>
+                    <div class="event-date-display">
+                        {% if event.day and event.month %}
+                            <span class="date-large">{{ event.day }}/{{ event.month }}/{{ event.year }}</span>
+                        {% elseif event.month %}
+                            <span class="date-large">{{ event.month }}/{{ event.year }}</span>
+                        {% else %}
+                            <span class="date-large">{{ 'world_event.year'|trans }} {{ event.year }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {# Description #}
+                {% if event.description %}
+                    <div class="info-card-section">
+                        <h3 class="info-card-title">
+                            {{ ux_icon('lucide:file-text', {style: 'width: 18px; height: 18px;'}) }}
+                            {{ 'world_event.show.description'|trans }}
+                        </h3>
+                        <div class="event-description">
+                            {{ event.description|nl2br }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# Lieu lié #}
+                {% if event.location %}
+                    <div class="info-card-section">
+                        <h3 class="info-card-title">
+                            {{ ux_icon('lucide:map-pin', {style: 'width: 18px; height: 18px;'}) }}
+                            {{ 'world_event.show.location'|trans }}
+                        </h3>
+                        <div class="linked-entity">
+                            <a href="{{ path('app_location_show', {project_slug: project.slug, id: event.location.id}) }}"
+                               class="entity-link">
+                                <div class="entity-icon">
+                                    {{ ux_icon('lucide:map-pin', {style: 'width: 14px; height: 14px;'}) }}
+                                </div>
+                                <div class="entity-info">
+                                    <span class="entity-name">{{ event.location.name }}</span>
+                                    <span class="entity-type">{{ 'location.type.' ~ event.location.type|trans }}</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# Métadonnées #}
+                <div class="info-card-section">
+                    <div class="metadata">
+                        <div class="metadata-item">
+                            <span class="metadata-label">{{ 'common.created_at'|trans }}</span>
+                            <span class="metadata-value">{{ event.createdAt|date('d/m/Y H:i') }}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
