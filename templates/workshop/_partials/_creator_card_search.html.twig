@@ -1,0 +1,66 @@
+{#
+    Carte créateur — contexte recherche / exploration.
+    Paramètres :
+      - user          : App\Entity\User
+      - project_count : int
+#}
+
+<a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: user.username}) }}"
+   class="sc-card sc-card--creator">
+
+    {# Media — dégradé depuis la couleur de l'avatar + badge projet en overlay #}
+    <div class="sc-card__media sc-card__media--auteur"
+         style="background: linear-gradient(135deg, {{ user.avatarColor }}22 0%, #0d0d10 100%);">
+
+        <div class="sc-card__media-badge">
+            {{ ux_icon('lucide:folder', {class: 'icon-3xs'}) }}
+            {{ project_count }} projet{{ project_count != 1 ? 's' : '' }}
+        </div>
+
+        {{ include('_partials/_user_avatar.html.twig', {user: user, size: 'xl'}) }}
+    </div>
+
+    <div class="sc-card__body">
+
+        <div class="sc-card__identity">
+            <h3 class="sc-card__title">@{{ user.username }}</h3>
+
+            {% if user.getFullName() %}
+                <p class="sc-card__creator-fullname">{{ user.getFullName() }}</p>
+            {% endif %}
+
+            <span class="sc-card__meta-date">
+                Membre depuis : {{ user.createdAt|date('F Y') }}
+            </span>
+        </div>
+
+        <p class="sc-card__desc">
+            {% if user.getBio() %}
+                {{ user.getBio()|length > 120 ? user.getBio()|slice(0, 120) ~ '…' : user.getBio() }}
+            {% else %}
+                <span class="sc-card__desc-placeholder">Cet auteur n'a pas encore rédigé de biographie.</span>
+            {% endif %}
+        </p>
+
+        <div class="sc-card__divider"></div>
+
+        <div class="sc-card__footer">
+            <div class="sc-card__stats-group">
+                <button type="button"
+                        class="sc-card__like-btn"
+                        data-controller="creator-like"
+                        data-creator-like-url-value="{{ path('app_workshop_creator_like', {_locale: app.request.locale, username: user.username}) }}"
+                        data-action="click->creator-like#toggle"
+                        aria-pressed="false">
+                    {{ ux_icon('lucide:hand-heart', {class: 'icon-xs'}) }}
+                    <strong data-creator-like-target="count">{{ user.likesCount }}</strong>
+                    <span   data-creator-like-target="label">soutien{{ user.likesCount != 1 ? 's' : '' }}</span>
+                </button>
+            </div>
+            <div class="sc-card__footer-actions">
+                <span class="sc-card__cta sc-card__cta--ongoing">Voir le profil</span>
+            </div>
+        </div>
+
+    </div>
+</a>

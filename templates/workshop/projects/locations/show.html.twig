@@ -15,7 +15,10 @@
                 {% endif %}
             </h1>
         </div>
-        <a href="{{ path('app_location_edit', {project_slug: project.slug, id: location.id}) }}" class="btn-export">
+        <a href="{{ path('app_location_edit', {project_slug: project.slug, id: location.id}) }}"
+           class="btn-export"
+           data-turbo-frame="modal-frame"
+           data-action="click->modal#open">
             {{ 'location.show.edit_btn'|trans }}
         </a>
     </header>

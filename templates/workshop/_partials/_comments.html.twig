@@ -1,0 +1,216 @@
+{#
+    Partial — section commentaires d'un projet public.
+
+    Variables attendues :
+      - project      : App\Entity\Project
+      - comments     : App\Entity\Comment[]  (racines, avec replies eager-loaded)
+      - comment_count: int
+      - viewer       : App\Entity\User|null
+      - can_reply    : bool  — seul le propriétaire et les collaborateurs peuvent répondre
+      - vote_data    : array<int, {up: int, down: int, user_vote: string|null}>
+#}
+
+<section id="comments" class="comments-section">
+
+    <div class="comments-section__header">
+        <h2 class="comments-section__title">
+            {{ ux_icon('lucide:message-square', {style: 'width:16px;height:16px'}) }}
+            Commentaires
+            <span class="comments-section__count">{{ comment_count }}</span>
+        </h2>
+    </div>
+
+    {# ── Formulaire de nouveau commentaire ──────────────────────────── #}
+    {% if viewer is not null %}
+        <form
+            action="{{ path('app_comment_new', {_locale: app.request.locale, slug: project.slug}) }}"
+            method="post"
+            class="comment-form"
+        >
+            <div class="comment-form__inner">
+                <textarea
+                    name="content"
+                    class="comment-form__textarea"
+                    placeholder="Partagez votre avis sur ce projet…"
+                    maxlength="2000"
+                    required
+                ></textarea>
+                <div class="comment-form__footer">
+                    <span class="comment-form__hint">2 – 2000 caractères</span>
+                    <button type="submit" class="comment-form__submit">
+                        {{ ux_icon('lucide:send', {style: 'width:13px;height:13px'}) }}
+                        Commenter
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="_token" value="{{ csrf_token('comment_new_' ~ project.id) }}">
+        </form>
+    {% else %}
+        <div class="comment-login-prompt">
+            {{ ux_icon('lucide:log-in', {class: 'icon-xs'}) }}
+            <span>
+                <a href="{{ path('app_login', {_locale: app.request.locale}) }}">Connectez-vous</a>
+                pour laisser un commentaire.
+            </span>
+        </div>
+    {% endif %}
+
+    {# ── Liste des commentaires ──────────────────────────────────────── #}
+    {% if comments is empty %}
+        <div class="comments-empty">
+            {{ ux_icon('lucide:message-circle', {style: 'width:32px;height:32px;opacity:.3'}) }}
+            <p>Aucun commentaire pour l'instant. Soyez le premier !</p>
+        </div>
+    {% else %}
+        <div class="comments-list">
+            {% for comment in comments %}
+                {{ _self.render_comment(comment, project, viewer, false, can_reply|default(false), vote_data|default({})) }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</section>
+
+{# ── Macro récursive ────────────────────────────────────────────────── #}
+{% macro render_comment(comment, project, viewer, isReply, can_reply, vote_data) %}
+    {% set cv = vote_data[comment.id] is defined
+        ? vote_data[comment.id]
+        : {up: 0, down: 0, user_vote: null} %}
+    <div
+        id="comment-{{ comment.id }}"
+        class="comment-item {{ not comment.isVisible() ? 'comment-item--hidden' : '' }} {{ isReply ? 'comment-reply-item' : '' }}"
+    >
+        {# Header #}
+        <div class="comment-item__header">
+            {{ include('_partials/_user_avatar.html.twig', {user: comment.author, size: 'sm'}) }}
+            <span class="comment-item__username">{{ comment.author.username }}</span>
+            <span class="comment-item__date">{{ comment.createdAt|date('d/m/Y à H:i') }}</span>
+            {% if not comment.isVisible() %}
+                <span class="comment-item__hidden-badge">masqué</span>
+            {% endif %}
+        </div>
+
+        {# Corps #}
+        <div class="comment-item__content">{{ comment.content|nl2br }}</div>
+
+        {# Votes 👍 / 👎 #}
+        <div class="comment-votes"
+             data-controller="comment-vote"
+             data-comment-vote-url-value="{{ path('app_comment_vote', {_locale: app.request.locale, id: comment.id}) }}"
+             data-comment-vote-csrf-value="{{ csrf_token('comment_vote_' ~ comment.id) }}"
+             data-comment-vote-user-vote-value="{{ cv.user_vote ?? '' }}">
+
+            <button class="vote-btn {{ cv.user_vote == 'up' ? 'vote-btn--active-up' : '' }}"
+                    data-action="click->comment-vote#vote"
+                    data-vote-value="up"
+                    data-comment-vote-target="upBtn"
+                    aria-label="Utile"
+                    aria-pressed="{{ cv.user_vote == 'up' ? 'true' : 'false' }}"
+                    {% if viewer is null %}disabled title="Connectez-vous pour voter"{% endif %}>
+                {{ ux_icon('lucide:thumbs-up', {style: 'width:13px;height:13px'}) }}
+                <span data-comment-vote-target="upCount">{{ cv.up }}</span>
+            </button>
+
+            <button class="vote-btn {{ cv.user_vote == 'down' ? 'vote-btn--active-down' : '' }}"
+                    data-action="click->comment-vote#vote"
+                    data-vote-value="down"
+                    data-comment-vote-target="downBtn"
+                    aria-label="Pas utile"
+                    aria-pressed="{{ cv.user_vote == 'down' ? 'true' : 'false' }}"
+                    {% if viewer is null %}disabled title="Connectez-vous pour voter"{% endif %}>
+                {{ ux_icon('lucide:thumbs-down', {style: 'width:13px;height:13px'}) }}
+                <span data-comment-vote-target="downCount">{{ cv.down }}</span>
+            </button>
+        </div>
+
+        {# Actions #}
+        <div class="comment-item__actions">
+
+            {# ── Répondre : uniquement propriétaire / collaborateurs, sur commentaires racines ── #}
+            {% if not isReply and can_reply %}
+                <button
+                    type="button"
+                    class="comment-action-btn"
+                    onclick="
+                        const replyForm = document.getElementById('reply-form-{{ comment.id }}');
+                        replyForm.hidden = !replyForm.hidden;
+                        this.textContent = replyForm.hidden ? '↩ Répondre' : '× Annuler';
+                    "
+                >↩ Répondre</button>
+            {% endif %}
+
+            {# Signaler #}
+            {% if viewer is not null and (viewer.id != comment.author.id or is_granted('ROLE_MODO')) %}
+                <button
+                    class="comment-action-btn comment-action-btn--report"
+                    data-action="click->report-modal#open"
+                    data-report-modal-url-param="{{ path('app_report', {_locale: app.request.locale, type: 'comment', id: comment.id}) }}"
+                    data-report-modal-token-param="{{ csrf_token('report_comment_' ~ comment.id) }}"
+                    data-report-modal-label-param="ce commentaire"
+                >
+                    {{ ux_icon('lucide:flag', {class: 'icon-3xs'}) }}
+                    Signaler
+                </button>
+            {% endif %}
+
+            {# Supprimer (auteur ou modo) #}
+            {% if viewer is not null and (viewer.id == comment.author.id or is_granted('ROLE_MODO')) %}
+                <form
+                    action="{{ path('app_comment_delete', {_locale: app.request.locale, id: comment.id}) }}"
+                    method="post"
+                    class="d-inline"
+                    onsubmit="return confirm('Supprimer ce commentaire ?')"
+                >
+                    <input type="hidden" name="_token" value="{{ csrf_token('comment_delete_' ~ comment.id) }}">
+                    <button type="submit" class="comment-action-btn comment-action-btn--danger">
+                        {{ ux_icon('lucide:trash-2', {class: 'icon-3xs'}) }}
+                        Supprimer
+                    </button>
+                </form>
+            {% endif %}
+
+        </div>
+
+        {# Formulaire de réponse (caché par défaut) #}
+        {% if not isReply and can_reply %}
+            <div id="reply-form-{{ comment.id }}" class="comment-reply-form" hidden>
+                <form
+                    action="{{ path('app_comment_new', {_locale: app.request.locale, slug: project.slug}) }}"
+                    method="post"
+                    class="comment-form"
+                >
+                    <div class="comment-form__inner">
+                        <textarea
+                            name="content"
+                            class="comment-form__textarea comment-form__textarea--reply"
+                            placeholder="Votre réponse…"
+                            maxlength="2000"
+                            required
+                        ></textarea>
+                        <div class="comment-form__footer">
+                            <span class="comment-form__hint">Réponse à {{ comment.author.username }}</span>
+                            <button type="submit" class="comment-form__submit">
+                                {{ ux_icon('lucide:corner-down-right', {class: 'icon-3xs'}) }}
+                                Répondre
+                            </button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('comment_new_' ~ project.id) }}">
+                </form>
+            </div>
+        {% endif %}
+
+        {# Réponses #}
+        {% if not isReply and comment.replies|length > 0 %}
+            <div class="comment-replies">
+                {% for reply in comment.replies %}
+                    {% if reply.isVisible() or is_granted('ROLE_MODO') %}
+                        {{ _self.render_comment(reply, project, viewer, true, false, vote_data) }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+{% endmacro %}

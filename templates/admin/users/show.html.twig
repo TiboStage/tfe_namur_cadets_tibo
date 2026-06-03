@@ -1,0 +1,158 @@
+{# templates/admin/users/show.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Admin — {{ user.username }}{% endblock %}
+{% block admin_title %}Fiche utilisateur{% endblock %}
+
+{% block admin_content %}
+
+    <div class="admin-user-profile">
+
+        {# ── En-tête ───────────────────────────────────────────────── #}
+        <div class="aup-header">
+            <div class="aup-avatar">
+                {% if user.avatarFilename %}
+                    <img src="{{ asset('uploads/avatars/' ~ user.avatarFilename) }}" alt="{{ user.username }}" width="64" height="64">
+                {% else %}
+                    <span class="aup-avatar-placeholder">{{ user.username|first|upper }}</span>
+                {% endif %}
+            </div>
+            <div class="aup-identity">
+                <h2>{{ user.firstName }} {{ user.lastName }}
+                    {% if user.isBanned %}
+                        <span class="status-badge status-badge--banned">BANNI</span>
+                    {% endif %}
+                </h2>
+                <p class="text-muted">@{{ user.username }} · {{ user.email }}</p>
+                <p class="text-muted">Inscrit le {{ user.createdAt|date('d/m/Y à H:i') }}</p>
+            </div>
+            <div class="aup-actions">
+                <a href="{{ path('admin_users', {_locale: app.request.locale}) }}" class="btn-table">← Retour</a>
+            </div>
+        </div>
+
+        <div class="aup-grid">
+
+            {# ── Rôles ─────────────────────────────────────────────── #}
+            <div class="panel-box">
+                <h3>Rôles</h3>
+                <form method="post"
+                      action="{{ path('admin_user_roles', {id: user.id, _locale: app.request.locale}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('admin_roles_' ~ user.id) }}">
+
+                    {% set available_roles = ['ROLE_MODO', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] %}
+                    {% set user_roles = user.roles %}
+
+                    <div class="roles-list">
+                        <div class="role-item role-item--fixed">
+                            <input type="checkbox" checked disabled>
+                            <span>ROLE_USER</span>
+                            <span class="role-hint">Automatique</span>
+                        </div>
+                        {% for role in available_roles %}
+                            <div class="role-item">
+                                <input type="checkbox" name="roles[]" value="{{ role }}"
+                                       id="role_{{ role }}"
+                                       {{ role in user_roles ? 'checked' : '' }}
+                                       {{ user == app.user ? 'disabled' : '' }}>
+                                <label for="role_{{ role }}">{{ role|replace({'ROLE_': ''}) }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if user != app.user %}
+                        <button type="submit" class="btn-table mt-4">Enregistrer les rôles</button>
+                    {% else %}
+                        <p class="text-muted text-sm mt-2">Vous ne pouvez pas modifier vos propres rôles.</p>
+                    {% endif %}
+                </form>
+            </div>
+
+            {# ── Ban / déban ───────────────────────────────────────── #}
+            <div class="panel-box">
+                <h3>Modération du compte</h3>
+
+                <p class="text-muted mb-5 text-base">
+                    {% if user.isBanned %}
+                        Ce compte est actuellement <strong>banni</strong>. L'utilisateur ne peut plus se connecter.
+                    {% else %}
+                        Ce compte est actif. Le bannir empêchera toute connexion.
+                    {% endif %}
+                </p>
+
+                {% if user != app.user %}
+                    <form method="post"
+                          action="{{ path('admin_user_ban', {id: user.id, _locale: app.request.locale}) }}"
+                          onsubmit="return confirm('{% if user.isBanned %}Débannir cet utilisateur ?{% else %}Bannir cet utilisateur ? Il ne pourra plus se connecter.{% endif %}')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('admin_ban_' ~ user.id) }}">
+                        <button type="submit"
+                                class="btn-table {{ user.isBanned ? 'btn-table--success' : 'btn-table--danger' }}">
+                            {% if user.isBanned %}
+                                ✓ Débannir l'utilisateur
+                            {% else %}
+                                ✕ Bannir l'utilisateur
+                            {% endif %}
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="text-muted text-sm">Impossible d'agir sur votre propre compte.</p>
+                {% endif %}
+            </div>
+
+            {# ── Projets ───────────────────────────────────────────── #}
+            <div class="panel-box col-full">
+                <div class="panel-header">
+                    <h3>Projets de {{ user.username }} ({{ projects|length }})</h3>
+                </div>
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead><tr>
+                            <th>Titre</th>
+                            <th>Type</th>
+                            <th>Visibilité</th>
+                            <th>Statut modération</th>
+                            <th>Signalements</th>
+                            <th>Créé le</th>
+                            <th></th>
+                        </tr></thead>
+                        <tbody>
+                        {% for project in projects %}
+                            <tr>
+                                <td><strong>{{ project.title }}</strong></td>
+                                <td class="text-muted">{{ project.projectType|upper }}</td>
+                                <td>
+                                    {% if project.visibility == 'public' %}
+                                        <span class="status-badge status-badge--active">En ligne</span>
+                                    {% elseif project.visibility == 'private' %}
+                                        <span class="status-badge status-badge--warning">Privé</span>
+                                    {% else %}
+                                        <span class="status-badge">Non publié</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span>
+                                </td>
+                                <td>
+                                    {% if project.reportCount > 0 %}
+                                        <span class="tag-reason">{{ project.reportCount }}</span>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-muted">{{ project.createdAt|date('d/m/Y') }}</td>
+                                <td>
+                                    <a href="{{ path('admin_project_show', {id: project.id, _locale: app.request.locale}) }}" class="btn-table">Voir</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="7" class="text-muted td-compact">Cet utilisateur n'a aucun projet.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

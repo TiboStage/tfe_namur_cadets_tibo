@@ -1,23 +1,132 @@
-{% extends 'workshop/projects/layout.html.twig' %}
+{% extends 'workshop/projects/scenario/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
 
-{% block project_content %}
-    <div class="workshop-container form-narrow">
-        <header class="page-header">
-            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}">← Retour</a>
-            <h1>Nouveau {{ elementType|upper }}</h1>
-        </header>
+{% block title %}Nouveau {{ config.labelSingular|lower }} — {{ project.title }}{% endblock %}
 
-        <form method="post">
-            <div class="form-block">
-                <label>Titre</label>
-                <input type="text" name="title" class="form-control" autofocus required>
+{% block editor_shell %}
+<div class="new-element-page">
+
+    {# ── Fil d'ariane ───────────────────────────────────────────────────── #}
+    <nav class="new-el-breadcrumb">
+        <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}" class="new-el-breadcrumb-link">
+            {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
+            Manuscrit
+        </a>
+        {% if parent %}
+            <span class="new-el-breadcrumb-sep">›</span>
+            {% for ancestor in parent.getAncestors() %}
+                <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: ancestor.id}) }}"
+                   class="new-el-breadcrumb-link">{{ ancestor.title }}</a>
+                <span class="new-el-breadcrumb-sep">›</span>
+            {% endfor %}
+            <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: parent.id}) }}"
+               class="new-el-breadcrumb-link">{{ parent.title }}</a>
+            <span class="new-el-breadcrumb-sep">›</span>
+        {% endif %}
+        <span class="new-el-breadcrumb-current">Nouveau {{ config.labelSingular|lower }}</span>
+    </nav>
+
+    {# ── Corps ──────────────────────────────────────────────────────────── #}
+    <div class="new-el-body">
+
+        {# Colonne gauche : hiérarchie du projet #}
+        <aside class="new-el-sidebar">
+            <div class="new-el-sidebar-title">Structure du projet</div>
+            <div class="new-el-levels">
+                {% for d, lvl in configMap %}
+                    <div class="new-el-level {% if d == depth %}new-el-level--active{% elseif d < depth %}new-el-level--done{% endif %}">
+                        <span class="new-el-level-icon">{{ lvl.icon }}</span>
+                        <div class="new-el-level-info">
+                            <span class="new-el-level-name" style="color:{{ d == depth ? lvl.color : 'inherit' }}">
+                                {{ lvl.labelSingular }}
+                            </span>
+                            <span class="new-el-level-desc">
+                                {% if lvl.hasContent %}contenu écrit{% else %}structure{% endif %}
+                            </span>
+                        </div>
+                        {% if d == depth %}
+                            <span class="new-el-level-badge">création</span>
+                        {% endif %}
+                    </div>
+                    {% set maxD = max(configMap|keys) %}
+                    {% if d < maxD %}
+                        <div class="new-el-level-arrow">{{ ux_icon('lucide:corner-down-right', {class: 'icon-xs'}) }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </aside>
+
+        {# Colonne droite : formulaire #}
+        <div class="new-el-form-wrap">
+
+            <div class="new-el-form-header">
+                <span class="new-el-form-icon" style="color:{{ config.color }}">{{ config.icon }}</span>
+                <h1 class="new-el-form-title">
+                    Nouveau <span style="color:{{ config.color }}">{{ config.labelSingular|lower }}</span>
+                </h1>
+                {% if parent %}
+                    <p class="new-el-form-context">
+                        Dans :
+                        <strong>{{ parent.title }}</strong>
+                    </p>
+                {% else %}
+                    <p class="new-el-form-context">À la racine du manuscrit</p>
+                {% endif %}
             </div>
 
-            <input type="hidden" name="_token" value="{{ csrf_token('new_scenarioma') }}">
+            {# Erreur #}
+            {% if error is defined and error %}
+                <div class="new-el-error">
+                    {{ ux_icon('lucide:alert-circle', {class: 'icon-xs'}) }}
+                    {{ error }}
+                </div>
+            {% endif %}
 
-            <div class="form-actions">
-                <button type="submit" class="btn-creat">Créer l'élément</button>
-            </div>
-        </form>
+            <form method="post"
+                  action="{{ path('app_manuscript_new', {project_slug: project.slug, depth: depth, parent_id: parent ? parent.id : null}) }}"
+                  class="new-el-form">
+
+                <label class="new-el-label" for="el-title">
+                    Titre du {{ config.labelSingular|lower }}
+                    <span class="text-primary">*</span>
+                </label>
+                <input type="text"
+                       id="el-title"
+                       name="title"
+                       class="new-el-input"
+                       placeholder="Ex : {{ config.labelSingular }} 1…"
+                       autofocus
+                       required>
+
+                {% set maxDepth = max(configMap|keys) %}
+                {% if depth < maxDepth %}
+                    <p class="new-el-hint">
+                        {{ ux_icon('lucide:info', {class: 'icon-xs'}) }}
+                        Après création, vous pourrez ajouter des
+                        <strong>{{ configMap[depth + 1].labelPlural|lower }}</strong> à l'intérieur.
+                    </p>
+                {% else %}
+                    <p class="new-el-hint">
+                        {{ ux_icon('lucide:pencil', {class: 'icon-xs'}) }}
+                        Ce niveau contient le contenu écrit (script/texte).
+                    </p>
+                {% endif %}
+
+                <div class="new-el-actions">
+                    <a href="{{ parent ? path('app_manuscript_show', {project_slug: project.slug, id: parent.id}) : path('app_manuscript_index', {project_slug: project.slug}) }}"
+                       class="new-el-cancel">
+                        Annuler
+                    </a>
+                    <button type="submit" class="new-el-submit">
+                        {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                        Créer {{ config.labelSingular|lower }}
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
     </div>
+
+</div>
 {% endblock %}

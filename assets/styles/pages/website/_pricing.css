@@ -10,8 +10,8 @@
 
 /* --- Bannière Early Access --- */
 .early-access-banner {
-    border: 1px solid rgba(255, 184, 0, 0.3);
-    background: rgba(255, 184, 0, 0.05);
+    border: 1px solid var(--color-primary-border);
+    background: var(--color-primary-glow);
     padding: 18px 24px;
     margin-bottom: 50px;
     display: flex;
@@ -32,7 +32,7 @@
 
 .early-access-banner a {
     background: var(--color-primary);
-    color: #000;
+    color: var(--text-dark);
     padding: 10px 20px;
     font-weight: 800;
     font-size: 13px;
@@ -58,7 +58,7 @@
 
 /* --- Carte de base --- */
 .card-pricing {
-    background: #0d0d10;
+    background: var(--color-bg-dark);
     border: 1px solid var(--color-border);
     padding: 40px;
     position: relative;
@@ -79,7 +79,7 @@
     left: 0;
     right: 0;
     background: var(--color-primary);
-    color: #000;
+    color: var(--text-dark);
     text-align: center;
     padding: 10px;
     font-weight: 800;
@@ -141,7 +141,7 @@
 
 /* --- Badge cible --- */
 .plan-badge {
-    background: #16161a;
+    background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     padding: 10px 14px;
     font-size: 12px;
@@ -150,9 +150,9 @@
 }
 
 .plan-badge.highlighted {
-    border-color: rgba(255, 184, 0, 0.3);
+    border-color: var(--color-primary-border);
     color: var(--color-primary);
-    background: rgba(255, 184, 0, 0.05);
+    background: var(--color-primary-glow);
 }
 
 /* --- Liste de features --- */
@@ -178,18 +178,18 @@
 }
 
 .features-list li.disabled {
-    color: #444;
+    color: var(--text-muted-dark);
 }
 
 .features-list li.disabled i {
-    color: #333;
+    color: var(--color-border-light);
     font-size: 12px;
 }
 
 /* --- Boutons CTA --- */
 .btn-primary-pricing {
     background: var(--color-primary);
-    color: #000;
+    color: var(--text-dark);
     padding: 16px;
     text-align: center;
     font-weight: 800;

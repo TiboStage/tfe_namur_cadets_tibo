@@ -1,0 +1,239 @@
+/* ============================================================
+   CHRONOLOGIE NARRATIVE — _timeline.css
+   ============================================================ */
+
+/* ── Wrapper ─────────────────────────────────────────────── */
+.tl-wrapper {
+    padding: 40px 40px 80px;
+    max-width: 860px;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.tl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 36px;
+}
+
+.tl-header__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--text-main);
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+}
+
+.tl-header__sub { font-size: 13px; }
+
+/* ── État vide ───────────────────────────────────────────── */
+.tl-empty {
+    text-align: center;
+    padding: 64px 32px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+}
+
+.tl-empty__icon {
+    color: var(--text-muted-dark);
+    margin-bottom: 16px;
+}
+
+.tl-empty__title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.tl-empty__desc {
+    font-size: 13px;
+    max-width: 400px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+}
+
+/* ── Timeline ────────────────────────────────────────────── */
+.tl-timeline {
+    position: relative;
+}
+
+/* Ligne verticale centrale */
+.tl-timeline::before {
+    content: '';
+    position: absolute;
+    left: 110px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--color-border);
+}
+
+/* ── Marqueur d'année ────────────────────────────────────── */
+.tl-year-marker {
+    position: relative;
+    margin: 28px 0 16px;
+    padding-left: 136px;
+}
+
+.tl-year-marker:first-child { margin-top: 0; }
+
+.tl-year-pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    background: var(--color-bg-dark);
+    border: 1px solid var(--color-primary);
+    padding: 3px 10px;
+}
+
+/* ── Groupe d'événements par année ───────────────────────── */
+.tl-year-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+/* ── Événement ───────────────────────────────────────────── */
+.tl-event {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 0;
+    align-items: stretch;
+    position: relative;
+}
+
+/* Point sur la ligne */
+.tl-event__dot {
+    position: absolute;
+    left: 107px;
+    top: 20px;
+    width: 7px;
+    height: 7px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* Carte */
+.tl-event__card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    padding: 16px 18px;
+    margin-left: 26px;
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+}
+
+.tl-event__card:hover {
+    border-color: var(--color-primary);
+}
+
+/* Header carte */
+.tl-event__card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.tl-event__meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.tl-event__date,
+.tl-event__location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+}
+
+.tl-event__actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.tl-btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--color-border);
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.tl-btn-icon:hover {
+    border-color: var(--color-primary);
+    color: var(--text-main);
+}
+
+.tl-btn-icon--danger:hover {
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+/* Titre */
+.tl-event__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 6px;
+}
+
+.tl-event__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.tl-event__title a:hover { color: var(--color-primary); }
+
+/* Description */
+.tl-event__desc {
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 700px) {
+    .tl-wrapper { padding: 24px 16px 60px; }
+
+    .tl-timeline::before { left: 0; }
+
+    .tl-event {
+        grid-template-columns: 1fr;
+        padding-left: 18px;
+    }
+
+    .tl-event__dot { left: -4px; top: 20px; }
+
+    .tl-year-marker { padding-left: 18px; }
+
+    .tl-event__card { margin-left: 0; }
+
+    .tl-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+}

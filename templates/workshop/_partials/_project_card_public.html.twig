@@ -1,0 +1,129 @@
+{#
+    Carte projet — contexte PUBLIC (exploration, résultats, tendances).
+
+    Paramètres :
+      - project       : App\Entity\Project
+      - comment_count : int (optionnel, 0 par défaut)
+      - viewer_role   : null | 'owner' | 'lead' | 'editor' | 'contributor'
+                        Si non null → affiche le bouton "Ouvrir dans l'atelier"
+
+    Règles d'accès :
+      - Tout le monde peut lire la carte et cliquer sur le CTA public.
+      - Si viewer_role est fourni (owner/collaborateur connecté) → bouton atelier supplémentaire.
+      - Sinon : CTA varie selon le statut du projet (finished → "Lire" / in_progress → "Suivre").
+#}
+
+{% set comment_count = comment_count|default(0) %}
+{% set viewer_role   = viewer_role|default(null) %}
+
+{# ── Labels ──────────────────────────────────────────────────────────────── #}
+{% set type_label = project.projectType == 'serie' ? 'Série'
+                  : (project.projectType == 'jeu_video' ? 'Jeu vidéo' : 'Film') %}
+
+{% set status_class = project.status == 'finished' ? 'complete' : 'ongoing' %}
+{% set status_label = project.status == 'finished' ? 'Histoire complète ✨'
+                    : (project.status == 'in_progress' ? 'En cours ✍️' : 'À venir') %}
+
+{% set cta_label = project.status == 'finished' ? 'Lire le scénario'
+                 : (project.status == 'in_progress' ? 'Suivre la parution' : 'Découvrir') %}
+
+{# ── Compteurs ───────────────────────────────────────────────────────────── #}
+{% set nb_elements = project.scenarioElements|length %}
+{% set nb_chars    = project.characters|length %}
+
+<article class="sc-card sc-card--public sc-card--{{ status_class }}"
+         data-project-type="{{ project.projectType }}">
+
+    {# ── Header ──────────────────────────────────────────────────────────── #}
+    <div class="sc-card__header">
+        <span class="sc-card__type">
+            {% if project.projectType == 'serie' %}
+                {{ ux_icon('lucide:tv-2', {class: 'icon-3xs'}) }}
+            {% elseif project.projectType == 'jeu_video' %}
+                {{ ux_icon('lucide:gamepad-2', {class: 'icon-3xs'}) }}
+            {% else %}
+                {{ ux_icon('lucide:film', {class: 'icon-3xs'}) }}
+            {% endif %}
+            {{ type_label }}
+        </span>
+        <span class="sc-card__status-badge sc-card__status-badge--{{ status_class }}">
+            {{ status_label }}
+        </span>
+    </div>
+
+    {# ── Zone image — dégradé dynamique selon le type de projet ─────────── #}
+    {% set _type_colors = {
+        film:      '#E63946',
+        serie:     '#A855F7',
+        jeu_video: '#2A9D8F',
+        custom:    '#6B7280'
+    } %}
+    {% set _type_color = _type_colors[project.projectType] ?? '#6B7280' %}
+    <div class="sc-card__media sc-card__media--{{ project.projectType != 'custom' ? project.projectType : 'film' }}"
+         {% if not project.coverFilename %}
+         style="background: linear-gradient(135deg, {{ _type_color }}33 0%, #0d0d10 100%);"
+         {% endif %}>
+        {% if project.coverFilename %}
+            <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
+                 alt="{{ project.title }}"
+                 class="sc-card__cover-img">
+        {% endif %}
+        <div class="sc-card__media-overlay"></div>
+        <div class="sc-card__media-badges">
+            <span class="sc-card__mbadge">
+                {{ ux_icon('lucide:layers', {style: 'width:10px;height:10px'}) }}
+                {{ nb_elements }} scène{{ nb_elements != 1 ? 's' : '' }}
+            </span>
+            <span class="sc-card__mbadge">
+                {{ ux_icon('lucide:users', {style: 'width:10px;height:10px'}) }}
+                {{ nb_chars }} perso{{ nb_chars != 1 ? 's' : '' }}
+            </span>
+        </div>
+    </div>
+
+    {# ── Corps ───────────────────────────────────────────────────────────── #}
+    <div class="sc-card__body">
+        <h3 class="sc-card__title">{{ project.title }}</h3>
+
+        {# Profil créateur #}
+        <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: project.createdBy.username}) }}"
+           class="sc-card__creator">
+            {{ include('_partials/_user_avatar.html.twig', {user: project.createdBy, size: 'xs'}) }}
+            <span class="sc-card__creator-name">par @{{ project.createdBy.username }}</span>
+        </a>
+
+        {# Description #}
+        {% if project.description %}
+            <p class="sc-card__desc">
+                {{ project.description|length > 140 ? project.description|slice(0, 140) ~ '…' : project.description }}
+            </p>
+        {% endif %}
+
+        <div class="sc-card__divider"></div>
+
+        <div class="sc-card__footer">
+            <span class="sc-card__date">
+                {{ ux_icon('lucide:message-circle', {style: 'width:11px;height:11px'}) }}
+                {{ comment_count }} commentaire{{ comment_count != 1 ? 's' : '' }}
+            </span>
+
+            <div class="sc-card__footer-actions">
+                {# Bouton atelier (propriétaire / collaborateur connecté uniquement) #}
+                {% if viewer_role is not null %}
+                    <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: project.slug}) }}"
+                       class="sc-card__cta-workshop">
+                        {{ ux_icon('lucide:pencil', {style: 'width:11px;height:11px'}) }}
+                        Atelier
+                    </a>
+                {% endif %}
+
+                {# CTA public #}
+                <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}"
+                   class="sc-card__cta sc-card__cta--{{ status_class }}">
+                    {{ cta_label }} →
+                </a>
+            </div>
+        </div>
+    </div>
+
+</article>

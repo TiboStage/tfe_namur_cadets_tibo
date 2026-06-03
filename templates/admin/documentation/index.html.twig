@@ -1,0 +1,78 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block admin_title %}Documentation{% endblock %}
+
+{% block admin_content %}
+<div class="admin-section-header">
+    <div>
+        <h3>Articles de documentation</h3>
+        <p class="text-muted">{{ articles|length }} article{{ articles|length > 1 ? 's' : '' }} au total</p>
+    </div>
+    <a href="{{ path('admin_doc_new', {_locale: app.request.locale}) }}" class="btn-primary">
+        + Nouvel article
+    </a>
+</div>
+
+{% if articles is empty %}
+    <div class="admin-empty">
+        <p>Aucun article de documentation. Créez le premier !</p>
+        <a href="{{ path('admin_doc_new', {_locale: app.request.locale}) }}" class="btn-primary">Créer un article</a>
+    </div>
+{% else %}
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Catégorie</th>
+                <th>Ordre</th>
+                <th>Statut</th>
+                <th>Mis à jour</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in articles %}
+                <tr>
+                    <td>
+                        <strong>{{ article.title }}</strong>
+                        <br>
+                        <small class="text-muted">/documentation/{{ article.slug }}</small>
+                    </td>
+                    <td>
+                        <span class="admin-badge admin-badge--neutral">{{ article.category }}</span>
+                    </td>
+                    <td>{{ article.orderIndex }}</td>
+                    <td>
+                        {% if article.isPublished %}
+                            <span class="admin-badge admin-badge--success">Publié</span>
+                        {% else %}
+                            <span class="admin-badge admin-badge--muted">Brouillon</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ article.updatedAt|date('d/m/Y') }}</td>
+                    <td class="admin-table__actions">
+                        {% if article.isPublished %}
+                            <a href="{{ path('app_documentation_show', {slug: article.slug, _locale: app.request.locale}) }}"
+                               target="_blank"
+                               class="btn-sm btn-sm--ghost"
+                               title="Voir en ligne">
+                                ↗
+                            </a>
+                        {% endif %}
+                        <a href="{{ path('admin_doc_edit', {id: article.id, _locale: app.request.locale}) }}"
+                           class="btn-sm btn-sm--outline">Modifier</a>
+                        <form method="post"
+                              action="{{ path('admin_doc_delete', {id: article.id, _locale: app.request.locale}) }}"
+                              onsubmit="return confirm('Supprimer cet article ?')"
+                              class="d-inline">
+                            <input type="hidden" name="_token"
+                                   value="{{ csrf_token('delete_doc_' ~ article.id) }}">
+                            <button type="submit" class="btn-sm btn-sm--danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

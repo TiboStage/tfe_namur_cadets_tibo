@@ -1,0 +1,280 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block subnav %}{% endblock %}
+
+{% block title %}{{ element.title }} — {{ project.title }} · Scénart{% endblock %}
+
+{# ── Calcul prev/next parmi les frères ──────────────────────────────────────── #}
+{% set siblings = element.parent is not null ? element.parent.children : [] %}
+{% set prev_el = null %}
+{% set next_el = null %}
+{% set _found  = false %}
+{% for sib in siblings %}
+    {% if _found and next_el is null %}
+        {% set next_el = sib %}
+    {% endif %}
+    {% if sib.id == element.id %}
+        {% set _found = true %}
+    {% endif %}
+    {% if not _found %}
+        {% set prev_el = sib %}
+    {% endif %}
+{% endfor %}
+
+{% block content %}
+<div class="pub-reader">
+
+    {# ═══════════════════════════════════════════════════════════
+       BARRE CONTEXTUELLE STICKY
+       ═══════════════════════════════════════════════════════════ #}
+    <div class="pub-reader__bar">
+        <div class="pub-reader__bar-inner">
+
+            {# Retour au projet #}
+            <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}"
+               class="pub-reader__back">
+                {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }}
+                <span class="pub-reader__back-name">{{ project.title }}</span>
+            </a>
+
+            <span class="pub-reader__bar-divider" aria-hidden="true"></span>
+
+            {# Fil d'Ariane #}
+            <nav class="pub-reader__crumb" aria-label="Fil d'Ariane">
+                {% for ancestor in element.getAncestors() %}
+                    <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: ancestor.id}) }}"
+                       class="pub-reader__crumb-link">{{ ancestor.title }}</a>
+                    <span class="pub-reader__crumb-sep" aria-hidden="true">/</span>
+                {% endfor %}
+                <span class="pub-reader__crumb-current">{{ element.title }}</span>
+            </nav>
+
+            {# Actions droite #}
+            <div class="pub-reader__bar-end">
+                {% if viewer is not null and viewer.id == project.createdBy.id %}
+                    <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: element.id}) }}"
+                       class="pub-reader__edit-btn">
+                        {{ ux_icon('lucide:pencil', {class: 'icon-xs'}) }}
+                        Éditer
+                    </a>
+                {% endif %}
+                <span class="pub-reader__mode-badge">
+                    {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
+                    Lecture
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    {# ═══════════════════════════════════════════════════════════
+       LAYOUT PRINCIPAL : SIDEBAR + CONTENU
+       ═══════════════════════════════════════════════════════════ #}
+    <div class="pub-reader__layout">
+
+        {# ── Sidebar : table des matières ──────────────────────── #}
+        <aside class="pub-reader__sidebar">
+
+            {# En-tête sidebar : retour au parent ou au projet #}
+            <div class="pub-reader__sidebar-head">
+                {% if element.parent is not null %}
+                    <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: element.parent.id}) }}"
+                       class="pub-reader__sidebar-back">
+                        {{ ux_icon('lucide:chevron-left', {class: 'icon-xs'}) }}
+                        {{ element.parent.title }}
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}"
+                       class="pub-reader__sidebar-back">
+                        {{ ux_icon('lucide:chevron-left', {class: 'icon-xs'}) }}
+                        {{ project.title }}
+                    </a>
+                {% endif %}
+            </div>
+
+            {# Navigation : frères/sœurs ou enfants #}
+            {% if siblings is not empty %}
+                <nav class="pub-reader__toc">
+                    <span class="pub-reader__toc-label">
+                        {{ element.parent is not null ? element.parent.elementType|capitalize : 'Structure' }}
+                    </span>
+                    {% for sib in siblings %}
+                        <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: sib.id}) }}"
+                           class="pub-reader__toc-item {{ sib.id == element.id ? 'pub-reader__toc-item--active' : '' }}">
+                            <span class="pub-reader__toc-icon">
+                                {% if sib.isLeaf() %}
+                                    {{ ux_icon('lucide:file-text', {class: 'icon-3xs'}) }}
+                                {% else %}
+                                    {{ ux_icon('lucide:folder', {class: 'icon-3xs'}) }}
+                                {% endif %}
+                            </span>
+                            <span class="pub-reader__toc-text">{{ sib.title }}</span>
+                            {% if sib.id == element.id %}
+                                <span class="pub-reader__toc-dot" aria-hidden="true"></span>
+                            {% endif %}
+                        </a>
+                    {% endfor %}
+                </nav>
+            {% elseif element.children is not empty %}
+                {# Élément racine : montrer ses enfants #}
+                <nav class="pub-reader__toc">
+                    <span class="pub-reader__toc-label">Contenu</span>
+                    {% for child in element.children %}
+                        <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: child.id}) }}"
+                           class="pub-reader__toc-item">
+                            <span class="pub-reader__toc-icon">
+                                {{ child.isLeaf() ? ux_icon('lucide:file-text', {class: 'icon-3xs'}) : ux_icon('lucide:folder', {class: 'icon-3xs'}) }}
+                            </span>
+                            <span class="pub-reader__toc-text">{{ child.title }}</span>
+                        </a>
+                    {% endfor %}
+                </nav>
+            {% endif %}
+
+        </aside>
+
+        {# ── Contenu principal ─────────────────────────────────── #}
+        <main class="pub-reader__main">
+
+            {# En-tête de l'élément #}
+            <header class="pub-reader__header">
+                <div class="pub-reader__header-meta">
+                    <span class="pub-reader__type-tag">{{ element.elementType|capitalize }}</span>
+                    {% if element.durationSeconds > 0 %}
+                        <span class="pub-reader__duration">
+                            {{ ux_icon('lucide:clock', {class: 'icon-3xs'}) }}
+                            {% set mins = (element.durationSeconds / 60)|round %}
+                            {{ mins }} min
+                        </span>
+                    {% endif %}
+                </div>
+                <h1 class="pub-reader__title">{{ element.title }}</h1>
+                {% if element.summary %}
+                    <p class="pub-reader__summary">{{ element.summary }}</p>
+                {% endif %}
+            </header>
+
+            {# ══ CONTENU ══════════════════════════════════════════ #}
+
+            {% if element.isLeaf() and element.content is not empty %}
+
+                {# ── Scénario au format Fountain ─────────────── #}
+                <div class="screenplay">
+                    {% for block in element.content %}
+                        {% if block.type == 'slug' %}
+                            <p class="screenplay__slug">{{ block.content }}</p>
+                        {% elseif block.type == 'action' %}
+                            <p class="screenplay__action">{{ block.content }}</p>
+                        {% elseif block.type == 'char' %}
+                            <p class="screenplay__char">{{ block.content }}</p>
+                        {% elseif block.type == 'diag' %}
+                            <p class="screenplay__diag">{{ block.content }}</p>
+                        {% elseif block.type == 'parenthetical' %}
+                            <p class="screenplay__parenthetical">{{ block.content }}</p>
+                        {% elseif block.type == 'transition' %}
+                            <p class="screenplay__transition">{{ block.content }}</p>
+                        {% else %}
+                            <p class="screenplay__action">{{ block.content }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+            {% elseif not element.isLeaf() and element.children is not empty %}
+
+                {# ── Liste des chapitres/sous-éléments ────────── #}
+                <div class="pub-reader__chapters">
+                    {% for child in element.children %}
+                        <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: child.id}) }}"
+                           class="pub-reader__chapter-card">
+                            <div class="pub-reader__chapter-icon">
+                                {% if child.isLeaf() %}
+                                    {{ ux_icon('lucide:scroll-text', {class: 'icon-sm'}) }}
+                                {% else %}
+                                    {{ ux_icon('lucide:folder-open', {class: 'icon-sm'}) }}
+                                {% endif %}
+                            </div>
+                            <div class="pub-reader__chapter-body">
+                                <div class="pub-reader__chapter-head">
+                                    <span class="pub-reader__chapter-type">{{ child.elementType|capitalize }}</span>
+                                    <span class="pub-reader__chapter-title">{{ child.title }}</span>
+                                </div>
+                                {% if child.summary %}
+                                    <p class="pub-reader__chapter-summary">
+                                        {{ child.summary|length > 130 ? child.summary|slice(0,130) ~ '…' : child.summary }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <span class="pub-reader__chapter-arrow">
+                                {{ ux_icon('lucide:chevron-right', {class: 'icon-sm'}) }}
+                            </span>
+                        </a>
+                    {% endfor %}
+                </div>
+
+            {% else %}
+
+                {# ── Aucun contenu ─────────────────────────────── #}
+                <div class="pub-reader__empty">
+                    {{ ux_icon('lucide:file-x', {class: 'icon-md'}) }}
+                    <p>Aucun contenu disponible pour cet élément.</p>
+                </div>
+
+            {% endif %}
+
+            {# ══ NAVIGATION PREV / NEXT ═══════════════════════════ #}
+            <div class="pub-reader__nav">
+
+                {# Précédent #}
+                <div class="pub-reader__nav-slot">
+                    {% if prev_el is not null %}
+                        <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: prev_el.id}) }}"
+                           class="pub-reader__nav-btn pub-reader__nav-btn--prev">
+                            {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }}
+                            <span class="pub-reader__nav-label">
+                                <span class="pub-reader__nav-hint">Précédent</span>
+                                <span class="pub-reader__nav-title">{{ prev_el.title }}</span>
+                            </span>
+                        </a>
+                    {% elseif element.parent is not null %}
+                        <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: element.parent.id}) }}"
+                           class="pub-reader__nav-btn pub-reader__nav-btn--prev pub-reader__nav-btn--up">
+                            {{ ux_icon('lucide:arrow-up', {class: 'icon-xs'}) }}
+                            <span class="pub-reader__nav-label">
+                                <span class="pub-reader__nav-hint">Remonter</span>
+                                <span class="pub-reader__nav-title">{{ element.parent.title }}</span>
+                            </span>
+                        </a>
+                    {% endif %}
+                </div>
+
+                {# Retour au projet si pas de parent #}
+                {% if element.parent is null %}
+                    <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}"
+                       class="pub-reader__nav-home">
+                        {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
+                        Retour au projet
+                    </a>
+                {% endif %}
+
+                {# Suivant #}
+                <div class="pub-reader__nav-slot pub-reader__nav-slot--right">
+                    {% if next_el is not null %}
+                        <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: next_el.id}) }}"
+                           class="pub-reader__nav-btn pub-reader__nav-btn--next">
+                            <span class="pub-reader__nav-label">
+                                <span class="pub-reader__nav-hint">Suivant</span>
+                                <span class="pub-reader__nav-title">{{ next_el.title }}</span>
+                            </span>
+                            {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
+                        </a>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+</div>
+{% endblock %}

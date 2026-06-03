@@ -1,0 +1,103 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block admin_title %}Gestion des genres{% endblock %}
+
+{% block admin_content %}
+<div class="admin-section">
+
+    <div class="admin-section-header">
+        <div>
+            <h2>Genres narratifs</h2>
+            <p class="text-muted">
+                Les genres apparaissent lors de la création et dans les paramètres de projet.
+                Chaque genre requiert une traduction en FR, NL et EN.
+            </p>
+        </div>
+        <a href="{{ path('admin_genre_new', {_locale: app.request.locale}) }}"
+           class="btn btn--cta-yellow">
+            + Nouveau genre
+        </a>
+    </div>
+
+    {% for msg in app.flashes('success') %}
+        <div class="admin-flash admin-flash--success">{{ msg }}</div>
+    {% endfor %}
+    {% for msg in app.flashes('error') %}
+        <div class="admin-flash admin-flash--error">{{ msg }}</div>
+    {% endfor %}
+
+    {% if genres is empty %}
+        <div class="admin-empty">
+            Aucun genre défini. Créez le premier pour qu'il apparaisse dans le funnel de création.
+        </div>
+    {% else %}
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Ordre</th>
+                <th>Slug</th>
+                <th>🇫🇷 Français</th>
+                <th>🇳🇱 Nederlands</th>
+                <th>🇬🇧 English</th>
+                <th>Types</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for genre in genres %}
+            <tr class="{{ not genre.isActive ? 'admin-row--inactive' : '' }}">
+                <td class="text-muted">{{ genre.orderIndex }}</td>
+                <td><code>{{ genre.slug }}</code></td>
+                <td>{{ genre.getLabel('fr') }}</td>
+                <td>{{ genre.getLabel('nl') }}</td>
+                <td>{{ genre.getLabel('en') }}</td>
+                <td>
+                    {% if genre.projectTypes is empty %}
+                        <span class="badge-all">Tous</span>
+                    {% else %}
+                        {% for type in genre.projectTypes %}
+                            <span class="badge-type badge-type--{{ type }}">{{ type }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if genre.isActive %}
+                        <span class="badge-status badge-status-active">Actif</span>
+                    {% else %}
+                        <span class="badge-status badge-status-inactive">Inactif</span>
+                    {% endif %}
+                </td>
+                <td class="admin-actions">
+                    <a href="{{ path('admin_genre_edit', {_locale: app.request.locale, id: genre.id}) }}"
+                       class="btn-action btn-action--edit">Modifier</a>
+
+                    {# Toggle actif / inactif #}
+                    <form method="post"
+                          action="{{ path('admin_genre_toggle', {_locale: app.request.locale, id: genre.id}) }}"
+                          class="d-inline">
+                        <input type="hidden" name="_token"
+                               value="{{ csrf_token('genre_toggle_' ~ genre.id) }}">
+                        <button type="submit" class="btn-action btn-action--toggle">
+                            {{ genre.isActive ? 'Désactiver' : 'Activer' }}
+                        </button>
+                    </form>
+
+                    {# Suppression #}
+                    <form method="post"
+                          action="{{ path('admin_genre_delete', {_locale: app.request.locale, id: genre.id}) }}"
+                          class="d-inline"
+                          onsubmit="return confirm('Supprimer le genre « {{ genre.slug }} » ? Il disparaîtra des sélecteurs mais restera affiché sur les projets existants.')">
+                        <input type="hidden" name="_token"
+                               value="{{ csrf_token('genre_delete_' ~ genre.id) }}">
+                        <button type="submit" class="btn-action btn-action--delete">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+</div>
+{% endblock %}

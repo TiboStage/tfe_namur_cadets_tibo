@@ -1,0 +1,130 @@
+{% extends 'workshop/projects/new/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}{{ 'funnel.step2.page_title'|trans }}{% endblock %}
+
+{% block new_project_content %}
+
+{% if type == 'serie' %}
+    {% set type_badge = 'funnel.step1.serie_label'|trans %}
+{% elseif type == 'jeu_video' %}
+    {% set type_badge = 'funnel.step1.game_label'|trans %}
+{% else %}
+    {% set type_badge = 'funnel.step1.film_label'|trans %}
+{% endif %}
+
+<div class="fn-page fn-page--narrow">
+
+    <div class="fn-page__header">
+        <span class="fn-page__type-badge">{{ type_badge }}</span>
+        <h1 class="fn-title">{{ 'funnel.step2.title'|trans }}</h1>
+        <p class="fn-subtitle">{{ 'funnel.step2.subtitle'|trans }}</p>
+    </div>
+
+    {% if error is defined %}
+    <div class="fn-alert fn-alert--error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post"
+          action="{{ path('app_project_new_step2', {_locale: app.request.locale}) }}"
+          class="fn-form"
+          novalidate>
+
+        <div class="fn-field">
+            <label class="fn-field__label" for="fn-title">
+                {{ 'funnel.step2.field_title'|trans }}
+                <span class="fn-field__required">*</span>
+            </label>
+            <input type="text"
+                   id="fn-title"
+                   name="title"
+                   class="fn-field__input"
+                   value="{{ prev_title ?? '' }}"
+                   placeholder="{{ 'funnel.step2.placeholder_title'|trans }}"
+                   maxlength="150"
+                   autofocus
+                   required>
+        </div>
+
+        <div class="fn-field">
+            <label class="fn-field__label" for="fn-desc">
+                {{ 'funnel.step2.field_desc'|trans }}
+                <span class="fn-field__optional">{{ 'funnel.step2.optional'|trans }}</span>
+            </label>
+            <textarea id="fn-desc"
+                      name="description"
+                      class="fn-field__textarea"
+                      rows="4"
+                      placeholder="{{ 'funnel.step2.placeholder_desc'|trans }}">{{ prev_desc ?? '' }}</textarea>
+        </div>
+
+        {# ── Genres (optionnel, max 3) ──────────────────────────────── #}
+        {% if genres is not empty %}
+        <div class="fn-field">
+            <label class="fn-field__label">
+                {{ 'funnel.step2.field_genres'|trans }}
+                <span class="fn-field__optional">{{ 'funnel.step2.optional_genres'|trans }}</span>
+            </label>
+            <p class="fn-hint">{{ 'funnel.step2.genres_hint'|trans }}</p>
+            <div class="fn-genre-grid">
+                {% for genre in genres %}
+                <label class="fn-genre-chip {{ genre.slug in (prev_genres ?? []) ? 'fn-genre-chip--checked' : '' }}">
+                    <input type="checkbox"
+                           name="genres[]"
+                           value="{{ genre.slug }}"
+                           class="fn-genre-checkbox"
+                           {{ genre.slug in (prev_genres ?? []) ? 'checked' : '' }}>
+                    <span class="fn-genre-label">{{ genre.getLabel(app.request.locale) }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            <p class="fn-hint" id="fn-genre-counter"></p>
+        </div>
+        {% endif %}
+
+        <div class="fn-form-nav">
+            <a href="{{ path('app_project_new_step1', {_locale: app.request.locale}) }}"
+               class="btn btn--ghost">
+                ← {{ 'funnel.step2.btn_back'|trans }}
+            </a>
+            <button type="submit" class="btn btn--cta-yellow">
+                {{ 'funnel.step2.btn_next'|trans }} →
+            </button>
+        </div>
+
+    </form>
+
+    <script>
+    // Limite à 3 genres sélectionnables + feedback visuel
+    (function () {
+        const MAX = 3;
+        const boxes   = document.querySelectorAll('.fn-genre-checkbox');
+        const counter = document.getElementById('fn-genre-counter');
+        const labelOne  = '{{ 'funnel.step2.genres_count_one'|trans|e('js') }}';
+        const labelMany = '{{ 'funnel.step2.genres_count_many'|trans|e('js') }}';
+
+        function update() {
+            const checked = [...boxes].filter(b => b.checked).length;
+            if (counter) {
+                if (checked === 0) {
+                    counter.textContent = '';
+                } else if (checked === 1) {
+                    counter.textContent = labelOne;
+                } else {
+                    counter.textContent = labelMany.replace('%n%', checked);
+                }
+            }
+            boxes.forEach(b => {
+                const chip = b.closest('.fn-genre-chip');
+                chip.classList.toggle('fn-genre-chip--checked', b.checked);
+                if (!b.checked) b.disabled = checked >= MAX;
+            });
+        }
+
+        boxes.forEach(b => b.addEventListener('change', update));
+        update();
+    })();
+    </script>
+</div>
+
+{% endblock %}

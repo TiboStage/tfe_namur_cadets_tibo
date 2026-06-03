@@ -1,120 +1,267 @@
 {% extends 'website/profile/layout.html.twig' %}
-{% trans_default_domain 'profile' %}
+{% trans_default_domain 'auth' %}
 
-{% block title %}{{ 'meta.title'|trans }}{% endblock %}
+{% block title %}{{ 'profile.page.title'|trans }} · Scénart{% endblock %}
 
 {% block content %}
-<main class="profile-page">
-    <a href="#" onclick="history.back()" class="link-back">← Retour</a>
+<div class="profile-page"
+     data-controller="profile-color"
+     data-profile-color-initial-value="{{ user.avatarColor }}">
 
-    {# ── En-tête ──────────────────────────────────────────────────────── #}
-    <div class="profile-header">
-        <div class="profile-avatar-large">
-            {{ user.firstName|slice(0,1)|upper }}{{ user.lastName|slice(0,1)|upper }}
+    {# ══════════════════════════════════════════════════════
+       CARTE PROFIL — bannière + avatar + identité rapide
+       ══════════════════════════════════════════════════════ #}
+    <div class="pf-card">
+
+        <div class="pf-card__banner">
+            <div class="pf-card__banner-glow"></div>
         </div>
-        <div>
-            <h1>{{ 'page.title'|trans }}</h1>
-            <p class="text-muted">{{ 'page.subtitle'|trans }}</p>
+
+        <div class="pf-card__header">
+            {# Avatar (clique = scroll vers le picker) #}
+            <div class="pf-card__avatar">
+                <span class="u-avatar u-avatar--profile-preview"
+                      style="background-color:{{ user.avatarColor }};"
+                      data-profile-color-target="avatarPreview">
+                    {% if user.avatarFilename %}
+                        <img src="/uploads/avatars/{{ user.avatarFilename }}" alt="{{ user.username }}" class="img-cover">
+                    {% else %}
+                        {{ user.username|first|upper }}
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="pf-card__info">
+                <h1 class="pf-card__username">{{ user.username }}</h1>
+                <p class="pf-card__email">{{ user.email }}</p>
+                <div class="pf-card__meta">
+                    <span>
+                        {{ ux_icon('lucide:calendar', {style: 'width:11px;height:11px'}) }}
+                        {{ 'profile.card.member_since'|trans }} {{ user.createdAt|date('F Y') }}
+                    </span>
+                    <span>
+                        {{ ux_icon('lucide:folder-open', {style: 'width:11px;height:11px'}) }}
+                        {{ projects_count }} {{ 'profile.card.project'|trans({'%count%': projects_count}) }}
+                    </span>
+                    {% if user.lastLoginAt %}
+                    <span>
+                        {{ ux_icon('lucide:log-in', {style: 'width:11px;height:11px'}) }}
+                        {{ 'profile.card.last_login'|trans }} {{ user.lastLoginAt|date('d/m/Y') }}
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: user.username}) }}"
+               class="pf-card__public-link">
+                {{ ux_icon('lucide:external-link', {class: 'icon-3xs'}) }}
+                {{ 'profile.card.view_public'|trans }}
+            </a>
         </div>
     </div>
 
-    <div class="profile-grid">
+    {# ══════════════════════════════════════════════════════
+       FORMULAIRE
+       ══════════════════════════════════════════════════════ #}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-        {# ── Colonne gauche : formulaire ──────────────────────────────── #}
-        <div class="profile-main">
+    <div class="pf-grid">
 
-            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'profile-form'}}) }}
+        {# ── Colonne principale ───────────────────────────────── #}
+        <div class="pf-main">
 
-                {# Identité #}
-                <div class="profile-section">
-                    <div class="profile-section-header">
-                        <h2>{{ 'sections.identity'|trans }}</h2>
-                        <p class="text-muted">{{ 'sections.identity_desc'|trans }}</p>
+            {# Section — Identité #}
+            <div class="pf-section">
+                <div class="pf-section__header">
+                    <div class="pf-section__title-row">
+                        {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
+                        <h2>{{ 'profile.sections.identity'|trans }}</h2>
                     </div>
+                    <p class="text-muted">{{ 'profile.sections.identity_desc'|trans }}</p>
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">{{ 'form.firstname'|trans }}</label>
-                            {{ form_widget(form.firstName, {'attr': {'placeholder': 'form.firstname'|trans}}) }}
-                            {{ form_errors(form.firstName) }}
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">{{ 'form.lastname'|trans }}</label>
-                            {{ form_widget(form.lastName, {'attr': {'placeholder': 'form.lastname'|trans}}) }}
-                            {{ form_errors(form.lastName) }}
-                        </div>
+                <div class="pf-row">
+                    <div class="pf-field">
+                        <label class="pf-label">{{ 'profile.form.firstname'|trans }}</label>
+                        {{ form_widget(form.firstName, {'attr': {'placeholder': 'profile.form.firstname'|trans}}) }}
+                        {{ form_errors(form.firstName) }}
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">{{ 'form.username'|trans }}</label>
-                        {{ form_widget(form.username, {'attr': {'placeholder': 'form.username'|trans}}) }}
-                        {{ form_errors(form.username) }}
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">{{ 'form.email'|trans }}</label>
-                        {{ form_widget(form.email, {'attr': {'placeholder': 'form.email'|trans}}) }}
-                        {{ form_errors(form.email) }}
+                    <div class="pf-field">
+                        <label class="pf-label">{{ 'profile.form.lastname'|trans }}</label>
+                        {{ form_widget(form.lastName, {'attr': {'placeholder': 'profile.form.lastname'|trans}}) }}
+                        {{ form_errors(form.lastName) }}
                     </div>
                 </div>
 
-                {# Sécurité #}
-                <div class="profile-section">
-                    <div class="profile-section-header">
-                        <h2>{{ 'sections.security'|trans }}</h2>
-                        <p class="text-muted">{{ 'sections.security_desc'|trans }}</p>
-                    </div>
+                <div class="pf-field"
+                     {% if not username_locked %}
+                     data-controller="username-check"
+                     data-username-check-url-value="{{ path('api_check_username') }}"
+                     data-username-check-exclude-value="{{ user.id }}"
+                     {% endif %}>
+                    <label class="pf-label">{{ 'profile.form.username'|trans }}</label>
+                    {{ form_widget(form.username, {
+                        'attr': {
+                            'placeholder': 'profile.form.username'|trans,
+                            'data-username-check-target': username_locked ? '' : 'input',
+                            'data-action': username_locked ? '' : 'input->username-check#check'
+                        }
+                    }) }}
+                    {% if not username_locked %}
+                        <div class="uc-status" data-username-check-target="status"></div>
+                    {% else %}
+                        <p class="pf-locked-hint">
+                            {{ ux_icon('lucide:lock', {class: 'icon-3xs'}) }}
+                            {{ 'profile.form.username_locked_msg'|trans({'%count%': days_until_change}) }}
+                        </p>
+                    {% endif %}
+                    {{ form_errors(form.username) }}
+                </div>
 
-                    <div class="form-group">
-                        <label class="form-label">{{ 'form.new_password'|trans }}</label>
-                        {{ form_widget(form.newPassword.first, {'attr': {'placeholder': 'form.new_password'|trans}}) }}
+                <div class="pf-field">
+                    <label class="pf-label">{{ 'profile.form.email'|trans }}</label>
+                    {{ form_widget(form.email, {'attr': {'placeholder': 'profile.form.email'|trans}}) }}
+                    {{ form_errors(form.email) }}
+                </div>
+            </div>
+
+            {# Section — Sécurité #}
+            <div class="pf-section">
+                <div class="pf-section__header">
+                    <div class="pf-section__title-row">
+                        {{ ux_icon('lucide:shield', {class: 'icon-xs'}) }}
+                        <h2>{{ 'profile.sections.security'|trans }}</h2>
+                    </div>
+                    <p class="text-muted">{{ 'profile.sections.security_desc'|trans }}</p>
+                </div>
+
+                <div class="pw-group"
+                     data-controller="password-field"
+                     data-password-field-show-strength-value="true"
+                     data-password-field-has-confirm-value="true">
+
+                    <div class="pf-field">
+                        <label class="pf-label">{{ 'profile.form.new_password'|trans }}</label>
+                        <div class="pw-input-wrap">
+                            {{ form_widget(form.newPassword.first, {
+                                'attr': {
+                                    'placeholder': 'profile.form.new_password'|trans,
+                                    'data-password-field-target': 'input',
+                                    'data-action': 'input->password-field#checkStrength focus->password-field#openStrength blur->password-field#closeStrength'
+                                }
+                            }) }}
+                            <button type="button" class="pw-toggle-btn"
+                                    data-password-field-target="toggleBtn"
+                                    data-action="click->password-field#toggleVisibility"
+                                    tabindex="-1" aria-label="{{ 'profile.form.password_show'|trans }}">
+                                <span class="pw-eye-show">{{ ux_icon('lucide:eye', {style: 'width:15px;height:15px'}) }}</span>
+                                <span class="pw-eye-hide" hidden>{{ ux_icon('lucide:eye-off', {style: 'width:15px;height:15px'}) }}</span>
+                            </button>
+                        </div>
+                        <div class="pw-strength" data-password-field-target="strength" aria-live="polite">
+                            <div class="pw-rule" data-rule="length"    data-password-field-target="rule"><span class="pw-rule__dot"></span>{{ 'profile.form.rule_length'|trans }}</div>
+                            <div class="pw-rule" data-rule="uppercase" data-password-field-target="rule"><span class="pw-rule__dot"></span>{{ 'profile.form.rule_uppercase'|trans }}</div>
+                            <div class="pw-rule" data-rule="digit"     data-password-field-target="rule"><span class="pw-rule__dot"></span>{{ 'profile.form.rule_digit'|trans }}</div>
+                            <div class="pw-rule" data-rule="special"   data-password-field-target="rule"><span class="pw-rule__dot"></span>{{ 'profile.form.rule_special'|trans }}</div>
+                        </div>
                         {{ form_errors(form.newPassword.first) }}
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">{{ 'form.confirm_password'|trans }}</label>
-                        {{ form_widget(form.newPassword.second, {'attr': {'placeholder': 'form.confirm_password'|trans}}) }}
+                    <div class="pf-field">
+                        <label class="pf-label">{{ 'profile.form.confirm_password'|trans }}</label>
+                        <div class="pw-input-wrap">
+                            {{ form_widget(form.newPassword.second, {
+                                'attr': {
+                                    'placeholder': 'profile.form.confirm_password'|trans,
+                                    'data-password-field-target': 'confirm',
+                                    'data-action': 'input->password-field#checkMatch'
+                                }
+                            }) }}
+                            <button type="button" class="pw-toggle-btn"
+                                    data-password-field-target="confirmToggleBtn"
+                                    data-action="click->password-field#toggleConfirmVisibility"
+                                    tabindex="-1" aria-label="{{ 'profile.form.password_show_confirm'|trans }}">
+                                <span class="pw-eye-show">{{ ux_icon('lucide:eye', {style: 'width:15px;height:15px'}) }}</span>
+                                <span class="pw-eye-hide" hidden>{{ ux_icon('lucide:eye-off', {style: 'width:15px;height:15px'}) }}</span>
+                            </button>
+                        </div>
+                        <p class="pw-match-status" data-password-field-target="matchStatus"></p>
                         {{ form_errors(form.newPassword.second) }}
                     </div>
 
-                    <p class="form-hint text-muted">{{ 'form.password_hint'|trans }}</p>
+                    <p class="pf-hint text-muted">{{ 'profile.form.password_hint'|trans }}</p>
                 </div>
+            </div>
 
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary">{{ 'form.btn_save'|trans }}</button>
-                </div>
-
-            {{ form_end(form) }}
+            <div class="pf-actions">
+                <button type="submit" class="btn btn--cta-yellow">
+                    {{ ux_icon('lucide:check', {class: 'icon-xs'}) }}
+                    {{ 'profile.form.btn_save'|trans }}
+                </button>
+                <a href="{{ path('app_workshop_dashboard') }}" class="btn btn--ghost">
+                    {{ 'profile.form.btn_cancel'|trans }}
+                </a>
+            </div>
 
         </div>
 
-        {# ── Colonne droite : stats ────────────────────────────────────── #}
-        <aside class="profile-sidebar">
-            <div class="profile-section">
-                <h2>{{ 'sections.stats'|trans }}</h2>
+        {# ── Sidebar droite ───────────────────────────────────── #}
+        <aside class="pf-sidebar">
 
-                <div class="stat-row">
-                    <span class="text-muted">{{ 'stats.member_since'|trans }}</span>
+            {# Couleur d'avatar #}
+            <div class="pf-section">
+                <div class="pf-section__header">
+                    <div class="pf-section__title-row">
+                        {{ ux_icon('lucide:palette', {class: 'icon-xs'}) }}
+                        <h2>{{ 'profile.sections.avatar_color'|trans }}</h2>
+                    </div>
+                    <p class="text-muted">{{ 'profile.sections.avatar_color_desc'|trans }}</p>
+                </div>
+
+                {# Champ caché avatarColor #}
+                {{ form_widget(form.avatarColor) }}
+
+                <div class="avatar-picker"
+                     data-profile-color-target="swatchContainer"></div>
+
+                <p class="pf-hint text-muted mt-3">
+                    {{ 'profile.form.avatar_color_hint'|trans }}
+                </p>
+            </div>
+
+            {# Statistiques #}
+            <div class="pf-section">
+                <div class="pf-section__header">
+                    <div class="pf-section__title-row">
+                        {{ ux_icon('lucide:bar-chart-2', {class: 'icon-xs'}) }}
+                        <h2>{{ 'profile.sections.stats'|trans }}</h2>
+                    </div>
+                </div>
+
+                <div class="pf-stat">
+                    <span class="text-muted">{{ 'profile.stats.member_since'|trans }}</span>
                     <span>{{ user.createdAt|date('d/m/Y') }}</span>
                 </div>
-                <div class="stat-row">
-                    <span class="text-muted">{{ 'stats.projects'|trans }}</span>
-                    <span class="highlight">{{ projects_count }}</span>
+                <div class="pf-stat">
+                    <span class="text-muted">{{ 'profile.stats.projects'|trans }}</span>
+                    <strong class="highlight">{{ projects_count }}</strong>
                 </div>
-                <div class="stat-row">
-                    <span class="text-muted">{{ 'stats.last_login'|trans }}</span>
+                <div class="pf-stat">
+                    <span class="text-muted">{{ 'profile.stats.last_login'|trans }}</span>
                     <span>
                         {% if user.lastLoginAt %}
-                            {{ user.lastLoginAt|date('d/m/Y H:i') }}
+                            {{ user.lastLoginAt|date('d/m/Y') }}
                         {% else %}
-                            {{ 'stats.never'|trans }}
+                            {{ 'profile.stats.never'|trans }}
                         {% endif %}
                     </span>
                 </div>
             </div>
-        </aside>
 
+        </aside>
     </div>
 
-</main>
+    {{ form_end(form) }}
+
+</div>
 {% endblock %}

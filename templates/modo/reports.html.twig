@@ -1,0 +1,71 @@
+{# templates/modo/reports.html.twig #}
+{% extends 'modo/layout.html.twig' %}
+
+{% set count_flagged = flagged|length %}
+
+{% block title %}Modo — Signalements{% endblock %}
+{% block modo_title %}Signalements{% endblock %}
+
+{% block modo_content %}
+
+    {% if count_flagged == 0 %}
+        <div class="admin-empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <h3>Aucun signalement actif</h3>
+            <p>La modération est à jour.</p>
+        </div>
+    {% else %}
+
+        <div class="panel-box panel-box--flush">
+            <div class="table-wrapper">
+                <table class="admin-table">
+                    <thead><tr>
+                        <th>Projet</th>
+                        <th>Auteur</th>
+                        <th>Type</th>
+                        <th>Signalements</th>
+                        <th>Statut actuel</th>
+                        <th>Actions rapides</th>
+                        <th></th>
+                    </tr></thead>
+                    <tbody>
+                    {% for project in flagged %}
+                        <tr>
+                            <td><strong>{{ project.title }}</strong></td>
+                            <td class="text-muted">{{ project.createdBy.username }}</td>
+                            <td class="text-muted">{{ project.projectType|upper }}</td>
+                            <td>
+                                {% if project.reportCount > 0 %}
+                                    <span class="tag-reason">{{ project.reportCount }}</span>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span>
+                            </td>
+                            <td>
+                                <form method="post"
+                                      action="{{ path('modo_project_review', {id: project.id, _locale: app.request.locale}) }}"
+                                      class="mod-inline-form">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('modo_review_' ~ project.id) }}">
+                                    <div class="mod-btn-group">
+                                        <button type="submit" name="status" value="clear"   class="btn-table btn-table--success" title="Lever le signalement">✓ Clear</button>
+                                        <button type="submit" name="status" value="warning" class="btn-table btn-table--warn"    title="Avertissement">⚠ Warn</button>
+                                        <button type="submit" name="status" value="blocked" class="btn-table btn-table--danger"  title="Bloquer le projet">✕ Block</button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                <a href="{{ path('modo_project_show', {id: project.id, _locale: app.request.locale}) }}" class="btn-table">Détail</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    {% endif %}
+
+{% endblock %}

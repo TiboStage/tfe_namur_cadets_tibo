@@ -1,59 +1,108 @@
 {% trans_default_domain 'workshop' %}
 
-<header class="top-nav">
+<header class="section-header">
 
-    <div class="subnav-links">
-        <a href="{{ path('app_home') }}" class="topbar-logo">
-            <img src="{{ asset('images/favicons/favicon_workshop.png') }}" alt="Scénart" width="28">
-        </a>
-        <a href="{{ path('app_workshop_dashboard') }}"
-           class="{{ app.request.attributes.get('_route') starts with 'app_workshop_dashboard' ? 'active' : '' }}">
-            {{ 'navbar.links.dashboard'|trans }}
-        </a>
+    <div class="top-nav">
 
-        <a href="{{ path('app_project_index') }}"
-           class="{{ app.request.attributes.get('_route') starts with 'app_project_' ? 'active' : '' }}">
-            {{ 'navbar.links.projects'|trans }}
-            <span class="nav-count">{{ projects_count|default(0) }}</span>
-        </a>
+        {# ── Burger (mobile uniquement) ──────────────────────────── #}
+        <button class="topbar-burger"
+                type="button"
+                aria-label="{{ 'navbar.actions.open_menu'|trans }}"
+                onclick="document.dispatchEvent(new CustomEvent('sidebar:toggle'))">
+            {{ ux_icon('lucide:menu', {class: 'icon-base'}) }}
+        </button>
 
-        <a href="#"
-           class="{{ app.request.attributes.get('_route') == 'app_recent' ? 'active' : '' }}">
-            {{ 'navbar.links.explore'|trans }}
-        </a>
         <div class="subnav-links">
-            <a href="#">
-                {{ 'navbar.links.files'|trans }}
+            <a href="{{ path('app_home') }}" class="topbar-logo">
+                <img src="{{ asset('images/favicons/favicon_workshop.png') }}" alt="Scénart" width="28">
+            </a>
+            <a href="{{ path('app_workshop_dashboard') }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_workshop_dashboard' ? 'active' : '' }}">
+                {{ 'navbar.links.dashboard'|trans }}
+            </a>
+
+            <a href="{{ path('app_project_index') }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_project_'
+                         and not (app.request.attributes.get('_route') starts with 'app_project_public')
+                         ? 'active' : '' }}">
+                {{ 'navbar.links.projects'|trans }}
+                <span class="nav-count">{{ projects_count|default(0) }}</span>
+            </a>
+
+            <a href="{{ path('app_workshop_explore', {_locale: app.request.locale}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_workshop_explore'
+                         or app.request.attributes.get('_route') starts with 'app_project_public'
+                         or app.request.attributes.get('_route') starts with 'app_workshop_creator'
+                         or app.request.attributes.get('_route') starts with 'app_element_reader'
+                         ? 'active' : '' }}">
+                {{ 'navbar.links.explore'|trans }}
+            </a>
+            <a href="{{ path('app_documentation', {_locale: app.request.locale}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_documentation' ? 'active' : '' }}">
+                {{ 'navbar.links.documentation'|trans }}
             </a>
         </div>
-    </div>
 
 
-    <div class="nav-center">
-        <div class="search-bar">
-            {{ ux_icon('lucide:search', {style: 'width: 18px; height: 18px;'}) }}
-            <label>
-                <input type="text" placeholder="{{ 'navbar.actions.search.placeholder'|trans }}">
-            </label>
+{#        <div class="nav-center">#}
+{#            <div class="search-bar">#}
+{#                {{ ux_icon('lucide:search', {class: 'icon-sm'}) }}#}
+{#                <label>#}
+{#                    <input type="text" placeholder="{{ 'navbar.actions.search.placeholder'|trans }}">#}
+{#                </label>#}
+{#            </div>#}
+{#        </div>#}
+
+        <div class="nav-right">
+
+
+
+            {# ── Cloche de notifications ──────────────────────── #}
+            <div class="notification-wrapper"
+                 data-controller="notifications"
+                 data-notifications-dropdown-url-value="{{ path('app_notifications_dropdown', {_locale: app.request.locale}) }}"
+                 data-notifications-mark-all-url-value="{{ path('app_notifications_mark_all_read', {_locale: app.request.locale}) }}"
+                 data-notifications-csrf-value="{{ csrf_token('notif_read_all') }}">
+
+                <button class="notification-btn"
+                        aria-label="{{ 'navbar.notifications.title'|trans }}"
+                        data-action="notifications#toggle"
+                        data-notifications-target="btn">
+                    {{ ux_icon('lucide:bell', {class: 'icon-sm'}) }}
+                    {% if unread_notif_count > 0 %}
+                        <span class="notification-badge" data-notifications-target="badge">
+                            {{ unread_notif_count > 9 ? '9+' : unread_notif_count }}
+                        </span>
+                    {% else %}
+                        <span class="notification-badge notification-badge--hidden" data-notifications-target="badge"></span>
+                    {% endif %}
+                </button>
+
+                {# Dropdown #}
+                <div class="notification-dropdown" hidden data-notifications-target="dropdown">
+                    <div class="notification-dropdown__header">
+                        <span class="notification-dropdown__title">{{ 'navbar.notifications.title'|trans }}</span>
+                        <button class="notification-dropdown__mark-all"
+                                data-action="notifications#markAllRead">
+                            {{ 'navbar.notifications.mark_all'|trans }}
+                        </button>
+                    </div>
+                    <div class="notification-dropdown__list" data-notifications-target="list">
+                        <div class="notification-dropdown__loading">
+                            {{ ux_icon('lucide:loader', {style: 'width:16px;height:16px'}) }}
+                        </div>
+                    </div>
+                    <a href="{{ path('app_notifications', {_locale: app.request.locale}) }}"
+                       class="notification-dropdown__see-all">
+                        {{ 'navbar.notifications.see_all'|trans }}
+                    </a>
+                </div>
+
+            </div>
+
+            <twig:UserProfile />
+
         </div>
-    </div>
-
-    <div class="nav-right">
-
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('admin_dashboard') }}" class="btn-admin">
-                {{ ux_icon('lucide:shield-cog-corner', {style: 'width: 18px; height: 18px;'}) }}
-                {{ 'navbar.actions.admin'|trans }}</a>
-        {% endif %}
-
-
-        <div class="notification-wrapper">
-            <button class="notification-btn" aria-label="Notifications">
-                {{ ux_icon('lucide:bell', {style: 'width: 18px; height: 18px;'}) }}
-            </button>
-        </div>
-
-        <twig:UserProfile />
 
     </div>
 

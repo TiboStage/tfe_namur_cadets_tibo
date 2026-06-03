@@ -1,0 +1,40 @@
+{% extends 'workshop/projects/new/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}{{ 'funnel.step1.page_title'|trans }}{% endblock %}
+
+{% block new_project_content %}
+<div class="fn-page">
+
+    <div class="fn-page__header">
+        <h1 class="fn-title">{{ 'funnel.step1.title'|trans }}</h1>
+        <p class="fn-subtitle">{{ 'funnel.step1.subtitle'|trans }}</p>
+    </div>
+
+    <form method="post"
+          action="{{ path('app_project_new_step1', {_locale: app.request.locale}) }}"
+          id="type-form">
+
+        <div class="fn-type-grid">
+
+            {% for card in [
+                {key: 'film',      icon: 'lucide:film',     label: 'funnel.step1.film_label',  desc: 'funnel.step1.film_desc',  hint: 'funnel.step1.film_hint'},
+                {key: 'serie',     icon: 'lucide:tv-2',     label: 'funnel.step1.serie_label', desc: 'funnel.step1.serie_desc', hint: 'funnel.step1.serie_hint'},
+                {key: 'jeu_video', icon: 'lucide:gamepad-2', label: 'funnel.step1.game_label', desc: 'funnel.step1.game_desc',  hint: 'funnel.step1.game_hint'},
+            ] %}
+            <button type="submit"
+                    class="fn-type-card"
+                    name="project_type"
+                    value="{{ card.key }}">
+                <span class="fn-type-card__icon">{{ ux_icon(card.icon, {style: 'width:28px;height:28px'}) }}</span>
+                <span class="fn-type-card__label">{{ card.label|trans }}</span>
+                <span class="fn-type-card__desc">{{ card.desc|trans }}</span>
+                <span class="fn-type-card__hint">ex. {{ card.hint|trans }}</span>
+            </button>
+            {% endfor %}
+
+        </div>
+    </form>
+
+</div>
+{% endblock %}

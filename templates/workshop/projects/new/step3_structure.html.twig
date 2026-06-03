@@ -1,0 +1,119 @@
+{% extends 'workshop/projects/new/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}{{ 'funnel.step3.page_title'|trans }}{% endblock %}
+
+{% block new_project_content %}
+
+{% if type == 'serie' %}
+    {% set type_badge = 'funnel.step1.serie_label'|trans %}
+{% elseif type == 'jeu_video' %}
+    {% set type_badge = 'funnel.step1.game_label'|trans %}
+{% else %}
+    {% set type_badge = 'funnel.step1.film_label'|trans %}
+{% endif %}
+
+<div class="fn-page">
+
+    <div class="fn-page__header">
+        <h1 class="fn-title">{{ 'funnel.step3.title'|trans }}</h1>
+        <p class="fn-subtitle">{{ 'funnel.step3.subtitle'|trans }}</p>
+    </div>
+
+{% set presets = {
+    film: {
+        '2': ['funnel.step3.film_act'|trans, 'funnel.step3.film_scene'|trans],
+        '3': ['funnel.step3.film_act'|trans, 'funnel.step3.film_sequence'|trans, 'funnel.step3.film_scene'|trans],
+        '4': ['funnel.step3.film_act'|trans, 'funnel.step3.film_sequence'|trans, 'funnel.step3.film_scene'|trans, 'funnel.step3.film_sub_scene'|trans],
+    },
+    serie: {
+        '2': ['funnel.step3.serie_season'|trans, 'funnel.step3.serie_episode'|trans],
+        '3': ['funnel.step3.serie_season'|trans, 'funnel.step3.serie_episode'|trans, 'funnel.step3.serie_scene'|trans],
+        '4': ['funnel.step3.serie_season'|trans, 'funnel.step3.serie_episode'|trans, 'funnel.step3.serie_act'|trans, 'funnel.step3.serie_scene'|trans],
+    },
+    jeu_video: {
+        '2': ['funnel.step3.game_chapter'|trans, 'funnel.step3.game_scene'|trans],
+        '3': ['funnel.step3.game_chapter'|trans, 'funnel.step3.game_level'|trans, 'funnel.step3.game_scene'|trans],
+        '4': ['funnel.step3.game_chapter'|trans, 'funnel.step3.game_level'|trans, 'funnel.step3.game_zone'|trans, 'funnel.step3.game_scene'|trans],
+    },
+} %}
+
+    <form method="post"
+          action="{{ path('app_project_new_step3', {_locale: app.request.locale}) }}"
+          class="fn-structure-form"
+          data-controller="funnel-structure"
+          data-funnel-structure-type-value="{{ type }}"
+          data-funnel-structure-depth-value="3"
+          data-funnel-structure-presets-value="{{ presets|json_encode }}"
+          data-funnel-structure-label-content-value="{{ 'funnel.step3.label_content'|trans }}"
+          data-funnel-structure-label-others-value="{{ 'funnel.step3.label_others'|trans }}"
+          data-funnel-structure-label-level-value="{{ 'funnel.step3.label_level'|trans }}"
+          novalidate>
+
+        <input type="hidden" name="depth" value="3"
+               data-funnel-structure-target="depthInput">
+
+        <div class="fn-structure-body">
+
+            {# ── Colonne gauche : picker + noms ───────────────────────── #}
+            <div class="fn-structure-left">
+
+                <div class="fn-depth-section">
+                    <p class="fn-section-label">{{ 'funnel.step3.depth_label'|trans }}</p>
+                    <div class="fn-depth-btns">
+                        {% for depth in [2, 3, 4] %}
+                        <button type="button"
+                                class="fn-depth-btn {{ depth == 3 ? 'fn-depth-btn--active' : '' }}"
+                                data-depth="{{ depth }}"
+                                data-funnel-structure-target="depthBtn"
+                                data-action="click->funnel-structure#setDepth">
+                            <span class="fn-depth-btn__n">{{ depth }}</span>
+                            <span class="fn-depth-btn__lbl">{{ 'funnel.step3.depth_levels'|trans }}</span>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="fn-levels-section">
+                    <p class="fn-section-label">{{ 'funnel.step3.levels_label'|trans }}</p>
+                    <div class="fn-level-inputs"
+                         data-funnel-structure-target="levelInputs">
+                    </div>
+                    <p class="fn-hint">{{ 'funnel.step3.levels_hint'|trans }}</p>
+                </div>
+
+            </div>
+
+            {# ── Colonne droite : aperçu arbre + récap ──────────────── #}
+            <div class="fn-structure-right">
+
+                <div class="fn-tree-card">
+                    <p class="fn-section-label">{{ 'funnel.step3.preview'|trans }}</p>
+                    <div class="fn-tree"
+                         data-funnel-structure-target="treePreview">
+                    </div>
+                </div>
+
+                <div class="fn-recap-card">
+                    <span class="fn-recap-badge">{{ type_badge }}</span>
+                    <span class="fn-recap-title">{{ title }}</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="fn-form-nav fn-form-nav--spaced">
+            <a href="{{ path('app_project_new_step2', {_locale: app.request.locale}) }}"
+               class="btn btn--ghost">
+                ← {{ 'funnel.step3.btn_back'|trans }}
+            </a>
+            <button type="submit" class="btn btn--cta-yellow">
+                {{ 'funnel.step3.btn_create'|trans }} →
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'workshop/layout.html.twig' %}
+
+{% block subnav %}{% endblock %}
+
+{% block title %}{{ article.title }} · Documentation · Scénart{% endblock %}
+
+{% block content %}
+<div class="doc-page">
+
+    {# ── Sidebar ─────────────────────────────────────────────────────── #}
+    <aside class="doc-sidebar">
+        <div class="doc-sidebar__inner">
+
+            <div class="doc-sidebar__brand">
+                {{ ux_icon('lucide:book-open', {class: 'icon-sm'}) }}
+                <span>Documentation</span>
+            </div>
+
+            <nav class="doc-nav">
+                {% if nav is empty %}
+                    <p class="doc-nav__empty">Aucun article disponible.</p>
+                {% else %}
+                    {% for category, articles in nav %}
+                        <div class="doc-nav__group">
+                            <span class="doc-nav__category">{{ category }}</span>
+                            <ul class="doc-nav__list">
+                                {% for art in articles %}
+                                    <li>
+                                        <a href="{{ path('app_documentation_show', {slug: art.slug, _locale: app.request.locale}) }}"
+                                           class="doc-nav__link {{ art.slug == current_slug ? 'active' : '' }}">
+                                            {{ art.title }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </nav>
+
+        </div>
+    </aside>
+
+    {# ── Contenu principal ───────────────────────────────────────────── #}
+    <main class="doc-main">
+
+        <div class="doc-content">
+
+            {# ── Meta + sélecteur de langue ───────────────────────────── #}
+            <div class="doc-content__meta">
+                <span class="doc-content__category">{{ article.category }}</span>
+                <time class="doc-content__date">
+                    Mis à jour le {{ article.updatedAt|date('d/m/Y') }}
+                </time>
+
+                {# Sélecteur de langue — uniquement les locales disponibles #}
+                {% set available = article.availableLocales %}
+                {% if available|length > 1 %}
+                    <div class="doc-lang-switcher">
+                        {% for loc in locales %}
+                            {% if loc in available %}
+                                <a href="{{ path('app_documentation_show', {slug: article.slug, _locale: loc}) }}"
+                                   class="doc-lang-btn {{ loc == locale ? 'doc-lang-btn--active' : '' }}"
+                                   title="{{ locale_labels[loc] }}">
+                                    {{ locale_flags[loc] }} {{ locale_labels[loc] }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            {# ── Corps Markdown ─────────────────────────────────────── #}
+            <div class="doc-body markdown-content">
+                {{ article.content|markdown_to_html|raw }}
+            </div>
+
+            {# ── Navigation bas de page ─────────────────────────────── #}
+            {% set all_articles = [] %}
+            {% for articles in nav %}
+                {% set all_articles = all_articles|merge(articles) %}
+            {% endfor %}
+
+            {% set current_index = 0 %}
+            {% for i, art in all_articles %}
+                {% if art.slug == current_slug %}
+                    {% set current_index = i %}
+                {% endif %}
+            {% endfor %}
+
+            <nav class="doc-pagination">
+                {% if current_index > 0 %}
+                    {% set prev = all_articles[current_index - 1] %}
+                    <a href="{{ path('app_documentation_show', {slug: prev.slug, _locale: app.request.locale}) }}"
+                       class="doc-pagination__prev">
+                        {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }}
+                        <div>
+                            <span class="doc-pagination__label">Précédent</span>
+                            <span class="doc-pagination__title">{{ prev.title }}</span>
+                        </div>
+                    </a>
+                {% else %}
+                    <div></div>
+                {% endif %}
+
+                {% if current_index < all_articles|length - 1 %}
+                    {% set next = all_articles[current_index + 1] %}
+                    <a href="{{ path('app_documentation_show', {slug: next.slug, _locale: app.request.locale}) }}"
+                       class="doc-pagination__next">
+                        <div>
+                            <span class="doc-pagination__label">Suivant</span>
+                            <span class="doc-pagination__title">{{ next.title }}</span>
+                        </div>
+                        {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
+                    </a>
+                {% endif %}
+            </nav>
+
+        </div>
+    </main>
+
+</div>
+{% endblock %}

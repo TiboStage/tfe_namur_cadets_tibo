@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{# ══════════════════════════════════════════════════════════
+   LAYOUT ÉDITEUR SCÉNARIO
+   Étend le workspace complet (topbar + sidebar projet).
+   La sidebar affiche l'arborescence manuscrit en sous-menu.
+   Utilisé par : index.html.twig, show.html.twig, new.html.twig
+   ══════════════════════════════════════════════════════════ #}
+
+{% block body_class %}workspace-layout{% endblock %}
+
+{% block body %}
+{# ══════════════════════════════════════════════════════════
+   Le data-controller="modal" englobe TOUT le contenu
+   pour que les triggers (notes, tâches, nouveau élément)
+   puissent remonter jusqu'à lui via le bubbling.
+   ══════════════════════════════════════════════════════════ #}
+<div data-controller="modal">
+
+    {% include 'workshop/_partials/_topbar.html.twig' %}
+
+    <div class="workspace-container">
+
+        {# ── Sidebar projet avec arbre manuscrit intégré ─── #}
+        {% include 'workshop/_partials/_project_nav.html.twig' with {
+            manuscriptTree:   rootElements is defined ? rootElements : [],
+            currentElement:   element is defined ? element : null,
+        } %}
+
+        {# ── Zone éditeur ───────────────────────────────── #}
+        <main class="workspace-main workspace-main--editor">
+            {% block editor_shell %}{% endblock %}
+        </main>
+
+    </div>
+
+    {# ══════════════════════════════════════════════════════════
+       MODAL GLOBAL — overlay cible du controller
+       ══════════════════════════════════════════════════════════ #}
+    <div class="ws-modal"
+         data-modal-target="overlay"
+         data-action="click->modal#backdropClick">
+        <div class="ws-modal-box">
+            <button type="button"
+                    class="ws-modal-close-btn"
+                    data-action="modal#close"
+                    aria-label="Fermer">
+                {{ ux_icon('lucide:x', {class: 'icon-sm'}) }}
+            </button>
+            <turbo-frame id="modal-frame">
+                <div class="ws-modal-loading">
+                    <span class="ws-modal-spinner"></span>
+                </div>
+            </turbo-frame>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

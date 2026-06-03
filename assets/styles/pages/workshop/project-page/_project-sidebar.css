@@ -4,15 +4,169 @@
 
 .workspace-sidebar {
     width: 280px;
+    min-width: 280px;
     height: calc(100vh - 80px);
-
     display: flex;
     flex-direction: column;
-
-    background: #0D0D0D;
-
+    background: var(--color-bg-dark);
     border-right: 1px solid var(--color-border);
+    /* Animation slide gauche */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
 }
+
+/* ── État réduit (desktop) — icon-only mode ─────────────── */
+.workspace-container.sidebar-collapsed .workspace-sidebar {
+    width: 64px;
+    min-width: 64px;
+    /* overflow: visible permet au dropdown de sortir de la sidebar
+       sans être coupé. Le texte est déjà display:none donc rien ne déborde. */
+    overflow: visible;
+}
+
+/* Pas d'animation au chargement initial */
+.workspace-container.no-transition .workspace-sidebar {
+    transition: none !important;
+}
+
+/* ── Textes : cachés en mode réduit (display:none = zéro espace résiduel) ── */
+.workspace-container.sidebar-collapsed .sidebar-text {
+    display: none;
+}
+
+.workspace-container.sidebar-collapsed .nav-count        { display: none; }
+.workspace-container.sidebar-collapsed .nav-label        { display: none; }
+.workspace-container.sidebar-collapsed .nav-submenu      { display: none; }
+.workspace-container.sidebar-collapsed .nav-badge        { display: none; }
+.workspace-container.sidebar-collapsed .sidebar-badge-live          { display: none; }
+.workspace-container.sidebar-collapsed .project-name                 { display: none; }
+.workspace-container.sidebar-collapsed .project-switcher-btn svg     { display: none; }
+.workspace-container.sidebar-collapsed .project-switcher-btn .project-icon { display: flex; }
+
+/* ── Tous les nav-items : centrage parfait ─────────────────── */
+/* On annule margin + padding gauche/droite, gap → icône seule centrée */
+.workspace-container.sidebar-collapsed .nav-item {
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 2px 0;
+    padding: 11px 0;
+    gap: 0;
+    width: 100%;
+    border-color: transparent;
+    background: none;
+}
+
+.workspace-container.sidebar-collapsed .nav-item:hover {
+    background: var(--color-bg-card);
+}
+
+.workspace-container.sidebar-collapsed .nav-item.active {
+    background: color-mix(in srgb, var(--color-primary) 8%, var(--color-bg-dark));
+}
+
+.workspace-container.sidebar-collapsed .nav-item.active::before {
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+}
+
+.workspace-container.sidebar-collapsed .sidebar-nav {
+    padding: 4px 0;
+}
+
+/* ── Header : juste l'initiale, centrée ───────────────────── */
+.workspace-container.sidebar-collapsed .sidebar-header {
+    padding: 12px 0;
+    overflow: hidden;
+}
+
+.workspace-container.sidebar-collapsed .project-switcher-btn {
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0;
+    gap: 0;
+    border: none;
+    background: none;
+    width: 100%;
+}
+
+.workspace-container.sidebar-collapsed .project-switcher-btn:hover {
+    background: var(--color-bg-card);
+}
+
+.workspace-container.sidebar-collapsed .project-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+/* ── Footer : mêmes règles que nav-items ─────────────────── */
+.workspace-container.sidebar-collapsed .sidebar-footer {
+    padding: 4px 0;
+}
+
+.workspace-container.sidebar-collapsed .sidebar-footer .nav-item {
+    margin: 0 0 2px 0;
+    padding: 11px 0;
+    justify-content: center;
+}
+
+/* ── Bouton "Réduire" — bas de sidebar-nav, au-dessus du footer ── */
+.sidebar-collapse-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 11px 20px;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--color-border);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.15s, background 0.15s;
+    flex-shrink: 0;
+    text-align: left;
+}
+
+.sidebar-collapse-btn svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.sidebar-collapse-btn:hover {
+    color: var(--text-main);
+    background: var(--color-bg-card);
+}
+
+/* Sidebar OUVERTE → icône gris, texte "Réduire" visible */
+.sidebar-collapse-btn .icon-expand  { display: none;  }
+.sidebar-collapse-btn .icon-collapse { display: block; }
+
+/* Sidebar RÉDUITE → icône JAUNE, centré, sans texte */
+.workspace-container.sidebar-collapsed .sidebar-collapse-btn {
+    justify-content: center;
+    padding: 11px 0;
+    gap: 0;
+    color: var(--color-primary);
+    border-top-color: var(--color-border);
+}
+
+.workspace-container.sidebar-collapsed .sidebar-collapse-btn:hover {
+    color: var(--color-primary);
+    background: var(--color-bg-card);
+}
+
+.workspace-container.sidebar-collapsed .sidebar-collapse-btn .icon-expand   { display: block; }
+.workspace-container.sidebar-collapsed .sidebar-collapse-btn .icon-collapse { display: none; }
 
 /* =========================================================
    PROJECT SWITCHER (dropdown)
@@ -20,7 +174,7 @@
 
 .sidebar-header {
     padding: 20px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--overlay-md);
 }
 
 .project-switcher {
@@ -36,10 +190,10 @@
 
     padding: 14px 12px;
 
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--overlay-xs);
+    border: 1px solid var(--overlay-md);
 
-    color: white;
+    color: var(--text-main);
 
     font-family: inherit;
     font-size: 14px;
@@ -51,8 +205,8 @@
 }
 
 .project-switcher-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(245, 196, 0, 0.3);
+    background: var(--overlay-sm);
+    border-color: var(--color-primary-border);
 }
 
 .project-icon {
@@ -65,10 +219,10 @@
     align-items: center;
     justify-content: center;
 
-    background: rgba(245, 196, 0, 0.1);
-    border: 1px solid rgba(245, 196, 0, 0.5);
+    background: var(--color-primary-glow);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 50%, transparent);
 
-    color: #F5C400;
+    color: var(--color-primary);
 
     font-size: 14px;
     font-weight: 800;
@@ -79,7 +233,7 @@
     flex: 1;
     min-width: 0;
 
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-main);
 
     font-size: 14px;
     font-weight: 500;
@@ -109,42 +263,40 @@
 /* ── Dropdown ─────────────────────────────────────────── */
 
 .project-switcher-dropdown {
+    display: none;
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
-    right: 0;
-
-    background: #0D0D0D;
-    border: 1px solid rgba(245, 196, 0, 0.3);
-
-    box-shadow:
-        0 8px 24px rgba(0, 0, 0, 0.6),
-        0 0 0 1px rgba(245, 196, 0, 0.1);
-
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-
-    transition: all 0.2s ease;
-
+    min-width: 220px;
+    background: var(--color-bg-dark);
+    border: 1px solid var(--color-primary-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
     z-index: 1000;
 }
 
 .project-switcher-dropdown.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+    display: block;
 }
+
+/* Sidebar réduite : dropdown à droite de la sidebar, aligné en haut du bouton */
+.project-switcher-dropdown.show.reduced {
+    top: 96px;
+    left: 66px;
+    min-width: 240px;
+    z-index: 10000;
+    position: fixed;
+}
+
 
 /* Header */
 
 .dropdown-header {
     padding: 12px 14px;
 
-    background: rgba(245, 196, 0, 0.05);
-    border-bottom: 1px solid rgba(245, 196, 0, 0.12);
+    background: var(--color-primary-glow);
+    border-bottom: 1px solid var(--color-primary-medium);
 
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted-light);
 
     font-size: 10px;
     font-weight: 700;
@@ -169,7 +321,7 @@
     padding: 10px;
     margin-bottom: 2px;
 
-    color: white;
+    color: var(--text-main);
     text-decoration: none;
 
     border: 1px solid transparent;
@@ -178,21 +330,21 @@
 }
 
 .dropdown-project-item:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: var(--overlay-xs);
+    border-color: var(--overlay-md);
 }
 
 /* Current project */
 
 .dropdown-project-item.current {
-    background: rgba(245, 196, 0, 0.08);
-    border-color: rgba(245, 196, 0, 0.2);
+    background: var(--color-primary-glow);
+    border-color: var(--color-primary-medium);
     cursor: default;
 }
 
 .dropdown-project-item.current:hover {
-    background: rgba(245, 196, 0, 0.08);
-    border-color: rgba(245, 196, 0, 0.2);
+    background: var(--color-primary-glow);
+    border-color: var(--color-primary-medium);
 }
 
 /* Icon */
@@ -207,10 +359,10 @@
     align-items: center;
     justify-content: center;
 
-    background: rgba(245, 196, 0, 0.1);
-    border: 1px solid rgba(245, 196, 0, 0.3);
+    background: var(--color-primary-glow);
+    border: 1px solid var(--color-primary-border);
 
-    color: #F5C400;
+    color: var(--color-primary);
 
     font-size: 12px;
     font-weight: 800;
@@ -220,7 +372,7 @@
 
 
 .project-meta {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted-light);
 
     font-size: 11px;
     font-weight: 400;
@@ -231,12 +383,12 @@
 .badge-current {
     padding: 3px 7px;
 
-    background: rgba(245, 196, 0, 0.15);
-    border: 1px solid rgba(245, 196, 0, 0.3);
+    background: var(--color-primary-medium);
+    border: 1px solid var(--color-primary-border);
 
     border-radius: 3px;
 
-    color: #F5C400;
+    color: var(--color-primary);
 
     font-size: 9px;
     font-weight: 700;
@@ -249,7 +401,7 @@
 .dropdown-footer {
     padding: 6px;
 
-    border-top: 1px solid rgba(245, 196, 0, 0.12);
+    border-top: 1px solid var(--color-primary-medium);
 }
 
 .dropdown-link {
@@ -259,7 +411,7 @@
 
     padding: 8px 10px;
 
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-muted);
     text-decoration: none;
 
     font-size: 12px;
@@ -271,9 +423,9 @@
 }
 
 .dropdown-link:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(245, 196, 0, 0.15);
-    color: #F5C400;
+    background: var(--overlay-xs);
+    border-color: color-mix(in srgb, var(--color-primary) 15%, transparent);
+    color: var(--color-primary);
 }
 
 .dropdown-link .icon-xs {
@@ -289,24 +441,21 @@
 }
 
 .dropdown-projects::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--overlay-xs);
 }
 
 .dropdown-projects::-webkit-scrollbar-thumb {
-    background: rgba(245, 196, 0, 0.2);
+    background: var(--color-primary-medium);
 }
 
 .dropdown-projects::-webkit-scrollbar-thumb:hover {
-    background: rgba(245, 196, 0, 0.3);
+    background: var(--color-primary-border);
 }
 
 /* =========================================================
    ADMIN BUTTON
    ========================================================= */
 
-.sidebar-admin {
-    padding: 16px;
-}
 
 .admin-btn {
     width: 100%;
@@ -318,10 +467,10 @@
 
     padding: 12px 16px;
 
-    background: rgba(220, 38, 38, 0.1);
-    border: 1px solid rgba(220, 38, 38, 0.5);
+    background: var(--color-red-glow);
+    border: 1px solid color-mix(in srgb, var(--color-red) 50%, transparent);
 
-    color: #DC2626;
+    color: var(--color-red);
     text-decoration: none;
 
     font-size: 13px;
@@ -335,8 +484,8 @@
 }
 
 .admin-btn:hover {
-    background: rgba(220, 38, 38, 0.15);
-    border-color: rgba(220, 38, 38, 0.7);
+    background: color-mix(in srgb, var(--color-red) 15%, transparent);
+    border-color: color-mix(in srgb, var(--color-red) 70%, transparent);
 }
 
 .admin-btn svg {
@@ -368,7 +517,7 @@
     padding: 8px 20px;
     margin-bottom: 4px;
 
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--text-muted-light);
 
     font-size: 10px;
     font-weight: 700;
@@ -388,7 +537,7 @@
     padding: 11px 20px;
     margin: 0 8px 2px 8px;
 
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-muted);
     text-decoration: none;
 
     font-size: 14px;
@@ -400,17 +549,17 @@
 }
 
 .nav-item:hover {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.06);
-    color: rgba(255, 255, 255, 0.9);
+    background: var(--overlay-xs);
+    border-color: var(--overlay-md);
+    color: var(--text-main);
 }
 
 /* Active state */
 
 .nav-item.active {
-    background: rgba(122, 122, 0, 0.15);
-    border-color: rgba(122, 122, 0, 0.3);
-    color: #F5C400;
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    border-color: color-mix(in srgb, var(--color-primary) 25%, transparent);
+    color: var(--color-primary);
 }
 
 .nav-item.active::before {
@@ -423,7 +572,7 @@
 
     width: 3px;
 
-    background: #F5C400;
+    background: var(--color-primary);
 }
 
 /* Icons */
@@ -441,35 +590,29 @@
     opacity: 1;
 }
 
-/* Badge */
+/* Badge / Count */
 
-.nav-badge {
+.nav-badge,
+.nav-count {
     margin-left: auto;
-
     min-width: 22px;
     height: 22px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     padding: 0 7px;
-
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-
-    border-radius: 12px;
-
-    color: rgba(255, 255, 255, 0.8);
-
+    background: var(--overlay-md);
+    border: 1px solid var(--overlay-lg);
+    color: var(--text-muted);
     font-size: 11px;
     font-weight: 700;
 }
 
-.nav-item.active .nav-badge {
-    background: rgba(245, 196, 0, 0.15);
-    border-color: rgba(245, 196, 0, 0.3);
-    color: #F5C400;
+.nav-item.active .nav-badge,
+.nav-item.active .nav-count {
+    background: var(--color-primary-medium);
+    border-color: var(--color-primary-border);
+    color: var(--color-primary);
 }
 
 /* Action icons (right side) */
@@ -496,7 +639,7 @@
 .sidebar-footer {
     padding: 16px;
 
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--overlay-md);
 }
 
 .footer-settings {
@@ -506,7 +649,7 @@
 
     padding: 10px 12px;
 
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-muted);
     text-decoration: none;
 
     font-size: 13px;
@@ -518,9 +661,9 @@
 }
 
 .footer-settings:hover {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.06);
-    color: rgba(255, 255, 255, 0.9);
+    background: var(--overlay-xs);
+    border-color: var(--overlay-md);
+    color: var(--text-main);
 }
 
 .footer-settings svg {
@@ -534,10 +677,30 @@
     margin-top: 12px;
     padding-left: 12px;
 
-    color: rgba(255, 255, 255, 0.25);
+    color: var(--text-muted-light);
 
     font-size: 11px;
     font-weight: 500;
+}
+
+.sidebar-readonly-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 12px;
+    margin-bottom: 6px;
+
+    background: var(--color-purple-glow);
+    border: 1px solid color-mix(in srgb, var(--color-purple) 25%, transparent);
+    border-radius: 6px;
+
+    color: var(--color-purple);
+
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 /* =========================================================
@@ -549,35 +712,311 @@
 }
 
 .sidebar-nav::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--overlay-xs);
 }
 
 .sidebar-nav::-webkit-scrollbar-thumb {
-    background: rgba(245, 196, 0, 0.2);
+    background: var(--color-primary-medium);
     border-radius: 3px;
 }
 
 .sidebar-nav::-webkit-scrollbar-thumb:hover {
-    background: rgba(245, 196, 0, 0.3);
+    background: var(--color-primary-border);
 }
 
 /* =========================================================
-   RESPONSIVE
+   OVERLAY (mobile — fond semi-transparent)
    ========================================================= */
 
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 199;      /* juste sous la sidebar (200) */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* =========================================================
+   SOUS-MENU ARBRE MANUSCRIT
+   ========================================================= */
+
+.nav-submenu {
+    margin: 0 8px 8px 0;
+    padding: 2px 0 4px 28px;
+    border-left: 1px solid var(--overlay-md);
+    overflow: hidden;
+}
+
+/* Nœud de l'arbre dans la sidebar */
+.nav-tree-node { position: relative; }
+
+.nav-tree-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px 4px 2px;
+    min-height: 26px;
+    border-radius: 2px;
+    transition: background 0.12s;
+}
+
+.nav-tree-row:hover { background: var(--overlay-xs); }
+
+.nav-tree-row.active {
+    background: var(--color-primary-dim);
+}
+
+/* Toggle bouton (chevron) */
+.nav-tree-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: var(--text-muted-dark);
+    cursor: pointer;
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    transition: color 0.12s, transform 0.2s;
+}
+
+.nav-tree-toggle:hover { color: var(--text-muted); }
+.nav-tree-toggle.expanded { transform: rotate(90deg); }
+
+/* Dot terminal (feuille) */
+.nav-tree-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--overlay-md);
+    flex-shrink: 0;
+    margin: 0 4px;
+}
+
+/* Label */
+.nav-tree-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.12s;
+}
+
+.nav-tree-label:hover { color: var(--text-main); }
+.nav-tree-label.active { color: var(--color-primary); font-weight: 600; }
+
+/* Bouton + rapide */
+.nav-tree-add {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--overlay-md);
+    text-decoration: none;
+    padding: 0 3px;
+    line-height: 1;
+    flex-shrink: 0;
+    display: none;
+    transition: color 0.12s;
+}
+
+.nav-tree-row:hover .nav-tree-add { display: block; }
+.nav-tree-add:hover { color: var(--color-primary); }
+
+/* Indentation enfants */
+.nav-tree-node .tree-children {
+    padding-left: 14px;
+    border-left: 1px solid var(--overlay-sm);
+    margin-left: 6px;
+}
+
+.nav-tree-node .tree-children.hidden { display: none; }
+
+/* Bouton ajouter un racine */
+.nav-submenu-add {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 8px;
+    font-size: 11px;
+    color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+    text-decoration: none;
+    margin-top: 4px;
+    transition: color 0.15s;
+}
+
+.nav-submenu-add:hover { color: var(--color-primary); }
+
+/* Profondeur */
+.nav-tree-node.depth-1 > .nav-tree-row > .nav-tree-label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.nav-tree-node.depth-2 > .nav-tree-row > .nav-tree-label { font-size: 12px; }
+.nav-tree-node.depth-3 > .nav-tree-row > .nav-tree-label { font-size: 11px; }
+.nav-tree-node.depth-4 > .nav-tree-row > .nav-tree-label { font-size: 11px; color: var(--text-muted-dark); }
+
+/* =========================================================
+   BOUTON VISIBILITÉ — "Mettre en ligne"
+   ========================================================= */
+
+.sidebar-visibility-form {
+    margin: 0;
+}
+
+.sidebar-visibility-btn {
+    width: 100%;
+    cursor: pointer;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    gap: 10px;
+}
+
+.sidebar-visibility-btn:hover {
+    background: var(--overlay-xs);
+    border-color: var(--overlay-md);
+    color: var(--text-main);
+}
+
+/* État "en ligne" : vert discret */
+.sidebar-visibility-btn.is-public {
+    color: var(--color-green);
+    border-color: color-mix(in srgb, var(--color-green) 15%, transparent);
+    background: color-mix(in srgb, var(--color-green) 5%, transparent);
+}
+
+.sidebar-visibility-btn.is-public:hover {
+    background: var(--color-green-glow);
+    border-color: color-mix(in srgb, var(--color-green) 30%, transparent);
+}
+
+.sidebar-visibility-btn.is-public svg {
+    opacity: 1;
+    color: var(--color-green);
+}
+
+/* Badge "Live" */
+.sidebar-badge-live {
+    margin-left: auto;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-green);
+    background: color-mix(in srgb, var(--color-green) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-green) 30%, transparent);
+    padding: 2px 6px;
+}
+
+/* =========================================================
+   RESPONSIVE — Mobile (< 768px)
+   ========================================================= */
+
+/* ── Bouton toggle sidebar dans la topbar (desktop) ─────── */
+.topbar-sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: none;
+    border: 1px solid var(--overlay-md);
+    border-radius: 4px;
+    color: var(--text-muted-light);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.topbar-sidebar-toggle:hover {
+    background: var(--overlay-md);
+    border-color: var(--overlay-lg);
+    color: var(--text-main);
+}
+
+/* Icônes selon l'état de la sidebar */
+.topbar-sidebar-toggle .tst-icon-open  { display: none; }
+.topbar-sidebar-toggle .tst-icon-close { display: block; }
+
+/* body.sidebar-collapsed ajouté par le Stimulus controller */
+body.sidebar-collapsed .topbar-sidebar-toggle .tst-icon-open  { display: block; }
+body.sidebar-collapsed .topbar-sidebar-toggle .tst-icon-close { display: none; }
+
+/* Burger (caché sur desktop) */
+.topbar-burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: none;
+    border: 1px solid var(--overlay-md);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.topbar-burger:hover {
+    background: var(--overlay-md);
+    border-color: var(--overlay-lg);
+    color: var(--text-main);
+}
+
 @media (max-width: 768px) {
+
+    /* Afficher le burger */
+    .topbar-burger { display: flex; }
+
+    /* Sidebar — hors du flux, slide depuis la gauche */
     .workspace-sidebar {
         position: fixed;
-        left: -280px;
         top: 0;
-
-        z-index: 1000;
-
-        transition: left 0.3s ease;
+        left: 0;
+        height: 100vh;
+        width: 280px;
+        z-index: 200;
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        /* override la height desktop calc() */
+        height: 100dvh;
     }
 
     .workspace-sidebar.open {
-        left: 0;
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+        transform: translateX(0);
+        box-shadow: 8px 0 40px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Le workspace-main prend toute la largeur (sidebar out-of-flow) */
+    .workspace-container {
+        flex-direction: row; /* reset du column mobile */
+    }
+
+    /* Masquer les liens de nav dans la topbar, garder logo + burger + user */
+    .top-nav .subnav-links > a:not(.topbar-logo),
+    .top-nav .subnav-links > .subnav-links,
+    .top-nav .nav-center {
+        display: none;
+    }
+
+    /* Bloquer le scroll du body quand la sidebar est ouverte */
+    body.sidebar-open {
+        overflow: hidden;
+        touch-action: none;
     }
 }

@@ -1,104 +1,116 @@
-{% extends 'website/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 {% trans_default_domain 'auth' %}
 
-{% block title %}{{ 'meta_title'|trans }}{% endblock %}
+{% block title %}{{ 'meta.title'|trans }}{% endblock %}
 
-{% block content %}
-    <div class="auth-page-container"
-         data-controller="auth-slider"
-         data-has-errors="{{ not registrationForm.vars.valid ? 'true' : 'false' }}">
+{% block body %}
+<div class="auth-fullpage"
+     data-controller="auth-slider"
+     data-has-errors="{{ not registrationForm.vars.valid ? 'true' : 'false' }}">
 
-        <div class="auth-card {{ not registrationForm.vars.valid ? 'right-panel-active' : '' }}"
-             id="auth-card"
-             data-auth-slider-target="card">
+    {# ══════════════════════════════════════════════════════
+       PANNEAU GAUCHE — branding
+       ══════════════════════════════════════════════════════ #}
+    <aside class="auth-brand">
 
-            {# ── FORMULAIRE INSCRIPTION ────────────────────────────────────── #}
-            <div class="form-container signup-container">
+        {# Logo #}
+        <a href="{{ path('app_home') }}" class="auth-brand__logo">
+            <img src="{{ asset('images/favicons/favicon.png') }}"
+                 alt="Scénart"
+                 class="auth-brand__logo-img">
+            <span class="auth-brand__logo-name">Scén<span>art</span></span>
+        </a>
 
-                {{ form_start(registrationForm, {
-                    'action': path('app_register'),
-                    'attr': {'novalidate': 'novalidate'}
-                }) }}
-
-                <h1>{{ 'register.title'|trans }}</h1>
-
-                {# Prénom + Nom côte à côte #}
-                <div class="form-row">
-                    <div class="form-group">
-                        {{ form_widget(registrationForm.firstName, {
-                            'attr': {'placeholder': 'register.firstname'|trans}
-                        }) }}
-                        {{ form_errors(registrationForm.firstName) }}
-                    </div>
-                    <div class="form-group">
-                        {{ form_widget(registrationForm.lastName, {
-                            'attr': {'placeholder': 'register.lastname'|trans}
-                        }) }}
-                        {{ form_errors(registrationForm.lastName) }}
-                    </div>
-                </div>
-
-                {# Nom d'utilisateur #}
-                <div class="form-group">
-                    {{ form_widget(registrationForm.username, {
-                        'attr': {'placeholder': 'register.username'|trans}
-                    }) }}
-                    {{ form_errors(registrationForm.username) }}
-                </div>
-
-                {# Email #}
-                <div class="form-group">
-                    {{ form_widget(registrationForm.email, {
-                        'attr': {'placeholder': 'register.email'|trans}
-                    }) }}
-                    {{ form_errors(registrationForm.email) }}
-                </div>
-
-                {# Mot de passe #}
-                <div class="form-group">
-                    {{ form_widget(registrationForm.plainPassword, {
-                        'attr': {'placeholder': 'register.password'|trans}
-                    }) }}
-                    {{ form_errors(registrationForm.plainPassword) }}
-                </div>
-
-                {# CGU #}
-                <div class="form-check">
-                    {{ form_widget(registrationForm.agreeTerms) }}
-                    <label for="{{ registrationForm.agreeTerms.vars.id }}">
-                        {{ 'register.agree_terms'|trans }}
-                    </label>
-                    {{ form_errors(registrationForm.agreeTerms) }}
-                </div>
-
-                <button type="submit" class="btn btn--cta-yellow">
-                    {{ 'register.submit'|trans }}
-                </button>
-
-                {{ form_end(registrationForm) }}
-
+        {# Corps #}
+        <div class="auth-brand__body">
+            <div class="auth-brand__tag">
+                {{ ux_icon('lucide:pen-line', {style: 'width:10px;height:10px'}) }}
+                Plateforme narrative
             </div>
+            <h2 class="auth-brand__title">
+                Donnez vie à<br>vos <em>univers</em>
+            </h2>
+            <p class="auth-brand__subtitle">
+                Scénart est l'espace de création collaborative pour
+                scénaristes, auteurs et game designers.
+            </p>
+            <div class="auth-brand__features">
+                <div class="auth-brand__feature">
+                    <div class="auth-brand__feature-icon">
+                        {{ ux_icon('lucide:folder-open', {style: 'width:13px;height:13px'}) }}
+                    </div>
+                    Projets films, séries, jeux vidéo
+                </div>
+                <div class="auth-brand__feature">
+                    <div class="auth-brand__feature-icon">
+                        {{ ux_icon('lucide:users', {style: 'width:13px;height:13px'}) }}
+                    </div>
+                    Collaboration en temps réel
+                </div>
+                <div class="auth-brand__feature">
+                    <div class="auth-brand__feature-icon">
+                        {{ ux_icon('lucide:globe', {style: 'width:13px;height:13px'}) }}
+                    </div>
+                    Communauté de créateurs
+                </div>
+            </div>
+        </div>
 
-            {# ── FORMULAIRE CONNEXION ──────────────────────────────────────── #}
-            <div class="form-container login-container">
+        {# Footer #}
+        <div class="auth-brand__footer">
+            &copy; {{ "now"|date("Y") }} Scénart &mdash;
+            <a href="{{ path('app_legal_cgu', {_locale: app.request.locale}) }}">Mentions légales</a>
+        </div>
+
+    </aside>
+
+    {# ══════════════════════════════════════════════════════
+       PANNEAU DROIT — formulaires
+       ══════════════════════════════════════════════════════ #}
+    <section class="auth-forms">
+        <div class="auth-forms__inner">
+
+            {# ── Onglets ──────────────────────────────────────────── #}
+            <nav class="auth-tabs">
+                <button type="button"
+                        class="auth-tab"
+                        data-auth-slider-target="tabLogin"
+                        data-action="click->auth-slider#showLogin">
+                    {{ 'tab.login'|trans }}
+                </button>
+                <button type="button"
+                        class="auth-tab"
+                        data-auth-slider-target="tabRegister"
+                        data-action="click->auth-slider#showRegister">
+                    {{ 'tab.register'|trans }}
+                </button>
+            </nav>
+
+            {# ══════════════════════════════════════════════
+               PANNEAU CONNEXION
+               ══════════════════════════════════════════════ #}
+            <div class="auth-form-panel"
+                 data-auth-slider-target="loginPanel">
+
+                <h1 class="auth-form-title">{{ 'login.title'|trans }}</h1>
+                <p class="auth-form-subtitle">{{ 'login.subtitle'|trans }}</p>
+
+                {# Erreur Symfony Security #}
+                {% if error %}
+                    <div class="auth-alert">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        {{ component('Alert', { type: label, message: message }) }}
+                    {% endfor %}
+                {% endfor %}
+
                 <form method="post" action="{{ path('app_login') }}">
 
-                    <h1>{{ 'login.title'|trans }}</h1>
-
-                    {# Erreur d'authentification Symfony Security #}
-                    {% if error %}
-                        <div class="alert alert--error">
-                            {{ error.messageKey|trans(error.messageData, 'security') }}
-                        </div>
-                    {% endif %}
-
-                    {% for label, messages in app.flashes %}
-                        {% for message in messages %}
-                            {{ component('Alert', { type: label, message: message }) }}
-                        {% endfor %}
-                    {% endfor %}
-
-                    <div class="form-group">
+                    <div class="auth-field">
                         <input type="email"
                                name="email"
                                value="{{ last_username }}"
@@ -108,50 +120,166 @@
                                autofocus>
                     </div>
 
-                    <div class="form-group">
-                        <input type="password"
-                               name="password"
-                               placeholder="{{ 'login.password'|trans }}"
-                               autocomplete="current-password"
-                               required>
+                    <div class="auth-field pw-group"
+                         data-controller="password-field">
+                        <div class="pw-input-wrap">
+                            <input type="password"
+                                   name="password"
+                                   placeholder="{{ 'login.password'|trans }}"
+                                   autocomplete="current-password"
+                                   required
+                                   data-password-field-target="input">
+                            <button type="button"
+                                    class="pw-toggle-btn"
+                                    data-password-field-target="toggleBtn"
+                                    data-action="click->password-field#toggleVisibility"
+                                    tabindex="-1"
+                                    aria-label="Voir le mot de passe">
+                                <span class="pw-eye-show">{{ ux_icon('lucide:eye', {style: 'width:15px;height:15px'}) }}</span>
+                                <span class="pw-eye-hide" hidden>{{ ux_icon('lucide:eye-off', {style: 'width:15px;height:15px'}) }}</span>
+                            </button>
+                        </div>
                     </div>
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                    <button type="submit" class="btn btn--cta-black">
+                    <div class="form-check form-check--remember">
+                        <input type="checkbox" name="_remember_me" id="remember_me" value="1">
+                        <label for="remember_me">{{ 'login.remember_me'|trans }}</label>
+                    </div>
+
+                    <button type="submit" class="btn btn--cta-yellow auth-submit">
                         {{ 'login.submit'|trans }}
                     </button>
 
                 </form>
+
             </div>
 
-            {# ── OVERLAY ───────────────────────────────────────────────────── #}
-            <div class="overlay-container">
-                <div class="overlay">
+            {# ══════════════════════════════════════════════
+               PANNEAU INSCRIPTION
+               ══════════════════════════════════════════════ #}
+            <div class="auth-form-panel"
+                 data-auth-slider-target="registerPanel">
 
-                    <div class="overlay-panel overlay-left">
-                        <h2>{{ 'overlay.welcome'|trans }}</h2>
-                        <p>{{ 'overlay.desc_login'|trans }}</p>
-                        <button class="btn btn--ghost"
-                                type="button"
-                                data-action="click->auth-slider#showLogin">
-                            {{ 'overlay.btn_login'|trans }}
-                        </button>
+                <h1 class="auth-form-title">{{ 'register.title'|trans }}</h1>
+                <p class="auth-form-subtitle">{{ 'register.subtitle'|trans }}</p>
+
+                {{ form_start(registrationForm, {
+                    'action': path('app_register'),
+                    'attr': {'novalidate': 'novalidate'}
+                }) }}
+
+                {# Prénom + Nom #}
+                <div class="auth-field-row">
+                    <div class="auth-field">
+                        {{ form_widget(registrationForm.firstName, {
+                            'attr': {'placeholder': 'register.firstname'|trans}
+                        }) }}
+                        {{ form_errors(registrationForm.firstName) }}
                     </div>
-
-                    <div class="overlay-panel overlay-right">
-                        <h2>{{ 'overlay.hello'|trans }}</h2>
-                        <p>{{ 'overlay.desc_register'|trans }}</p>
-                        <button class="btn btn--ghost"
-                                type="button"
-                                data-action="click->auth-slider#showSignup">
-                            {{ 'overlay.btn_register'|trans }}
-                        </button>
+                    <div class="auth-field">
+                        {{ form_widget(registrationForm.lastName, {
+                            'attr': {'placeholder': 'register.lastname'|trans}
+                        }) }}
+                        {{ form_errors(registrationForm.lastName) }}
                     </div>
-
                 </div>
+
+                {# Username #}
+                <div class="auth-field"
+                     data-controller="username-check"
+                     data-username-check-url-value="{{ path('api_check_username') }}">
+                    {{ form_widget(registrationForm.username, {
+                        'attr': {
+                            'placeholder': 'register.username'|trans,
+                            'data-auth-slider-target': 'usernameInput',
+                            'data-username-check-target': 'input',
+                            'data-action': 'input->username-check#check input->auth-slider#onUsernameInput'
+                        }
+                    }) }}
+                    <div class="uc-status" data-username-check-target="status"></div>
+                    {{ form_errors(registrationForm.username) }}
+                </div>
+
+                {# Champ caché avatarColor #}
+                {{ form_widget(registrationForm.avatarColor) }}
+
+                {# Avatar color picker #}
+                <div class="auth-avatar-section">
+                    <span class="auth-avatar-section__label">Couleur de votre avatar</span>
+                    <div class="auth-avatar-preview-row">
+                        <span class="u-avatar u-avatar--auth-preview"
+                              style="background-color:#3B82F6;"
+                              data-auth-slider-target="avatarPreview">
+                            ?
+                        </span>
+                        <span class="auth-avatar-preview-row__hint">
+                            Choisissez une couleur ou saisissez<br>votre pseudo pour en générer une.
+                        </span>
+                    </div>
+                    <div class="avatar-picker"
+                         data-auth-slider-target="swatchContainer"></div>
+                </div>
+
+                {# Email #}
+                <div class="auth-field">
+                    {{ form_widget(registrationForm.email, {
+                        'attr': {'placeholder': 'register.email'|trans}
+                    }) }}
+                    {{ form_errors(registrationForm.email) }}
+                </div>
+
+                {# Mot de passe #}
+                <div class="auth-field pw-group"
+                     data-controller="password-field"
+                     data-password-field-show-strength-value="true">
+                    <div class="pw-input-wrap">
+                        {{ form_widget(registrationForm.plainPassword, {
+                            'attr': {
+                                'placeholder': 'register.password'|trans,
+                                'data-password-field-target': 'input',
+                                'data-action': 'input->password-field#checkStrength focus->password-field#openStrength blur->password-field#closeStrength'
+                            }
+                        }) }}
+                        <button type="button"
+                                class="pw-toggle-btn"
+                                data-password-field-target="toggleBtn"
+                                data-action="click->password-field#toggleVisibility"
+                                tabindex="-1"
+                                aria-label="Voir le mot de passe">
+                            <span class="pw-eye-show">{{ ux_icon('lucide:eye', {style: 'width:15px;height:15px'}) }}</span>
+                            <span class="pw-eye-hide" hidden>{{ ux_icon('lucide:eye-off', {style: 'width:15px;height:15px'}) }}</span>
+                        </button>
+                    </div>
+                    <div class="pw-strength" data-password-field-target="strength" aria-live="polite">
+                        <div class="pw-rule" data-rule="length"    data-password-field-target="rule"><span class="pw-rule__dot"></span>Min. 8 caractères</div>
+                        <div class="pw-rule" data-rule="uppercase" data-password-field-target="rule"><span class="pw-rule__dot"></span>Une majuscule (A–Z)</div>
+                        <div class="pw-rule" data-rule="digit"     data-password-field-target="rule"><span class="pw-rule__dot"></span>Un chiffre (0–9)</div>
+                        <div class="pw-rule" data-rule="special"   data-password-field-target="rule"><span class="pw-rule__dot"></span>Un caractère spécial (!@#…)</div>
+                    </div>
+                    {{ form_errors(registrationForm.plainPassword) }}
+                </div>
+
+                {# CGU #}
+                <div class="auth-check">
+                    {{ form_widget(registrationForm.agreeTerms) }}
+                    <label for="{{ registrationForm.agreeTerms.vars.id }}">
+                        {{ 'register.agree_terms'|trans }}
+                    </label>
+                </div>
+                {{ form_errors(registrationForm.agreeTerms) }}
+
+                <button type="submit" class="btn btn--cta-yellow auth-submit">
+                    {{ 'register.submit'|trans }}
+                </button>
+
+                {{ form_end(registrationForm) }}
+
             </div>
 
         </div>
-    </div>
+    </section>
+
+</div>
 {% endblock %}

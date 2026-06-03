@@ -1,7 +1,7 @@
 /* Container global de la carte */
 .project-card {
-    background: #0f0f12; /* Fond très noir comme le screen */
-    border: 1px solid #2a2a2e;
+    background: var(--color-bg-dark); /* Fond très noir comme le screen */
+    border: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -35,12 +35,12 @@
 .project-card__placeholder .placeholder-icon {
     width: 64px;
     height: 64px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--overlay-md);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--overlay-lg);
 }
 
 /* Zone de texte */
@@ -52,7 +52,7 @@
 }
 
 .project-card__title a {
-    color: #ffffff;
+    color: var(--text-main);
     font-size: 1.2rem;
     font-weight: 700;
     text-decoration: none;
@@ -61,7 +61,7 @@
 
 .project-card__meta {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--text-muted-light);
     margin-top: 5px;
 }
 
@@ -82,8 +82,8 @@
 .user-avatar--owner {
     width: 40px;
     height: 40px;
-    background: #FFB800;
-    color: #000;
+    background: var(--color-primary);
+    color: var(--text-dark);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -95,17 +95,17 @@
 .member-count-badge {
     width: 40px;
     height: 40px;
-    border: 1px solid #333;
+    border: 1px solid var(--color-border-light);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--text-main);
     font-size: 12px;
 }
 
 .link-view-all {
-    color: #FFB800;
+    color: var(--color-primary);
     text-decoration: none;
     font-weight: 700;
     font-size: 0.9rem;

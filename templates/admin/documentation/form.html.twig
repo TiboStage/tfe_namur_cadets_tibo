@@ -1,0 +1,165 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block admin_title %}
+    {{ article ? 'Modifier : ' ~ article.getTitle() : 'Nouvel article' }}
+{% endblock %}
+
+{% block admin_content %}
+<div class="admin-form-header">
+    <a href="{{ path('admin_doc_index', {_locale: app.request.locale}) }}" class="admin-back-link">
+        ← Retour à la liste
+    </a>
+</div>
+
+{{ form_start(form, {attr: {class: 'doc-admin-form', novalidate: 'novalidate'}}) }}
+
+<div class="doc-admin-form__layout">
+
+    {# ── Colonne principale : traductions par langue ───────────────────────── #}
+    <div class="doc-admin-form__main">
+        <div class="admin-card">
+
+            <div class="admin-card__header panel-header">
+                <span>Contenu</span>
+                {# Onglets de langue #}
+                <div class="doc-lang-tabs" role="tablist">
+                    {% for locale in ['fr', 'nl', 'en'] %}
+                        {% set labels = {fr: '🇫🇷 Français', nl: '🇳🇱 Nederlands', en: '🇬🇧 English'} %}
+                        <button type="button"
+                                class="doc-lang-tab {{ loop.first ? 'doc-lang-tab--active' : '' }}"
+                                data-lang-tab="{{ locale }}"
+                                role="tab">
+                            {{ labels[locale] }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="admin-card__body">
+                {% for locale in ['fr', 'nl', 'en'] %}
+                    {% set labels = {fr: 'français', nl: 'néerlandais', en: 'anglais'} %}
+                    <div class="doc-lang-panel" data-lang-panel="{{ locale }}" {% if locale != 'fr' %}style="display:none"{% endif %}>
+
+                        {% if locale != 'fr' %}
+                            <p class="form-hint text-muted mb-4">
+                                Laissez vide pour utiliser la version française par défaut.
+                            </p>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label class="form-label" for="trans_title_{{ locale }}">
+                                Titre
+                                {% if locale == 'fr' %}<span class="text-primary">*</span>{% endif %}
+                            </label>
+                            <input type="text"
+                                   id="trans_title_{{ locale }}"
+                                   name="translations[{{ locale }}][title]"
+                                   value="{{ translations[locale].title ?? '' }}"
+                                   placeholder="Titre en {{ labels[locale] }}"
+                                   class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="trans_content_{{ locale }}">
+                                Contenu <span class="text-muted">(Markdown)</span>
+                            </label>
+                            <p class="form-hint text-muted">
+                                **gras**, *italique*, # Titre, - liste, `code`, ```bloc```, [lien](url)
+                            </p>
+                            <textarea id="trans_content_{{ locale }}"
+                                      name="translations[{{ locale }}][content]"
+                                      rows="25"
+                                      placeholder="# Titre&#10;&#10;Votre contenu en **Markdown**…"
+                                      class="doc-editor-textarea form-control">{{ translations[locale].content ?? '' }}</textarea>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {# ── Colonne latérale : paramètres ──────────────────────────────────── #}
+    <aside class="doc-admin-form__sidebar">
+
+        <div class="admin-card">
+            <div class="admin-card__header">Publication</div>
+            <div class="admin-card__body">
+                <div class="form-group form-group--inline">
+                    {{ form_widget(form.isPublished) }}
+                    {{ form_label(form.isPublished) }}
+                </div>
+                {{ form_errors(form.isPublished) }}
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card__header">Métadonnées</div>
+            <div class="admin-card__body">
+
+                <div class="form-group">
+                    {{ form_label(form.slug) }}
+                    {{ form_widget(form.slug) }}
+                    {% if form.slug.vars.help %}
+                        <p class="form-hint text-muted">{{ form.slug.vars.help }}</p>
+                    {% endif %}
+                    {{ form_errors(form.slug) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.category) }}
+                    {{ form_widget(form.category) }}
+                    <datalist id="doc-categories">
+                        <option value="Démarrage">
+                        <option value="Projets">
+                        <option value="Personnages">
+                        <option value="Lieux">
+                        <option value="Écriture">
+                        <option value="Export">
+                        <option value="Compte">
+                        <option value="Avancé">
+                    </datalist>
+                    {{ form_errors(form.category) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.orderIndex) }}
+                    {{ form_widget(form.orderIndex) }}
+                    {{ form_errors(form.orderIndex) }}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary w-full">
+                {{ article ? 'Enregistrer les modifications' : 'Créer l\'article' }}
+            </button>
+        </div>
+
+    </aside>
+
+</div>
+
+{{ form_end(form) }}
+
+<script>
+(function () {
+    const tabs   = document.querySelectorAll('[data-lang-tab]');
+    const panels = document.querySelectorAll('[data-lang-panel]');
+
+    tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.langTab;
+
+            tabs.forEach(b => b.classList.remove('doc-lang-tab--active'));
+            panels.forEach(p => p.style.display = 'none');
+
+            btn.classList.add('doc-lang-tab--active');
+            document.querySelector(`[data-lang-panel="${target}"]`).style.display = '';
+        });
+    });
+})();
+</script>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{# templates/admin/config.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Admin — Configuration{% endblock %}
+{% block admin_title %}Configuration de la plateforme{% endblock %}
+
+{% block admin_content %}
+
+    <div class="aup-grid">
+
+        <div class="panel-box">
+            <h3>Informations plateforme</h3>
+            <dl class="admin-dl">
+                <dt>Nom</dt><dd>ScénArt</dd>
+                <dt>Version</dt><dd>1.0.0 — TFE 2026</dd>
+                <dt>Framework</dt><dd>Symfony 8 / PHP 8.4</dd>
+                <dt>Base de données</dt><dd>PostgreSQL</dd>
+                <dt>Environnement</dt><dd><code>{{ app.environment }}</code></dd>
+                <dt>Debug</dt><dd>{{ app.debug ? 'Activé' : 'Désactivé' }}</dd>
+            </dl>
+        </div>
+
+        <div class="panel-box">
+            <h3>Sessions actives</h3>
+            <p class="text-muted text-base mb-4">Informations sur la session courante.</p>
+            <dl class="admin-dl">
+                <dt>Connecté en tant que</dt><dd>{{ app.user.username }}</dd>
+                <dt>Email</dt><dd>{{ app.user.email }}</dd>
+                <dt>Rôles</dt>
+                <dd>
+                    {% for role in app.user.roles %}
+                        <span class="role-badge role-badge--{{ role|lower|replace({'role_': ''}) }}">{{ role|replace({'ROLE_': ''}) }}</span>
+                    {% endfor %}
+                </dd>
+            </dl>
+        </div>
+
+        <div class="panel-box col-full">
+            <h3>À implémenter</h3>
+            <p class="text-muted text-base lh-loose">
+                Cette section contiendra dans une version future : paramètres d'inscription ouverte/fermée,
+                limite de projets par utilisateur, activation/désactivation de fonctionnalités expérimentales,
+                configuration des emails transactionnels, et outils de maintenance (vider le cache, reconstruire les indexes de recherche).
+            </p>
+        </div>
+
+    </div>
+
+{% endblock %}

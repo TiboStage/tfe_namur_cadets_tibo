@@ -94,7 +94,7 @@
 }
 
 .tree-item:hover {
-    background: rgba(255, 184, 0, 0.1);
+    background: var(--color-primary-glow);
     color: var(--color-primary);
 }
 
@@ -111,11 +111,11 @@
 }
 
 .tree-row:hover {
-    background: rgba(255, 184, 0, 0.05);
+    background: var(--color-primary-glow);
 }
 
 .tree-row.active {
-    background: rgba(255, 184, 0, 0.15);
+    background: var(--color-primary-medium);
     border-left: 3px solid var(--color-primary);
 }
 
@@ -132,7 +132,7 @@
 
 /* ─── ZONE CENTRALE : Éditeur ──────────────────────────────────────────*/
 .editor-main {
-    background: #0f0f11;
+    background: var(--color-bg-dark);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -173,8 +173,8 @@
 .paper-sheet {
     width: 210mm;
     min-height: 297mm;
-    background: #ffffff;
-    color: #111;
+    background: var(--text-main);
+    color: var(--text-dark);
     padding: 60px 80px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     font-family: 'Courier New', Courier, monospace;
@@ -185,7 +185,7 @@
 }
 
 .paper-sheet:focus {
-    box-shadow: 0 10px 40px rgba(255, 184, 0, 0.3);
+    box-shadow: 0 10px 40px var(--color-primary-medium);
 }
 
 /* ─── SIDEBAR DROITE : Inspecteur ──────────────────────────────────────*/
@@ -216,7 +216,7 @@
 }
 
 .inspector-cards {
-    background: rgba(255, 184, 0, 0.05);
+    background: var(--color-primary-glow);
     border-left: 3px solid var(--color-primary);
     padding: 15px;
     border-radius: 4px;

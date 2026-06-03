@@ -8,7 +8,7 @@
     width: 100%;
     height: calc(100vh - 80px);
 
-    background: #0D0D0D;
+    background: var(--color-bg-dark);
 
     overflow: hidden;
 }
@@ -17,15 +17,10 @@
 
 .workspace-main {
     flex: 1;
-
     display: flex;
     flex-direction: column;
-
     height: 100vh;
-
     overflow-y: auto;
-
-    background: #0D0D0D;
 }
 
 /* ── Masquer la navbar principale dans le workspace ──── */
@@ -43,8 +38,8 @@
     padding: 0 24px;
     height: 56px;
 
-    background: rgba(13, 13, 13, 0.95);
-    border-bottom: 1px solid rgba(245, 196, 0, 0.12);
+    background: color-mix(in srgb, var(--color-bg-dark) 95%, transparent);
+    border-bottom: 1px solid var(--color-primary-border);
 
     backdrop-filter: blur(8px);
 }
@@ -54,17 +49,10 @@
    ========================================================= */
 
 @media (max-width: 768px) {
-    .workspace-container {
-        flex-direction: column;
-    }
-
-    .workspace-sidebar {
-        position: fixed;
-        left: -280px;
-        z-index: 1000;
-    }
-
-    .workspace-sidebar.open {
-        left: 0;
+    /* La sidebar est gérée en position:fixed dans _project-sidebar.css.
+       Le workspace-main prend donc toute la largeur automatiquement. */
+    .workspace-main {
+        width: 100%;
+        min-width: 0;
     }
 }

@@ -11,27 +11,32 @@
                 <h1>{{ 'note.index.title'|trans }}</h1>
                 <p class="page-subtitle">{{ 'note.index.subtitle'|trans }}</p>
             </div>
-            <a href="{{ path('app_note_new', {project_slug: project.slug}) }}" class="btn-creat">
+            {% if not (readonly ?? false) %}
+            <a href="{{ path('app_note_new', {project_slug: project.slug}) }}"
+               class="btn-creat"
+               data-turbo-frame="modal-frame"
+               data-action="click->modal#open">
                 {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
                 {{ 'note.index.create'|trans }}
             </a>
+            {% endif %}
         </header>
 
         {# Filtres par statut #}
         <div class="filter-tabs">
-            <a href="{{ path('app_note_index', {project_slug: project.slug, status: 'all'}) }}"
+            <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
                class="filter-tab {% if currentStatus == 'all' %}active{% endif %}">
                 {{ 'note.filter.all'|trans }}
             </a>
-            <a href="{{ path('app_note_index', {project_slug: project.slug, status: 'note'}) }}"
+            <a href="{{ path('app_note_filter', {project_slug: project.slug, status: 'note'}) }}"
                class="filter-tab {% if currentStatus == 'note' %}active{% endif %}">
                 {{ 'note.filter.notes'|trans }}
             </a>
-            <a href="{{ path('app_note_index', {project_slug: project.slug, status: 'todo'}) }}"
+            <a href="{{ path('app_note_filter', {project_slug: project.slug, status: 'todo'}) }}"
                class="filter-tab {% if currentStatus == 'todo' %}active{% endif %}">
                 {{ 'note.filter.todos'|trans }}
             </a>
-            <a href="{{ path('app_note_index', {project_slug: project.slug, status: 'done'}) }}"
+            <a href="{{ path('app_note_filter', {project_slug: project.slug, status: 'done'}) }}"
                class="filter-tab {% if currentStatus == 'done' %}active{% endif %}">
                 {{ 'note.filter.done'|trans }}
             </a>
@@ -44,7 +49,10 @@
                 </div>
                 <h3>{{ 'note.index.empty.title'|trans }}</h3>
                 <p>{{ 'note.index.empty.message'|trans }}</p>
-                <a href="{{ path('app_note_new', {project_slug: project.slug}) }}" class="btn-primary">
+                <a href="{{ path('app_note_new', {project_slug: project.slug}) }}"
+                   class="btn-primary"
+                   data-turbo-frame="modal-frame"
+                   data-action="click->modal#open">
                     {{ 'note.index.create_first'|trans }}
                 </a>
             </div>
@@ -63,11 +71,26 @@
                         <div class="note-card-body">
                             <p>{{ note.content|striptags|slice(0, 150) }}...</p>
                         </div>
+
+                        {# Lien vers l'élément narratif associé #}
+                        {% if elementPaths[note.id] is defined %}
+                            {% set el = elementPaths[note.id] %}
+                            <div class="note-element-path">
+                                {{ ux_icon('lucide:file-text', {class: 'icon-3xs'}) }}
+                                <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: el.id}) }}"
+                                   class="note-element-link">
+                                    {{ el.getFullPath() }}
+                                </a>
+                            </div>
+                        {% endif %}
+
                         <div class="note-card-footer">
                             <span class="note-meta">{{ note.author.username }} • {{ note.createdAt|date('d/m/Y') }}</span>
                             <div class="note-actions">
-                                <a href="{{ path('app_note_edit', {project_slug: project.slug, id: note.id}) }}">
-                                    {{ ux_icon('lucide:pencil', {style: 'width: 14px; height: 14px;'}) }}
+                                <a href="{{ path('app_note_edit', {project_slug: project.slug, id: note.id}) }}"
+                                   data-turbo-frame="modal-frame"
+                                   data-action="click->modal#open">
+                                    {{ ux_icon('lucide:pencil', {class: 'icon-xs'}) }}
                                 </a>
                             </div>
                         </div>

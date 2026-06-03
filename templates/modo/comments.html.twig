@@ -1,0 +1,100 @@
+{# templates/modo/comments.html.twig #}
+{% extends 'modo/layout.html.twig' %}
+
+{% block title %}Modo — Commentaires{% endblock %}
+{% block modo_title %}Modération des commentaires{% endblock %}
+
+{% block modo_content %}
+
+    <div class="modo-stats-note">
+        <p class="text-muted text-sm m-0">
+            {{ count_comments }} commentaire{{ count_comments != 1 ? 's' : '' }} au total (100 plus récents affichés)
+        </p>
+    </div>
+
+    {% if comments is empty %}
+        <div class="admin-empty-state modo-empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <p>Aucun commentaire à modérer.</p>
+        </div>
+    {% else %}
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Auteur</th>
+                        <th>Contenu</th>
+                        <th>Projet</th>
+                        <th>Date</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for comment in comments %}
+                    <tr class="{{ comment.status == 'hidden' ? 'row--muted' : '' }}">
+                        <td class="text-muted td-2xs">
+                            {{ comment.id }}
+                            {% if comment.parent %}
+                                <span class="tag-reply">↩ réponse</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="td-author">{{ comment.author.username }}</td>
+
+                        <td class="td-comment">
+                            {{ comment.content|slice(0, 120) }}{{ comment.content|length > 120 ? '…' : '' }}
+                        </td>
+
+                        <td class="text-muted td-2xs">
+                            {{ comment.project.title }}
+                        </td>
+
+                        <td class="text-muted td-2xs nowrap">
+                            {{ comment.createdAt|date('d/m/Y H:i') }}
+                        </td>
+
+                        <td>
+                            {% if comment.status == 'visible' %}
+                                <span class="mod-badge mod-badge--clear">Visible</span>
+                            {% else %}
+                                <span class="mod-badge mod-badge--warning">Masqué</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <form
+                                action="{{ path('modo_comment_moderate', {id: comment.id, _locale: app.request.locale}) }}"
+                                method="post"
+                                class="mod-actions-cell"
+                            >
+                                <input type="hidden" name="_token" value="{{ csrf_token('comment_moderate_' ~ comment.id) }}">
+
+                                {% if comment.status == 'visible' %}
+                                    <button type="submit" name="action" value="hide" class="btn-table text-xs">
+                                        Masquer
+                                    </button>
+                                {% else %}
+                                    <button type="submit" name="action" value="show" class="btn-table text-xs">
+                                        Remettre
+                                    </button>
+                                {% endif %}
+
+                                <button
+                                    type="submit" name="action" value="delete"
+                                    class="btn-table btn-table--danger text-xs"
+                                    onclick="return confirm('Supprimer définitivement ce commentaire ?')"
+                                >
+                                    Supprimer
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block admin_title %}
+    {{ mode == 'edit' ? 'Modifier le genre' : 'Nouveau genre' }}
+{% endblock %}
+
+{% block admin_content %}
+<div class="admin-section admin-section--narrow">
+
+    <div class="admin-section-header">
+        <div>
+            <a href="{{ path('admin_genre_index', {_locale: app.request.locale}) }}"
+               class="admin-back">← Retour aux genres</a>
+            <h2>{{ mode == 'edit' ? 'Modifier «&nbsp;' ~ genre.slug ~ '&nbsp;»' : 'Nouveau genre' }}</h2>
+        </div>
+    </div>
+
+    {% if errors is not empty %}
+    <div class="admin-flash admin-flash--error">
+        {% for err in errors %}
+            <p>{{ err }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post"
+          action="{{ mode == 'edit'
+              ? path('admin_genre_edit', {_locale: app.request.locale, id: genre.id})
+              : path('admin_genre_new',  {_locale: app.request.locale}) }}"
+          class="admin-form"
+          novalidate>
+
+        {# ── Slug ────────────────────────────────────────────────────── #}
+        <div class="admin-field">
+            <label class="admin-label">
+                Slug <span class="admin-required">*</span>
+                <span class="admin-hint">Clé technique unique, lowercase + underscores uniquement</span>
+            </label>
+            <input type="text"
+                   name="slug"
+                   class="admin-input"
+                   value="{{ genre.slug }}"
+                   placeholder="ex : science_fiction"
+                   pattern="[a-z0-9_]+"
+                   maxlength="50"
+                   required>
+            <p class="admin-field-note">
+                ⚠️ Ne modifiez pas le slug d'un genre déjà utilisé par des projets — cela romprait l'association.
+            </p>
+        </div>
+
+        {# ── Traductions (obligatoires) ───────────────────────────────── #}
+        <div class="admin-field">
+            <label class="admin-label">
+                Traductions <span class="admin-required">*</span>
+                <span class="admin-hint">Les 3 langues sont obligatoires</span>
+            </label>
+
+            <div class="admin-translations-grid">
+                {% for locale in ['fr', 'nl', 'en'] %}
+                {% set flags   = {fr: '🇫🇷', nl: '🇳🇱', en: '🇬🇧'} %}
+                {% set langNames = {fr: 'Français', nl: 'Nederlands', en: 'English'} %}
+                {% set existing = genre.getTranslation(locale) %}
+                <div class="admin-translation-row">
+                    <span class="admin-translation-flag">{{ flags[locale] }}</span>
+                    <label class="admin-translation-lang">{{ langNames[locale] }}</label>
+                    <input type="text"
+                           name="translations[{{ locale }}][label]"
+                           class="admin-input"
+                           value="{{ existing ? existing.label : '' }}"
+                           placeholder="{{ locale == 'fr' ? 'Ex : Thriller' : (locale == 'nl' ? 'Bijv.: Thriller' : 'E.g.: Thriller') }}"
+                           maxlength="100"
+                           required>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# ── Types de projet compatibles ──────────────────────────────── #}
+        <div class="admin-field">
+            <label class="admin-label">
+                Types de projet compatibles
+                <span class="admin-hint">Laissez tout décoché = compatible avec tous les types</span>
+            </label>
+            <div class="admin-checkboxes">
+                {% for type, label in {film: '🎬 Film', serie: '📺 Série', jeu_video: '🎮 Jeu vidéo'} %}
+                <label class="admin-checkbox-label">
+                    <input type="checkbox"
+                           name="projectTypes[]"
+                           value="{{ type }}"
+                           {{ type in genre.projectTypes ? 'checked' : '' }}>
+                    {{ label }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# ── Ordre d'affichage ─────────────────────────────────────────── #}
+        <div class="admin-field admin-field--short">
+            <label class="admin-label">
+                Ordre d'affichage
+                <span class="admin-hint">0 = en premier</span>
+            </label>
+            <input type="number"
+                   name="orderIndex"
+                   class="admin-input"
+                   value="{{ genre.orderIndex }}"
+                   min="0" max="999">
+        </div>
+
+        {# ── Actions ──────────────────────────────────────────────────── #}
+        <div class="admin-form-actions">
+            <button type="submit" class="btn btn--cta-yellow">
+                {{ mode == 'edit' ? '✓ Enregistrer les modifications' : '+ Créer le genre' }}
+            </button>
+            <a href="{{ path('admin_genre_index', {_locale: app.request.locale}) }}"
+               class="btn btn--ghost">Annuler</a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

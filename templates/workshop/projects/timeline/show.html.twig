@@ -10,7 +10,7 @@
         <header class="page-header">
             <div>
                 <a href="{{ path('app_world_event_index', {project_slug: project.slug}) }}" class="link-back">
-                    {{ ux_icon('lucide:arrow-left', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }}
                     {{ 'world_event.back'|trans }}
                 </a>
                 <h1>{{ event.title }}</h1>
@@ -19,17 +19,17 @@
             <div class="page-header-actions">
                 <a href="{{ path('app_world_event_edit', {project_slug: project.slug, id: event.id}) }}"
                    class="btn-export">
-                    {{ ux_icon('lucide:pencil', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ ux_icon('lucide:pencil', {class: 'icon-xs'}) }}
                     {{ 'common.edit'|trans }}
                 </a>
 
                 <form method="post"
                       action="{{ path('app_world_event_delete', {project_slug: project.slug, id: event.id}) }}"
-                      onsubmit="return confirm('{{ 'world_event.confirm_delete'|trans }}');"
-                      style="display: inline;">
+                      data-turbo-confirm="{{ 'world_event.confirm_delete'|trans }}"
+                      class="d-inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
                     <button type="submit" class="btn-delete">
-                        {{ ux_icon('lucide:trash-2', {style: 'width: 14px; height: 14px;'}) }}
+                        {{ ux_icon('lucide:trash-2', {class: 'icon-xs'}) }}
                         {{ 'common.delete'|trans }}
                     </button>
                 </form>
@@ -45,7 +45,7 @@
                 {# Date narrative #}
                 <div class="info-card-section">
                     <h3 class="info-card-title">
-                        {{ ux_icon('lucide:calendar', {style: 'width: 18px; height: 18px;'}) }}
+                        {{ ux_icon('lucide:calendar', {class: 'icon-sm'}) }}
                         {{ 'world_event.show.date'|trans }}
                     </h3>
                     <div class="event-date-display">
@@ -63,7 +63,7 @@
                 {% if event.description %}
                     <div class="info-card-section">
                         <h3 class="info-card-title">
-                            {{ ux_icon('lucide:file-text', {style: 'width: 18px; height: 18px;'}) }}
+                            {{ ux_icon('lucide:file-text', {class: 'icon-sm'}) }}
                             {{ 'world_event.show.description'|trans }}
                         </h3>
                         <div class="event-description">
@@ -76,14 +76,14 @@
                 {% if event.location %}
                     <div class="info-card-section">
                         <h3 class="info-card-title">
-                            {{ ux_icon('lucide:map-pin', {style: 'width: 18px; height: 18px;'}) }}
+                            {{ ux_icon('lucide:map-pin', {class: 'icon-sm'}) }}
                             {{ 'world_event.show.location'|trans }}
                         </h3>
                         <div class="linked-entity">
                             <a href="{{ path('app_location_show', {project_slug: project.slug, id: event.location.id}) }}"
                                class="entity-link">
                                 <div class="entity-icon">
-                                    {{ ux_icon('lucide:map-pin', {style: 'width: 14px; height: 14px;'}) }}
+                                    {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }}
                                 </div>
                                 <div class="entity-info">
                                     <span class="entity-name">{{ event.location.name }}</span>

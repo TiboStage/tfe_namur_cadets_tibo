@@ -1,0 +1,74 @@
+{# templates/admin/users/index.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Admin — Utilisateurs{% endblock %}
+{% block admin_title %}Gestion des utilisateurs{% endblock %}
+
+{% block admin_content %}
+
+    {# ── Barre de recherche ───────────────────────────────────────── #}
+    <div class="admin-toolbar">
+        <form method="get" class="admin-search-form">
+            <input type="search" name="q" value="{{ q }}"
+                   placeholder="Rechercher par email ou pseudo…"
+                   class="admin-search-input">
+            <button type="submit" class="btn-table">Rechercher</button>
+            {% if q %}
+                <a href="{{ path('admin_users', {_locale: app.request.locale}) }}" class="btn-table">✕ Effacer</a>
+            {% endif %}
+        </form>
+        <span class="admin-count">{{ users|length }} utilisateur{{ users|length > 1 ? 's' : '' }}</span>
+    </div>
+
+    {# ── Table ─────────────────────────────────────────────────────── #}
+    <div class="panel-box panel-box--flush">
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead><tr>
+                    <th>#</th>
+                    <th>Pseudo</th>
+                    <th>Email</th>
+                    <th>Prénom / Nom</th>
+                    <th>Rôles</th>
+                    <th>Statut</th>
+                    <th>Inscrit le</th>
+                    <th></th>
+                </tr></thead>
+                <tbody>
+                {% for user in users %}
+                    <tr class="{{ user.isBanned ? 'row-banned' : '' }}">
+                        <td class="text-muted">{{ user.id }}</td>
+                        <td><strong>{{ user.username }}</strong></td>
+                        <td class="text-muted">{{ user.email }}</td>
+                        <td>{{ user.firstName }} {{ user.lastName }}</td>
+                        <td>
+                            {% for role in user.roles %}
+                                {% if role != 'ROLE_USER' %}
+                                    <span class="role-badge role-badge--{{ role|lower|replace({'role_': ''}) }}">{{ role|replace({'ROLE_': ''}) }}</span>
+                                {% endif %}
+                            {% endfor %}
+                            {% if 'ROLE_ADMIN' not in user.roles and 'ROLE_MODO' not in user.roles %}
+                                <span class="role-badge role-badge--user">USER</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.isBanned %}
+                                <span class="status-badge status-badge--banned">Banni</span>
+                            {% else %}
+                                <span class="status-badge status-badge--active">Actif</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted">{{ user.createdAt|date('d/m/Y') }}</td>
+                        <td>
+                            <a href="{{ path('admin_user_show', {id: user.id, _locale: app.request.locale}) }}" class="btn-table">Gérer</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="8" class="text-muted td-empty">Aucun utilisateur trouvé.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

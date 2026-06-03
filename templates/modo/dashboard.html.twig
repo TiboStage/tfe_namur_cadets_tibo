@@ -1,0 +1,130 @@
+{# templates/modo/dashboard.html.twig #}
+{% extends 'modo/layout.html.twig' %}
+
+{% block title %}Modo — Vue d'ensemble{% endblock %}
+{% block modo_title %}Vue d'ensemble — Modération{% endblock %}
+
+{% block modo_content %}
+
+    {# ── KPI ──────────────────────────────────────────────────────── #}
+    <div class="admin-stats-grid">
+
+        {% set icon_alert %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        {% endset %}
+        {% set sub_reports %}<a href="{{ path('modo_report_list', {_locale: app.request.locale}) }}" class="color-inherit">Voir les signalements →</a>{% endset %}
+        {{ include('components/_stat_card.html.twig', {
+            icon:  icon_alert,
+            value: count_pending_reports,
+            label: 'Signalement' ~ (count_pending_reports != 1 ? 's' : '') ~ ' en attente',
+            sub:   sub_reports,
+            color: 'red',
+            alert: count_pending_reports > 0,
+        }) }}
+
+        {% set icon_folder %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        {% endset %}
+        {{ include('components/_stat_card.html.twig', {
+            icon:  icon_folder,
+            value: count_flagged,
+            label: 'Projet' ~ (count_flagged != 1 ? 's' : '') ~ ' signalé' ~ (count_flagged != 1 ? 's' : ''),
+            sub:   'Sur ' ~ count_total ~ ' projets au total',
+            color: 'yellow',
+            alert: count_flagged > 0,
+        }) }}
+
+        {% set icon_comment %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        {% endset %}
+        {% set sub_comments %}<a href="{{ path('modo_comments', {_locale: app.request.locale}) }}" class="color-inherit">Modérer →</a>{% endset %}
+        {{ include('components/_stat_card.html.twig', {
+            icon:  icon_comment,
+            value: count_comments,
+            label: 'Commentaire' ~ (count_comments != 1 ? 's' : ''),
+            sub:   sub_comments,
+            color: 'muted',
+        }) }}
+
+    </div>
+
+    {# ── Signalements en attente ───────────────────────────────────── #}
+    {% embed 'components/_dashboard_panel.html.twig' with {
+        title:    'Signalements en attente',
+        link_url: path('modo_report_list', {_locale: app.request.locale}),
+    } %}
+        {% block panel_body %}
+            {% if recent_reports|length == 0 %}
+                <div class="admin-empty-state modo-empty">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p>Aucun signalement en attente. Beau travail !</p>
+                </div>
+            {% else %}
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead><tr>
+                            <th>Type / Cible</th>
+                            <th>Raison</th>
+                            <th>Signalé par</th>
+                            <th>Date</th>
+                            <th></th>
+                        </tr></thead>
+                        <tbody>
+                        {% for report in recent_reports|slice(0, 10) %}
+                            <tr>
+                                <td>
+                                    {% if report.targetType == 'project' %}
+                                        <span class="tag-reason tag-reason--blue text-xs">Projet</span>
+                                        <span class="report-target-label">{{ report.targetProject ? report.targetProject.title : '(supprimé)' }}</span>
+                                    {% elseif report.targetType == 'comment' %}
+                                        <span class="tag-reason tag-reason--purple text-xs">Commentaire</span>
+                                    {% else %}
+                                        <span class="tag-reason tag-reason--orange text-xs">Utilisateur</span>
+                                        <span class="report-target-label">{{ report.targetUser ? report.targetUser.username : '(supprimé)' }}</span>
+                                    {% endif %}
+                                </td>
+                                <td><span class="tag-reason text-xs">{{ report.reasonLabel }}</span></td>
+                                <td class="text-muted td-2xs">{{ report.reporter.username }}</td>
+                                <td class="text-muted td-2xs nowrap">{{ report.createdAt|date('d/m/Y') }}</td>
+                                <td>
+                                    <a href="{{ path('modo_report_show', {id: report.id, _locale: app.request.locale}) }}" class="btn-table">Traiter</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        {% endblock %}
+    {% endembed %}
+
+    {# ── Projets avec flag de modération (ancien système) ─────────── #}
+    {% if flagged|length > 0 %}
+        {% embed 'components/_dashboard_panel.html.twig' with {
+            title:      'Projets avec flag de modération',
+            link_url:   path('modo_reports', {_locale: app.request.locale}),
+            link_label: 'Voir tous →',
+        } %}
+            {% block panel_body %}
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead><tr>
+                            <th>Projet</th><th>Auteur</th><th>Statut</th><th></th>
+                        </tr></thead>
+                        <tbody>
+                        {% for project in flagged|slice(0, 5) %}
+                            <tr>
+                                <td><strong>{{ project.title }}</strong></td>
+                                <td class="text-muted td-sm">{{ project.createdBy.username }}</td>
+                                <td><span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span></td>
+                                <td><a href="{{ path('modo_project_show', {id: project.id, _locale: app.request.locale}) }}" class="btn-table">Examiner</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+
+{% endblock %}

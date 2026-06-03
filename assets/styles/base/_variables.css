@@ -1,67 +1,95 @@
 :root {
     /* ═══════════════════════════════════════════════════════════ */
-    /* COULEURS PRINCIPALES                                         */
+    /* COULEUR PRINCIPALE                                           */
     /* ═══════════════════════════════════════════════════════════ */
 
-    --color-primary: #FFB800;    /* Jaune Scénart */
-
-    --color-bg-dark: #0d0d12;    /* Noir de fond */
-    --color-bg-card: #15151A;    /* Gris foncé des cartes/menus */
-    --color-bg-elevated: #07070a; /* Modales / menus */
-
-    --color-border: #222222;     /* Bordures subtiles */
+    --color-primary:         #FFB800;                    /* Jaune ScénArt */
+    --color-primary-dim:     rgba(255, 184, 0, 0.04);   /* Fond très subtil */
+    --color-primary-glow:    rgba(255, 184, 0, 0.08);   /* Fond actif / hover */
+    --color-primary-medium:  rgba(255, 184, 0, 0.12);   /* Fond mis en avant */
+    --color-primary-border:  rgba(255, 184, 0, 0.25);   /* Bordure primaire */
 
     /* ═══════════════════════════════════════════════════════════ */
-    /* COULEURS DE TEXTE                                            */
+    /* COULEURS SÉMANTIQUES (statuts, badges, alertes)             */
     /* ═══════════════════════════════════════════════════════════ */
 
-    --text-main: #FFFFFF;        /* Texte principal (blanc) */
-    --text-muted: #888888;       /* Texte secondaire (gris moyen) */
-    --text-muted-light: #666666; /* Texte secondaire clair */
-    --text-muted-dark: #444444;  /* Texte secondaire foncé */
-    --text-dark: #000000;        /* Texte noir (sur fond clair) */
+    --color-red:    #f87171;   /* Erreur / Danger / Urgent */
+    --color-orange: #fb923c;   /* Avertissement / Haute priorité */
+    --color-green:  #4ade80;   /* Succès / Terminé / Disponible */
+    --color-yellow: #facc15;   /* Attention / En cours */
+    --color-blue:   #60a5fa;   /* Info / Invitation */
+    --color-purple: #a78bfa;   /* Spécial / Note */
+
+    /* Variantes glow — fond teinté à 8% pour badges et hover states */
+    --color-red-glow:    rgba(248, 113, 113, 0.08);
+    --color-orange-glow: rgba(251, 146,  60, 0.08);
+    --color-green-glow:  rgba( 74, 222, 128, 0.08);
+    --color-blue-glow:   rgba( 96, 165, 250, 0.08);
+    --color-purple-glow: rgba(167, 139, 250, 0.08);
 
     /* ═══════════════════════════════════════════════════════════ */
-    /* ÉTATS DE VALIDATION (Formulaires)                            */
+    /* BACKGROUNDS                                                  */
     /* ═══════════════════════════════════════════════════════════ */
 
-    --color-error: #FF4444;      /* Erreurs de validation */
-    --color-error-bg: rgba(255, 68, 68, 0.1);  /* Fond erreur */
-    --color-error-light: rgba(255, 68, 68, 0.05); /* Fond erreur léger */
-
-    --color-success: #4CAF50;    /* Validation réussie */
-    --color-success-bg: rgba(76, 175, 80, 0.1);  /* Fond succès */
-
-    --color-warning: #FFC107;    /* Avertissements */
-    --color-warning-bg: rgba(255, 193, 7, 0.1);  /* Fond warning */
+    --color-bg-dark:     #0A0A0A;   /* Fond de page — noir chaud Claude */
+    --color-bg-card:     #0F0F0F;   /* Cartes / panneaux */
+    --color-bg-elevated: #262320;   /* Modales, tooltips, menus */
+    --color-bg-input:    #131210;   /* Inputs */
+    --color-bg-inset:    #0d0c0b;   /* Zones creusées */
 
     /* ═══════════════════════════════════════════════════════════ */
-    /* NUANCES DE GRIS (Backgrounds & Borders)                      */
+    /* BORDURES                                                     */
     /* ═══════════════════════════════════════════════════════════ */
 
-    --color-bg-input: #111114;   /* Fond des inputs */
-    --color-border-light: #333333; /* Bordures claires */
-    --color-border-focus: #444444; /* Bordures au focus */
+    --color-border:       #2c2925;  /* Bordure principale */
+    --color-border-light: #3a3733;  /* Séparateurs */
+    /* focus → utiliser var(--color-primary) directement */
 
     /* ═══════════════════════════════════════════════════════════ */
-    /* LAYOUT & RESPONSIVE                                          */
+    /* TEXTE                                                        */
     /* ═══════════════════════════════════════════════════════════ */
 
-    --container-width: 1400px;
+    --text-main:        #ece9e4;   /* Blanc crème chaud — Claude */
+    --text-muted:       #9a9390;   /* Gris chaud secondaire */
+    --text-muted-light: #706b67;   /* Placeholders, légendes */
+    --text-muted-dark:  #4a4643;   /* Éléments désactivés */
+    --text-dark:        #000000;   /* Texte noir (sur fond clair) */
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* ÉTATS DE VALIDATION                                          */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --color-error:       #FF4444;
+    --color-error-bg:    rgba(255, 68, 68, 0.10);
+    --color-error-light: rgba(255, 68, 68, 0.05);
+
+    --color-success:     #4CAF50;
+    --color-success-bg:  rgba(76, 175, 80, 0.10);
+
+    /* warning → utiliser var(--color-primary) + var(--color-primary-glow) */
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* SUPERPOSITIONS (overlays semi-transparents blancs)          */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --overlay-xs:  rgba(255, 255, 255, 0.02);
+    --overlay-sm:  rgba(255, 255, 255, 0.05);
+    --overlay-md:  rgba(255, 255, 255, 0.10);
+    --overlay-lg:  rgba(255, 255, 255, 0.15);
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* LAYOUT                                                       */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --container-width:   1400px;
     --container-padding: 50px;
 
     /* ═══════════════════════════════════════════════════════════ */
     /* TRANSITIONS                                                  */
     /* ═══════════════════════════════════════════════════════════ */
 
-    --transition: all 0.3s ease;
     --transition-fast: all 0.2s ease;
 
-    /* ═══════════════════════════════════════════════════════════ */
-    /* BREAKPOINTS                                                  */
-    /* ═══════════════════════════════════════════════════════════ */
-
-    --breakpoint-mobile: 640px;
-    --breakpoint-tablet: 768px;
-    --breakpoint-desktop: 1024px;
+    /* Breakpoints — non utilisables avec var() dans @media, hardcodés dans chaque fichier
+       mobile: 640px  |  tablet: 768px  |  desktop: 1024px */
 }

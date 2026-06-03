@@ -1,0 +1,291 @@
+/* ═══════════════════════════════════════════════════════════
+   MODAL DE SIGNALEMENT — _report-modal.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Overlay ─────────────────────────────────────────────── */
+.report-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .7);
+    backdrop-filter: blur(3px);
+    padding: 16px;
+}
+
+.report-modal-overlay[hidden] {
+    display: none;
+}
+
+/* ── Panneau ──────────────────────────────────────────────── */
+.report-modal__panel {
+    position: relative;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    width: 100%;
+    max-width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    animation: report-modal-in .15s ease;
+}
+
+@keyframes report-modal-in {
+    from { opacity: 0; transform: translateY(-14px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── En-tête ──────────────────────────────────────────────── */
+.report-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+    gap: 10px;
+}
+
+.report-modal__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.report-modal__title-icon {
+    color: var(--color-orange);
+    flex-shrink: 0;
+}
+
+.report-modal__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+    flex-shrink: 0;
+}
+
+.report-modal__close:hover {
+    border-color: var(--color-border);
+    color: var(--text-main);
+}
+
+/* ── Corps ────────────────────────────────────────────────── */
+.report-modal__body {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.report-modal__intro {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ── Options de raison ────────────────────────────────────── */
+.report-modal__reasons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.report-reason-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: border-color .12s, background .12s;
+}
+
+.report-reason-option:hover {
+    border-color: var(--overlay-lg);
+}
+
+.report-reason-option input[type="radio"] {
+    display: none;
+}
+
+.report-reason-option__dot {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color .12s;
+}
+
+.report-reason-option__dot::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    opacity: 0;
+    transition: opacity .12s;
+}
+
+.report-reason-option:has(input:checked) {
+    border-color: var(--color-primary);
+    background: var(--color-primary-dim);
+}
+
+.report-reason-option:has(input:checked) .report-reason-option__dot {
+    border-color: var(--color-primary);
+}
+
+.report-reason-option:has(input:checked) .report-reason-option__dot::after {
+    opacity: 1;
+}
+
+.report-reason-option__label {
+    font-size: 12px;
+    color: var(--text-main);
+    font-weight: 600;
+    flex: 1;
+}
+
+/* ── Description additionnelle ────────────────────────────── */
+.report-modal__description-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.report-modal__description-group[hidden] { display: none; }
+
+.report-modal__description-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-muted);
+}
+
+.report-modal__description-field {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    padding: 10px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--text-main);
+    font-size: 12px;
+    font-family: inherit;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color .15s;
+}
+
+.report-modal__description-field:focus {
+    border-color: var(--color-primary);
+}
+
+.report-modal__description-field::placeholder {
+    color: var(--text-muted);
+    opacity: .6;
+}
+
+/* ── Feedback ─────────────────────────────────────────────── */
+.report-modal__feedback {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 12px;
+    min-height: 0;
+}
+
+.report-modal__feedback:empty { display: none; }
+
+.report-modal__feedback--success {
+    background: var(--color-green-glow);
+    border: 1px solid color-mix(in srgb, var(--color-green) 25%, transparent);
+    color: var(--color-green);
+}
+
+.report-modal__feedback--error {
+    background: var(--color-error-bg);
+    border: 1px solid color-mix(in srgb, var(--color-error) 25%, transparent);
+    color: var(--color-error);
+}
+
+/* ── Pied ─────────────────────────────────────────────────── */
+.report-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 18px;
+    border-top: 1px solid var(--color-border);
+    flex-shrink: 0;
+}
+
+.report-modal__btn-cancel {
+    padding: 7px 14px;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+}
+
+.report-modal__btn-cancel:hover {
+    border-color: var(--color-primary);
+    color: var(--text-main);
+}
+
+.report-modal__btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    background: var(--color-orange);
+    border: none;
+    color: var(--text-dark);
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity .15s;
+}
+
+.report-modal__btn-submit:hover   { opacity: .85; }
+.report-modal__btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Bouton de déclenchement générique ───────────────────── */
+.btn-report {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color .15s, background .15s;
+}
+
+.btn-report:hover {
+    color: var(--color-orange);
+    background: var(--color-orange-glow);
+}

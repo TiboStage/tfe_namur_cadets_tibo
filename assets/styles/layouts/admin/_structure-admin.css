@@ -159,8 +159,7 @@
 .admin-stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
-    margin-bottom: 40px;
+    gap: 15px;
 }
 
 
@@ -245,3 +244,710 @@
     .admin-sidebar .menu-item span, .sidebar-brand span { display: none; }
     .admin-main { margin-left: 70px; }
 }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* STAT CARDS — Dashboard                                      */
+/* ═══════════════════════════════════════════════════════════ */
+
+.admin-stat-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    padding: 24px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.admin-stat-card--alert {
+    border-color: rgba(255, 68, 68, 0.3);
+    background: var(--color-error-light);
+}
+
+.asc-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.asc-icon--blue   { color: var(--color-blue); background: rgba(96,165,250,0.1); }
+.asc-icon--yellow { color: var(--color-primary); background: var(--color-primary-glow); }
+.asc-icon--red    { color: var(--color-error); background: var(--color-error-bg); }
+.asc-icon--muted  { color: var(--text-muted); background: rgba(255,255,255,0.04); }
+
+.asc-body  { flex: 1; }
+.asc-value { font-size: 32px; font-weight: 800; color: var(--text-main); line-height: 1; }
+.asc-label { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+.asc-sub   { font-size: 11px; color: var(--text-muted-light); margin-top: 4px; }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* BADGES — Rôles, Statut utilisateur, Modération             */
+/* ═══════════════════════════════════════════════════════════ */
+
+.role-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-right: 3px;
+}
+.role-badge--admin { background: rgba(239,68,68,0.15);  color: var(--color-red); }
+.role-badge--modo  { background: rgba(251,146,60,0.15); color: var(--color-orange); }
+.role-badge--user  { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+.role-badge--super { background: color-mix(in srgb, var(--color-purple) 15%, transparent); color: var(--color-purple); }
+
+.status-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+}
+.status-badge--active  { background: var(--color-success-bg); color: var(--color-success); }
+.status-badge--warning { background: var(--color-orange-glow); color: var(--color-orange); }
+.status-badge--banned  { background: var(--color-error-bg);   color: var(--color-error); }
+
+.mod-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    letter-spacing: 0.3px;
+}
+.mod-badge--clear    { background: var(--color-success-bg); color: var(--color-success); }
+.mod-badge--warning  { background: var(--color-primary-glow); color: var(--color-primary); }
+.mod-badge--blocked  { background: var(--color-error-bg);   color: var(--color-error); }
+.mod-badge--approved { background: rgba(96,165,250,0.1);    color: var(--color-blue); }
+.mod-badge--flagged  { background: var(--color-error-bg);   color: var(--color-error); }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* BTN-TABLE VARIANTS — Actions de modération                 */
+/* ═══════════════════════════════════════════════════════════ */
+
+.btn-table--success { border-color: var(--color-success); color: var(--color-success); }
+.btn-table--success:hover { background: var(--color-success-bg); border-color: var(--color-success); color: var(--color-success); }
+
+.btn-table--warn { border-color: var(--color-primary); color: var(--color-primary); }
+.btn-table--warn:hover { background: var(--color-primary-glow); border-color: var(--color-primary); color: var(--color-primary); }
+
+.btn-table--danger { border-color: var(--color-error); color: var(--color-error); }
+.btn-table--danger:hover { background: var(--color-error-bg); border-color: var(--color-error); color: var(--color-error); }
+
+.btn-table--primary { border-color: var(--color-blue); color: var(--color-blue); }
+.btn-table--primary:hover { background: rgba(96,165,250,0.1); border-color: var(--color-blue); color: var(--color-blue); }
+
+.btn-table--current { opacity: 0.4; cursor: default; pointer-events: none; }
+
+.mod-inline-form { display: inline; }
+.mod-btn-group   { display: flex; gap: 6px; flex-wrap: wrap; }
+.mod-actions     { display: flex; flex-direction: column; gap: 10px; }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* TOOLBAR & FILTER TABS — Listes admin                       */
+/* ═══════════════════════════════════════════════════════════ */
+
+.admin-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.admin-search-form {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    max-width: 400px;
+}
+
+.admin-search-input {
+    flex: 1;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border-light);
+    color: var(--text-main);
+    padding: 8px 14px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.admin-search-input:focus { border-color: var(--color-primary); }
+.admin-search-input::placeholder { color: var(--text-muted); }
+
+.admin-count {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    align-self: center;
+}
+
+.admin-filter-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.filter-tab {
+    padding: 10px 18px;
+    font-size: 13px;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: var(--transition-fast);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.filter-tab:hover { color: var(--text-main); }
+.filter-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+
+.filter-tab--alert.active .filter-count,
+.filter-tab--alert .filter-count {
+    background: var(--color-error-bg);
+    color: var(--color-error);
+}
+
+.filter-count {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/* USER PROFILE LAYOUT — Admin user detail                    */
+/* ═══════════════════════════════════════════════════════════ */
+
+.aup-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.aup-avatar img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+}
+
+.aup-avatar-placeholder {
+    width: 72px;
+    height: 72px;
+    background: var(--color-primary);
+    color: var(--text-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.aup-identity { flex: 1; }
+.aup-identity h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+
+.aup-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+.aup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+@media (max-width: 900px) { .aup-grid { grid-template-columns: 1fr; } }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* DETAIL PAGE HEADER                                          */
+/* ═══════════════════════════════════════════════════════════ */
+
+.admin-detail-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.admin-detail-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/* DEFINITION LIST — Panel info                               */
+/* ═══════════════════════════════════════════════════════════ */
+
+.admin-dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 20px;
+    font-size: 13px;
+    align-items: start;
+}
+
+.admin-dl dt { color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+.admin-dl dd { color: var(--text-main); margin: 0; }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* ROLES LIST — Checkboxes gestion de rôles                   */
+/* ═══════════════════════════════════════════════════════════ */
+
+.roles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.role-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    user-select: none;
+}
+
+.role-item:hover { border-color: var(--color-border-light); }
+.role-item--fixed { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+.role-item input[type="checkbox"] {
+    accent-color: var(--color-primary);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.role-hint {
+    font-size: 11px;
+    color: var(--text-muted-light);
+    margin-left: 40px;
+    margin-top: -4px;
+    margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/* PANEL HEADER                                                */
+/* ═══════════════════════════════════════════════════════════ */
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.panel-header h3 { margin-bottom: 0; }
+
+.panel-link {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.panel-link:hover { color: var(--color-primary); }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* EMPTY STATE                                                 */
+/* ═══════════════════════════════════════════════════════════ */
+
+.admin-empty-state {
+    text-align: center;
+    padding: 80px 40px;
+    color: var(--text-muted);
+}
+
+.admin-empty-state svg {
+    color: var(--text-muted-light);
+    margin-bottom: 16px;
+}
+
+.admin-empty-state h3 {
+    font-size: 18px;
+    color: var(--text-main);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.admin-empty-state p { font-size: 14px; }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* FLASH MESSAGES — Admin                                     */
+/* ═══════════════════════════════════════════════════════════ */
+
+.admin-flash {
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-left: 3px solid;
+}
+
+.admin-flash--success { background: var(--color-success-bg); border-color: var(--color-success); color: var(--color-success); }
+.admin-flash--danger  { background: var(--color-error-bg);   border-color: var(--color-error);   color: var(--color-error); }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* NAVBAR ADMIN — User pill & misc                            */
+/* ═══════════════════════════════════════════════════════════ */
+
+.admin-user-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.admin-user-pill--modo { color: var(--color-orange); }
+
+/* ─── Panel variants ─────────────────────────────────────────────── */
+.panel-box--flush { margin-top: 0; }
+
+/* ─── Table utilitaires ──────────────────────────────────────────── */
+.td-empty   { text-align: center; padding: 32px; }
+.td-compact { text-align: center; padding: 24px; }
+.td-xs      { font-size: 10px; }
+.td-2xs     { font-size: 11px; white-space: nowrap; }
+.td-sm      { font-size: 12px; }
+.th-xs      { width: 40px; }
+
+/* ─── Report / Modo layouts ──────────────────────────────────────── */
+.modo-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.modo-toolbar__actions { display: flex; gap: 8px; }
+.modo-report-grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 20px;
+    align-items: start;
+}
+.modo-report-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.modo-report-side {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.modo-report-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.modo-row-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+.modo-target-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+.modo-target-text {
+    margin-top: 6px;
+    font-size: 12px;
+}
+.modo-comment-box {
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    font-size: 12px;
+    line-height: 1.6;
+}
+.modo-comment-meta {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+.modo-info-text {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 0 0 8px;
+}
+.modo-reason-text {
+    margin: 6px 0 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-main);
+}
+.modo-empty { padding: 60px 0; }
+.modo-stats-note { margin-bottom: 16px; }
+
+/* ─── Commentaires inline (admin/modo tables) ────────────────────── */
+.td-comment { font-size: 12px; max-width: 300px; word-break: break-word; }
+.td-author  { font-size: 12px; font-weight: 600; }
+.tag-reply  { font-size: 10px; color: var(--text-muted); }
+.mod-actions-cell { display: flex; gap: 4px; flex-wrap: wrap; }
+
+/* ─── Span utilitaires dans les tableaux de signalement ─────────── */
+.report-target-label { font-size: 12px; margin-left: 6px; }
+.report-target-meta  { font-size: 11px; margin-left: 6px; color: var(--text-muted); }
+.report-target-del   { font-size: 12px; margin-left: 6px; font-style: italic; }
+
+.text-muted { color: var(--text-muted); }
+
+.row-banned { background: var(--color-error-light) !important; }
+.row-banned td { opacity: 0.7; }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* SIDEBAR FOOTER & MODO LINK                                 */
+/* ═══════════════════════════════════════════════════════════ */
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 12px 12px 20px;
+    border-top: 1px solid var(--color-border);
+}
+
+.sidebar-modo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    color: var(--color-orange);
+    font-size: 13px;
+    font-weight: 600;
+    transition: var(--transition-fast);
+    text-decoration: none;
+}
+
+.sidebar-modo-link:hover { background: rgba(251,146,60,0.06); }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* MODO VARIANT — Sidebar & badges                            */
+/* ═══════════════════════════════════════════════════════════ */
+
+.brand-dot--modo  { background-color: var(--color-orange); }
+
+.brand-badge--modo {
+    background: rgba(251,146,60,0.15);
+    color: var(--color-orange);
+}
+
+.admin-layout--modo .menu-item.active {
+    background-color: rgba(251,146,60,0.08);
+    color: var(--color-orange);
+}
+
+.admin-layout--modo .menu-item.active svg { color: var(--color-orange); }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* DOCUMENTATION ADMIN — Composants supplémentaires           */
+/* ═══════════════════════════════════════════════════════════ */
+
+/* Section header avec bouton à droite */
+.admin-section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.admin-section-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+/* Empty state compact */
+.admin-empty {
+    text-align: center;
+    padding: 60px 20px;
+    border: 2px dashed var(--color-border);
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.admin-empty p { margin-bottom: 16px; }
+
+/* Petits boutons d'action */
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    line-height: 1.4;
+}
+
+.btn-sm--ghost {
+    background: transparent;
+    border-color: var(--color-border);
+    color: var(--text-muted);
+}
+.btn-sm--ghost:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+.btn-sm--outline {
+    background: transparent;
+    border-color: var(--color-border-light);
+    color: var(--text-main);
+}
+.btn-sm--outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+.btn-sm--danger {
+    background: transparent;
+    border-color: rgba(255,68,68,0.3);
+    color: var(--color-error);
+}
+.btn-sm--danger:hover { background: var(--color-error-bg); border-color: var(--color-error); }
+
+/* Badges génériques */
+.admin-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border: 1px solid transparent;
+}
+.admin-badge--success  { background: var(--color-success-bg); color: var(--color-success); border-color: rgba(76,175,80,0.2); }
+.admin-badge--muted    { background: rgba(255,255,255,0.04); color: var(--text-muted); border-color: var(--color-border); }
+.admin-badge--neutral  { background: rgba(255,255,255,0.05); color: var(--text-muted); border-color: var(--color-border-light); }
+
+/* Cards admin */
+.admin-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    margin-bottom: 16px;
+}
+.admin-card__header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+.admin-card__body { padding: 16px; }
+
+/* Navigation retour */
+.admin-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 20px;
+    transition: color 0.2s;
+}
+.admin-back-link:hover { color: var(--text-main); }
+
+.admin-form-header { margin-bottom: 16px; }
+
+/* Actions dans les lignes du tableau */
+.admin-table__actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+/* Inline checkbox */
+.form-group--inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row;
+}
+.form-group--inline label { margin: 0; cursor: pointer; }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* EXTENSIONS — Signalements & Commentaires                   */
+/* ═══════════════════════════════════════════════════════════ */
+
+/* Variantes de tag-reason par type */
+.tag-reason--blue   { background: rgba(96,165,250,.12); color: var(--color-blue); }
+.tag-reason--purple { background: var(--color-purple-glow); color: var(--color-purple); }
+.tag-reason--orange { background: rgba(251,146,60,.12);  color: var(--color-orange); }
+
+/* mod-badge pour les statuts de Report */
+.mod-badge--pending   { background: var(--color-orange-glow); color: var(--color-orange); }
+.mod-badge--reviewed  { background: rgba(96,165,250,.12); color: var(--color-blue); }
+.mod-badge--dismissed { background: rgba(255,255,255,.06); color: var(--text-muted); }
+.mod-badge--actioned  { background: rgba(74,222,128,.12);  color: var(--color-green); }
+
+/* Libellés de champ dans les panels détail */
+.admin-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--text-muted);
+}
+
+/* Lignes de tableau colorées */
+.row--alert td { background: rgba(255,68,68,.04); }
+.row--muted td { opacity: .55; }
+
+/* Boutons action dans un panel (plus grands que btn-table) */
+.btn-admin {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.btn-admin--outline {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--text-main);
+}
+.btn-admin--outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+.btn-admin--danger {
+    background: var(--color-error-light);
+    border: 1px solid color-mix(in srgb, var(--color-error) 30%, transparent);
+    color: var(--color-error);
+}
+.btn-admin--danger:hover { background: var(--color-error-bg); border-color: var(--color-error); }

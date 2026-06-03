@@ -1,0 +1,25 @@
+{#
+ * Composant panel unifié — utilisé dans admin et modo.
+ *
+ * Paramètres :
+ *   title       (string)  Titre du panneau
+ *   link_url    (string)  URL du lien "Voir tous" [optionnel]
+ *   link_label  (string)  Texte du lien [défaut: 'Voir tous →']
+ *
+ * Utilisation via {% embed %} pour injecter le contenu :
+ *
+ *   {% embed 'components/_dashboard_panel.html.twig' with {title: '...', link_url: path('...')} %}
+ *       {% block panel_body %}
+ *           <div class="table-wrapper">...</div>
+ *       {% endblock %}
+ *   {% endembed %}
+ #}
+<div class="panel-box">
+    <div class="panel-header">
+        <h3>{{ title }}</h3>
+        {% if link_url is defined and link_url %}
+            <a href="{{ link_url }}" class="panel-link">{{ link_label|default('Voir tous →') }}</a>
+        {% endif %}
+    </div>
+    {% block panel_body %}{% endblock %}
+</div>

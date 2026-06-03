@@ -1,0 +1,148 @@
+{#
+ # Modal de publication — _publish_modal.html.twig
+ # Variables attendues : project
+ #}
+{% trans_default_domain 'workshop' %}
+
+<div class="publish-modal" id="publishModal" hidden
+     data-controller="publish-modal"
+     data-publish-modal-is-serie-value="{{ project.projectType == 'serie' ? 'true' : 'false' }}">
+
+    <div class="publish-modal__backdrop" data-action="click->publish-modal#close"></div>
+
+    <div class="publish-modal__panel">
+
+        {# ── En-tête ── #}
+        <div class="publish-modal__header">
+            <h2 class="publish-modal__title">
+                {{ ux_icon('lucide:globe', {style: 'width:16px;height:16px'}) }}
+                {{ 'publish_modal.title'|trans }}
+            </h2>
+            <button type="button" class="publish-modal__close"
+                    data-action="publish-modal#close"
+                    aria-label="{{ 'publish_modal.close'|trans }}">
+                {{ ux_icon('lucide:x', {style: 'width:16px;height:16px'}) }}
+            </button>
+        </div>
+
+        {# ── Formulaire ── #}
+        <form method="post"
+              action="{{ path('app_project_publish', {_locale: app.request.locale, slug: project.slug}) }}"
+              class="publish-modal__form"
+              data-publish-modal-target="form">
+
+            <input type="hidden" name="_token" value="{{ csrf_token('publish_' ~ project.id) }}">
+            <input type="hidden" name="visibility" data-publish-modal-target="visibilityInput"
+                   value="{{ project.visibility }}">
+
+            {# ── Options de visibilité ── #}
+            <div class="publish-modal__options">
+
+                <label class="visibility-option {{ project.visibility == 'unpublished' ? 'is-selected' : '' }}"
+                       data-action="click->publish-modal#select"
+                       data-value="unpublished">
+                    <div class="visibility-option__icon visibility-option__icon--muted">
+                        {{ ux_icon('lucide:eye-off', {class: 'icon-sm'}) }}
+                    </div>
+                    <div class="visibility-option__text">
+                        <span class="visibility-option__label">{{ 'publish_modal.unpublished_label'|trans }}</span>
+                        <span class="visibility-option__desc">{{ 'publish_modal.unpublished_desc'|trans }}</span>
+                    </div>
+                    <div class="visibility-option__check">{{ ux_icon('lucide:check', {class: 'icon-xs'}) }}</div>
+                </label>
+
+                <label class="visibility-option {{ project.visibility == 'private' ? 'is-selected' : '' }}"
+                       data-action="click->publish-modal#select"
+                       data-value="private">
+                    <div class="visibility-option__icon visibility-option__icon--orange">
+                        {{ ux_icon('lucide:users', {class: 'icon-sm'}) }}
+                    </div>
+                    <div class="visibility-option__text">
+                        <span class="visibility-option__label">{{ 'publish_modal.private_label'|trans }}</span>
+                        <span class="visibility-option__desc">{{ 'publish_modal.private_desc'|trans }}</span>
+                    </div>
+                    <div class="visibility-option__check">{{ ux_icon('lucide:check', {class: 'icon-xs'}) }}</div>
+                </label>
+
+                <label class="visibility-option {{ project.visibility == 'public' ? 'is-selected' : '' }}"
+                       data-action="click->publish-modal#select"
+                       data-value="public">
+                    <div class="visibility-option__icon visibility-option__icon--green">
+                        {{ ux_icon('lucide:globe', {class: 'icon-sm'}) }}
+                    </div>
+                    <div class="visibility-option__text">
+                        <span class="visibility-option__label">{{ 'publish_modal.public_label'|trans }}</span>
+                        <span class="visibility-option__desc">{{ 'publish_modal.public_desc'|trans }}</span>
+                    </div>
+                    <div class="visibility-option__check">{{ ux_icon('lucide:check', {class: 'icon-xs'}) }}</div>
+                </label>
+
+            </div>
+
+            {# ── Éléments à publier ── #}
+            {% set topLevelElements = project.scenarioElements|filter(e => e.depth == 1) %}
+
+            {% if topLevelElements is not empty %}
+            <div class="publish-modal__elements"
+                 data-publish-modal-target="elementsSection">
+
+                <div class="publish-modal__elements-header">
+                    {{ ux_icon('lucide:layers', {style: 'width:13px;height:13px'}) }}
+                    {{ 'publish_modal.content_title'|trans }}
+                    <span class="publish-modal__elements-hint">
+                        {{ 'publish_modal.content_hint'|trans }}
+                    </span>
+                </div>
+
+                <div class="publish-modal__elements-controls">
+                    <button type="button"
+                            class="publish-modal__ctrl-btn"
+                            data-action="click->publish-modal#selectAll">
+                        {{ 'publish_modal.select_all'|trans }}
+                    </button>
+                    <button type="button"
+                            class="publish-modal__ctrl-btn"
+                            data-action="click->publish-modal#selectNone">
+                        {{ 'publish_modal.deselect_all'|trans }}
+                    </button>
+                </div>
+
+                <div class="publish-modal__elements-list">
+                    {% for el in topLevelElements %}
+                    <label class="element-toggle">
+                        <input type="checkbox"
+                               name="element_ids[]"
+                               value="{{ el.id }}"
+                               {{ el.isPublic ? 'checked' : '' }}
+                               class="element-toggle__checkbox">
+                        <span class="element-toggle__track"></span>
+                        <div class="element-toggle__info">
+                            <span class="element-toggle__label">{{ el.title }}</span>
+                            {% if el.children is not empty %}
+                                <span class="element-toggle__sub">
+                                    {{ 'publish_modal.element'|trans({'%count%': el.children|length}) }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+
+            </div>
+            {% endif %}
+
+            {# ── Pied de modal ── #}
+            <div class="publish-modal__footer">
+                <button type="button" class="publish-modal__btn-cancel"
+                        data-action="publish-modal#close">
+                    {{ 'publish_modal.cancel'|trans }}
+                </button>
+                <button type="submit" class="publish-modal__btn-save">
+                    {{ ux_icon('lucide:check', {class: 'icon-xs'}) }}
+                    {{ 'publish_modal.apply'|trans }}
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>

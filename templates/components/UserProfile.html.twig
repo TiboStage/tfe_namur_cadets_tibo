@@ -1,39 +1,104 @@
 {# templates/components/UserProfile.html.twig #}
+{% trans_default_domain 'workshop' %}
 <div class="user-profile-dropdown"
-     data-controller="dropdown"
-     data-action="mouseenter->dropdown#show mouseleave->dropdown#hide">
+     data-controller="dropdown">
 
-    <div class="user-trigger">
+    {# ── Trigger ──────────────────────────────────────────────── #}
+    <button type="button"
+            class="user-trigger"
+            data-action="click->dropdown#toggle"
+            aria-haspopup="true"
+            aria-expanded="false">
+
+        {{ include('_partials/_user_avatar.html.twig', {user: app.user, size: 'sm'}) }}
+
         <div class="user-info">
-            <span class="user-name">
-                {{ app.user.firstName|capitalize }} {{ app.user.lastName|slice(0, 1)|upper }}.
-            </span>
-            <span class="user-status">
-                {{ ux_icon('lucide:diamond', { class: 'icon-xs', fill: 'currentColor' }) }}
-                Premium
-            </span>
+            <span class="user-name">{{ app.user.username }}</span>
         </div>
 
-        <div class="user-avatar">
-            {{ app.user.firstName|slice(0, 1)|upper }}{{ app.user.lastName|slice(0, 1)|upper }}
-        </div>
-    </div>
+        {{ ux_icon('lucide:chevron-down', {class: 'icon-xs dropdown-chevron'}) }}
+    </button>
 
-    <ul class="dropdown-content hidden" data-dropdown-target="menu">
-        <li>
-            <a href="{{ path('app_profile') }}">
-                {{ ux_icon('lucide:user-round', { class: 'icon-sm' }) }}
-                Profil
+    {# ── Dropdown ─────────────────────────────────────────────── #}
+    <ul class="dropdown-content" data-dropdown-target="menu" role="menu">
+
+        {# ── Identité ─────────────────────────────────── #}
+        <li class="up-identity" role="none">
+            {{ include('_partials/_user_avatar.html.twig', {user: app.user, size: 'md'}) }}
+            <div class="up-identity__info">
+                <span class="up-identity__name">{{ app.user.username }}</span>
+                <span class="up-identity__email">{{ app.user.email }}</span>
+            </div>
+        </li>
+
+        <li class="dropdown-divider" role="separator"><hr></li>
+
+        {# ── Espace personnel ──────────────────────────── #}
+        <li role="none">
+            <a href="{{ path('app_project_index') }}" role="menuitem">
+                {{ ux_icon('lucide:folder-open', { class: 'icon-sm' }) }}
+                {{ 'navbar.actions.my_projects'|trans }}
+                {% if projects_count > 0 %}
+                    <span class="up-count">{{ projects_count > 99 ? '99+' : projects_count }}</span>
+                {% endif %}
             </a>
         </li>
 
-        <li class="dropdown-divider"><hr></li>
+        <li role="none">
+            <a href="{{ path('app_profile') }}" role="menuitem">
+                {{ ux_icon('lucide:settings', { class: 'icon-sm' }) }}
+                {{ 'navbar.actions.profile'|trans }}
+            </a>
+        </li>
 
-        <li>
-            <a href="{{ path('app_logout') }}" data-turbo="false" class="logout-link">
+        <li role="none">
+            <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: app.user.username}) }}"
+               role="menuitem"
+               target="_blank"
+               rel="noopener">
+                {{ ux_icon('lucide:globe', { class: 'icon-sm' }) }}
+                {{ 'navbar.actions.public_profile'|trans }}
+                {{ ux_icon('lucide:arrow-up-right', { class: 'up-external' }) }}
+            </a>
+        </li>
+
+        {# ── Administration / Modération ──────────────── #}
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MODO') %}
+        <li class="dropdown-divider" role="separator"><hr></li>
+
+        <li role="none">
+            {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('admin_dashboard', {_locale: app.request.locale}) }}"
+               data-turbo="false"
+               role="menuitem"
+               class="admin-link">
+                {{ ux_icon('lucide:shield', { class: 'icon-sm' }) }}
+                {{ 'navbar.actions.admin'|trans }}
+            </a>
+            {% else %}
+            <a href="{{ path('modo_dashboard', {_locale: app.request.locale}) }}"
+               data-turbo="false"
+               role="menuitem"
+               class="admin-link admin-link--modo">
+                {{ ux_icon('lucide:shield-check', { class: 'icon-sm' }) }}
+                {{ 'navbar.actions.moderation'|trans }}
+            </a>
+            {% endif %}
+        </li>
+        {% endif %}
+
+        <li class="dropdown-divider" role="separator"><hr></li>
+
+        {# ── Déconnexion ───────────────────────────────── #}
+        <li role="none">
+            <a href="{{ path('app_logout') }}"
+               data-turbo="false"
+               class="logout-link"
+               role="menuitem">
                 {{ ux_icon('lucide:log-out', { class: 'icon-sm' }) }}
-                Déconnexion
+                {{ 'navbar.actions.logout'|trans }}
             </a>
         </li>
+
     </ul>
 </div>

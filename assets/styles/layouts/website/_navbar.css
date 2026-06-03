@@ -12,7 +12,7 @@
 .main-nav {
     background: var(--color-bg-dark);
     border-bottom: 1px solid var(--color-border);
-    padding: 15px 50px;
+    padding: 15px var(--container-padding);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -23,7 +23,7 @@
     grid-template-columns: 1fr 2fr 1fr;
     justify-content: space-between;
     align-items: center;
-    max-width: 1400px;
+    max-width: var(--container-width);
     margin: 0 auto;
 }
 
@@ -31,7 +31,7 @@
 .logo-text {
     font-size: 22px;
     font-weight: 900;
-    color: white;
+    color: var(--text-main);
     text-decoration: none;
 }
 .logo-text .highlight { color: var(--color-primary); }
@@ -60,106 +60,198 @@
 }
 
 
-/* Bloc Profil (Noir) */
+/* ── Bloc profil ─────────────────────────────────────────────── */
 .user-profile-dropdown {
     position: relative;
-    display: flex;
-    align-items: center;
-    height: 50px;
-    gap: 10px;
-    padding: 0 10px 0 15px;
-    border: 1px solid #222;
-    cursor: pointer;
-    transition: border-color 0.2s;
 }
-.user-profile-dropdown:hover { border-color: #444; }
 
+/* Trigger — bouton cliquable */
+.user-trigger {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    height: 50px;
+    min-width: 180px;
+    padding: 0 12px 0 14px;
+    border: 1px solid var(--color-border);
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.2s, background 0.2s;
+    justify-content: end;
+}
+
+.user-trigger:hover,
+.user-profile-dropdown.is-open .user-trigger {
+    border-color: var(--color-primary);
+    background: var(--overlay-xs);
+}
+
+/* Infos utilisateur */
 .user-info {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
 }
+
 .user-name {
-    color: white;
+    color: var(--text-main);
     font-weight: 700;
     font-size: 14px;
     line-height: 1.2;
 }
-.user-status {
-    color: #ffb800;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+
+
+/* Chevron — tourne à l'ouverture */
+.dropdown-chevron {
+    color: var(--text-muted-light);
+    flex-shrink: 0;
+    transition: transform 0.2s ease, color 0.2s;
 }
 
-/* Rond Initiales (Avatar) */
-.user-avatar {
-    width: 36px;
-    height: 36px;
-    background: #ffb800;
-    color: black;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 13px;
+.user-profile-dropdown.is-open .dropdown-chevron {
+    transform: rotate(180deg);
+    color: var(--color-primary);
 }
 
-.user-trigger{
+/* ── Bloc identité (header du dropdown) ─────────────────────── */
+.up-identity {
     display: flex;
-    flex-direction: row;
     align-items: center;
     gap: 10px;
+    padding: 12px 14px 10px;
 }
 
-.dropdown-arrow {
-    color: #444;
-    font-size: 12px;
+.up-identity__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
 
-/* --- 4. Menu Déroulant (Dropdown Content) --- */
+.up-identity__name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.up-identity__email {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 170px;
+}
+
+/* ── Badge compteur dans les liens du dropdown ───────────────── */
+.up-count {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    background: rgba(255, 184, 0, .12);
+    color: var(--color-primary);
+}
+
+/* ── Icône lien externe ──────────────────────────────────────── */
+.up-external {
+    margin-left: auto;
+    width: 11px !important;
+    height: 11px !important;
+    color: var(--text-muted-dark);
+    flex-shrink: 0;
+}
+
+/* ── Menu déroulant ──────────────────────────────────────────── */
 .dropdown-content {
     position: absolute;
-    top: calc(100% + 0px);
+    top: calc(100% + 8px);   /* espace entre trigger et menu */
     right: 0;
-    background: #111114;
-    border: 1px solid #222;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border-light);
     min-width: 180px;
     list-style: none;
-    padding: 8px 0;
-    z-index: 100;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding: 6px 0;
+    z-index: 200;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+
+    /* Caché par défaut — transition CSS */
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+
+    /* Toujours dans le DOM pour la transition */
+    display: block;
 }
 
-/* Affichage via le JS */
+/* Ouvert */
 .dropdown-content.show {
-    display: block !important;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+    min-width: 180px;
 }
 
+/* Liens */
 .dropdown-content li a {
-    padding: 10px 20px;
-    color: #ccc;
+    padding: 9px 16px;
+    color: var(--text-muted);
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 14px;
-    transition: 0.2s;
+    font-size: 13px;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
 }
 
 .dropdown-content li a:hover {
-    background: #1a1a1f;
-    color: #ffb800;
+    background: var(--overlay-sm);
+    color: var(--text-main);
 }
 
+.dropdown-content li a .icon-sm {
+    color: var(--text-muted-light);
+    flex-shrink: 0;
+    transition: color 0.15s;
+}
+
+.dropdown-content li a:hover .icon-sm {
+    color: var(--color-primary);
+}
+
+/* Séparateur */
+.dropdown-divider hr,
 .dropdown-content hr {
     border: 0;
-    border-top: 1px solid #222;
-    margin: 5px 0;
+    border-top: 1px solid var(--color-border);
+    margin: 4px 0;
+}
+
+.logout-link:hover {
+    color: var(--color-red) !important;
+}
+.logout-link:hover .icon-sm {
+    color: var(--color-red) !important;
+}
+
+.admin-link:hover {
+    color: var(--color-error) !important;
+}
+.admin-link:hover .icon-sm {
+    color: var(--color-error) !important;
+}
+
+.admin-link--modo:hover {
+    color: var(--color-orange) !important;
+}
+.admin-link--modo:hover .icon-sm {
+    color: var(--color-orange) !important;
 }
 
 /* Boutons de connexion (si déconnecté) */
@@ -169,7 +261,7 @@
     gap: 15px;
 }
 .btn-login {
-    color: white;
+    color: var(--text-main);
     text-decoration: none;
     font-weight: 600;
     font-size: 14px;

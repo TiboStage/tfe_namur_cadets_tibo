@@ -1,104 +1,216 @@
-{% extends 'workshop/projects/layout.html.twig' %}
+{% extends 'workshop/projects/scenario/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
 
-{% block project_content %}
-    <div class="project-view">
+{% block title %}{{ project.title }} — {{ 'manuscript.index.title'|trans }}{% endblock %}
 
-        {# ═══════════════════════════════════════════════════════════════════
-       LAYOUT 2 COLONNES : Sidebar + Contenu
-       ═══════════════════════════════════════════════════════════════════ #}
-        <div class="workshop-wrapper">
+{% macro renderNode(element, project, notesByElement, configMap) %}
+    {% trans_default_domain 'workshop' %}
+    {% import _self as ms %}
 
-            {# --- SIDEBAR GAUCHE : NAVIGATION NARRATIVE --- #}
-            <aside class="workshop-sidebar-left">
-                <div class="sidebar-header">
-                    <h3>{{ project.title }}</h3>
-                    <small>{{ project.projectType|upper }}</small>
-                </div>
+    {% if element.isLeaf() %}
 
-                <nav class="tree-nav">
-                    <div class="tree-group">
-                        <span class="tree-label">MANUSCRIT</span>
-                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}" class="btn-add-mini">+</a>
-                    </div>
+        {% set notes = notesByElement[element.id] is defined ? notesByElement[element.id] : [] %}
+        {% set wc = 0 %}
+        {% for b in element.content %}
+            {% if b.content is defined and b.content %}{% set wc = wc + (b.content|split(' ')|length) %}{% endif %}
+        {% endfor %}
 
-                    <div class="scenario-tree">
-                        {% for root in rootElements %}
-                            {{ _self.renderTree(root, project) }}
-                        {% else %}
-                            <p class="empty-msg">Aucun élément narratif.</p>
-                        {% endfor %}
-                    </div>
-
-                    <div class="tree-group mt-4">
-                        <span class="tree-label">ENCYCLOPÉDIE</span>
-                    </div>
-                    <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="tree-item">
-                        {{ ux_icon('lucide:user', {class: 'icon-xs'}) }} Personnages
-                    </a>
-                    <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="tree-item">
-                        {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }} Lieux
-                    </a>
-                </nav>
-            </aside>
-
-            {# --- ZONE CENTRALE --- #}
-            <main class="workshop-main-content">
-                <header class="content-header">
-                    <h1>Tableau de bord narratif</h1>
-                    <div class="header-actions">
-                        <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="btn btn--ghost btn--sm">
-                            {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }} Retour
-                        </a>
-                    </div>
-                </header>
-
-                <div class="dashboard-grid">
-                    <section class="dashboard-card">
-                        <h4>Dernières modifications</h4>
-                        <p class="text-muted">Sélectionnez un élément dans l'arborescence à gauche pour commencer l'écriture.</p>
-                    </section>
-
-                    <section class="dashboard-card card-yellow">
-                        <h4>Astuce</h4>
-                        <p>Créez d'abord vos personnages et lieux pour pouvoir les mentionner avec @ et # dans vos scènes.</p>
-                    </section>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    {# ═══════════════════════════════════════════════════════════════════
-   MACRO ARBORESCENCE
-   ═══════════════════════════════════════════════════════════════════ #}
-    {% macro renderTree(element, project) %}
-        <div class="tree-node depth-{{ element.depth }}">
-            <div class="tree-row">
-            <span class="node-icon">
-                {% if element.depth == 1 %}
-                    {{ ux_icon('lucide:folder', {class: 'icon-xs'}) }}
-                {% elseif element.depth == 2 %}
-                    {{ ux_icon('lucide:folder-open', {class: 'icon-xs'}) }}
+        <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: element.id}) }}" class="ms-script-row">
+            <span class="ms-script-icon">{{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}</span>
+            <span class="ms-script-title">{{ element.title }}</span>
+            <span class="ms-script-meta">
+                {% if wc > 0 %}
+                    <span class="ms-script-words">{{ wc }} {{ 'manuscript.index.stats.word'|trans({'%count%': wc}) }}</span>
                 {% else %}
-                    {{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}
+                    <span class="ms-script-empty">{{ 'manuscript.index.tree.empty_folder'|trans }}</span>
+                {% endif %}
+                {% if notes|length > 0 %}
+                    <span class="ms-note-chip">{{ ux_icon('lucide:sticky-note', {class: 'icon-xs'}) }}{{ notes|length }}</span>
                 {% endif %}
             </span>
-                <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: element.id}) }}" class="node-link">
-                    {{ element.title }}
-                </a>
-                <div class="node-ops">
-                    {% if element.depth < 3 %}
-                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: element.depth + 1, parent_id: element.id}) }}" class="btn-add-mini">+</a>
-                    {% endif %}
-                </div>
+        </a>
+
+    {% else %}
+
+        {% set childDepth = element.depth + 1 %}
+        {% set childConfig = configMap[childDepth] is defined ? configMap[childDepth] : null %}
+
+        <div class="ms-folder ms-folder--depth-{{ element.depth > 3 ? 3 : element.depth }}">
+
+            <div class="ms-folder-header">
+                {{ ux_icon('lucide:folder-open', {class: 'icon-xs'}) }}
+
+                <span data-controller="inline-rename"
+                      data-inline-rename-url-value="{{ path('app_manuscript_rename', {project_slug: project.slug, id: element.id}) }}"
+                      data-inline-rename-title-value="{{ element.title }}"
+                      class="ms-folder-title-wrap">
+                    <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: element.id}) }}"
+                       class="ms-folder-title"
+                       data-inline-rename-target="display"
+                       data-action="dblclick->inline-rename#startEdit:prevent">{{ element.title }}</a>
+                    <button type="button" class="ms-rename-btn" title="{{ 'manuscript.index.tree.rename'|trans }}"
+                            data-action="click->inline-rename#startEdit">
+                        {{ ux_icon('lucide:pencil', {style: 'width:10px;height:10px;'}) }}
+                    </button>
+                </span>
+
+                <span class="ms-folder-type">{{ element.elementType|upper }}</span>
+                <span class="ms-folder-count">
+                    {{ element.children|length }} {{ 'manuscript.index.stats.script'|trans({'%count%': element.children|length}) }}
+                </span>
+
+                {% if childConfig %}
+                    <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: childDepth, parent_id: element.id}) }}"
+                       class="ms-folder-add" title="Ajouter {{ childConfig.labelSingular|lower }}">
+                        {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                    </a>
+                {% endif %}
             </div>
 
             {% if element.children is not empty %}
-                <div class="node-children">
+                <div class="ms-folder-body">
                     {% for child in element.children %}
-                        {{ _self.renderTree(child, project) }}
+                        {{ ms.renderNode(child, project, notesByElement, configMap) }}
                     {% endfor %}
                 </div>
+            {% else %}
+                {% if childConfig %}
+                <div class="ms-folder-empty">
+                    <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: childDepth, parent_id: element.id}) }}"
+                       class="ms-folder-add-link">
+                        {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                        Ajouter {{ childConfig.labelSingular|lower }}
+                    </a>
+                </div>
+                {% endif %}
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+{% endmacro %}
+
+{% block editor_shell %}
+{% import _self as ms %}
+
+{% set rootConfig = configMap[1] is defined ? configMap[1] : null %}
+
+<div class="editor-main">
+
+    {# Topbar #}
+    <header class="editor-topbar">
+        <div class="editor-topbar-left">
+            <span class="editor-topbar-title">
+                {{ ux_icon('lucide:book-open', {class: 'icon-sm'}) }}
+                {{ 'manuscript.index.title'|trans }}
+            </span>
+            <span class="element-type-pill">{{ project.projectType|upper }}</span>
+        </div>
+        <div class="editor-topbar-right">
+            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="topbar-btn">
+                {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
+                {{ 'manuscript.index.btn_overview'|trans }}
+            </a>
+            {% if rootConfig %}
+                <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}"
+                   class="topbar-btn topbar-btn-primary">
+                    {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                    Nouveau {{ rootConfig.labelSingular|lower }}
+                </a>
             {% endif %}
         </div>
-    {% endmacro %}
+    </header>
+
+    {% if rootElements is empty %}
+
+        {# État vide — formulaire inline #}
+        <div class="ms-empty-start">
+
+            <div class="ms-empty-structure">
+                <div class="ms-empty-structure-title">Structure de votre projet</div>
+                <div class="ms-empty-levels">
+                    {% for d, lvl in configMap %}
+                        <div class="ms-empty-level {% if d == 1 %}ms-empty-level--first{% endif %}" style="--lvl-color: {{ lvl.color }}">
+                            <span class="ms-empty-level-icon">{{ lvl.icon }}</span>
+                            <div class="ms-empty-level-text">
+                                <strong>{{ lvl.labelPlural }}</strong>
+                                <span>{{ lvl.hasContent ? 'contenu écrit' : 'structure' }}</span>
+                            </div>
+                        </div>
+                        {% if not loop.last %}
+                            <div class="ms-empty-level-arrow">{{ ux_icon('lucide:arrow-down', {class: 'icon-xs'}) }}</div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if rootConfig %}
+            <div class="ms-empty-form">
+                <h2 class="ms-empty-form-title">
+                    Créez votre premier
+                    <span style="color:{{ rootConfig.color }}">{{ rootConfig.labelSingular|lower }}</span>
+                </h2>
+                <form method="post" action="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}" class="ms-empty-form-inner">
+                    <input type="text" name="title" class="ms-empty-input" placeholder="{{ rootConfig.labelSingular }} 1…" autofocus required>
+                    <button type="submit" class="ms-empty-submit">
+                        {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }} Créer
+                    </button>
+                </form>
+                {% if configMap|length > 1 %}
+                    <p class="ms-empty-hint">Vous ajouterez ensuite des <strong>{{ configMap[2].labelPlural|lower }}</strong> à l'intérieur.</p>
+                {% endif %}
+            </div>
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        {# Stats #}
+        {% set allElements    = project.scenarioElements %}
+        {% set totalScripts   = allElements|filter(e => e.isLeaf())|length %}
+        {% set totalFolders   = allElements|filter(e => not e.isLeaf())|length %}
+        {% set totalNoteCount = 0 %}
+        {% for notes in notesByElement %}{% set totalNoteCount = totalNoteCount + notes|length %}{% endfor %}
+
+        <div class="ms-overview-stats">
+            <div class="ms-stat">
+                <span class="ms-stat-icon">{{ ux_icon('lucide:folder', {class: 'icon-sm'}) }}</span>
+                <div class="ms-stat-body"><span class="ms-stat-value">{{ totalFolders }}</span><span class="ms-stat-label">{{ 'manuscript.index.stats.folder'|trans({'%count%': totalFolders}) }}</span></div>
+            </div>
+            <div class="ms-stat">
+                <span class="ms-stat-icon">{{ ux_icon('lucide:file-text', {class: 'icon-sm'}) }}</span>
+                <div class="ms-stat-body"><span class="ms-stat-value">{{ totalScripts }}</span><span class="ms-stat-label">{{ 'manuscript.index.stats.script'|trans({'%count%': totalScripts}) }}</span></div>
+            </div>
+            <div class="ms-stat">
+                <span class="ms-stat-icon">{{ ux_icon('lucide:type', {class: 'icon-sm'}) }}</span>
+                <div class="ms-stat-body"><span class="ms-stat-value">{{ totalWordCount|number_format(0, ',', ' ') }}</span><span class="ms-stat-label">{{ 'manuscript.index.stats.word'|trans({'%count%': totalWordCount}) }}</span></div>
+            </div>
+            {% if totalNoteCount > 0 %}
+            <div class="ms-stat ms-stat--notes">
+                <span class="ms-stat-icon">{{ ux_icon('lucide:sticky-note', {class: 'icon-sm'}) }}</span>
+                <div class="ms-stat-body"><span class="ms-stat-value">{{ totalNoteCount }}</span><span class="ms-stat-label">{{ 'manuscript.index.stats.note'|trans({'%count%': totalNoteCount}) }}</span></div>
+            </div>
+            {% endif %}
+        </div>
+
+        {# Arborescence #}
+        <div class="ms-overview-tree">
+            {% for root in rootElements %}
+                {{ ms.renderNode(root, project, notesByElement, configMap) }}
+            {% endfor %}
+
+            {% if rootConfig %}
+            <div class="ms-tree-add-root">
+                <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}" class="ms-tree-add-root-link">
+                    {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                    Ajouter {{ rootConfig.labelSingular|lower }}
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+    {% endif %}
+
+</div>
 {% endblock %}

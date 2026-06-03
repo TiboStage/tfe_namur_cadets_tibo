@@ -1,0 +1,80 @@
+{# templates/admin/projects/index.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Admin — Projets{% endblock %}
+{% block admin_title %}Gestion des projets{% endblock %}
+
+{% block admin_content %}
+
+    {# ── Filtres ───────────────────────────────────────────────────── #}
+    <div class="admin-toolbar">
+        <div class="admin-filter-tabs">
+            <a href="{{ path('admin_projects', {_locale: app.request.locale, filter: 'all'}) }}"
+               class="filter-tab {{ filter == 'all' ? 'active' : '' }}">
+                Tous <span class="filter-count">{{ counts.all }}</span>
+            </a>
+            <a href="{{ path('admin_projects', {_locale: app.request.locale, filter: 'public'}) }}"
+               class="filter-tab {{ filter == 'public' ? 'active' : '' }}">
+                Publics <span class="filter-count">{{ counts.public }}</span>
+            </a>
+            <a href="{{ path('admin_projects', {_locale: app.request.locale, filter: 'flagged'}) }}"
+               class="filter-tab {{ filter == 'flagged' ? 'active' : '' }} {{ counts.flagged > 0 ? 'filter-tab--alert' : '' }}">
+                Signalés <span class="filter-count">{{ counts.flagged }}</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="panel-box panel-box--flush">
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead><tr>
+                    <th>#</th>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Type</th>
+                    <th>Visibilité</th>
+                    <th>Modération</th>
+                    <th>Signalements</th>
+                    <th>Créé le</th>
+                    <th></th>
+                </tr></thead>
+                <tbody>
+                {% for project in projects %}
+                    <tr>
+                        <td class="text-muted">{{ project.id }}</td>
+                        <td><strong>{{ project.title }}</strong></td>
+                        <td class="text-muted">{{ project.createdBy.username }}</td>
+                        <td class="text-muted">{{ project.projectType|upper }}</td>
+                        <td>
+                            {% if project.visibility == 'public' %}
+                                <span class="status-badge status-badge--active">En ligne</span>
+                            {% elseif project.visibility == 'private' %}
+                                <span class="status-badge status-badge--warning">Privé</span>
+                            {% else %}
+                                <span class="status-badge">Non publié</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span>
+                        </td>
+                        <td>
+                            {% if project.reportCount > 0 %}
+                                <span class="tag-reason">{{ project.reportCount }}</span>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted">{{ project.createdAt|date('d/m/Y') }}</td>
+                        <td>
+                            <a href="{{ path('admin_project_show', {id: project.id, _locale: app.request.locale}) }}" class="btn-table">Voir</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="9" class="text-muted td-empty">Aucun projet.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

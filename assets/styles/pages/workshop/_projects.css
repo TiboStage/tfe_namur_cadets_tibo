@@ -4,27 +4,173 @@
    ============================================================ */
 
 
+/* ── 0. FILTRES PAGE PROJETS ────────────────────────────── */
+
+.project-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+/* Onglets scope (Tous / Mes projets / Collaborations) */
+.project-filters__tabs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0;
+}
+
+.project-filter-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.project-filter-tab:hover {
+    color: var(--text-main);
+}
+
+.project-filter-tab.is-active {
+    color: var(--text-main);
+    border-bottom-color: var(--color-primary);
+}
+
+.project-filter-tab__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--overlay-sm);
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.project-filter-tab.is-active .project-filter-tab__count {
+    background: var(--color-primary-medium);
+    color: var(--color-primary);
+}
+
+/* Pills de rôle */
+.project-filters__roles {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.role-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 11px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.role-pill:hover {
+    color: var(--text-main);
+    border-color: var(--color-border-light);
+}
+
+.role-pill.is-active {
+    color: var(--text-main);
+    background: var(--overlay-sm);
+    border-color: var(--color-border-light);
+}
+
+/* Variantes couleur */
+.role-pill--owner       { color: var(--color-primary); }
+.role-pill--owner.is-active { border-color: var(--color-primary); background: var(--color-primary-glow); }
+
+.role-pill--lead        { color: var(--color-purple); }
+.role-pill--lead.is-active  { border-color: var(--color-purple); background: var(--color-purple-glow); }
+
+.role-pill--editor      { color: var(--color-blue); }
+.role-pill--editor.is-active { border-color: var(--color-blue); background: var(--color-blue-glow); }
+
+.role-pill--contributor { color: var(--color-green); }
+.role-pill--contributor.is-active { border-color: var(--color-green); background: var(--color-green-glow); }
+
+/* Badge de rôle en overlay sur les cartes de collaboration */
+.collab-grid-item {
+    position: relative;
+}
+
+.collab-role-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    padding: 3px 9px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+.collab-role-badge--lead        { background: color-mix(in srgb, var(--color-purple) 18%, transparent); color: var(--color-purple); }
+.collab-role-badge--editor      { background: color-mix(in srgb, var(--color-blue)   18%, transparent); color: var(--color-blue); }
+.collab-role-badge--contributor { background: color-mix(in srgb, var(--color-green)  18%, transparent); color: var(--color-green); }
+
+/* État vide */
+.projects-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 80px 0;
+    color: var(--text-muted);
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Colonne rôle en mode liste */
+.col-role {
+    width: 130px;
+    flex-shrink: 0;
+}
+
 /* ── 1. STRUCTURE & SWITCH ──────────────────────────────── */
 
-.title-projects{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+.title-projects {
+    margin-bottom: 20px;
 }
 
 .list-only, .project-list-header { display: none; }
 
-.projects-grid {
+.projects-grid,
+.projects-skeleton-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 24px;
 }
 
 .projects-list {
     display: flex;
     flex-direction: column;
-    background: #111115;
-    border: 1px solid #2a2a2e;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border-light);
 }
 
 .projects-list .grid-only { display: none !important; }
@@ -34,8 +180,8 @@
 /* ── 2. COMPOSANTS DE LA CARTE (GRILLE) ─────────────────── */
 .project-card {
     position: relative;
-    background: #1a1a1e;
-    border: 1px solid #2a2a2e;
+    background: var(--color-bg-inset);
+    border: 1px solid var(--color-border-light);
     display: flex;
     flex-direction: column;
     min-height: 280px;
@@ -43,7 +189,7 @@
 }
 
 .project-card:hover {
-    border-color: #FFB800;
+    border-color: var(--color-primary);
 }
 
 .project-card__header {
@@ -55,14 +201,14 @@
 .project-card__thumb {
     width: 56px;
     height: 56px;
-    background: rgba(255, 184, 0, 0.1);
-    color: #FFB800;
+    background: var(--color-primary-glow);
+    color: var(--color-primary);
     font-size: 24px;
     font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(255, 184, 0, 0.2);
+    border: 1px solid var(--color-primary-medium);
 }
 
 /* Badge de type (Film, Série, etc.) */
@@ -70,8 +216,8 @@
     font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
-    color: #9ca3af;
-    border: 1px solid #2a2a2e;
+    color: var(--text-muted);
+    border: 1px solid var(--color-border-light);
     padding: 4px 10px;
     display: flex;
     align-items: center;
@@ -79,7 +225,7 @@
 }
 
 .project-card__title a {
-    color: #f5f5f5;
+    color: var(--text-main);
     text-decoration: none;
     font-size: 18px;
     font-weight: 700;
@@ -87,35 +233,35 @@
 
 .project-card__desc {
     font-size: 13px;
-    color: #9ca3af;
+    color: var(--text-muted);
     line-height: 1.6;
 }
 
 .project-card__footer {
     margin-top: auto;
     padding-top: 16px;
-    border-top: 1px solid #2a2a2e;
+    border-top: 1px solid var(--color-border-light);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.member-avatar--owner {
-    width: 32px;
-    height: 32px;
-    background: #2a2a2e;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #FFB800;
-    font-size: 12px;
-    font-weight: bold;
-    border: 1px solid #3f3f46;
-}
+/*.member-avatar--owner {*/
+/*    width: 32px;*/
+/*    height: 32px;*/
+/*    background: var(--color-bg-inset);*/
+/*    border-radius: 50%;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    color: var(--color-primary);*/
+/*    font-size: 12px;*/
+/*    font-weight: bold;*/
+/*    border: 1px solid var(--color-primary);*/
+/*}*/
 
 .link-view-all {
-    color: #FFB800;
+    color: var(--color-primary);
     text-decoration: none;
     font-size: 13px;
     font-weight: 700;
@@ -127,13 +273,13 @@
 /* ── 3. COMPOSANTS DU TABLEAU (LISTE) ───────────────────── */
 .project-list-row, .project-list-header {
     padding: 16px 24px;
-    border-bottom: 1px solid #2a2a2e;
+    border-bottom: 1px solid var(--color-border-light);
     align-items: center;
     gap: 20px;
 }
 
 .project-list-header {
-    color: #6b7280;
+    color: var(--text-muted);
     font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
@@ -142,8 +288,8 @@
 .project-mini-thumb {
     width: 40px;
     height: 40px;
-    background: #1a1a1e;
-    border: 1px solid #2a2a2e;
+    background: var(--color-bg-inset);
+    border: 1px solid var(--color-border-light);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,17 +299,17 @@
 .col-status { flex: 1; }
 .col-progression { flex: 2; max-width: 200px; }
 .col-entities { flex: 1; text-align: center; }
-.col-date { flex: 1; color: #9ca3af; font-size: 13px; text-align: right; }
+.col-date { flex: 1; color: var(--text-muted); font-size: 13px; text-align: right; }
 
 /* ── 4. UI ELEMENTS (PROGRESS & BADGES STATUS) ─────────── */
 .progress-bar-container {
     height: 6px;
-    background: #232326;
+    background: var(--color-border);
 }
 
 .progress-bar-fill {
     height: 100%;
-    background: #FFB800;
+    background: var(--color-primary);
 }
 
 .badge-status {
@@ -171,23 +317,23 @@
     border-radius: 100px;
     font-size: 10px;
     font-weight: 700;
-    border: 1px solid rgba(156, 163, 175, 0.3);
-    color: #9ca3af;
+    border: 1px solid var(--color-border-light);
+    color: var(--text-muted);
 }
 
 .badge--production {
-    color: #4ade80;
-    border-color: rgba(74, 222, 128, 0.4);
-    background: rgba(74, 222, 128, 0.05);
+    color: var(--color-green);
+    border-color: color-mix(in srgb, var(--color-green) 40%, transparent);
+    background: var(--color-green-glow);
 }
 
 /* ── 5. FORMULAIRES (CRÉATION/ÉDITION) ─────────────────── */
 .project-form input[type="text"],
 .project-form textarea,
 .project-form select {
-    background: #1a1a1e;
-    border: 1px solid #2a2a2e;
-    color: #f5f5f5;
+    background: var(--color-bg-inset);
+    border: 1px solid var(--color-border-light);
+    color: var(--text-main);
     padding: 12px 16px;
     width: 100%;
     outline: none;
@@ -196,30 +342,67 @@
 .type-selector {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    background: #2a2a2e;
+    background: var(--color-border-light);
     gap: 1px;
-    border: 1px solid #2a2a2e;
+    border: 1px solid var(--color-border-light);
 }
 
 .type-option {
-    background: #1a1a1e;
+    background: var(--color-bg-inset);
     padding: 16px;
     text-align: center;
     cursor: pointer;
 }
 
-.type-option:hover { background: #232326; }
+.type-option:hover { background: var(--color-border); }
 
 .type-option:has(input:checked) {
-    background: rgba(255, 184, 0, 0.05);
+    background: var(--color-primary-dim);
 }
 
 .type-option:has(input:checked) .type-label {
-    color: #FFB800;
+    color: var(--color-primary);
 }
 
 /* ── 6. RESPONSIVE ──────────────────────────────────────── */
 @media (max-width: 768px) {
     .projects-grid { grid-template-columns: 1fr; }
     .project-list-header { display: none !important; }
+}
+
+/* ── 7. PAGINATION ──────────────────────────────────────────── */
+.proj-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+}
+
+.proj-page-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color .15s, color .15s;
+}
+
+.proj-page-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+.proj-page-btn--disabled {
+    opacity: .3;
+    pointer-events: none;
+}
+
+.proj-page-info {
+    font-size: 12px;
+    color: var(--text-muted);
 }

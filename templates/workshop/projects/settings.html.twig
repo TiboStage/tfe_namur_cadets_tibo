@@ -1,0 +1,409 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+
+{% block title %}Paramètres — {{ project.title }}{% endblock %}
+
+{% block project_content %}
+
+{% set type_labels = {film: 'Film', serie: 'Série', jeu_video: 'Jeu vidéo', custom: 'Custom'} %}
+{% set status_labels = {draft: 'Brouillon', in_progress: 'En cours', completed: 'Terminé', archived: 'Archivé'} %}
+
+<div class="ps-wrapper">
+
+    {# ── Header ───────────────────────────────────────────────────── #}
+    <div class="ps-header">
+        <div class="ps-header__meta">
+            <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: project.slug}) }}"
+               class="ps-header__back">
+                {{ ux_icon('lucide:arrow-left', {style: 'width:13px;height:13px'}) }}
+                {{ project.title }}
+            </a>
+            <h1 class="ps-header__title">Paramètres</h1>
+        </div>
+    </div>
+
+    {# ── Onglets ──────────────────────────────────────────────────── #}
+    <nav class="ps-tabs" aria-label="Onglets des paramètres">
+        {% for t, label in {general: 'Informations', structure: 'Structure', members: 'Collaborateurs', danger: 'Danger'} %}
+        <a href="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: t}) }}"
+           class="ps-tab {{ tab == t ? 'ps-tab--active' : '' }} {{ t == 'danger' ? 'ps-tab--danger' : '' }}">
+            {% if t == 'general'    %}{{ ux_icon('lucide:settings-2',  {style: 'width:13px;height:13px'}) }}{% endif %}
+            {% if t == 'structure'  %}{{ ux_icon('lucide:git-branch',  {style: 'width:13px;height:13px'}) }}{% endif %}
+            {% if t == 'members'    %}{{ ux_icon('lucide:users',        {style: 'width:13px;height:13px'}) }}{% endif %}
+            {% if t == 'danger'     %}{{ ux_icon('lucide:triangle-alert',{style: 'width:13px;height:13px'}) }}{% endif %}
+            {{ label }}
+        </a>
+        {% endfor %}
+    </nav>
+
+    {# ── Erreurs ──────────────────────────────────────────────────── #}
+    {% if errors is defined and errors|length > 0 %}
+    <div class="ps-alert ps-alert--error">
+        {% for err in errors %}{{ err }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════════
+       ONGLET INFORMATIONS
+       ══════════════════════════════════════════════════════════════ #}
+    {% if tab == 'general' %}
+    <div class="ps-panel">
+
+        <form method="post"
+              action="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: 'general'}) }}"
+              class="ps-form"
+              novalidate>
+            <input type="hidden" name="_action" value="save_general">
+            <input type="hidden" name="_token"  value="{{ csrf_token('project_settings_' ~ project.id) }}">
+
+            <div class="ps-section">
+                <div class="ps-section__head">
+                    <div class="ps-section__title-row">
+                        {{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}
+                        <h2>Informations générales</h2>
+                    </div>
+                    <p class="text-muted">Titre, description et état d'avancement du projet.</p>
+                </div>
+
+                <div class="ps-field">
+                    <label class="ps-label">Titre <span class="ps-required">*</span></label>
+                    <input type="text" name="title" class="ps-input"
+                           value="{{ project.title }}" maxlength="150" required>
+                </div>
+
+                <div class="ps-field">
+                    <label class="ps-label">Description <span class="ps-optional">(optionnel)</span></label>
+                    <textarea name="description" class="ps-textarea" rows="4">{{ project.description }}</textarea>
+                </div>
+
+                <div class="ps-row">
+                    <div class="ps-field">
+                        <label class="ps-label">Type</label>
+                        <div class="ps-input ps-input--readonly">
+                            {{ type_labels[project.projectType] ?? project.projectType }}
+                            <span class="ps-readonly-hint">non modifiable</span>
+                        </div>
+                    </div>
+                    <div class="ps-field">
+                        <label class="ps-label">Statut</label>
+                        <select name="status" class="ps-select">
+                            {% for val, lbl in {draft: 'Brouillon', in_progress: 'En cours', completed: 'Terminé', archived: 'Archivé'} %}
+                            <option value="{{ val }}" {{ project.status == val ? 'selected' }}>{{ lbl }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            {# ── Genres ──────────────────────────────────────────────────── #}
+            {% if available_genres is not empty %}
+            <div class="ps-section">
+                <div class="ps-section__head">
+                    <div class="ps-section__title-row">
+                        {{ ux_icon('lucide:tag', {class: 'icon-xs'}) }}
+                        <h2>Genre(s)</h2>
+                    </div>
+                    <p class="text-muted">
+                        Choisissez jusqu'à 3 genres. Sans sélection, le projet sera affiché comme "Non classé".
+                    </p>
+                </div>
+
+                <div class="ps-genre-grid">
+                    {% for genre in available_genres %}
+                    {% set isChecked = genre.slug in selected_genre_slugs %}
+                    <label class="ps-genre-chip {{ isChecked ? 'ps-genre-chip--checked' : '' }}">
+                        <input type="checkbox"
+                               name="genres[]"
+                               value="{{ genre.slug }}"
+                               class="ps-genre-checkbox"
+                               {{ isChecked ? 'checked' : '' }}>
+                        <span>{{ genre.getLabel(app.request.locale) }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {# ── Paramètres du manuscrit ──────────────────────────────── #}
+            <div class="ps-section">
+                <div class="ps-section__head">
+                    <div class="ps-section__title-row">
+                        {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
+                        <h2>Paramètres du manuscrit</h2>
+                    </div>
+                    <p class="text-muted">
+                        Utilisés pour estimer les pages, la durée à l'écran et le temps de lecture dans l'éditeur.
+                    </p>
+                </div>
+
+                <div class="ps-row ps-row--3cols">
+                    <div class="ps-field">
+                        <label class="ps-label">
+                            Mots par page
+                            <span class="ps-optional">(std : 170)</span>
+                        </label>
+                        <div class="ps-input-group">
+                            <input type="number" name="ms_words_per_page" class="ps-input"
+                                   value="{{ project.settings.ms_words_per_page ?? 170 }}"
+                                   min="1" max="999">
+                            <span class="ps-input-addon">mots</span>
+                        </div>
+                    </div>
+
+                    <div class="ps-field">
+                        <label class="ps-label">
+                            Vitesse de lecture
+                            <span class="ps-optional">(std : 200)</span>
+                        </label>
+                        <div class="ps-input-group">
+                            <input type="number" name="ms_reading_wpm" class="ps-input"
+                                   value="{{ project.settings.ms_reading_wpm ?? 200 }}"
+                                   min="1" max="9999">
+                            <span class="ps-input-addon">mots/min</span>
+                        </div>
+                    </div>
+
+                    <div class="ps-field">
+                        <label class="ps-label">
+                            Durée à l'écran
+                            <span class="ps-optional">(std : 60 s/page)</span>
+                        </label>
+                        <div class="ps-input-group">
+                            <input type="number" name="ms_screen_time_per_page" class="ps-input"
+                                   value="{{ project.settings.ms_screen_time_per_page ?? 60 }}"
+                                   min="1" max="999">
+                            <span class="ps-input-addon">s / page</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ps-actions">
+                <button type="submit" class="btn btn--cta-yellow">
+                    {{ ux_icon('lucide:check', {class: 'icon-xs'}) }}
+                    Enregistrer
+                </button>
+                <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: project.slug}) }}"
+                   class="btn btn--ghost">Annuler</a>
+            </div>
+        </form>
+
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════════
+       ONGLET STRUCTURE
+       ══════════════════════════════════════════════════════════════ #}
+    {% if tab == 'structure' %}
+    <div class="ps-panel">
+
+        <form method="post"
+              action="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: 'structure'}) }}"
+              class="ps-form"
+              novalidate>
+            <input type="hidden" name="_action" value="save_structure">
+            <input type="hidden" name="_token"  value="{{ csrf_token('project_structure_' ~ project.id) }}">
+
+            <div class="ps-section">
+                <div class="ps-section__head">
+                    <div class="ps-section__title-row">
+                        {{ ux_icon('lucide:git-branch', {class: 'icon-xs'}) }}
+                        <h2>Niveaux narratifs</h2>
+                    </div>
+                    <p class="text-muted">
+                        Modifiez les noms affichés pour chaque niveau de votre structure.
+                        Le nombre de niveaux ne peut pas être changé après création.
+                    </p>
+                </div>
+
+                {% set level_colors = ['#E63946', '#F4A261', '#457B9D', '#2A9D8F'] %}
+
+                {% if configs is empty %}
+                    <p class="text-muted">Aucune structure définie pour ce projet.</p>
+                {% else %}
+                    <div class="ps-level-list">
+                        {% for config in configs %}
+                        {% set color = level_colors[config.depth - 1] ?? '#888' %}
+                        <div class="ps-level-row">
+                            <span class="ps-level-badge" style="--badge-color: {{ color }}">
+                                N{{ config.depth }}
+                            </span>
+
+                            <div class="ps-level-fields">
+                                <div class="ps-field ps-field--inline">
+                                    <label class="ps-label">Singulier</label>
+                                    <input type="text"
+                                           name="configs[{{ config.id }}][labelSingular]"
+                                           class="ps-input"
+                                           value="{{ config.labelSingular }}"
+                                           maxlength="40" required>
+                                </div>
+                                <div class="ps-field ps-field--inline">
+                                    <label class="ps-label">Pluriel</label>
+                                    <input type="text"
+                                           name="configs[{{ config.id }}][labelPlural]"
+                                           class="ps-input"
+                                           value="{{ config.labelPlural }}"
+                                           maxlength="40">
+                                </div>
+                            </div>
+
+                            <div class="ps-level-flags">
+                                {% if config.hasContent %}
+                                <span class="ps-flag ps-flag--green">contenu</span>
+                                {% endif %}
+                                {% if config.hasDuration %}
+                                <span class="ps-flag ps-flag--blue">durée</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="ps-actions">
+                <button type="submit" class="btn btn--cta-yellow">
+                    {{ ux_icon('lucide:check', {class: 'icon-xs'}) }}
+                    Enregistrer la structure
+                </button>
+            </div>
+        </form>
+
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════════
+       ONGLET COLLABORATEURS
+       ══════════════════════════════════════════════════════════════ #}
+    {% if tab == 'members' %}
+    <div class="ps-panel">
+
+        <div class="ps-section">
+            <div class="ps-section__head">
+                <div class="ps-section__title-row">
+                    {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }}
+                    <h2>Inviter un collaborateur</h2>
+                </div>
+                <p class="text-muted">Entrez le nom d'utilisateur et choisissez le rôle.</p>
+            </div>
+
+            <form method="post"
+                  action="{{ path('app_project_member_invite', {_locale: app.request.locale, slug: project.slug}) }}"
+                  class="ps-invite-form">
+                <input type="hidden" name="_token" value="{{ csrf_token('member_invite_' ~ project.id) }}">
+
+                <div class="ps-invite-row">
+                    <div class="ps-field flex-1">
+                        <label class="ps-label">Nom d'utilisateur</label>
+                        <input type="text" name="username" class="ps-input"
+                               placeholder="ex : alice_writes" required autocomplete="off">
+                    </div>
+                    <div class="ps-field flex-1">
+                        <label class="ps-label">Rôle</label>
+                        <select name="role" class="ps-select">
+                            <option value="contributor">Contributeur — lecture + suggestions</option>
+                            <option value="editor">Éditeur — peut modifier le contenu</option>
+                            <option value="lead">Co-responsable — accès complet</option>
+                        </select>
+                    </div>
+                    <div class="ps-field ps-field--submit">
+                        <label class="ps-label">&nbsp;</label>
+                        <button type="submit" class="btn btn--cta-yellow">
+                            {{ ux_icon('lucide:user-plus', {style: 'width:13px;height:13px'}) }}
+                            Inviter
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="ps-section">
+            <div class="ps-section__head">
+                <div class="ps-section__title-row">
+                    {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
+                    <h2>Membres actuels</h2>
+                </div>
+            </div>
+
+            {% if project.projectMembers is empty %}
+            <p class="text-muted ps-empty">
+                {{ ux_icon('lucide:user-x', {class: 'icon-xs'}) }}
+                Aucun collaborateur pour l'instant.
+            </p>
+            {% else %}
+            <div class="ps-member-list">
+                {% for member in project.projectMembers %}
+                <div class="ps-member-row">
+                    <div class="ps-member-avatar">
+                        {{ include('_partials/_user_avatar.html.twig', {user: member.user, size: 'sm'}) }}
+                    </div>
+                    <div class="ps-member-info">
+                        <span class="ps-member-username">{{ member.user.username }}</span>
+                        <span class="ps-member-since text-muted">depuis {{ member.joinedAt|date('d/m/Y') }}</span>
+                    </div>
+
+                    <form method="post"
+                          action="{{ path('app_project_member_role', {_locale: app.request.locale, slug: project.slug, userId: member.user.id}) }}"
+                          class="ps-role-form">
+                        <input type="hidden" name="_token" value="{{ csrf_token('member_role_' ~ project.id ~ '_' ~ member.user.id) }}">
+                        <select name="role" class="ps-select ps-select--small"
+                                onchange="this.closest('form').submit()">
+                            <option value="contributor" {{ member.role == 'contributor' ? 'selected' }}>Contributeur</option>
+                            <option value="editor"      {{ member.role == 'editor'      ? 'selected' }}>Éditeur</option>
+                            <option value="lead"        {{ member.role == 'lead'        ? 'selected' }}>Co-responsable</option>
+                        </select>
+                    </form>
+
+                    <form method="post"
+                          action="{{ path('app_project_member_remove', {_locale: app.request.locale, slug: project.slug, userId: member.user.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('member_remove_' ~ project.id ~ '_' ~ member.user.id) }}">
+                        <button type="submit" class="ps-remove-btn"
+                                title="Retirer {{ member.user.username }}"
+                                onclick="return confirm('Retirer {{ member.user.username }} du projet ?')">
+                            {{ ux_icon('lucide:x', {style: 'width:13px;height:13px'}) }}
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════════
+       ONGLET DANGER
+       ══════════════════════════════════════════════════════════════ #}
+    {% if tab == 'danger' %}
+    <div class="ps-panel">
+
+        <div class="ps-section ps-section--danger">
+            <div class="ps-section__head">
+                <div class="ps-section__title-row">
+                    {{ ux_icon('lucide:trash-2', {class: 'icon-xs'}) }}
+                    <h2>Supprimer le projet</h2>
+                </div>
+                <p class="text-muted">
+                    Cette action est <strong>irréversible</strong>. Tout le contenu (personnages, lieux, manuscrit,
+                    notes, tâches) sera définitivement supprimé.
+                </p>
+            </div>
+
+            <form method="post"
+                  action="{{ path('app_project_delete', {_locale: app.request.locale, slug: project.slug}) }}"
+                  onsubmit="return confirm('Supprimer définitivement « {{ project.title }} » ? Cette action est irréversible.')">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_project_' ~ project.id) }}">
+                <button type="submit" class="btn btn--danger">
+                    {{ ux_icon('lucide:trash-2', {class: 'icon-xs'}) }}
+                    Supprimer « {{ project.title }} »
+                </button>
+            </form>
+        </div>
+
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

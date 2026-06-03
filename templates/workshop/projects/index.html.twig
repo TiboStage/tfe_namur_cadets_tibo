@@ -1,92 +1,225 @@
 {% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
 
 {% block content %}
+<div class="workshop-container"
+     data-controller="per-page"
+     data-per-page-target="root">
 
-    <div class="workshop-container">
-        <div class="title-projects">
-            {# 1. Header de la page #}
-            <div>
-                <h1>Mes projets</h1>
-                <p class="text-muted">{{ projects|length }} projet(s) au total</p>
-            </div>
+    {# ── En-tête ──────────────────────────────────────────────────── #}
+    <div class="title-projects">
+        <h1>{{ 'projects.index.title'|trans }}</h1>
+        <p class="text-muted">
+            {{ total_items }}
+            {{ 'projects.index.subtitle'|trans }}
+            {% if role_filter %}{{ 'projects.index.role_filter_suffix'|trans }}{% endif %}
+        </p>
+    </div>
 
+    {# ── Barre de filtres ─────────────────────────────────────────── #}
+    <div class="project-filters">
 
-            {# 2. Barre d'actions #}
+        {# Onglets scope + actions groupées sur la même ligne #}
+        <div class="project-filters__tabs">
+            <a href="{{ path('app_project_index', {_locale: app.request.locale}) }}"
+               class="project-filter-tab {{ scope == 'all' ? 'is-active' : '' }}">
+                {{ 'projects.index.tab_all'|trans }}
+                <span class="project-filter-tab__count">{{ owned_count + collab_count }}</span>
+            </a>
+            <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: 'mine'}) }}"
+               class="project-filter-tab {{ scope == 'mine' ? 'is-active' : '' }}">
+                {{ ux_icon('lucide:user', {style: 'width:11px;height:11px'}) }}
+                {{ 'projects.index.tab_mine'|trans }}
+                <span class="project-filter-tab__count">{{ owned_count }}</span>
+            </a>
+            <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: 'other'}) }}"
+               class="project-filter-tab {{ scope == 'other' ? 'is-active' : '' }}">
+                {{ ux_icon('lucide:users', {style: 'width:11px;height:11px'}) }}
+                {{ 'projects.index.tab_collab'|trans }}
+                <span class="project-filter-tab__count">{{ collab_count }}</span>
+            </a>
+
             <div class="view-actions" data-controller="view-switcher">
-
-                {# Bouton créé nouveau project #}
-                <div>
-                    <a href="{{ path('app_project_new_step1') }}" class="btn-creat">
-                        + Créer
-                    </a>
-                </div>
-
+                <a href="{{ path('app_project_new_step1', {_locale: app.request.locale}) }}" class="btn-creat">
+                    {{ 'projects.index.btn_new'|trans }}
+                </a>
                 <div class="btn-group">
-                    <button class="btn btn--sm active" data-action="click->view-switcher#switch" data-view="grid">
+                    <button class="btn btn--sm active"
+                            data-action="click->view-switcher#switch"
+                            data-view="grid">
                         {{ ux_icon('lucide:layout-grid') }}
                     </button>
-                    <button class="btn btn--sm" data-action="click->view-switcher#switch" data-view="list">
+                    <button class="btn btn--sm"
+                            data-action="click->view-switcher#switch"
+                            data-view="list">
                         {{ ux_icon('lucide:list') }}
                     </button>
                 </div>
             </div>
-
-
         </div>
 
+        {# Pills de rôle (masquées si scope=mine) #}
+        {% if scope != 'mine' and collab_count > 0 %}
+        <div class="project-filters__roles">
+            <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: scope}) }}"
+               class="role-pill {{ role_filter == '' ? 'is-active' : '' }}">
+                {{ 'projects.index.role_all'|trans }}
+            </a>
+            <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: scope, role: 'lead'}) }}"
+               class="role-pill role-pill--lead {{ role_filter == 'lead' ? 'is-active' : '' }}">
+                {{ ux_icon('lucide:shield', {style: 'width:10px;height:10px'}) }}
+                {{ 'projects.roles.lead'|trans }}
+            </a>
+            <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: scope, role: 'editor'}) }}"
+               class="role-pill role-pill--editor {{ role_filter == 'editor' ? 'is-active' : '' }}">
+                {{ ux_icon('lucide:pen', {style: 'width:10px;height:10px'}) }}
+                {{ 'projects.roles.editor'|trans }}
+            </a>
+            <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: scope, role: 'contributor'}) }}"
+               class="role-pill role-pill--contributor {{ role_filter == 'contributor' ? 'is-active' : '' }}">
+                {{ ux_icon('lucide:eye', {style: 'width:10px;height:10px'}) }}
+                {{ 'projects.roles.contributor'|trans }}
+            </a>
+        </div>
+        {% endif %}
 
-        {# 3. Conteneur principal #}
-        <div id="projects-container" class="projects-grid">
+    </div>
 
-            {# Header du Tableau (Visible uniquement en mode liste) #}
-            <div class="project-list-header">
-                <div class="col-main">Projets</div>
-                <div class="col-status">Status</div>
-                <div class="col-progression">Progression</div>
-                <div class="col-entities">Entités</div>
-                <div class="col-date">Modifié</div>
-                <div class="col-actions"></div>
+    {# ── Skeleton — affiché pendant le redirect per_page ────────── #}
+    <div class="projects-skeleton-grid" data-per-page-target="skeleton" hidden aria-hidden="true">
+        {% for i in 1..10 %}
+            {{ include('workshop/_partials/_project_card_skeleton.html.twig') }}
+        {% endfor %}
+    </div>
+
+    {# ── Contenu réel ─────────────────────────────────────────────── #}
+    <div data-per-page-target="content">
+
+    {# ── État vide ────────────────────────────────────────────────── #}
+    {% if items is empty %}
+        <div class="projects-empty">
+            {{ ux_icon('lucide:folder-open', {style: 'width:44px;height:44px;opacity:.12'}) }}
+            {% if scope == 'other' %}
+                <p>{{ role_filter ? 'projects.index.empty_collab_role'|trans : 'projects.index.empty_collab'|trans }}</p>
+            {% else %}
+                <p>{{ 'projects.index.empty'|trans }}</p>
+                <a href="{{ path('app_project_new_step1', {_locale: app.request.locale}) }}" class="btn-creat">
+                    {{ 'projects.index.empty_btn'|trans }}
+                </a>
+            {% endif %}
+        </div>
+
+    {# ── Grille / Liste ───────────────────────────────────────────── #}
+    {% else %}
+    <div id="projects-container" class="projects-grid">
+
+        {# Header tableau (mode liste uniquement) #}
+        <div class="project-list-header">
+            <div class="col-main">{{ 'projects.index.col_name'|trans }}</div>
+            <div class="col-status">{{ 'projects.index.col_status'|trans }}</div>
+            <div class="col-role">{{ 'projects.index.col_role'|trans }}</div>
+            <div class="col-progression">{{ 'projects.index.col_progress'|trans }}</div>
+            <div class="col-entities">{{ 'projects.index.col_entities'|trans }}</div>
+            <div class="col-date">{{ 'projects.index.col_date'|trans }}</div>
+            <div class="col-actions"></div>
+        </div>
+
+        {% for item in items %}
+            {% set project   = item.project %}
+            {% set role      = item.role %}
+            {% set roleLabel = ('projects.roles.' ~ role)|trans %}
+            {% set ctaKey    = role == 'owner' ? 'projects.index.btn_edit_arrow' : 'projects.index.btn_open_arrow' %}
+
+            {# Vue grille #}
+            <div class="grid-only">
+                {{ include('workshop/_partials/_project_card_private.html.twig', {
+                    project: project,
+                    role:    role,
+                }) }}
             </div>
 
-            {% for project in projects %}
-                {# --- VUE GRILLE (Card) --- #}
-                <div class="grid-only">
-                    {{ component('project_card', { project: project }) }}
-                </div>
-
-                {# --- VUE LISTE (Row) --- #}
-                <div class="project-list-row list-only">
-                    <div class="col-main">
-                        <div class="project-mini-thumb">
+            {# Vue liste #}
+            <div class="project-list-row list-only">
+                <div class="col-main">
+                    <div class="project-mini-thumb">
+                        {% if project.coverFilename %}
+                            <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
+                                 alt="" class="img-cover">
+                        {% else %}
                             {{ ux_icon('lucide:image', {class: 'icon-xs'}) }}
-                        </div>
-                        <div class="project-info">
-                            <span class="project-name">{{ project.title }}</span>
-                            <span class="project-sub">{{ project.projectType|capitalize }} - Catégorie</span>
-                        </div>
+                        {% endif %}
                     </div>
-
-                    <div class="col-status">
-                    <span class="badge-status badge--{{ project.status|default('draft') }}">
-                        {{ project.status|default('Brouillon') }}
-                    </span>
+                    <div class="project-info">
+                        <span class="project-name">{{ project.title }}</span>
+                        <span class="project-sub">
+                            {{ ('project_type.' ~ project.projectType)|trans({}, 'messages') }}
+                            &nbsp;·&nbsp;
+                            {% if role == 'owner' %}
+                                {% if project.visibility == 'public' %}
+                                    <span class="text-success">{{ 'projects.visibility.public'|trans }}</span>
+                                {% elseif project.visibility == 'private' %}
+                                    <span class="text-warning">{{ 'projects.visibility.private'|trans }}</span>
+                                {% else %}{{ 'projects.visibility.unlisted'|trans }}{% endif %}
+                            {% else %}
+                                {{ project.createdBy.username }}
+                            {% endif %}
+                        </span>
                     </div>
-
-                    <div class="col-progression">
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-fill" style="width: 45%;"></div>
-                        </div>
-                    </div>
-
-                    <div class="col-entities">
-                        <strong>{{ project.scenarioElements|length + project.characters|length }}</strong>
-                    </div>
-
-                    <div class="col-date">{{ project.updatedAt|date('d/m/Y') }}</div>
-
-                    <div class="col-actions">{{ ux_icon('lucide:more-horizontal') }}</div>
                 </div>
-            {% endfor %}
-        </div>
+                <div class="col-status">
+                    <span class="badge-status badge--{{ project.status|default('draft') }}">
+                        {{ ('projects.status.' ~ (project.status == 'in_progress' ? 'in_progress' : (project.status == 'finished' ? 'finished' : 'draft')))|trans }}
+                    </span>
+                </div>
+                <div class="col-role">
+                    <span class="sc-card__role-badge sc-card__role-badge--{{ role }}">{{ roleLabel }}</span>
+                </div>
+                <div class="col-progression">
+                    {% set total = project.tasks|length %}
+                    {% set done  = project.tasks|filter(t => t.status == 'done')|length %}
+                    <div class="progress-bar-container" title="{{ total > 0 ? done ~ '/' ~ total ~ ' ' ~ 'projects.card.task'|trans({'%count%': total}) : 'projects.card.no_tasks'|trans }}">
+                        <div class="progress-bar-fill" style="width: {{ total > 0 ? ((done/total)*100)|round : 0 }}%;"></div>
+                    </div>
+                </div>
+                <div class="col-entities">
+                    <strong>{{ project.scenarioElements|length + project.characters|length }}</strong>
+                </div>
+                <div class="col-date">{{ project.updatedAt|date('d/m/Y') }}</div>
+                <div class="col-actions">
+                    <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: project.slug}) }}"
+                       class="btn-table text-2xs">{{ ctaKey|trans }} →</a>
+                </div>
+            </div>
+
+        {% endfor %}
+
     </div>
+
+    {# ── Pagination ───────────────────────────────────────────────── #}
+    {% if total_pages > 1 %}
+        {% set base_params = app.request.query.all|merge({_locale: app.request.locale}) %}
+        <div class="proj-pagination">
+            <a href="{{ path('app_project_index', base_params|merge({page: page - 1})) }}"
+               class="proj-page-btn {{ page <= 1 ? 'proj-page-btn--disabled' : '' }}">
+                {{ ux_icon('lucide:chevron-left', {style: 'width:13px;height:13px'}) }}
+                {{ 'projects.index.prev'|trans }}
+            </a>
+
+            <span class="proj-page-info">
+                {{ 'projects.index.page_of'|trans({'%page%': page, '%total%': total_pages}) }}
+            </span>
+
+            <a href="{{ path('app_project_index', base_params|merge({page: page + 1})) }}"
+               class="proj-page-btn {{ page >= total_pages ? 'proj-page-btn--disabled' : '' }}">
+                {{ 'projects.index.next'|trans }}
+                {{ ux_icon('lucide:chevron-right', {style: 'width:13px;height:13px'}) }}
+            </a>
+        </div>
+    {% endif %}
+
+    {% endif %}
+
+    </div>{# fin data-per-page-target="content" #}
+
+</div>
 {% endblock %}

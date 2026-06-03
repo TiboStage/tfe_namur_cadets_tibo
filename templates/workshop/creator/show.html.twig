@@ -1,0 +1,194 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block subnav %}{% endblock %}
+
+{% block title %}{{ creator.username }} · Scénart{% endblock %}
+
+{% block content %}
+<div class="workshop-container creator-page">
+
+    {# ══════════════════════════════════════════════════════════════════════
+       PROFIL CRÉATEUR — édition inline si c'est le propre profil
+       ══════════════════════════════════════════════════════════════════════ #}
+
+    {% if is_own_profile %}
+    <div class="creator-profile"
+         data-controller="profile-editor"
+         data-profile-editor-update-url-value="{{ path('app_workshop_creator_update', {_locale: app.request.locale}) }}"
+         data-profile-editor-csrf-value="{{ csrf_token('update_profile') }}">
+    {% else %}
+    <div class="creator-profile">
+    {% endif %}
+
+        {# ── Bannière de fond ──────────────────────────────────────────────── #}
+        <div class="creator-profile__banner">
+            <div class="creator-profile__banner-glow"></div>
+        </div>
+
+        {# ── Section d'en-tête ─────────────────────────────────────────────── #}
+        <div class="creator-profile__header">
+
+            {# Avatar #}
+            <div class="creator-profile__avatar">
+                {{ include('_partials/_user_avatar.html.twig', {user: creator, size: '2xl'}) }}
+            </div>
+
+            {# ────── MODE VUE ────────────────────────────────────────────── #}
+            <div class="creator-profile__info"
+                 {% if is_own_profile %}data-profile-editor-target="view"{% endif %}>
+
+                <div class="creator-profile__name-row">
+                    <h1 class="creator-profile__username">{{ creator.username }}</h1>
+                    {% if is_own_profile %}
+                        <button class="creator-profile__edit-btn"
+                                type="button"
+                                data-action="profile-editor#edit">
+                            {{ ux_icon('lucide:pencil', {style: 'width:13px;height:13px'}) }}
+                            Modifier
+                        </button>
+                    {% endif %}
+                </div>
+
+                <p class="creator-profile__fullname"
+                   {% if is_own_profile %}data-profile-editor-target="nameDisplay"{% endif %}>
+                    {{ creator.getFullName() }}
+                </p>
+
+                <p class="creator-profile__bio {% if not creator.getBio() %}creator-profile__bio--empty{% endif %}"
+                   {% if is_own_profile %}data-profile-editor-target="bioDisplay"{% endif %}>
+                    {{ creator.getBio() ?? (is_own_profile ? 'Ajoutez une courte description…' : '') }}
+                </p>
+
+                <div class="creator-profile__meta">
+                    <span>
+                        {{ ux_icon('lucide:calendar', {class: 'icon-3xs'}) }}
+                        Membre depuis {{ creator.createdAt|date('F Y') }}
+                    </span>
+                    <span>
+                        {{ ux_icon('lucide:folder-open', {class: 'icon-3xs'}) }}
+                        {{ public_count }} projet{{ public_count > 1 ? 's' : '' }} public{{ public_count > 1 ? 's' : '' }}
+                    </span>
+                </div>
+            </div>
+
+            {# ────── MODE ÉDITION (propre profil uniquement) ─────────────── #}
+            {% if is_own_profile %}
+            <div class="creator-profile__edit-form"
+                 data-profile-editor-target="editForm"
+                 hidden>
+
+                <div class="creator-edit__fields">
+                    <div class="creator-edit__row">
+                        <div class="creator-edit__field">
+                            <label>Prénom</label>
+                            <input type="text"
+                                   data-profile-editor-target="firstName"
+                                   value="{{ creator.getFirstName() }}"
+                                   placeholder="Prénom">
+                        </div>
+                        <div class="creator-edit__field">
+                            <label>Nom</label>
+                            <input type="text"
+                                   data-profile-editor-target="lastName"
+                                   value="{{ creator.getLastName() }}"
+                                   placeholder="Nom">
+                        </div>
+                    </div>
+                    <div class="creator-edit__field">
+                        <label>Biographie <span class="creator-edit__limit">(500 caractères max)</span></label>
+                        <textarea data-profile-editor-target="bio"
+                                  maxlength="500"
+                                  rows="3"
+                                  placeholder="Décrivez-vous en quelques mots, votre style, vos projets…">{{ creator.getBio() ?? '' }}</textarea>
+                    </div>
+                </div>
+
+                <div class="creator-edit__actions">
+                    <button type="button"
+                            class="creator-edit__save"
+                            data-profile-editor-target="saveBtn"
+                            data-action="profile-editor#save">
+                        {{ ux_icon('lucide:check', {class: 'icon-xs'}) }}
+                        Sauvegarder
+                    </button>
+                    <button type="button"
+                            class="creator-edit__cancel"
+                            data-action="profile-editor#cancel">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════════════
+       PROJETS
+       ══════════════════════════════════════════════════════════════════════ #}
+
+    <section class="creator-projects">
+
+        <div class="creator-projects__header">
+            <h2>
+                {% if is_own_profile %}
+                    Mes projets
+                {% else %}
+                    Projets de {{ creator.username }}
+                {% endif %}
+            </h2>
+            {% if is_own_profile %}
+                <a href="{{ path('app_project_new_step1', {_locale: app.request.locale}) }}"
+                   class="btn-creat">+ Créer</a>
+            {% endif %}
+        </div>
+
+        {% if projects is empty %}
+            <div class="creator-projects__empty">
+                {{ ux_icon('lucide:folder-open', {style: 'width:32px;height:32px;opacity:.25'}) }}
+                <p>
+                    {% if is_own_profile %}
+                        Vous n'avez pas encore de projets. Créez-en un !
+                    {% else %}
+                        Ce créateur n'a pas encore publié de projets.
+                    {% endif %}
+                </p>
+            </div>
+        {% else %}
+            <div class="sc-cards-grid">
+                {% for row in projects %}
+                    {# findByUserWithStats retourne [0=>Project, character_count, ...] pour le propre profil #}
+                    {% set project = row[0] is defined ? row[0] : row %}
+
+                    {% if is_own_profile %}
+                        {# Propre profil : carte privée avec rôle propriétaire #}
+                        {{ include('workshop/_partials/_project_card_private.html.twig', {
+                            project: project,
+                            role: 'owner',
+                        }) }}
+                    {% else %}
+                        {# Profil d'un autre créateur : carte publique #}
+                        {{ include('workshop/_partials/_project_card_public.html.twig', {
+                            project:      project,
+                            comment_count: 0,
+                            viewer_role:  viewer_roles_map[project.id] ?? null,
+                        }) }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </section>
+
+    {# Lien retour #}
+    <div class="creator-back">
+        <a href="{{ path('app_workshop_explore', {_locale: app.request.locale, search_type: 'auteur'}) }}"
+           class="creator-back__link">
+            {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }}
+            Retour à l'exploration
+        </a>
+    </div>
+
+</div>
+{% endblock %}

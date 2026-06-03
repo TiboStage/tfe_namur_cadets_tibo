@@ -3,16 +3,20 @@
 {% block body %}
     <div class="profile-wrapper">
 
-        {# ── Header minimal ──────────────────────────────────────────────── #}
+        {# ── Topbar minimale ─────────────────────────────────────────────── #}
         <header class="profile-topbar">
-            <a href="{{ path('app_home') }}" class="profile-logo">
-                SCÉN<span class="highlight">ART</span>
+            <a href="{{ path('app_home') }}" class="profile-topbar__logo">
+                <img src="{{ asset('images/favicons/favicon.png') }}" alt="Scénart" width="24">
+                <span>Scén<span class="highlight">art</span></span>
             </a>
 
-            <div class="profile-topbar-right">
-                <div class="avatar-circle">
-                    {{ app.user.firstName|slice(0,1)|upper }}{{ app.user.lastName|slice(0,1)|upper }}
-                </div>
+            <div class="profile-topbar__right">
+                <a href="{{ path('app_workshop_dashboard') }}"
+                   class="profile-topbar__link">
+                    {{ ux_icon('lucide:layout-dashboard', {class: 'icon-xs'}) }}
+                    {{ 'navbar.links.dashboard'|trans({}, 'workshop') }}
+                </a>
+                {{ include('_partials/_user_avatar.html.twig', {user: app.user, size: 'sm'}) }}
             </div>
         </header>
 

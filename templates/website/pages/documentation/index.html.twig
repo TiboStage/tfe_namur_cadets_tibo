@@ -1,0 +1,81 @@
+{% extends 'website/layout.html.twig' %}
+
+{% block title %}Documentation · Scénart{% endblock %}
+
+{% block content %}
+<div class="doc-page">
+
+    {# ── Sidebar ─────────────────────────────────────────────────────── #}
+    <aside class="doc-sidebar">
+        <div class="doc-sidebar__inner">
+            <div class="doc-sidebar__brand">
+                {{ ux_icon('lucide:book-open', {class: 'icon-sm'}) }}
+                <span>Documentation</span>
+            </div>
+            <nav class="doc-nav">
+                {% if nav is empty %}
+                    <p class="doc-nav__empty">Aucun article disponible.</p>
+                {% else %}
+                    {% for category, articles in nav %}
+                        <div class="doc-nav__group">
+                            <span class="doc-nav__category">{{ category }}</span>
+                            <ul class="doc-nav__list">
+                                {% for art in articles %}
+                                    <li>
+                                        <a href="{{ path('app_documentation_show', {slug: art.slug, _locale: app.request.locale}) }}"
+                                           class="doc-nav__link">
+                                            {{ art.title }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </nav>
+        </div>
+    </aside>
+
+    {# ── Contenu principal ───────────────────────────────────────────── #}
+    <main class="doc-main">
+        <div class="doc-content">
+
+            {% if nav is empty %}
+                <div class="doc-empty">
+                    <div class="doc-empty__icon">{{ ux_icon('lucide:book', {style: 'width:48px;height:48px'}) }}</div>
+                    <h1>Documentation en cours de rédaction</h1>
+                    <p>Nos guides et tutoriels seront disponibles très prochainement. Revenez bientôt !</p>
+                    <a href="{{ path('app_home', {_locale: app.request.locale}) }}" class="btn-primary">
+                        Retour à l'accueil
+                    </a>
+                </div>
+            {% else %}
+                <h1 class="doc-index-title">Documentation Scénart</h1>
+                <p class="doc-index-intro">
+                    Bienvenue dans la documentation officielle de Scénart. Retrouvez ici tous les guides pour créer, organiser et partager vos projets narratifs.
+                </p>
+
+                <div class="doc-categories-grid">
+                    {% for category, articles in nav %}
+                        <div class="doc-category-card">
+                            <h3 class="doc-category-card__title">{{ category }}</h3>
+                            <ul class="doc-category-card__list">
+                                {% for art in articles %}
+                                    <li>
+                                        <a href="{{ path('app_documentation_show', {slug: art.slug, _locale: app.request.locale}) }}">
+                                            {{ ux_icon('lucide:chevron-right', {class: 'icon-3xs'}) }}
+                                            {{ art.title }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+    </main>
+
+</div>
+{% endblock %}

@@ -1,20 +1,73 @@
 {% trans_default_domain 'workshop' %}
 
-<aside class="workspace-sidebar">
+{#
+  Variables optionnelles injectées par scenario/layout.html.twig :
+    manuscriptTree   — array de ScenarioElement racine (avec enfants)
+    currentElement   — ScenarioElement courant (pour marquer active)
+#}
 
-    {# ── Header avec project switcher dropdown ────────────── #}
+{# ── Macro : nœud de l'arbre manuscrit dans la sidebar ────── #}
+{% macro renderNavTreeNode(item, project, currentElement) %}
+    <div class="nav-tree-node depth-{{ item.depth }}"
+         {% if item.children is defined and item.children is not empty %}
+             data-controller="tree-node"
+         {% endif %}>
+
+        <div class="nav-tree-row {% if currentElement and item.id == currentElement.id %}active{% endif %}">
+            {% if item.children is defined and item.children is not empty %}
+                <button class="nav-tree-toggle" type="button"
+                        data-action="tree-node#toggle"
+                        data-tree-node-target="toggle">
+                    {{ ux_icon('lucide:chevron-right', {class: 'icon-xs'}) }}
+                </button>
+            {% else %}
+                <span class="nav-tree-dot"></span>
+            {% endif %}
+
+            <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: item.id}) }}"
+               class="nav-tree-label {% if currentElement and item.id == currentElement.id %}active{% endif %}"
+               title="{{ item.title }}">
+                {{ item.title }}
+            </a>
+
+            {% set maxDepth = project.projectType == 'film' ? 3 : 4 %}
+            {% if item.depth < maxDepth and not (readonly ?? false) %}
+                <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: item.depth + 1, parent_id: item.id}) }}"
+                   class="nav-tree-add"
+                   title="Ajouter un enfant">+</a>
+            {% endif %}
+        </div>
+
+        {% if item.children is defined and item.children is not empty %}
+            <div class="tree-children hidden" data-tree-node-target="children">
+                {% for child in item.children %}
+                    {{ _self.renderNavTreeNode(child, project, currentElement) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+{% endmacro %}
+
+{# ══════════════════════════════════════════════════════════════
+   SIDEBAR
+   ══════════════════════════════════════════════════════════════ #}
+<aside class="workspace-sidebar" data-controller="sidebar">
+
+    {# ── Header : projet ──────────────────────────────────── #}
     <div class="sidebar-header">
+
         <div class="project-switcher" data-controller="dropdown">
 
             <button class="project-switcher-btn"
                     data-action="click->dropdown#toggle"
-                    type="button">
+                    type="button"
+                    aria-expanded="false">
                 <span class="project-icon">{{ project.title|first|upper }}</span>
                 <span class="project-name">{{ project.title }}</span>
                 {{ ux_icon('lucide:chevron-down', {class: 'icon-xs'}) }}
             </button>
 
-            {# Le controller dropdown toggle .show sur cet élément #}
             <div class="project-switcher-dropdown" data-dropdown-target="menu">
 
                 <div class="dropdown-header">
@@ -22,8 +75,6 @@
                 </div>
 
                 <div class="dropdown-projects">
-
-                    {# Projet actuel #}
                     <div class="dropdown-project-item current">
                         <span class="project-icon-sm">{{ project.title|first|upper }}</span>
                         <div class="project-info">
@@ -33,7 +84,6 @@
                         <span class="badge-current">{{ 'navbar.current_badge'|trans }}</span>
                     </div>
 
-                    {# Autres projets (max 4, exclu le projet actuel) #}
                     {% for other_project in app.user.projects %}
                         {% if other_project.id != project.id %}
                             <a href="{{ path('app_project_show', {slug: other_project.slug}) }}"
@@ -46,7 +96,6 @@
                             </a>
                         {% endif %}
                     {% endfor %}
-
                 </div>
 
                 <div class="dropdown-footer">
@@ -58,116 +107,156 @@
 
             </div>
         </div>
-    </div>
 
-    {# ── Bouton Administration ──────────────────────────── #}
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="sidebar-admin">
-            <a href="{{ path('admin_dashboard') }}" class="admin-btn">
-                {{ ux_icon('lucide:shield-alert') }}
-                Administration
-                {{ ux_icon('lucide:external-link') }}
-            </a>
-        </div>
-    {% endif %}
+    </div>
 
     {# ── Navigation principale ──────────────────────────── #}
     <nav class="sidebar-nav">
 
         {# Section ÉCRITURE #}
         <div class="nav-group">
-            <span class="nav-label">Écriture</span>
+            <span class="nav-label sidebar-text">{{ 'nav.writing'|trans }}</span>
 
             <a href="{{ path('app_project_show', {slug: project.slug}) }}"
-               class="nav-item {{ app.request.attributes.get('_route') == 'app_project_show' ? 'active' : '' }}">
+               class="nav-item {{ app.request.attributes.get('_route') == 'app_project_show' ? 'active' : '' }}"
+               title="{{ 'nav.overview'|trans }}">
                 {{ ux_icon('lucide:layout-grid') }}
-                Aperçu
+                <span class="sidebar-text">{{ 'nav.overview'|trans }}</span>
             </a>
 
+            {# ── Manuscrit + sous-arbre ──────────────────── #}
             <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}"
-               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_manuscript' ? 'active' : '' }}">
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_manuscript' ? 'active' : '' }}"
+               title="{{ 'nav.manuscript'|trans }}">
                 {{ ux_icon('lucide:book-open') }}
-                Manuscript
-                {{ ux_icon('lucide:corner-right-down', {class: 'nav-action'}) }}
+                <span class="sidebar-text">{{ 'nav.manuscript'|trans }}</span>
+                <span class="nav-count">{{ project.scenarioElements|length }}</span>
             </a>
-            <a href="#" class="nav-item">{{ ux_icon('lucide:network') }}Structure</a>
-{#            <a href="{{ path('app_structure_index', {project_slug: project.slug}) }}"#}
-{#               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_structure' ? 'active' : '' }}">#}
-{#                {{ ux_icon('lucide:network') }}#}
-{#                Structure#}
-{#            </a>#}
+
+            {# Sous-menu : arborescence narrative #}
+            {% if manuscriptTree is defined and manuscriptTree is not empty %}
+                <div class="nav-submenu">
+                    {% for root in manuscriptTree %}
+                        {{ _self.renderNavTreeNode(root, project, currentElement ?? null) }}
+                    {% endfor %}
+                    {% if not (readonly ?? false) %}
+                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}"
+                           class="nav-submenu-add">
+                            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                            <span class="sidebar-text">{{ 'nav.add_root'|trans }}</span>
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <a href="{{ path('app_world_event_index', {project_slug: project.slug}) }}"
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_world_event' ? 'active' : '' }}"
+               title="{{ 'nav.timeline'|trans }}">
+                {{ ux_icon('lucide:calendar-clock') }}
+                <span class="sidebar-text">{{ 'nav.timeline'|trans }}</span>
+                <span class="nav-count">{{ project.worldEvents|length }}</span>
+            </a>
         </div>
 
         {# Section UNIVERS #}
         <div class="nav-group">
-            <span class="nav-label">Univers</span>
+            <span class="nav-label sidebar-text">{{ 'nav.universe'|trans }}</span>
 
             <a href="{{ path('app_character_index', {project_slug: project.slug}) }}"
-               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_character' ? 'active' : '' }}">
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_character' ? 'active' : '' }}"
+               title="{{ 'nav.characters'|trans }}">
                 {{ ux_icon('lucide:user') }}
-                Personnage
-                <span class="nav-badge">{{ project.characters|length }}</span>
+                <span class="sidebar-text">{{ 'nav.characters'|trans }}</span>
+                <span class="nav-count">{{ project.characters|length }}</span>
             </a>
 
             <a href="{{ path('app_location_index', {project_slug: project.slug}) }}"
-               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_location' ? 'active' : '' }}">
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_location' ? 'active' : '' }}"
+               title="{{ 'nav.locations'|trans }}">
                 {{ ux_icon('lucide:map-pin') }}
-                Lieux
-                <span class="nav-badge">{{ project.locations|length }}</span>
+                <span class="sidebar-text">{{ 'nav.locations'|trans }}</span>
+                <span class="nav-count">{{ project.locations|length }}</span>
             </a>
-
-            <a href="#" class="nav-item">{{ ux_icon('lucide:git-branch') }}Relation</a>
-            {#            <a href="{{ path('app_relation_index', {project_slug: project.slug}) }}"#}
-{#               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_relation' ? 'active' : '' }}">#}
-{#                {{ ux_icon('lucide:git-branch') }}#}
-{#                Relations#}
-{#            </a>#}
-
-            <a href="#" class="nav-item">{{ ux_icon('lucide:file-text') }}Documentation</a>
-            {#            <a href="{{ path('app_documentation_index', {project_slug: project.slug}) }}"#}
-{#               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_documentation' ? 'active' : '' }}">#}
-{#                {{ ux_icon('lucide:file-text') }}#}
-{#                Documentation#}
-{#            </a>#}
         </div>
 
         {# Section PRODUCTION #}
         <div class="nav-group">
-            <span class="nav-label">Production</span>
-
-
-            <a href="#" class="nav-item">{{ ux_icon('lucide:check-check') }}Taches
-                <span class="nav-badge">2</span>
-            </a>
+            <span class="nav-label sidebar-text">{{ 'nav.production'|trans }}</span>
 
             <a href="{{ path('app_task_index', {project_slug: project.slug}) }}"
-               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_task' ? 'active' : '' }}">
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_task' ? 'active' : '' }}"
+               title="{{ 'nav.tasks'|trans }}">
                 {{ ux_icon('lucide:check-square') }}
-                Tâches
-                <span class="nav-badge">{{ project.tasks|filter(t => not t.completed)|length }}</span>
+                <span class="sidebar-text">{{ 'nav.tasks'|trans }}</span>
+                <span class="nav-count">{{ project.tasks|filter(t => t.status != 'done')|length }}</span>
             </a>
 
-{#            <a href="#" class="nav-item">{{ ux_icon('lucide:file-edit') }}Notes</a>#}
-
             <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
-               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_note' ? 'active' : '' }}">
+               class="nav-item {{ app.request.attributes.get('_route') starts with 'app_note' ? 'active' : '' }}"
+               title="{{ 'nav.notes'|trans }}">
                 {{ ux_icon('lucide:file-edit') }}
-                Notes
+                <span class="sidebar-text">{{ 'nav.notes'|trans }}</span>
+                <span class="nav-count">{{ project.notes|filter(n => n.status != 'archived')|length }}</span>
             </a>
         </div>
 
     </nav>
 
+    {# ── Bouton réduire — en bas de la nav, au-dessus du footer ── #}
+    <button class="sidebar-collapse-btn"
+            type="button"
+            data-action="click->sidebar#toggle"
+            title="{{ 'nav.collapse'|trans }}">
+        <span class="icon-collapse">{{ ux_icon('lucide:panel-left-close', {class: 'icon-xs'}) }}</span>
+        <span class="icon-expand">{{ ux_icon('lucide:panel-left-open', {class: 'icon-xs'}) }}</span>
+        <span class="sidebar-text">{{ 'nav.collapse'|trans }}</span>
+    </button>
+
     {# ── Footer ─────────────────────────────────────────── #}
     <footer class="sidebar-footer">
 
-        <a href="#" class="nav-item">{{ ux_icon('lucide:settings') }}Paramètre du projet</a>
+        {% if readonly ?? false %}
+            {# ── Mode lecture ── #}
+            <div class="sidebar-readonly-banner">
+                {{ ux_icon('lucide:eye', {class: 'icon-xs'}) }}
+                <span class="sidebar-text">{{ 'nav.readonly_mode'|trans }}</span>
+            </div>
+            <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}"
+               class="nav-item"
+               title="{{ 'nav.public_page'|trans }}">
+                {{ ux_icon('lucide:external-link', {class: 'icon-xs'}) }}
+                <span class="sidebar-text">{{ 'nav.public_page'|trans }}</span>
+            </a>
+        {% else %}
+            {# ── Bouton Publication ── #}
+            <button type="button"
+                    class="nav-item sidebar-visibility-btn {{ project.visibility == 'public' ? 'is-public' : (project.visibility == 'private' ? 'is-private' : '') }}"
+                    onclick="document.getElementById('publishModal').hidden = false"
+                    title="{{ 'publish_modal.title'|trans }}">
+                {% if project.visibility == 'public' %}
+                    {{ ux_icon('lucide:globe', {class: 'icon-xs'}) }}
+                    <span class="sidebar-text">{{ 'nav.online'|trans }}</span>
+                    <span class="sidebar-badge-live">{{ 'nav.live'|trans }}</span>
+                {% elseif project.visibility == 'private' %}
+                    {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
+                    <span class="sidebar-text">{{ 'nav.private_vis'|trans }}</span>
+                {% else %}
+                    {{ ux_icon('lucide:eye-off', {class: 'icon-xs'}) }}
+                    <span class="sidebar-text">{{ 'nav.unpublished'|trans }}</span>
+                {% endif %}
+            </button>
 
-        {#        <a href="{{ path('app_project_settings', {slug: project.slug}) }}" class="footer-settings">#}
-{#            {{ ux_icon('lucide:settings') }}#}
-{#            Paramètres projet#}
-{#        </a>#}
-        <span class="sidebar-version">Version {{ app_version.version }}</span>
+            {% include 'workshop/_partials/_publish_modal.html.twig' %}
+
+            <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
+               class="nav-item {{ app.request.attributes.get('_route') == 'app_project_edit' ? 'active' : '' }}"
+               title="{{ 'nav.settings'|trans }}">
+                {{ ux_icon('lucide:settings') }}
+                <span class="sidebar-text">{{ 'nav.settings'|trans }}</span>
+            </a>
+        {% endif %}
+
+        <span class="sidebar-version sidebar-text">Version {{ app_version.version }}</span>
     </footer>
 
 </aside>

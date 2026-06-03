@@ -1,0 +1,112 @@
+/* ============================================================
+   SYSTÈME D'AVATARS UNIVERSELS — .u-avatar
+   Photo OU initiale colorée. Tailles : xs/sm/md/lg/xl/2xl
+   ============================================================ */
+
+.u-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0;
+    line-height: 1;
+    user-select: none;
+}
+
+/* ── Tailles ─────────────────────────────────────────────── */
+.u-avatar--xs  { width: 20px; height: 20px; font-size: 9px;  border-radius: 3px; }
+.u-avatar--sm  { width: 26px; height: 26px; font-size: 11px; border-radius: 4px; }
+.u-avatar--md  { width: 32px; height: 32px; font-size: 13px; border-radius: 4px; }
+.u-avatar--lg  { width: 42px; height: 42px; font-size: 16px; border-radius: 5px; }
+.u-avatar--xl  { width: 56px; height: 56px; font-size: 20px; border-radius: 6px; }
+.u-avatar--2xl { width: 80px; height: 80px; font-size: 28px; border-radius: 8px; }
+
+/* ── Image (quand avatar photo uploadé) ─────────────────── */
+.u-avatar__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ── Lettre (quand pas de photo) ────────────────────────── */
+.u-avatar__letter {
+    line-height: 1;
+}
+
+/* ── Lien wrapper ───────────────────────────────────────── */
+.u-avatar-link {
+    display: inline-flex;
+    text-decoration: none;
+}
+
+.u-avatar-link:hover .u-avatar {
+    opacity: 0.85;
+    transition: opacity 0.15s ease;
+}
+
+/* ── Variantes contextuelles ────────────────────────────── */
+
+/* Preview profile page (remplit son conteneur) */
+.u-avatar--profile-preview {
+    width: 100%;
+    height: 100%;
+    font-size: 38px;
+    border-radius: 0;
+    color: #fff;
+}
+
+/* Preview formulaire auth (color picker) */
+.u-avatar--auth-preview {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+    border-radius: 6px;
+    color: #fff;
+}
+
+/* ── Auth page color picker (swatches d'inscription) ──── */
+.avatar-picker {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 4px 0 16px;
+}
+
+.avatar-picker__swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+    flex-shrink: 0;
+}
+
+.avatar-picker__swatch:hover {
+    transform: scale(1.15);
+}
+
+.avatar-picker__swatch--active {
+    border-color: var(--text-main);
+    transform: scale(1.15);
+    box-shadow: 0 0 0 2px var(--overlay-lg);
+}
+
+/* Preview avatar dans le form d'inscription */
+.avatar-preview {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.avatar-preview__label {
+    font-size: 12px;
+    color: var(--text-muted);
+}

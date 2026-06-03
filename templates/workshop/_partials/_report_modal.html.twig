@@ -1,0 +1,127 @@
+{#
+    Partial — modal de signalement (singleton sur la page).
+
+    Doit être placé à l'intérieur d'un élément avec
+    data-controller="report-modal".
+
+    Variables attendues :
+      - project : App\Entity\Project (pour le bouton de signalement du projet)
+      - viewer  : App\Entity\User|null
+#}
+
+{% if viewer is not null %}
+
+{# ── Bouton flottant de signalement du projet ─────────────────────── #}
+<div class="pub-project__report-btn-wrap">
+    <button
+        class="btn-report"
+        data-action="click->report-modal#open"
+        data-report-modal-url-param="{{ path('app_report', {_locale: app.request.locale, type: 'project', id: project.id}) }}"
+        data-report-modal-token-param="{{ csrf_token('report_project_' ~ project.id) }}"
+        data-report-modal-label-param="ce projet"
+    >
+        {{ ux_icon('lucide:flag', {class: 'icon-3xs'}) }}
+        Signaler ce projet
+    </button>
+</div>
+
+{# ── Modal ─────────────────────────────────────────────────────────── #}
+<div
+    class="report-modal-overlay"
+    hidden
+    data-report-modal-target="overlay"
+    data-action="click->report-modal#closeOnBackdrop"
+>
+    <div class="report-modal__panel" data-report-modal-target="panel">
+
+        {# En-tête #}
+        <div class="report-modal__header">
+            <h2 class="report-modal__title">
+                <span class="report-modal__title-icon">
+                    {{ ux_icon('lucide:flag', {style: 'width:15px;height:15px'}) }}
+                </span>
+                Signaler <span data-report-modal-target="labelText">cet élément</span>
+            </h2>
+            <button
+                type="button"
+                class="report-modal__close"
+                data-action="click->report-modal#close"
+                aria-label="Fermer"
+            >
+                {{ ux_icon('lucide:x', {class: 'icon-xs'}) }}
+            </button>
+        </div>
+
+        {# Corps — formulaire #}
+        <form
+            method="post"
+            data-report-modal-target="form"
+            data-action="submit->report-modal#submit"
+        >
+            <div class="report-modal__body">
+
+                <p class="report-modal__intro">
+                    Aidez-nous à maintenir une communauté saine.
+                    Votre signalement est traité de manière confidentielle.
+                </p>
+
+                {# Choix de la raison #}
+                <div class="report-modal__reasons">
+                    {% for key, label in constant('App\\Entity\\Report::REASONS') %}
+                        <label class="report-reason-option">
+                            <input
+                                type="radio"
+                                name="reason"
+                                value="{{ key }}"
+                                data-action="change->report-modal#onReasonChange"
+                            >
+                            <span class="report-reason-option__dot"></span>
+                            <span class="report-reason-option__label">{{ label }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+
+                {# Description optionnelle (visible si "Autre raison") #}
+                <div
+                    class="report-modal__description-group"
+                    hidden
+                    data-report-modal-target="descriptionGroup"
+                >
+                    <label class="report-modal__description-label">Précisez (optionnel)</label>
+                    <textarea
+                        name="description"
+                        class="report-modal__description-field"
+                        placeholder="Décrivez le problème en quelques mots…"
+                        maxlength="500"
+                        data-report-modal-target="description"
+                    ></textarea>
+                </div>
+
+                {# Feedback #}
+                <div class="report-modal__feedback" data-report-modal-target="feedback"></div>
+
+                {# Token CSRF dynamique #}
+                <input type="hidden" name="_token" data-report-modal-target="tokenInput">
+
+            </div>
+
+            {# Pied #}
+            <div class="report-modal__footer">
+                <button
+                    type="button"
+                    class="report-modal__btn-cancel"
+                    data-action="click->report-modal#close"
+                >
+                    Annuler
+                </button>
+                <button type="submit" class="report-modal__btn-submit">
+                    {{ ux_icon('lucide:send', {class: 'icon-3xs'}) }}
+                    Envoyer le signalement
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endif %}

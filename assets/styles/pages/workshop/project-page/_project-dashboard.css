@@ -1,10 +1,618 @@
 /* =========================================================
+   PROJECT DASHBOARD + PAGES NOTES / TÂCHES
+   ========================================================= */
+
+/* ── Conteneur général des pages projet ──────────────────── */
+
+.dashboard-container {
+    padding: 32px 40px;
+    max-width: var(--container-width);
+    width: 100%;
+}
+
+/* ── Actions dans le header (edit/delete) ────────────────── */
+
+.page-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* ── Wrapper formulaire (new/edit) ───────────────────────── */
+
+.form-page-wrapper {
+    max-width: 720px;
+}
+
+.form-section {
+    background: var(--overlay-xs);
+    border: 1px solid var(--overlay-sm);
+    padding: 24px;
+    margin-bottom: 16px;
+}
+
+.form-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted-light);
+    margin-bottom: 18px;
+}
+
+.form-row-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 4px;
+}
+
+/* ── Bouton supprimer ────────────────────────────────────── */
+
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--color-red-glow);
+    border: 1px solid color-mix(in srgb, var(--color-red) 20%, transparent);
+    color: var(--color-red);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.btn-delete:hover {
+    background: color-mix(in srgb, var(--color-red) 15%, transparent);
+    border-color: color-mix(in srgb, var(--color-red) 40%, transparent);
+}
+
+/* ── Wrapper contenu de la page show ─────────────────────── */
+
+.content-wrapper {
+    max-width: 720px;
+}
+
+.info-card {
+    background: var(--overlay-xs);
+    border: 1px solid var(--overlay-sm);
+}
+
+.info-card-section {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--overlay-sm);
+}
+
+.info-card-section:last-child { border-bottom: none; }
+
+.info-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted-light);
+    margin: 0 0 14px;
+}
+
+.info-card-title svg { color: color-mix(in srgb, var(--color-primary) 50%, transparent); }
+
+/* Badges statut+priorité groupés */
+.task-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Contenu de note */
+.note-content {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+/* Contenu de tâche */
+.task-description {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+/* Affichage assigné (grand) */
+.note-assignee-display,
+.task-assignee-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.assignee-avatar-large {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-primary-medium);
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.assignee-email {
+    font-size: 12px;
+    color: var(--text-muted-light);
+}
+
+/* Auteur / créateur */
+.note-author,
+.task-creator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.author-name, .creator-name {
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.author-date, .creator-date {
+    color: var(--text-muted-light);
+    font-size: 12px;
+}
+
+/* ── Header de page (h1 + bouton créer) ──────────────────── */
+
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 4px;
+}
+
+.page-subtitle {
+    font-size: 13px;
+    color: var(--text-muted-light);
+    margin: 0;
+}
+
+/* ── Filtres par onglets (notes, tâches) ─────────────────── */
+
+.filter-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--overlay-sm);
+    padding-bottom: 0;
+}
+
+.filter-tab {
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted-light);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.filter-tab:hover  { color: var(--text-muted); }
+.filter-tab.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+/* ── Grille des notes ─────────────────────────────────────── */
+
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.note-card {
+    background: color-mix(in srgb, var(--text-main) 2.5%, transparent);
+    border: 1px solid var(--overlay-sm);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.15s;
+}
+
+.note-card:hover { border-color: var(--overlay-md); }
+
+.note-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.note-card-header a {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.15s;
+}
+
+.note-card-header a:hover { color: var(--text-main); }
+
+.note-card-body p {
+    font-size: 12px;
+    color: var(--text-muted-light);
+    line-height: 1.55;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Chemin vers l'élément narratif lié */
+.note-element-path {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-muted-light);
+}
+
+.note-element-path svg { flex-shrink: 0; }
+
+.note-element-link {
+    color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s;
+}
+
+.note-element-link:hover { color: var(--color-primary); }
+
+.note-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid var(--overlay-sm);
+}
+
+.note-meta {
+    font-size: 11px;
+    color: var(--text-muted-dark);
+}
+
+.note-actions { display: flex; gap: 6px; }
+
+.note-actions a {
+    color: var(--text-muted-dark);
+    text-decoration: none;
+    transition: color 0.15s;
+    display: flex;
+    align-items: center;
+}
+
+.note-actions a:hover { color: var(--text-muted); }
+
+/* Badges statut */
+.badge-status {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.badge-status-note     { background: color-mix(in srgb, var(--color-purple) 12%, transparent); color: var(--color-purple); }
+.badge-status-todo     { background: var(--color-primary-glow);   color: var(--color-primary); }
+.badge-status-done     { background: var(--color-green-glow);   color: var(--color-green); }
+.badge-status-archived { background: var(--overlay-sm); color: var(--text-muted-light); }
+.badge-status-in_progress { background: var(--color-orange-glow); color: var(--color-orange); }
+.badge-status-review   { background: color-mix(in srgb, var(--color-yellow) 10%, transparent);  color: var(--color-yellow); }
+
+/* ── Vue liste des tâches ─────────────────────────────────── */
+
+.task-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 36px;
+}
+
+.task-list-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--overlay-xs);
+    border: 1px solid var(--overlay-md);
+    transition: background 0.12s, border-color 0.12s;
+}
+
+.task-list-row:hover {
+    background: var(--overlay-sm);
+    border-color: var(--overlay-lg);
+}
+
+.task-list-status { flex-shrink: 0; }
+
+.task-list-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.task-list-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s;
+}
+
+.task-list-title:hover { color: var(--text-main); }
+
+.task-list-path {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--text-muted-dark);
+}
+
+.task-list-path svg { flex-shrink: 0; color: color-mix(in srgb, var(--color-primary) 35%, transparent); }
+
+.task-path-link {
+    color: color-mix(in srgb, var(--color-primary) 45%, transparent);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s;
+}
+
+.task-path-link:hover { color: var(--color-primary); }
+
+.task-list-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* ── Badge priorité ───────────────────────────────────────── */
+
+.badge-priority {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 7px;
+    border-radius: 2px;
+}
+
+.badge-priority-high   { background: var(--color-orange-glow);  color: var(--color-orange); }
+.badge-priority-urgent { background: var(--color-red-glow);   color: var(--color-red); }
+.badge-priority-normal { background: var(--overlay-md); color: var(--text-muted-light); }
+.badge-priority-low    { background: var(--overlay-xs); color: var(--text-muted-dark); }
+
+/* Avatar assigné */
+.assignee-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--color-primary-medium);
+    color: var(--color-primary);
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Bouton icône petit */
+.btn-icon-sm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: var(--overlay-xs);
+    border: 1px solid var(--overlay-md);
+    color: var(--text-muted-light);
+    text-decoration: none;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.btn-icon-sm:hover {
+    background: var(--overlay-md);
+    color: var(--text-muted);
+    border-color: var(--overlay-lg);
+}
+
+/* ── Kanban ───────────────────────────────────────────────── */
+
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    align-items: start;
+}
+
+.kanban-column { display: flex; flex-direction: column; gap: 8px; }
+
+.kanban-column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 2px solid transparent;
+}
+
+.kanban-column-header h3 {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.kanban-header-todo     { border-bottom-color: var(--overlay-md); }
+.kanban-header-progress { border-bottom-color: var(--color-orange); }
+.kanban-header-review   { border-bottom-color: var(--color-yellow); }
+.kanban-header-done     { border-bottom-color: var(--color-green); }
+
+.kanban-count {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--overlay-sm);
+    color: var(--text-muted-light);
+    padding: 1px 7px;
+}
+
+.kanban-column-content { display: flex; flex-direction: column; gap: 6px; }
+
+.kanban-card {
+    background: color-mix(in srgb, var(--text-main) 2.5%, transparent);
+    border: 1px solid var(--overlay-sm);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 0.15s;
+}
+
+.kanban-card:hover { border-color: var(--overlay-md); }
+
+.kanban-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.kanban-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    flex: 1;
+    line-height: 1.4;
+    transition: color 0.15s;
+}
+
+.kanban-card-title:hover { color: var(--text-main); }
+
+.kanban-card-body p {
+    font-size: 11px;
+    color: var(--text-muted-light);
+    margin: 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.kanban-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 8px;
+    border-top: 1px solid var(--overlay-sm);
+}
+
+.task-assignee {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.assignee-name {
+    font-size: 11px;
+    color: var(--text-muted-light);
+}
+
+.kanban-card-actions { display: flex; gap: 4px; }
+
+/* Priorité : bordure gauche sur les cartes */
+.kanban-priority-urgent { border-left: 3px solid var(--color-error) !important; }
+.kanban-priority-high   { border-left: 3px solid var(--color-orange) !important; }
+.task-priority-urgent   { border-left: 3px solid var(--color-error); }
+.task-priority-high     { border-left: 3px solid var(--color-orange); }
+
+/* Empty state */
+.empty-state-icon { margin-bottom: 8px; color: var(--text-muted-dark); }
+.empty-state h3   { font-size: 18px; font-weight: 700; color: var(--text-muted); margin: 0; }
+.empty-state p    { font-size: 14px; color: var(--text-muted-light); margin: 0; }
+
+.text-muted { font-size: 11px; color: var(--text-muted-dark); }
+
+@media (max-width: 1100px) {
+    .kanban-board { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 700px) {
+    .kanban-board { grid-template-columns: 1fr; }
+    .dashboard-container { padding: 20px; }
+}
+
+/* =========================================================
    PROJECT DASHBOARD
    ========================================================= */
 
 .project-dashboard {
-    padding: 40px;
     max-width: 1600px;
+    width: 100%;
+    padding: 40px 20px;
+    margin: 0 auto;
 }
 
 /* ── Header projet ────────────────────────────────────── */
@@ -37,10 +645,10 @@
     align-items: center;
     justify-content: center;
 
-    background: rgba(245, 196, 0, 0.1);
-    border: 2px solid rgba(245, 196, 0, 0.5);
+    background: var(--color-primary-glow);
+    border: 2px solid color-mix(in srgb, var(--color-primary) 50%, transparent);
 
-    color: #F5C400;
+    color: var(--color-primary);
 
     font-size: 28px;
     font-weight: 800;
@@ -54,10 +662,10 @@
     margin-top: 4px;
     padding: 4px 12px;
 
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--overlay-sm);
+    border: 1px solid var(--overlay-md);
 
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-muted);
 
     font-size: 12px;
     font-weight: 700;
@@ -68,7 +676,7 @@
 .project-description {
     margin: 0;
 
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-muted);
 
     font-size: 16px;
     line-height: 1.6;
@@ -87,8 +695,8 @@
 
 
 .stat-highlight {
-    background: rgba(245, 196, 0, 0.05);
-    border-color: rgba(245, 196, 0, 0.2);
+    background: var(--color-primary-glow);
+    border-color: var(--color-primary-medium);
 }
 
 .stat-icon {
@@ -101,10 +709,10 @@
     align-items: center;
     justify-content: center;
 
-    background: rgba(245, 196, 0, 0.1);
-    border: 1px solid rgba(245, 196, 0, 0.3);
+    background: var(--color-primary-glow);
+    border: 1px solid var(--color-primary-border);
 
-    color: #F5C400;
+    color: var(--color-primary);
 }
 
 .stat-icon svg {
@@ -133,15 +741,15 @@
 .dashboard-card {
     padding: 28px;
 
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--overlay-xs);
+    border: 1px solid var(--overlay-md);
 
     margin-bottom: 24px;
 }
 
 .card-accent {
-    background: rgba(245, 196, 0, 0.05);
-    border-color: rgba(245, 196, 0, 0.2);
+    background: var(--color-primary-glow);
+    border-color: var(--color-primary-medium);
 }
 
 .card-title {
@@ -151,7 +759,7 @@
 
     margin: 0 0 24px 0;
 
-    color: white;
+    color: var(--text-main);
 
     font-size: 18px;
     font-weight: 700;
@@ -162,7 +770,7 @@
 .card-title svg {
     width: 20px;
     height: 20px;
-    color: #F5C400;
+    color: var(--color-primary);
 }
 
 /* ── Activité récente ─────────────────────────────────── */
@@ -177,21 +785,9 @@
     display: flex;
     align-items: center;
     gap: 16px;
-
-    padding: 14px;
-
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-
-    color: white;
+    color: var(--text-main);
     text-decoration: none;
-
     transition: all 0.14s ease;
-}
-
-.activity-item:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(245, 196, 0, 0.2);
 }
 
 .activity-icon {
@@ -204,10 +800,10 @@
     align-items: center;
     justify-content: center;
 
-    background: rgba(245, 196, 0, 0.1);
-    border: 1px solid rgba(245, 196, 0, 0.2);
+    background: var(--color-primary-glow);
+    border: 1px solid var(--color-primary-medium);
 
-    color: #F5C400;
+    color: var(--color-primary);
 }
 
 .activity-icon svg {
@@ -225,7 +821,7 @@
 }
 
 .activity-title {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-main);
 
     font-size: 14px;
     font-weight: 600;
@@ -236,7 +832,7 @@
 }
 
 .activity-time {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted-light);
 
     font-size: 12px;
     font-weight: 500;
@@ -252,13 +848,13 @@
     align-items: center;
     justify-content: center;
 
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--text-muted-light);
 
     transition: all 0.14s ease;
 }
 
 .activity-item:hover .activity-arrow {
-    color: #F5C400;
+    color: var(--color-primary);
     transform: translateX(4px);
 }
 
@@ -285,20 +881,20 @@
     width: 48px;
     height: 48px;
 
-    color: rgba(255, 255, 255, 0.2);
+    color: var(--text-muted-dark);
 }
 
 .empty-state p {
     margin: 0;
 
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-muted);
 
     font-size: 16px;
     font-weight: 600;
 }
 
 .empty-state span {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted-light);
 
     font-size: 14px;
 }
@@ -318,10 +914,10 @@
 
     padding: 12px 16px;
 
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(245, 196, 0, 0.2);
+    background: var(--overlay-xs);
+    border: 1px solid var(--color-primary-medium);
 
-    color: white;
+    color: var(--text-main);
     text-decoration: none;
 
     font-size: 14px;
@@ -331,16 +927,16 @@
 }
 
 .quick-action-btn:hover {
-    background: rgba(245, 196, 0, 0.1);
-    border-color: rgba(245, 196, 0, 0.4);
-    color: #F5C400;
+    background: var(--color-primary-glow);
+    border-color: var(--color-primary-border);
+    color: var(--color-primary);
 }
 
 .quick-action-btn svg {
     width: 18px;
     height: 18px;
 
-    color: #F5C400;
+    color: var(--color-primary);
 }
 
 /* ── Informations projet ──────────────────────────────── */
@@ -360,7 +956,7 @@
 
     padding-bottom: 16px;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--overlay-md);
 }
 
 .info-item:last-child {
@@ -369,7 +965,7 @@
 }
 
 .info-label {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted-light);
 
     font-size: 11px;
     font-weight: 700;
@@ -378,7 +974,7 @@
 }
 
 .info-value {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-main);
 
     font-size: 14px;
     font-weight: 600;
@@ -398,9 +994,9 @@
 }
 
 .info-badge-draft {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.8);
+    background: var(--overlay-md);
+    border: 1px solid var(--overlay-lg);
+    color: var(--text-muted);
 }
 
 .btn-settings {
@@ -411,10 +1007,10 @@
 
     padding: 12px 16px;
 
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--overlay-xs);
+    border: 1px solid var(--overlay-md);
 
-    color: white;
+    color: var(--text-main);
     text-decoration: none;
 
     font-size: 13px;
@@ -424,9 +1020,9 @@
 }
 
 .btn-settings:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(245, 196, 0, 0.3);
-    color: #F5C400;
+    background: var(--overlay-sm);
+    border-color: var(--color-primary-border);
+    color: var(--color-primary);
 }
 
 .btn-settings svg {
@@ -440,6 +1036,10 @@
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
+    .project-dashboard {
+        padding: 20px;
+        margin: 0;
+    }
 
     .grid-sidebar {
         display: grid;
@@ -449,9 +1049,6 @@
 }
 
 @media (max-width: 768px) {
-    .project-dashboard {
-        padding: 20px;
-    }
 
     .header-content {
         flex-direction: column;
@@ -466,3 +1063,41 @@
         grid-template-columns: 1fr;
     }
 }
+
+
+/* ── Activité récente (mini-commentaires sur le dashboard projet) ── */
+.activity-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+    padding: 10px 0;
+}
+
+.activity-item__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.activity-item__avatar {
+    width: 20px;
+    height: 20px;
+    font-size: 9px;
+}
+
+.activity-item__author {
+    color: var(--text-main);
+}
+
+.activity-item__text {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.empty-state--compact { padding: 16px 0; }
+.empty-state--compact p { margin: 0; font-size: 12px; }

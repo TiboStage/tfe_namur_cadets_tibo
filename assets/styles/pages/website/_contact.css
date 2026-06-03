@@ -2,10 +2,6 @@
 /* PAGE CONTACT - CSS COMPLET                                       */
 /* ═══════════════════════════════════════════════════════════════ */
 
-.contact-page {
-    padding-top: 100px;
-    padding-bottom: 100px;
-}
 
 .contact-grid {
     display: grid;
@@ -74,7 +70,7 @@
     justify-content: center;
     color: var(--text-muted-light);
     text-decoration: none;
-    transition: var(--transition);
+    transition: var(--transition-fast);
 }
 
 .social-box:hover {
@@ -86,7 +82,7 @@
 .form-card {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
-    padding: 50px;
+    padding: var(--container-padding);
 }
 
 .form-card h2 {
@@ -169,7 +165,7 @@
 .contact-form input[type="email"]:focus,
 .contact-form select:focus,
 .contact-form textarea:focus {
-    border-color: var(--color-border-focus);
+    border-color: var(--color-primary);
 }
 
 /* ── État valide ───────────────────────────────────────────────── */
@@ -293,7 +289,7 @@
 
 .alert-success { background: var(--color-success-bg); border-color: var(--color-success); color: var(--color-success); }
 .alert-danger  { background: var(--color-error-bg);   border-color: var(--color-error);   color: var(--color-error);   }
-.alert-warning { background: var(--color-warning-bg); border-color: var(--color-warning); color: var(--color-warning); }
+.alert-warning { background: var(--color-primary-glow); border-color: var(--color-primary); color: var(--color-primary); }
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* RESPONSIVE                                                       */

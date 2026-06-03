@@ -6,44 +6,53 @@
 {% block project_content %}
 <div class="workshop-container">
 
+    {# ── En-tête page (accès direct uniquement) ────────────────────── #}
     <header class="page-header">
         <div>
-            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="link-back">{{ 'location.new.back'|trans }}</a>
+            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="link-back">
+                {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }}
+                {{ 'location.new.back'|trans }}
+            </a>
             <h1>{{ 'location.new.title'|trans }}</h1>
         </div>
     </header>
 
-    <div class="form-page-wrapper">
+    <turbo-frame id="modal-frame">
+        <div class="ws-modal-form-wrap">
 
-        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
+            <h2 class="ws-modal-form-title">{{ 'location.new.title'|trans }}</h2>
 
-            <div class="form-block">
-                <label class="form-label">{{ 'location.form.name'|trans }} <span class="required">*</span></label>
-                {{ form_widget(form.name, {'attr': {'placeholder': 'location.form.name_placeholder'|trans}}) }}
-                {{ form_errors(form.name) }}
-            </div>
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
 
-            <div class="form-block">
-                <label class="form-label">{{ 'location.form.type'|trans }} <span class="required">*</span></label>
-                <div class="select-wrapper">
-                    {{ form_widget(form.type) }}
+                <div class="form-block">
+                    <label class="form-label">{{ 'location.form.name'|trans }} <span class="required">*</span></label>
+                    {{ form_widget(form.name, {'attr': {'placeholder': 'location.form.name_placeholder'|trans}}) }}
+                    {{ form_errors(form.name) }}
                 </div>
-                {{ form_errors(form.type) }}
-            </div>
 
-            <div class="form-block">
-                <label class="form-label">{{ 'location.form.description'|trans }}</label>
-                {{ form_widget(form.description, {'attr': {'placeholder': 'location.form.description_placeholder'|trans}}) }}
-                {{ form_errors(form.description) }}
-            </div>
+                <div class="form-block">
+                    <label class="form-label">{{ 'location.form.type'|trans }} <span class="required">*</span></label>
+                    <div class="select-wrapper">{{ form_widget(form.type) }}</div>
+                    {{ form_errors(form.type) }}
+                </div>
 
-            <div class="form-actions">
-                <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="btn-export">{{ 'location.new.cancel'|trans }}</a>
-                <button type="submit" class="btn-creat">{{ 'location.new.submit'|trans }}</button>
-            </div>
+                <div class="form-block">
+                    <label class="form-label">{{ 'location.form.description'|trans }}</label>
+                    {{ form_widget(form.description, {'attr': {'placeholder': 'location.form.description_placeholder'|trans}}) }}
+                    {{ form_errors(form.description) }}
+                </div>
 
-        {{ form_end(form) }}
+                <div class="form-actions">
+                    <button type="button" class="btn-export" data-action="click->modal#close">
+                        {{ 'location.new.cancel'|trans }}
+                    </button>
+                    <button type="submit" class="btn-creat">{{ 'location.new.submit'|trans }}</button>
+                </div>
 
-    </div>
+            {{ form_end(form) }}
+
+        </div>
+    </turbo-frame>
+
 </div>
 {% endblock %}

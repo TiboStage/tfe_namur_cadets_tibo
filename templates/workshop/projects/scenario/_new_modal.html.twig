@@ -1,0 +1,121 @@
+{#
+  Partial modal — création d'un élément narratif
+  Rendu sans layout (réponse directe à la turbo-frame).
+  Variables : project, parent, depth, config, configMap, error, action_url
+#}
+<turbo-frame id="modal-frame">
+<div class="new-element-card">
+
+    {# ── En-tête : niveau de structure ───────────────────── #}
+    <div class="new-element-level">
+        <span class="new-element-level-icon" style="color:{{ config.color }}">
+            {{ config.icon }}
+        </span>
+        <span class="new-element-level-name" style="color:{{ config.color }}">
+            {{ config.labelSingular }}
+        </span>
+        {% if not config.hasContent %}
+            <span class="new-element-level-type">Structure</span>
+        {% else %}
+            <span class="new-element-level-type new-element-level-type--leaf">Écriture</span>
+        {% endif %}
+    </div>
+
+    {# ── Titre du modal ───────────────────────────────────── #}
+    <h2 class="new-element-title">
+        Nouveau {{ config.labelSingular|lower }}
+    </h2>
+
+    {# ── Arborescence du projet (niveaux disponibles) ─────── #}
+    <div class="new-element-breadcrumb">
+        {# Niveau racine #}
+        <span class="new-element-breadcrumb-root">
+            {{ ux_icon('lucide:book', {class: 'icon-xs'}) }}
+            {{ project.title }}
+        </span>
+
+        {# Ancêtres du parent (s'il existe) #}
+        {% if parent %}
+            {% for ancestor in parent.getAncestors() %}
+                <span class="new-element-breadcrumb-sep">›</span>
+                <span class="new-element-breadcrumb-item">{{ ancestor.title }}</span>
+            {% endfor %}
+            <span class="new-element-breadcrumb-sep">›</span>
+            <span class="new-element-breadcrumb-item new-element-breadcrumb-item--current">
+                {{ ux_icon('lucide:folder', {class: 'icon-xs'}) }}
+                {{ parent.title }}
+            </span>
+        {% endif %}
+
+        {# Niveau qu'on va créer #}
+        <span class="new-element-breadcrumb-sep">›</span>
+        <span class="new-element-breadcrumb-item new-element-breadcrumb-item--new"
+              style="color:{{ config.color }}">
+            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+            {{ config.labelSingular }}
+        </span>
+    </div>
+
+    {# ── Hiérarchie visuelle du projet ────────────────────── #}
+    {% set maxDepth = configMap|keys|max %}
+    <div class="new-element-hierarchy">
+        {% for d, lvl in configMap %}
+            <div class="hierarchy-level {% if d == depth %}hierarchy-level--active{% elseif d < depth %}hierarchy-level--done{% endif %}"
+                 style="--level-color: {{ lvl.color }}">
+                <span class="hierarchy-level-icon">{{ lvl.icon }}</span>
+                <span class="hierarchy-level-name">{{ lvl.labelSingular }}</span>
+                {% if d == depth %}
+                    <span class="hierarchy-level-badge">← ici</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    {# ── Erreur éventuelle ────────────────────────────────── #}
+    {% if error %}
+        <div class="new-element-error">
+            {{ ux_icon('lucide:alert-circle', {class: 'icon-xs'}) }}
+            {{ error }}
+        </div>
+    {% endif %}
+
+    {# ── Formulaire ───────────────────────────────────────── #}
+    <form method="post" action="{{ action_url }}" class="new-element-form">
+
+        <div class="new-element-field">
+            <label class="new-element-label" for="element-title">
+                Titre <span class="required-star">*</span>
+            </label>
+            <input type="text"
+                   name="title"
+                   id="element-title"
+                   class="new-element-input {% if error %}is-invalid{% endif %}"
+                   placeholder="{{ config.labelSingular }}…"
+                   autofocus
+                   required>
+        </div>
+
+        {% if depth < maxDepth %}
+            <p class="new-element-hint">
+                {{ ux_icon('lucide:info', {class: 'icon-xs'}) }}
+                Vous pourrez ensuite ajouter des
+                <strong>{{ configMap[depth + 1].labelPlural|lower }}</strong> à l'intérieur.
+            </p>
+        {% endif %}
+
+        <div class="new-element-actions">
+            <button type="button"
+                    class="new-element-cancel"
+                    data-action="click->modal#close">
+                Annuler
+            </button>
+            <button type="submit" class="new-element-submit">
+                {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                Créer {{ config.labelSingular|lower }}
+            </button>
+        </div>
+
+    </form>
+
+</div>
+</turbo-frame>

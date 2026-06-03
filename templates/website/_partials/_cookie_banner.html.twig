@@ -1,0 +1,31 @@
+{# templates/website/_partials/_cookie_banner.html.twig #}
+{# Bannière d'information cookies — strictement nécessaires, pas de consentement requis #}
+
+<div class="cookie-banner"
+     data-controller="cookie-banner"
+     role="region"
+     aria-label="Information cookies">
+    <div class="cookie-banner__inner">
+        <div class="cookie-banner__text">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 14v-4m0-4h.01"/>
+            </svg>
+            <span>
+                ScénArt utilise uniquement des cookies techniques indispensables à son fonctionnement
+                (authentification, langue, sécurité). Aucun cookie publicitaire ni analytique.
+                <a href="{{ path('app_legal_cookies', {_locale: app.request.locale}) }}"
+                   class="cookie-banner__link">En savoir plus</a>
+            </span>
+        </div>
+        <button type="button"
+                class="cookie-banner__close"
+                data-action="click->cookie-banner#dismiss"
+                aria-label="Fermer la bannière cookies">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+            <span>Fermer</span>
+        </button>
+    </div>
+</div>

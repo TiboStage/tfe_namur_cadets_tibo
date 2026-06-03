@@ -1,0 +1,245 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block subnav %}{% endblock %}
+
+{% block title %}{{ project.title }} · Scénart{% endblock %}
+
+{% block content %}
+<div class="pub-project" data-controller="report-modal">
+
+    {# ════════════════════════════════════════════════════════════════════
+       HERO DU PROJET
+       ════════════════════════════════════════════════════════════════════ #}
+    <div class="pub-project__hero">
+        {# Fond : image de couverture ou dégradé selon le type #}
+        <div class="pub-project__cover pub-project__cover--{{ project.projectType != 'custom' ? project.projectType : 'film' }}">
+            {% if project.coverFilename %}
+                <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
+                     alt="{{ project.title }}"
+                     class="pub-project__cover-img">
+            {% endif %}
+            <div class="pub-project__cover-overlay"></div>
+        </div>
+
+        {# Badge type #}
+        <div class="pub-project__hero-content workshop-container">
+            <div class="pub-project__type-badge pub-project__type-badge--{{ project.projectType != 'custom' ? project.projectType : 'film' }}">
+                {% if project.projectType == 'serie' %}
+                    {{ ux_icon('lucide:tv-2', {class: 'icon-3xs'}) }} Série
+                {% elseif project.projectType == 'jeu_video' %}
+                    {{ ux_icon('lucide:gamepad-2', {class: 'icon-3xs'}) }} Jeu vidéo
+                {% else %}
+                    {{ ux_icon('lucide:film', {class: 'icon-3xs'}) }} Film
+                {% endif %}
+            </div>
+
+            <h1 class="pub-project__title">{{ project.title }}</h1>
+
+            {# Auteur #}
+            <div class="pub-project__author">
+                <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: project.createdBy.username}) }}"
+                   class="pub-project__author-link">
+                    <span class="pub-project__author-avatar">{{ project.createdBy.username|first|upper }}</span>
+                    <span class="pub-project__author-name">{{ project.createdBy.username }}</span>
+                </a>
+                <span class="pub-project__author-sep">·</span>
+                <span class="pub-project__date">{{ project.updatedAt|date('d/m/Y') }}</span>
+            </div>
+
+            {# ── Bouton atelier (owner / membres uniquement) ──────────── #}
+            {% if can_workshop %}
+                <div class="pub-project__workshop-btn-wrap">
+                    <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: project.slug}) }}"
+                       class="pub-project__workshop-btn">
+                        {{ ux_icon('lucide:pencil', {style: 'width:15px;height:15px'}) }}
+                        {% if is_owner %}
+                            Gérer dans l'atelier
+                        {% else %}
+                            Ouvrir l'atelier
+                        {% endif %}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# ════════════════════════════════════════════════════════════════════
+       CORPS
+       ════════════════════════════════════════════════════════════════════ #}
+    <div class="workshop-container pub-project__body">
+        <div class="pub-project__main">
+
+            {# Description #}
+            {% if project.description %}
+            <section class="pub-project__section">
+                <h2 class="pub-project__section-title">
+                    {{ ux_icon('lucide:align-left', {class: 'icon-xs'}) }}
+                    À propos
+                </h2>
+                <p class="pub-project__description">{{ project.description }}</p>
+            </section>
+            {% endif %}
+
+            {# Structure narrative publique #}
+            {% set public_elements = project.scenarioElements|filter(e => e.isPublic or project.projectType != 'serie') %}
+            {% if public_elements is not empty %}
+            <section class="pub-project__section">
+                <h2 class="pub-project__section-title">
+                    {% if project.projectType == 'serie' %}
+                        {{ ux_icon('lucide:list', {class: 'icon-xs'}) }}
+                        Épisodes disponibles
+                    {% else %}
+                        {{ ux_icon('lucide:layers', {class: 'icon-xs'}) }}
+                        Structure narrative
+                    {% endif %}
+                </h2>
+
+                <div class="pub-project__elements">
+                    {% for element in public_elements|slice(0, 12) %}
+                        {% if element.depth == 1 %}
+                        <div class="pub-element">
+                            <div class="pub-element__icon">
+                                {{ ux_icon('lucide:book-open', {style: 'width:13px;height:13px'}) }}
+                            </div>
+                            <div class="pub-element__info">
+                                <span class="pub-element__title">{{ element.title }}</span>
+                                {% if element.summary %}
+                                    <span class="pub-element__summary">
+                                        {{ element.summary|length > 120 ? element.summary|slice(0,120) ~ '…' : element.summary }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <div class="pub-element__actions">
+                                <span class="pub-element__type">{{ element.elementType|capitalize }}</span>
+                                <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: element.id}) }}"
+                                   class="pub-element__read-btn">
+                                    {{ ux_icon('lucide:book-open-text', {class: 'icon-3xs'}) }}
+                                    Lire
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    {% if public_elements|length > 12 %}
+                        <p class="pub-project__elements-more">
+                            + {{ public_elements|length - 12 }} éléments supplémentaires
+                        </p>
+                    {% endif %}
+                </div>
+            </section>
+            {% endif %}
+
+            {# ── Section commentaires ──────────────────────────────── #}
+            {{ include('workshop/_partials/_comments.html.twig', {
+                project:       project,
+                comments:      comments,
+                comment_count: comment_count,
+                viewer:        viewer,
+                can_reply:     can_reply,
+                vote_data:     vote_data,
+            }) }}
+
+        </div>
+
+        {# ── Sidebar #}
+        <aside class="pub-project__sidebar">
+
+            {# Stats #}
+            <div class="pub-sidebar-widget">
+                <div class="pub-sidebar-widget__title">
+                    {{ ux_icon('lucide:bar-chart-2', {class: 'icon-3xs'}) }}
+                    Statistiques
+                </div>
+                <div class="pub-sidebar-stats">
+                    <div class="pub-sidebar-stat">
+                        <span class="pub-sidebar-stat__value">{{ project.scenarioElements|length }}</span>
+                        <span class="pub-sidebar-stat__label">Éléments narratifs</span>
+                    </div>
+                    <div class="pub-sidebar-stat">
+                        <span class="pub-sidebar-stat__value">{{ project.characters|length }}</span>
+                        <span class="pub-sidebar-stat__label">Personnages</span>
+                    </div>
+                    <div class="pub-sidebar-stat">
+                        <span class="pub-sidebar-stat__value">{{ project.locations|length }}</span>
+                        <span class="pub-sidebar-stat__label">Lieux</span>
+                    </div>
+                    <div class="pub-sidebar-stat">
+                        <span class="pub-sidebar-stat__value">{{ comment_count }}</span>
+                        <span class="pub-sidebar-stat__label">Commentaires</span>
+                    </div>
+                </div>
+            </div>
+
+            {# Auteur #}
+            <div class="pub-sidebar-widget">
+                <div class="pub-sidebar-widget__title">
+                    {{ ux_icon('lucide:user', {class: 'icon-3xs'}) }}
+                    Créateur
+                </div>
+                <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: project.createdBy.username}) }}"
+                   class="pub-sidebar-creator">
+                    <div class="pub-sidebar-creator__avatar">{{ project.createdBy.username|first|upper }}</div>
+                    <div class="pub-sidebar-creator__info">
+                        <span class="pub-sidebar-creator__username">{{ project.createdBy.username }}</span>
+                        <span class="pub-sidebar-creator__since">Membre depuis {{ project.createdBy.createdAt|date('Y') }}</span>
+                    </div>
+                </a>
+
+                {# Signaler l'auteur #}
+                {% if viewer is not null and viewer.id != project.createdBy.id %}
+                    <button
+                        class="btn-report mt-2 text-xs"
+                        data-action="click->report-modal#open"
+                        data-report-modal-url-param="{{ path('app_report', {_locale: app.request.locale, type: 'user', id: project.createdBy.id}) }}"
+                        data-report-modal-token-param="{{ csrf_token('report_user_' ~ project.createdBy.id) }}"
+                        data-report-modal-label-param="cet utilisateur"
+                    >
+                        {{ ux_icon('lucide:flag', {style: 'width:10px;height:10px'}) }}
+                        Signaler
+                    </button>
+                {% endif %}
+            </div>
+
+            {# Membres collaborateurs #}
+            {% if project.projectMembers|length > 0 %}
+            <div class="pub-sidebar-widget">
+                <div class="pub-sidebar-widget__title">
+                    {{ ux_icon('lucide:users', {class: 'icon-3xs'}) }}
+                    Collaborateurs
+                </div>
+                <div class="pub-sidebar-members">
+                    {% for member in project.projectMembers|slice(0, 5) %}
+                    <div class="pub-sidebar-member" title="{{ member.user.username }}">
+                        {{ member.user.username|first|upper }}
+                    </div>
+                    {% endfor %}
+                    {% if project.projectMembers|length > 5 %}
+                        <span class="pub-sidebar-member pub-sidebar-member--more">
+                            +{{ project.projectMembers|length - 5 }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+        </aside>
+    </div>
+
+    {# Retour à l'exploration + bouton signaler le projet #}
+    <div class="workshop-container pub-project__back">
+        <a href="{{ path('app_workshop_explore', {_locale: app.request.locale}) }}"
+           class="pub-project__back-link">
+            {{ ux_icon('lucide:arrow-left', {style: 'width:13px;height:13px'}) }}
+            Retour à l'exploration
+        </a>
+    </div>
+
+    {# ── Modal de signalement (singleton) ──────────────────────────── #}
+    {{ include('workshop/_partials/_report_modal.html.twig', {
+        project: project,
+        viewer:  viewer,
+    }) }}
+
+</div>
+{% endblock %}

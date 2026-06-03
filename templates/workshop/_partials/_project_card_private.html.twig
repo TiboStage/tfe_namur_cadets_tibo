@@ -1,0 +1,141 @@
+{#
+    Carte projet — contexte ATELIER (privé).
+
+    Paramètres :
+      - project : App\Entity\Project
+      - role    : 'owner' | 'lead' | 'editor' | 'contributor'  (défaut : 'owner')
+
+    CTA varie selon le rôle :
+      owner       → "Éditer le projet"
+      lead        → "Reprendre le travail"
+      editor/contributor → "Ouvrir l'atelier"
+#}
+
+{% set role = role|default('owner') %}
+
+{# ── Labels ──────────────────────────────────────────────────────────────── #}
+{% set role_label = ('projects.roles.' ~ role)|trans({}, 'workshop') %}
+{% set type_label = ('project_type.' ~ project.projectType)|trans({}, 'messages') %}
+{% set cta_label  = role == 'owner' ? 'projects.cta.owner'|trans({}, 'workshop')
+                  : (role == 'lead' ? 'projects.cta.lead'|trans({}, 'workshop') : 'projects.cta.collab'|trans({}, 'workshop')) %}
+{% set vis_label  = ('projects.visibility.' ~ project.visibility)|trans({}, 'workshop') %}
+{% set status_label = ('projects.status.' ~ (project.status == 'finished' ? 'finished' : (project.status == 'in_progress' ? 'in_progress' : 'draft')))|trans({}, 'workshop') %}
+
+{# ── Calcul de progression des tâches ───────────────────────────────────── #}
+{% set total_tasks   = project.tasks|length %}
+{% set done_tasks    = project.tasks|filter(t => t.status == 'done')|length %}
+{% set progress_pct  = total_tasks > 0 ? ((done_tasks / total_tasks) * 100)|round : 0 %}
+{% set today         = 'now'|date('Y-m-d') %}
+{% set overdue_count = project.tasks|filter(t =>
+    t.status != 'done' and t.dueDate is not null and t.dueDate|date('Y-m-d') < today
+)|length %}
+
+{# ── Compteurs d'entités ────────────────────────────────────────────────── #}
+{% set nb_elements = project.scenarioElements|length %}
+{% set nb_chars    = project.characters|length %}
+{% set nb_locs     = project.locations|length %}
+
+<article class="sc-card sc-card--private sc-card--{{ role }}"
+         data-project-type="{{ project.projectType }}">
+
+    {# ── Header ──────────────────────────────────────────────────────────── #}
+    <div class="sc-card__header">
+        <span class="sc-card__type">
+            {% if project.projectType == 'serie' %}
+                {{ ux_icon('lucide:tv-2', {class: 'icon-3xs'}) }}
+            {% elseif project.projectType == 'jeu_video' %}
+                {{ ux_icon('lucide:gamepad-2', {class: 'icon-3xs'}) }}
+            {% else %}
+                {{ ux_icon('lucide:film', {class: 'icon-3xs'}) }}
+            {% endif %}
+            {{ type_label }}
+        </span>
+        <span class="sc-card__role-badge sc-card__role-badge--{{ role }}">
+            {{ role_label }}
+        </span>
+    </div>
+
+    {# ── Zone image ──────────────────────────────────────────────────────── #}
+    {% set _type_colors = { film: '#E63946', serie: '#A855F7', jeu_video: '#2A9D8F', custom: '#6B7280' } %}
+    {% set _type_color = _type_colors[project.projectType] ?? '#6B7280' %}
+    <div class="sc-card__media sc-card__media--{{ project.projectType != 'custom' ? project.projectType : 'film' }}"
+         {% if not project.coverFilename %}
+         style="background: linear-gradient(135deg, {{ _type_color }}33 0%, #0d0d10 100%);"
+         {% endif %}>
+        {% if project.coverFilename %}
+            <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
+                 alt="{{ project.title }}"
+                 class="sc-card__cover-img">
+        {% endif %}
+        <div class="sc-card__media-overlay"></div>
+        <div class="sc-card__media-badges">
+            <span class="sc-card__mbadge">
+                {{ ux_icon('lucide:layers', {style: 'width:10px;height:10px'}) }}
+                {{ nb_elements }} {{ 'projects.card.element'|trans({'%count%': nb_elements}, 'workshop') }}
+            </span>
+            <span class="sc-card__mbadge">
+                {% if project.visibility == 'public' %}
+                    {{ ux_icon('lucide:globe', {style: 'width:10px;height:10px'}) }}
+                {% elseif project.visibility == 'private' %}
+                    {{ ux_icon('lucide:users', {style: 'width:10px;height:10px'}) }}
+                {% else %}
+                    {{ ux_icon('lucide:lock', {style: 'width:10px;height:10px'}) }}
+                {% endif %}
+                {{ vis_label }}
+            </span>
+        </div>
+    </div>
+
+    {# ── Corps ───────────────────────────────────────────────────────────── #}
+    <div class="sc-card__body">
+        <h3 class="sc-card__title">{{ project.title }}</h3>
+        <div class="sc-card__counters">
+            {{ nb_chars }} {{ 'projects.card.character'|trans({'%count%': nb_chars}, 'workshop') }}
+            · {{ nb_locs }} {{ 'projects.card.location'|trans({'%count%': nb_locs}, 'workshop') }}
+        </div>
+
+        {# Status box #}
+        <div class="sc-card__status-box">
+            <div class="sc-card__status-meta">
+                <span>{{ status_label }}</span>
+                <strong>
+                    {% if total_tasks > 0 %}
+                        {{ done_tasks }}/{{ total_tasks }} {{ 'projects.card.task'|trans({'%count%': total_tasks}, 'workshop') }}
+                    {% else %}
+                        {{ 'projects.card.no_tasks'|trans({}, 'workshop') }}
+                    {% endif %}
+                </strong>
+            </div>
+            <div class="sc-card__progress-bg">
+                <div class="sc-card__progress-fill sc-card__progress-fill--{{ role }}"
+                     style="width: {{ progress_pct }}%"></div>
+            </div>
+            {% if overdue_count > 0 %}
+                <div class="sc-card__alert sc-card__alert--danger">
+                    {{ ux_icon('lucide:alert-triangle', {style: 'width:11px;height:11px'}) }}
+                    {{ 'projects.card.overdue'|trans({'%count%': overdue_count}, 'workshop') }}
+                </div>
+            {% elseif total_tasks > 0 %}
+                <div class="sc-card__alert sc-card__alert--ok">
+                    {{ ux_icon('lucide:check-circle', {style: 'width:11px;height:11px'}) }}
+                    {{ 'projects.card.all_up_to_date'|trans({}, 'workshop') }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="sc-card__divider"></div>
+
+        <div class="sc-card__footer">
+            <span class="sc-card__date">
+                {{ project.updatedAt|date('d/m/Y') }}
+            </span>
+            <div class="sc-card__footer-actions">
+                <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: project.slug}) }}"
+                   class="sc-card__cta sc-card__cta--{{ role }}">
+                    {{ cta_label }} →
+                </a>
+            </div>
+        </div>
+    </div>
+
+</article>

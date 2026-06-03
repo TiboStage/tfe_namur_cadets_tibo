@@ -1,109 +1,134 @@
 {% extends 'workshop/projects/layout.html.twig' %}
 {% trans_default_domain 'workshop' %}
 
-{% block title %}{{ 'world_event.index.title'|trans }}{% endblock %}
+{% block title %}Chronologie — {{ project.title }}{% endblock %}
 
 {% block project_content %}
-    <div class="dashboard-container">
+<div class="tl-wrapper">
 
-        {# Header avec titre et bouton création #}
-        <header class="page-header">
-            <div>
-                <h1>{{ 'world_event.index.title'|trans }}</h1>
-                <p class="page-subtitle">{{ 'world_event.index.subtitle'|trans }}</p>
+    {# ── Header ────────────────────────────────────────────────────── #}
+    <div class="tl-header">
+        <div>
+            <h1 class="tl-header__title">
+                {{ ux_icon('lucide:clock', {class: 'icon-sm'}) }}
+                Chronologie narrative
+            </h1>
+            <p class="tl-header__sub text-muted">
+                {{ events|length }} événement{{ events|length != 1 ? 's' : '' }} dans la timeline de <strong>{{ project.title }}</strong>
+            </p>
+        </div>
+        <a href="{{ path('app_world_event_new', {_locale: app.request.locale, project_slug: project.slug}) }}"
+           class="btn btn--cta-yellow"
+            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+            Nouvel événement
+        </a>
+    </div>
+
+    {# ── État vide ─────────────────────────────────────────────────── #}
+    {% if events is empty %}
+    <div class="tl-empty">
+        <div class="tl-empty__icon">
+            {{ ux_icon('lucide:calendar-x', {style: 'width:40px;height:40px'}) }}
+        </div>
+        <h3 class="tl-empty__title">Aucun événement pour l'instant</h3>
+        <p class="tl-empty__desc text-muted">
+            Construisez la timeline de votre univers : batailles, naissances, catastrophes,
+            révélations…
+        </p>
+        <a href="{{ path('app_world_event_new', {_locale: app.request.locale, project_slug: project.slug}) }}"
+           class="btn btn--cta-yellow"
+            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+            Créer le premier événement
+        </a>
+    </div>
+
+    {% else %}
+
+    {# ── Regroupement par année ────────────────────────────────────── #}
+    {% set current_year = null %}
+
+    <div class="tl-timeline">
+
+        {% for event in events %}
+
+        {# Séparateur d'année #}
+        {% if event.year != current_year %}
+            {% if current_year is not null %}
+            </div>{# fin tl-year-group #}
+            {% endif %}
+            {% set current_year = event.year %}
+            <div class="tl-year-marker">
+                <span class="tl-year-pill">
+                    {{ event.year > 0 ? 'An ' ~ event.year : 'An ' ~ event.year ~ ' (avant J.C.)' }}
+                </span>
             </div>
-            <a href="{{ path('app_world_event_new', {project_slug: project.slug}) }}" class="btn-creat">
-                {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
-                {{ 'world_event.index.create'|trans }}
-            </a>
-        </header>
-
-        {# État vide #}
-        {% if events is empty %}
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    {{ ux_icon('lucide:calendar', {style: 'width: 48px; height: 48px;'}) }}
-                </div>
-                <h3>{{ 'world_event.index.empty.title'|trans }}</h3>
-                <p>{{ 'world_event.index.empty.message'|trans }}</p>
-                <a href="{{ path('app_world_event_new', {project_slug: project.slug}) }}" class="btn-primary">
-                    {{ 'world_event.index.create_first'|trans }}
-                </a>
-            </div>
-
-        {% else %}
-
-            {# Timeline chronologique #}
-            <div class="timeline-container">
-                {% for event in events %}
-                    <div class="timeline-item">
-                        {# Date narrative #}
-                        <div class="timeline-date">
-                            <div class="timeline-marker"></div>
-                            <span class="timeline-date-text">
-                                {% if event.day and event.month %}
-                                    {{ event.day }}/{{ event.month }}/{{ event.year }}
-                                {% elseif event.month %}
-                                    {{ event.month }}/{{ event.year }}
-                                {% else %}
-                                    {{ 'world_event.year'|trans }} {{ event.year }}
-                                {% endif %}
-                            </span>
-                        </div>
-
-                        {# Contenu de l'événement #}
-                        <div class="timeline-content">
-                            <div class="timeline-card">
-                                <div class="timeline-card-header">
-                                    <h3>
-                                        <a href="{{ path('app_world_event_show', {project_slug: project.slug, id: event.id}) }}">
-                                            {{ event.title }}
-                                        </a>
-                                    </h3>
-
-                                    {# Actions #}
-                                    <div class="timeline-card-actions">
-                                        <a href="{{ path('app_world_event_edit', {project_slug: project.slug, id: event.id}) }}"
-                                           class="btn-icon"
-                                           title="{{ 'common.edit'|trans }}">
-                                            {{ ux_icon('lucide:pencil', {style: 'width: 14px; height: 14px;'}) }}
-                                        </a>
-
-                                        <form method="post"
-                                              action="{{ path('app_world_event_delete', {project_slug: project.slug, id: event.id}) }}"
-                                              onsubmit="return confirm('{{ 'world_event.confirm_delete'|trans }}');"
-                                              style="display: inline;">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
-                                            <button type="submit" class="btn-icon btn-icon-danger" title="{{ 'common.delete'|trans }}">
-                                                {{ ux_icon('lucide:trash-2', {style: 'width: 14px; height: 14px;'}) }}
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                {# Description #}
-                                {% if event.description %}
-                                    <div class="timeline-card-body">
-                                        <p>{{ event.description|striptags|slice(0, 200) }}...</p>
-                                    </div>
-                                {% endif %}
-
-                                {# Lieu lié #}
-                                {% if event.location %}
-                                    <div class="timeline-card-meta">
-                                        {{ ux_icon('lucide:map-pin', {style: 'width: 14px; height: 14px;'}) }}
-                                        <a href="{{ path('app_location_show', {project_slug: project.slug, id: event.location.id}) }}">
-                                            {{ event.location.name }}
-                                        </a>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-
+            <div class="tl-year-group">
         {% endif %}
 
-    </div>
+            {# ── Événement ──────────────────────────────────────────── #}
+            <div class="tl-event">
+                <div class="tl-event__dot"></div>
+
+                <div class="tl-event__card">
+                    <div class="tl-event__card-header">
+                        <div class="tl-event__meta">
+                            {% if event.day and event.month %}
+                                <span class="tl-event__date">
+                                    {{ ux_icon('lucide:calendar', {style: 'width:11px;height:11px'}) }}
+                                    {{ '%02d'|format(event.day) }}/{{ '%02d'|format(event.month) }}/{{ event.year }}
+                                </span>
+                            {% elseif event.month %}
+                                <span class="tl-event__date">
+                                    {{ ux_icon('lucide:calendar', {style: 'width:11px;height:11px'}) }}
+                                    {{ '%02d'|format(event.month) }}/{{ event.year }}
+                                </span>
+                            {% endif %}
+                            {% if event.location %}
+                            <span class="tl-event__location">
+                                {{ ux_icon('lucide:map-pin', {style: 'width:11px;height:11px'}) }}
+                                {{ event.location.name }}
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="tl-event__actions">
+                            <a href="{{ path('app_world_event_edit', {_locale: app.request.locale, project_slug: project.slug, id: event.id}) }}"
+                               class="tl-btn-icon"
+                               title="Modifier">
+                                {{ ux_icon('lucide:pencil', {style: 'width:13px;height:13px'}) }}
+                            </a>
+                            <form method="post"
+                                  action="{{ path('app_world_event_delete', {_locale: app.request.locale, project_slug: project.slug, id: event.id}) }}"
+                                  class="d-inline"
+                                  onsubmit="return confirm('Supprimer cet événement ?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                                <button type="submit" class="tl-btn-icon tl-btn-icon--danger" title="Supprimer">
+                                    {{ ux_icon('lucide:trash-2', {class: 'icon-2xs'}) }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <h3 class="tl-event__title">
+                        <a href="{{ path('app_world_event_show', {_locale: app.request.locale, project_slug: project.slug, id: event.id}) }}">
+                            {{ event.title }}
+                        </a>
+                    </h3>
+
+                    {% if event.description %}
+                    <p class="tl-event__desc text-muted">
+                        {{ event.description|striptags|slice(0, 220) }}{% if event.description|length > 220 %}…{% endif %}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+        {% endfor %}
+
+        </div>{# fin dernier tl-year-group #}
+    </div>{# fin tl-timeline #}
+
+    {% endif %}
+
+</div>
 {% endblock %}

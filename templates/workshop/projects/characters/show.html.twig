@@ -18,7 +18,10 @@
                     <p class="text-muted">« {{ character.nickname }} »</p>
                 {% endif %}
             </div>
-            <a href="{{ path('app_character_edit', {project_slug: project.slug, id: character.id}) }}" class="btn-export">
+            <a href="{{ path('app_character_edit', {project_slug: project.slug, id: character.id}) }}"
+               class="btn-export"
+               data-turbo-frame="modal-frame"
+               data-action="click->modal#open">
                 {{ 'character.show.edit_btn'|trans }}
             </a>
         </header>

@@ -1,0 +1,395 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block subnav %}{% endblock %}
+{% block title %}Exploration · Scénart{% endblock %}
+
+{% block content %}
+
+<div class="workshop-container explore-page"
+     data-controller="exploration-search"
+     data-exploration-search-url-value="{{ path('app_workshop_explore_search', {_locale: app.request.locale}) }}"
+     data-exploration-search-initial-query-value="{{ initial_query }}"
+     data-exploration-search-initial-type-value="{{ initial_type }}"
+     data-exploration-search-initial-genre-value="{{ initial_genre }}"
+>
+
+    {# ══════════════════════════════════════════════════════════════════════
+       SECTION RECHERCHE — Design inspiré du prototype
+       ══════════════════════════════════════════════════════════════════════ #}
+    {# ══════════════════════════════════════════════════════════════════════
+       BARRE DE FILTRES — 5 colonnes dans un seul container
+       ══════════════════════════════════════════════════════════════════════ #}
+    <div class="xsearch">
+
+        <div class="xfilters-bar">
+
+            {# ── Col 1 : Mode Projet / Auteur ──────────────────────────────── #}
+            <div class="xfilter-col xfilter-col--mode">
+                <span class="xfilter-label">{{ 'explore.filter.mode'|trans }}</span>
+                <div class="xfilter-mode-toggle">
+                    <button type="button"
+                            class="xfilter-mode-btn active"
+                            data-exploration-search-target="modeBtn"
+                            data-mode="projet"
+                            data-action="click->exploration-search#setMode">
+                        {{ ux_icon('lucide:folder-open', {class: 'icon-3xs'}) }}
+                        {{ 'explore.filter.mode_project'|trans }}
+                    </button>
+                    <button type="button"
+                            class="xfilter-mode-btn"
+                            data-exploration-search-target="modeBtn"
+                            data-mode="auteur"
+                            data-action="click->exploration-search#setMode">
+                        {{ ux_icon('lucide:user', {class: 'icon-3xs'}) }}
+                        {{ 'explore.filter.mode_author'|trans }}
+                    </button>
+                </div>
+            </div>
+
+            {# ── Col 2 : Mots clé ───────────────────────────────────────────── #}
+            <div class="xfilter-col xfilter-col--search">
+                <span class="xfilter-label">{{ 'explore.filter.keywords'|trans }}</span>
+                <div class="xfilter-input-wrap">
+                    <input type="text"
+                           data-exploration-search-target="input"
+                           data-action="input->exploration-search#onInput
+                                        keydown->exploration-search#onKeydown"
+                           class="xfilter-input"
+                           placeholder="{{ 'explore.filter.search_hint'|trans }}"
+                           autocomplete="off"
+                           spellcheck="false"
+                           value="{{ initial_query }}">
+                    <button type="button"
+                            data-exploration-search-target="clearBtn"
+                            data-action="click->exploration-search#clear"
+                            class="xfilter-input-clear"
+                            hidden>
+                        {{ ux_icon('lucide:x', {class: 'icon-2xs'}) }}
+                    </button>
+                    {{ ux_icon('lucide:search', {class: 'icon-2xs xfilter-search-icon'}) }}
+                </div>
+            </div>
+
+            {# ── Col 3 : Types de projets (verrouillé en mode Auteur) ─────── #}
+            <div class="xfilter-col"
+                 data-exploration-search-target="typeSection">
+                <span class="xfilter-label">{{ 'explore.filter.project_types'|trans }}</span>
+
+                <div class="xfilter-custom" data-controller="dropdown">
+
+                    <button type="button"
+                            class="xfilter-btn"
+                            data-action="click->dropdown#toggle">
+                        <span data-exploration-search-target="typeLabel">
+                            {%- if initial_type == 'film' -%}{{ 'explore.filter.films'|trans }}
+                            {%- elseif initial_type == 'serie' -%}{{ 'explore.filter.series'|trans }}
+                            {%- elseif initial_type == 'jeu_video' -%}{{ 'explore.filter.games'|trans }}
+                            {%- else -%}{{ 'explore.filter.all_types'|trans }}
+                            {%- endif -%}
+                        </span>
+                        {{ ux_icon('lucide:chevron-down', {class: 'icon-xs xfilter-chevron'}) }}
+                        {{ ux_icon('lucide:lock', {class: 'icon-xs xfilter-lock-icon'}) }}
+                    </button>
+
+                    <div class="xfilter-panel" data-dropdown-target="menu" data-xfilter-panel>
+                        <button type="button"
+                                class="xfilter-option {{ initial_type == '' ? 'xfilter-option--active' : '' }}"
+                                data-action="click->exploration-search#setTypeOption"
+                                data-value="" data-label="{{ 'explore.filter.all_types'|trans }}">
+                            {{ 'explore.filter.all_types'|trans }}
+                        </button>
+                        <button type="button"
+                                class="xfilter-option {{ initial_type == 'film' ? 'xfilter-option--active' : '' }}"
+                                data-action="click->exploration-search#setTypeOption"
+                                data-value="film" data-label="{{ 'explore.filter.films'|trans }}">
+                            {{ ux_icon('lucide:film', {class: 'icon-xs'}) }}
+                            {{ 'explore.filter.films'|trans }}
+                        </button>
+                        <button type="button"
+                                class="xfilter-option {{ initial_type == 'serie' ? 'xfilter-option--active' : '' }}"
+                                data-action="click->exploration-search#setTypeOption"
+                                data-value="serie" data-label="{{ 'explore.filter.series'|trans }}">
+                            {{ ux_icon('lucide:tv-2', {class: 'icon-xs'}) }}
+                            {{ 'explore.filter.series'|trans }}
+                        </button>
+                        <button type="button"
+                                class="xfilter-option {{ initial_type == 'jeu_video' ? 'xfilter-option--active' : '' }}"
+                                data-action="click->exploration-search#setTypeOption"
+                                data-value="jeu_video" data-label="{{ 'explore.filter.games'|trans }}">
+                            {{ ux_icon('lucide:gamepad-2', {class: 'icon-xs'}) }}
+                            {{ 'explore.filter.games'|trans }}
+                        </button>
+                    </div>
+
+                </div>
+
+                {# Select caché — sync JS (quickSearch, clearType, etc.) #}
+                <select class="xfilter-select-hidden"
+                        data-exploration-search-target="typeSelect"
+                        data-action="change->exploration-search#onTypeChange">
+                    <option value="">{{ 'explore.filter.all_types'|trans }}</option>
+                    <option value="film"      {{ initial_type == 'film'      ? 'selected' : '' }}>{{ 'explore.filter.films'|trans }}</option>
+                    <option value="serie"     {{ initial_type == 'serie'     ? 'selected' : '' }}>{{ 'explore.filter.series'|trans }}</option>
+                    <option value="jeu_video" {{ initial_type == 'jeu_video' ? 'selected' : '' }}>{{ 'explore.filter.games'|trans }}</option>
+                </select>
+
+            </div>
+
+            {# ── Col 4 : Ajouter des filtres / Genre (verrouillé mode Auteur) #}
+            <div class="xfilter-col" data-exploration-search-target="typeSection">
+                <span class="xfilter-label">{{ 'explore.filter.add_filters'|trans }}</span>
+
+                <div class="xfilter-custom" data-controller="dropdown">
+
+                    <button type="button"
+                            class="xfilter-btn"
+                            data-action="click->dropdown#toggle"
+                            data-exploration-search-target="genreBtn">
+                        <span data-exploration-search-target="genreLabel">{{ 'explore.filter.all'|trans }}</span>
+                        {{ ux_icon('lucide:chevron-down', {class: 'icon-xs xfilter-chevron'}) }}
+                        {{ ux_icon('lucide:lock', {class: 'icon-xs xfilter-lock-icon'}) }}
+                    </button>
+
+                    <div class="xfilter-panel" data-dropdown-target="menu" data-xfilter-panel>
+                        <button type="button"
+                                class="xfilter-option xfilter-option--active"
+                                data-action="click->exploration-search#setGenreOption"
+                                data-value="" data-label="{{ 'explore.filter.all'|trans }}">{{ 'explore.filter.all'|trans }}</button>
+                        {% set printed_types = [] %}
+                        {% for genre in genres_json %}
+                            {% if genre.types is not empty %}
+                                {% set type_key = genre.types|first %}
+                                {% if type_key not in printed_types %}
+                                    {% set printed_types = printed_types|merge([type_key]) %}
+                                    <div class="xfilter-option-group">{{ ('project_type.' ~ type_key)|trans({}, 'messages') }} :</div>
+                                {% endif %}
+                            {% elseif loop.first %}
+                                <div class="xfilter-option-group">{{ 'explore.filter.genre_universal'|trans }} :</div>
+                            {% endif %}
+                            <button type="button"
+                                    class="xfilter-option"
+                                    data-action="click->exploration-search#setGenreOption"
+                                    data-value="{{ genre.slug }}"
+                                    data-types="{{ genre.types|json_encode }}"
+                                    data-label="{{ genre.label }}">{{ genre.label }}</button>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                {# Select caché — compat JS filterGenreOptions() #}
+                <select class="xfilter-select-hidden"
+                        data-exploration-search-target="genreSelect"
+                        data-action="change->exploration-search#onGenreChange">
+                    <option value="">{{ 'explore.filter.all'|trans }}</option>
+                    {% for genre in genres_json %}
+                    <option value="{{ genre.slug }}"
+                            data-types="{{ genre.types|json_encode }}"
+                            {{ initial_genre == genre.slug ? 'selected' : '' }}>{{ genre.label }}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+
+            {# ── Col 5 : Trier par (toujours actif, options selon mode) ───── #}
+            <div class="xfilter-col">
+                <span class="xfilter-label">{{ 'explore.filter.sort'|trans }}</span>
+                <div class="xfilter-custom" data-controller="dropdown">
+                    <button type="button"
+                            class="xfilter-btn"
+                            data-action="click->dropdown#toggle">
+                        <span data-exploration-search-target="sortLabel">{{ 'explore.filter.sort_recent'|trans }}</span>
+                        {{ ux_icon('lucide:chevron-down', {class: 'icon-xs xfilter-chevron'}) }}
+                    </button>
+                    {# Panneau projets #}
+                    <div class="xfilter-panel"
+                         data-dropdown-target="menu"
+                         data-xfilter-panel
+                         data-exploration-search-target="projectSortOptions">
+                        {% for val, label in {recent: 'explore.filter.sort_recent'|trans, oldest: 'explore.filter.sort_oldest'|trans, az: 'explore.filter.sort_az'|trans, za: 'explore.filter.sort_za'|trans} %}
+                        <button type="button"
+                                class="xfilter-option {{ val == 'recent' ? 'xfilter-option--active' : '' }}"
+                                data-action="click->exploration-search#setSortOption"
+                                data-value="{{ val }}">
+                            {{ label }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                    {# Panneau auteurs (caché par JS, même panneau) #}
+                    <div class="xfilter-panel xfilter-panel--author"
+                         data-dropdown-target="menu"
+                         data-xfilter-panel
+                         data-exploration-search-target="authorSortOptions"
+                         hidden>
+                        {% for val, label in {az: 'explore.filter.sort_name_az'|trans, za: 'explore.filter.sort_name_za'|trans} %}
+                        <button type="button"
+                                class="xfilter-option {{ val == 'az' ? 'xfilter-option--active' : '' }}"
+                                data-action="click->exploration-search#setSortOption"
+                                data-value="{{ val }}">
+                            {{ label }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {# ── Chips filtres actifs ────────────────────────────────────────── #}
+        <div class="xfilters-chips-row"
+             data-exploration-search-target="activeFilters"></div>
+
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════════════
+       SECTION RÉSULTATS (FutBin layout : sidebar filtres + grille)
+       Masquée au chargement, visible dès qu'une recherche est active
+       ══════════════════════════════════════════════════════════════════════ #}
+    {# ══════════════════════════════════════════════════════════════════════
+       SECTION RÉSULTATS — s'affiche quand une recherche/filtre est actif
+       ══════════════════════════════════════════════════════════════════════ #}
+    <div data-exploration-search-target="resultsSection"
+         class="xresults">
+
+        <div class="xresults__header">
+            <span data-exploration-search-target="resultsHeader"
+                  class="xresults__count"></span>
+        </div>
+
+        {# Grille — même composant sc-card que les sections discovery #}
+        <div data-exploration-search-target="resultsGrid"
+             class="sc-cards-grid"></div>
+
+        <div data-exploration-search-target="resultsPagination"
+             class="xresults__pagination"></div>
+
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════════════
+       SECTIONS DÉCOUVERTE — visibles par défaut, masquées pendant la recherche
+       ══════════════════════════════════════════════════════════════════════ #}
+    <div data-exploration-search-target="discoverySection"
+         class="explore-discovery">
+
+        {# ── Les derniers films ──────────────────────────────────────────── #}
+        <section class="explore-section">
+            <div class="dashboard-section-header">
+                <h2>
+                    {{ ux_icon('lucide:film', {class: 'icon-xs'}) }}
+                    {{ 'explore.section.films'|trans }}
+                </h2>
+                <button type="button"
+                        class="link-more"
+                        data-action="click->exploration-search#quickSearch"
+                        data-type="film" data-mode="projet">
+                    {{ 'explore.section.see_all'|trans }} {{ ux_icon('lucide:arrow-right', {class: 'icon-3xs'}) }}
+                </button>
+            </div>
+            {% if latest_films is not empty %}
+                <div class="sc-cards-grid">
+                    {% for project in latest_films %}
+                        {{ include('workshop/_partials/_project_card_public.html.twig', {
+                            project:       project,
+                            comment_count: 0,
+                            viewer_role:   viewer_roles_map[project.id] ?? null,
+                        }) }}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="explore-section__empty">{{ 'explore.section.empty_films'|trans }}</p>
+            {% endif %}
+        </section>
+
+        {# ── Les dernières séries ────────────────────────────────────────── #}
+        <section class="explore-section">
+            <div class="dashboard-section-header">
+                <h2>
+                    {{ ux_icon('lucide:tv-2', {class: 'icon-xs'}) }}
+                    {{ 'explore.section.series'|trans }}
+                </h2>
+                <button type="button"
+                        class="link-more"
+                        data-action="click->exploration-search#quickSearch"
+                        data-type="serie" data-mode="projet">
+                    {{ 'explore.section.see_all'|trans }} {{ ux_icon('lucide:arrow-right', {class: 'icon-3xs'}) }}
+                </button>
+            </div>
+            {% if latest_series is not empty %}
+                <div class="sc-cards-grid">
+                    {% for project in latest_series %}
+                        {{ include('workshop/_partials/_project_card_public.html.twig', {
+                            project:       project,
+                            comment_count: 0,
+                            viewer_role:   viewer_roles_map[project.id] ?? null,
+                        }) }}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="explore-section__empty">{{ 'explore.section.empty_series'|trans }}</p>
+            {% endif %}
+        </section>
+
+        {# ── Les derniers jeux vidéo ─────────────────────────────────────── #}
+        <section class="explore-section">
+            <div class="dashboard-section-header">
+                <h2>
+                    {{ ux_icon('lucide:gamepad-2', {class: 'icon-xs'}) }}
+                    {{ 'explore.section.games'|trans }}
+                </h2>
+                <button type="button"
+                        class="link-more"
+                        data-action="click->exploration-search#quickSearch"
+                        data-type="jeu_video" data-mode="projet">
+                    {{ 'explore.section.see_all'|trans }} {{ ux_icon('lucide:arrow-right', {class: 'icon-3xs'}) }}
+                </button>
+            </div>
+            {% if latest_games is not empty %}
+                <div class="sc-cards-grid">
+                    {% for project in latest_games %}
+                        {{ include('workshop/_partials/_project_card_public.html.twig', {
+                            project:       project,
+                            comment_count: 0,
+                            viewer_role:   viewer_roles_map[project.id] ?? null,
+                        }) }}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="explore-section__empty">{{ 'explore.section.empty_games'|trans }}</p>
+            {% endif %}
+        </section>
+
+        {# ── Studios & auteurs actifs ─────────────────────────────────────── #}
+        {% if featured_creators is not empty %}
+        <section class="explore-section">
+            <div class="dashboard-section-header">
+                <h2>
+                    {{ ux_icon('lucide:award', {class: 'icon-xs'}) }}
+                    {{ 'explore.section.creators'|trans }}
+                </h2>
+                <button type="button"
+                        data-action="click->exploration-search#quickSearch"
+                        data-type="" data-mode="auteur"
+                        class="link-more">
+                    {{ 'explore.section.see_all'|trans }} {{ ux_icon('lucide:arrow-right', {class: 'icon-3xs'}) }}
+                </button>
+            </div>
+            {# Même composant que les résultats de recherche auteur #}
+            <div class="sc-cards-grid">
+                {% for row in featured_creators %}
+                    {% set creator = row[0] %}
+                    {% set count   = row.project_count %}
+                    {{ include('workshop/_partials/_creator_card_search.html.twig', {
+                        user:          creator,
+                        project_count: count,
+                    }) }}
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

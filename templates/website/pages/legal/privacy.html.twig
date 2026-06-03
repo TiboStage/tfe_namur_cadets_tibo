@@ -1,0 +1,224 @@
+{# templates/website/pages/legal/privacy.html.twig #}
+{% extends 'website/layout.html.twig' %}
+
+{% block title %}Politique de Confidentialité — ScénArt{% endblock %}
+
+{% block content %}
+<div class="legal-page">
+    <div class="legal-container">
+
+        <header class="legal-header">
+            <p class="legal-label">Document légal</p>
+            <h1>Politique de Confidentialité</h1>
+            <p class="legal-meta">Conforme au RGPD (Règlement UE 2016/679) · En vigueur depuis le 1er janvier 2026</p>
+        </header>
+
+        <nav class="legal-toc">
+            <p class="legal-toc-title">Sommaire</p>
+            <ol>
+                <li><a href="#responsable">Responsable du traitement</a></li>
+                <li><a href="#donnees">Données collectées</a></li>
+                <li><a href="#finalites">Finalités et bases légales</a></li>
+                <li><a href="#conservation">Durée de conservation</a></li>
+                <li><a href="#partage">Partage des données</a></li>
+                <li><a href="#droits">Vos droits</a></li>
+                <li><a href="#securite">Sécurité</a></li>
+                <li><a href="#cookies">Cookies</a></li>
+                <li><a href="#mineurs">Mineurs</a></li>
+                <li><a href="#contact">Nous contacter</a></li>
+            </ol>
+        </nav>
+
+        <div class="legal-body">
+
+            <section id="responsable">
+                <h2>1. Responsable du traitement</h2>
+                <p>
+                    Le responsable du traitement de vos données personnelles est :
+                </p>
+                <address class="legal-address">
+                    <strong>ScénArt SRL</strong><br>
+                    Siège social : Namur, Belgique<br>
+                    Email : <a href="mailto:privacy@scenart.be">privacy@scenart.be</a>
+                </address>
+                <p>
+                    ScénArt ne dispose pas de DPO (délégué à la protection des données) désigné, mais s'engage à
+                    traiter toute demande relative à la protection des données dans les meilleurs délais et au plus
+                    tard dans un délai d'un mois.
+                </p>
+            </section>
+
+            <section id="donnees">
+                <h2>2. Données collectées</h2>
+                <h3>2.1 Données fournies lors de l'inscription</h3>
+                <ul>
+                    <li>Adresse email (identifiant unique, traitement sécurisé)</li>
+                    <li>Nom d'utilisateur (pseudonyme public)</li>
+                    <li>Prénom et nom de famille</li>
+                    <li>Mot de passe (haché de façon irréversible — nous ne conservons jamais votre mot de passe en clair)</li>
+                    <li>Langue préférée</li>
+                    <li>Photo de profil (optionnelle)</li>
+                </ul>
+
+                <h3>2.2 Données générées par votre activité</h3>
+                <ul>
+                    <li>Projets créés et leur contenu (scénarios, personnages, lieux, notes, tâches)</li>
+                    <li>Membres invités à vos projets</li>
+                    <li>Messages et formulaires de contact</li>
+                    <li>Logs de connexion (date, heure, adresse IP)</li>
+                    <li>Date et heure de dernière connexion</li>
+                </ul>
+
+                <h3>2.3 Données collectées automatiquement</h3>
+                <ul>
+                    <li>Adresse IP (à des fins de sécurité et de prévention des abus)</li>
+                    <li>Type de navigateur et système d'exploitation</li>
+                    <li>Cookies techniques nécessaires au fonctionnement (voir section 8)</li>
+                </ul>
+            </section>
+
+            <section id="finalites">
+                <h2>3. Finalités et bases légales du traitement</h2>
+                <div class="legal-table-wrap">
+                    <table class="legal-table">
+                        <thead><tr>
+                            <th>Finalité</th>
+                            <th>Base légale</th>
+                        </tr></thead>
+                        <tbody>
+                        <tr>
+                            <td>Fourniture du service et gestion de votre compte</td>
+                            <td>Exécution du contrat (Art. 6.1.b RGPD)</td>
+                        </tr>
+                        <tr>
+                            <td>Authentification et sécurité</td>
+                            <td>Intérêt légitime (Art. 6.1.f RGPD)</td>
+                        </tr>
+                        <tr>
+                            <td>Envoi d'emails transactionnels (confirmation, réinitialisation mot de passe)</td>
+                            <td>Exécution du contrat (Art. 6.1.b RGPD)</td>
+                        </tr>
+                        <tr>
+                            <td>Modération des contenus</td>
+                            <td>Obligation légale et intérêt légitime (Art. 6.1.c et 6.1.f RGPD)</td>
+                        </tr>
+                        <tr>
+                            <td>Statistiques d'utilisation anonymisées</td>
+                            <td>Intérêt légitime (Art. 6.1.f RGPD)</td>
+                        </tr>
+                        <tr>
+                            <td>Communications marketing (newsletters)</td>
+                            <td>Consentement (Art. 6.1.a RGPD) — uniquement si vous y avez souscrit</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="conservation">
+                <h2>4. Durée de conservation</h2>
+                <ul>
+                    <li><strong>Données de compte actif :</strong> conservées tant que votre compte est actif.</li>
+                    <li><strong>Après suppression du compte :</strong> suppression définitive sous 30 jours, sauf obligation légale de conservation.</li>
+                    <li><strong>Logs de connexion :</strong> conservés 12 mois à des fins de sécurité.</li>
+                    <li><strong>Données de contact (formulaire) :</strong> conservées 3 ans après le dernier contact.</li>
+                    <li><strong>Données de facturation :</strong> conservées 7 ans conformément aux obligations comptables belges.</li>
+                </ul>
+            </section>
+
+            <section id="partage">
+                <h2>5. Partage des données</h2>
+                <p>
+                    ScénArt ne vend, ne loue ni ne cède vos données personnelles à des tiers à des fins commerciales.
+                </p>
+                <p>
+                    Vos données peuvent être partagées dans les cas suivants :
+                </p>
+                <ul>
+                    <li><strong>Prestataires techniques :</strong> hébergeur (serveur localisé en UE), service d'email transactionnel. Ces prestataires agissent en tant que sous-traitants et sont liés par des clauses contractuelles conformes au RGPD.</li>
+                    <li><strong>Obligations légales :</strong> sur réquisition judiciaire ou d'une autorité compétente.</li>
+                    <li><strong>Collaboration :</strong> votre nom d'utilisateur et projets publics sont visibles par les autres utilisateurs de la Plateforme.</li>
+                </ul>
+            </section>
+
+            <section id="droits">
+                <h2>6. Vos droits</h2>
+                <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+                <ul>
+                    <li><strong>Droit d'accès (Art. 15) :</strong> obtenir une copie de vos données personnelles.</li>
+                    <li><strong>Droit de rectification (Art. 16) :</strong> corriger vos données inexactes ou incomplètes.</li>
+                    <li><strong>Droit à l'effacement (Art. 17) :</strong> demander la suppression de vos données dans les conditions prévues par le RGPD.</li>
+                    <li><strong>Droit à la limitation (Art. 18) :</strong> demander la suspension temporaire du traitement de vos données.</li>
+                    <li><strong>Droit à la portabilité (Art. 20) :</strong> recevoir vos données dans un format structuré et lisible par machine.</li>
+                    <li><strong>Droit d'opposition (Art. 21) :</strong> vous opposer au traitement fondé sur l'intérêt légitime.</li>
+                    <li><strong>Droit de retirer votre consentement</strong> à tout moment, sans préjudice des traitements déjà effectués.</li>
+                </ul>
+                <p>
+                    Pour exercer vos droits, écrivez à <a href="mailto:privacy@scenart.be">privacy@scenart.be</a>.
+                    Nous répondrons dans un délai d'un mois. En cas de réclamation non résolue, vous pouvez saisir
+                    l'Autorité de Protection des Données belge (APD) : <a href="https://www.autoriteprotectiondonnees.be" target="_blank" rel="noopener">www.autoriteprotectiondonnees.be</a>.
+                </p>
+            </section>
+
+            <section id="securite">
+                <h2>7. Sécurité</h2>
+                <p>
+                    ScénArt met en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos
+                    données contre tout accès non autorisé, perte, altération ou divulgation :
+                </p>
+                <ul>
+                    <li>Chiffrement HTTPS (TLS) pour toutes les communications ;</li>
+                    <li>Hachage des mots de passe avec un algorithme sécurisé (bcrypt) ;</li>
+                    <li>Protection contre les attaques par force brute (limitation du taux de tentatives de connexion) ;</li>
+                    <li>Tokens CSRF sur tous les formulaires sensibles ;</li>
+                    <li>Accès aux données en production strictement limité au personnel autorisé.</li>
+                </ul>
+            </section>
+
+            <section id="cookies">
+                <h2>8. Cookies</h2>
+                <p>
+                    ScénArt utilise uniquement des cookies strictement nécessaires au fonctionnement du service
+                    (session d'authentification, préférences de langue). Aucun cookie de traçage publicitaire n'est
+                    utilisé. Consultez notre
+                    <a href="{{ path('app_legal_cookies', {_locale: app.request.locale}) }}">politique des cookies</a>
+                    pour plus de détails.
+                </p>
+            </section>
+
+            <section id="mineurs">
+                <h2>9. Mineurs</h2>
+                <p>
+                    ScénArt est accessible à partir de 16 ans. Nous ne collectons pas sciemment de données
+                    personnelles de mineurs de moins de 16 ans sans le consentement de leur représentant légal.
+                    Si vous constatez qu'un mineur de moins de 16 ans a créé un compte sans autorisation,
+                    contactez-nous à <a href="mailto:privacy@scenart.be">privacy@scenart.be</a>.
+                </p>
+            </section>
+
+            <section id="contact">
+                <h2>10. Nous contacter</h2>
+                <p>
+                    Pour toute question relative à cette politique de confidentialité ou à vos données personnelles :
+                </p>
+                <ul>
+                    <li>Email : <a href="mailto:privacy@scenart.be">privacy@scenart.be</a></li>
+                    <li><a href="{{ path('app_contact', {_locale: app.request.locale}) }}">Formulaire de contact</a></li>
+                </ul>
+            </section>
+
+        </div>
+
+        <footer class="legal-footer">
+            <div class="legal-nav-links">
+                <a href="{{ path('app_legal_cgu', {_locale: app.request.locale}) }}">CGU</a>
+                <span>·</span>
+                <a href="{{ path('app_legal_cookies', {_locale: app.request.locale}) }}">Politique des cookies</a>
+                <span>·</span>
+                <a href="{{ path('app_contact', {_locale: app.request.locale}) }}">Contact</a>
+            </div>
+        </footer>
+
+    </div>
+</div>
+{% endblock %}

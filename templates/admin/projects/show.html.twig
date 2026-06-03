@@ -1,0 +1,63 @@
+{# templates/admin/projects/show.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Admin — {{ project.title }}{% endblock %}
+{% block admin_title %}Détail du projet{% endblock %}
+
+{% block admin_content %}
+
+    <div class="admin-detail-header">
+        <div>
+            <h2>{{ project.title }}
+                <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span>
+            </h2>
+            <p class="text-muted">Par <strong>{{ project.createdBy.username }}</strong> · {{ project.projectType|upper }} · Créé le {{ project.createdAt|date('d/m/Y') }}</p>
+        </div>
+        <a href="{{ path('admin_projects', {_locale: app.request.locale}) }}" class="btn-table">← Retour</a>
+    </div>
+
+    <div class="aup-grid">
+
+        {# ── Infos ─────────────────────────────────────────────────── #}
+        <div class="panel-box">
+            <h3>Informations</h3>
+            <dl class="admin-dl">
+                <dt>Slug</dt><dd><code>{{ project.slug }}</code></dd>
+                <dt>Visibilité</dt><dd>{{ project.visibility == 'public' ? 'En ligne' : (project.visibility == 'private' ? 'Privé' : 'Non publié') }}</dd>
+                <dt>Signalements</dt><dd>{{ project.reportCount }}</dd>
+                <dt>Statut</dt><dd><span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span></dd>
+                <dt>Mis à jour</dt><dd>{{ project.updatedAt|date('d/m/Y H:i') }}</dd>
+            </dl>
+        </div>
+
+        {# ── Action de modération ──────────────────────────────────── #}
+        <div class="panel-box">
+            <h3>Action de modération</h3>
+            <form method="post"
+                  action="{{ path('admin_moderation_status', {id: project.id, _locale: app.request.locale}) }}"
+                  onsubmit="return confirm('Confirmer le changement de statut ?')">
+                <input type="hidden" name="_token" value="{{ csrf_token('mod_status_' ~ project.id) }}">
+                <div class="mod-actions">
+                    <button type="submit" name="status" value="clear"
+                            class="btn-table btn-table--success {{ project.moderationStatus == 'clear' ? 'btn-table--current' : '' }}">
+                        ✓ Lever le signalement (clear)
+                    </button>
+                    <button type="submit" name="status" value="warning"
+                            class="btn-table btn-table--warn {{ project.moderationStatus == 'warning' ? 'btn-table--current' : '' }}">
+                        ⚠ Avertissement (warning)
+                    </button>
+                    <button type="submit" name="status" value="blocked"
+                            class="btn-table btn-table--danger {{ project.moderationStatus == 'blocked' ? 'btn-table--current' : '' }}">
+                        ✕ Bloquer le projet (blocked)
+                    </button>
+                    <button type="submit" name="status" value="approved"
+                            class="btn-table btn-table--primary {{ project.moderationStatus == 'approved' ? 'btn-table--current' : '' }}">
+                        ★ Approuver (approved)
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+{% endblock %}

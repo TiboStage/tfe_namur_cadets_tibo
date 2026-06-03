@@ -12,10 +12,15 @@
                 <h1>{{ 'task.index.title'|trans }}</h1>
                 <p class="page-subtitle">{{ 'task.index.subtitle'|trans }}</p>
             </div>
-            <a href="{{ path('app_task_new', {project_slug: project.slug}) }}" class="btn-creat">
+            {% if not (readonly ?? false) %}
+            <a href="{{ path('app_task_new', {project_slug: project.slug}) }}"
+               class="btn-creat"
+               data-turbo-frame="modal-frame"
+               data-action="click->modal#open">
                 {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
                 {{ 'task.index.create'|trans }}
             </a>
+            {% endif %}
         </header>
 
         {# État vide #}
@@ -26,12 +31,62 @@
                 </div>
                 <h3>{{ 'task.index.empty.title'|trans }}</h3>
                 <p>{{ 'task.index.empty.message'|trans }}</p>
-                <a href="{{ path('app_task_new', {project_slug: project.slug}) }}" class="btn-primary">
+                <a href="{{ path('app_task_new', {project_slug: project.slug}) }}"
+                   class="btn-primary"
+                   data-turbo-frame="modal-frame"
+                   data-action="click->modal#open">
                     {{ 'task.index.create_first'|trans }}
                 </a>
             </div>
 
         {% else %}
+
+            {# Vue liste — tâches triées avec chemin narratif #}
+            <div class="task-list-view">
+                {% for task in allTasks %}
+                    <div class="task-list-row task-priority-{{ task.priority }}">
+                        <div class="task-list-status">
+                            <span class="badge-status badge-status-{{ task.status }}">
+                                {{ ('task.status.' ~ task.status)|trans }}
+                            </span>
+                        </div>
+                        <div class="task-list-main">
+                            <a href="{{ path('app_task_show', {project_slug: project.slug, id: task.id}) }}"
+                               class="task-list-title">
+                                {{ task.title }}
+                            </a>
+                            {% if elementPaths[task.id] is defined %}
+                                {% set el = elementPaths[task.id] %}
+                                <div class="task-list-path">
+                                    {{ ux_icon('lucide:map-pin', {style: 'width: 11px; height: 11px;'}) }}
+                                    <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: el.id}) }}"
+                                       class="task-path-link">
+                                        {{ el.getFullPath() }}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="task-list-meta">
+                            {% if task.priority in ['high', 'urgent'] %}
+                                <span class="badge-priority badge-priority-{{ task.priority }}">
+                                    {{ ('task.priority.' ~ task.priority)|trans }}
+                                </span>
+                            {% endif %}
+                            {% if task.assignedTo %}
+                                <div class="assignee-avatar" title="{{ task.assignedTo.username }}">
+                                    {{ task.assignedTo.username|first|upper }}
+                                </div>
+                            {% endif %}
+                            <a href="{{ path('app_task_edit', {project_slug: project.slug, id: task.id}) }}"
+                               class="btn-icon-sm" title="{{ 'common.edit'|trans }}"
+                               data-turbo-frame="modal-frame"
+                               data-action="click->modal#open">
+                                {{ ux_icon('lucide:pencil', {style: 'width: 13px; height: 13px;'}) }}
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
 
             {# Vue Kanban #}
             <div class="kanban-board">
@@ -133,7 +188,7 @@
                 <a href="{{ path('app_task_edit', {project_slug: project.slug, id: task.id}) }}"
                    class="btn-icon-sm"
                    title="{{ 'common.edit'|trans }}">
-                    {{ ux_icon('lucide:pencil', {style: 'width: 12px; height: 12px;'}) }}
+                    {{ ux_icon('lucide:pencil', {class: 'icon-3xs'}) }}
                 </a>
             </div>
         </div>

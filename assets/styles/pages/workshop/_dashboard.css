@@ -1,43 +1,37 @@
 /* ============================================================
    DASHBOARD — _dashboard.css
-   Sharp design, zéro border-radius
    ============================================================ */
 
 .workshop-container {
-    background-color: var(--color-bg-elevated);
+    background-color: var(--color-bg-dark);
     min-height: 100vh;
-    padding: 30px 50px;
+    padding: 30px var(--container-padding);
     width: 100%;
-    max-width: 100%;
-    margin: 0;
+    max-width: 1800px;
+    margin: auto;
 }
 
-/*.workshop-content {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    flex: 1;*/
-/*    width: 100%;*/
-/*    min-height: 0; !* Important pour éviter les bugs de scroll flexbox *!*/
-/*}*/
+/* ── Structure principale ────────────────────────────────── */
 
-/* ── En-tête ─────────────────────────────────────────────── */
+.container-dashboard-structure {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    gap: 15px;
+}
 
-.intro-dashboard-structure{
+.intro-dashboard-structure {
     background-color: var(--color-bg-dark);
     padding: 25px 35px 35px 35px;
     border: solid 1px var(--color-border);
 }
 
-.container-dashboard-structure{
-    display: grid;
-    grid-template-columns: 4fr 1fr;
-    gap: 15px;
-}
-.child-dashboard-structure{
+.child-dashboard-structure {
     border: 1px solid var(--color-border);
     background: var(--color-bg-dark);
     margin-bottom: 24px;
 }
+
+/* ── En-tête ─────────────────────────────────────────────── */
 
 .dashboard-intro {
     margin-bottom: 35px;
@@ -54,8 +48,7 @@
     color: var(--text-muted);
 }
 
-/* ── Grille de stats ──────────────────────────────────────── */
-
+/* ── Stat cards (projet show — sans icône) ───────────────── */
 
 .stat-card {
     padding: 28px 30px;
@@ -66,44 +59,11 @@
     border: 1px solid var(--color-border);
 }
 
-.stat-card--yellow {
-    background: var(--color-primary);
-    color: #000;
-
-}
-
-.stat-card--dark {
-    background: var(--color-bg-card);
-}
-
 .stat-value {
     font-size: clamp(30px, 2.5vw, 40px);
     font-weight: 700;
     line-height: 1;
 }
-
-.stat-desc {
-    font-size: clamp(15px, 2.5vw, 20px);
-    color: inherit;
-}
-
-.stat-card--yellow .stat-value  {
-    color: #000;
-}
-
-.stat-card--yellow .stat-desc {
-    color: #000;
-}
-
-.stat-card--yellow .stat-footer-link {
-    color: #0A0A0A;
-    font-size: clamp(12px, 2.5vw, 18px);
-    font-weight: 700;
-    text-decoration: none;
-    margin-top: 10px;
-    align-self: self-end;
-}
-
 
 /* ── Actions rapides ─────────────────────────────────────── */
 
@@ -117,23 +77,6 @@
     padding: 20px;
     gap: 20px;
     display: grid;
-}
-
-.quick-action-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.quick-action-info .text-bold {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-main);
-}
-
-.quick-action-info .text-muted {
-    font-size: 11px;
-    color: var(--text-muted);
 }
 
 /* ── Grille basse ────────────────────────────────────────── */
@@ -156,8 +99,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 25px;
+    padding: 20px 20px 25px 30px;
     border-bottom: 1px solid var(--color-border);
+    margin-bottom: 20px;
 }
 
 .dashboard-section-header h2 {
@@ -173,35 +117,31 @@
     text-decoration: none;
 }
 
-
-.recent-projects-full{
+.recent-projects-full {
     margin: 40px 0;
     background-color: transparent;
     border: none;
 }
-/*.project-cards-grid-large{*/
-/*    padding-bottom: 15px;*/
-/*    margin: 0;*/
-/*}*/
-.recent-projects-full .dashboard-section-header{
+
+.recent-projects-full .dashboard-section-header {
     padding: 0;
     border-bottom: none;
 }
-.recent-projects-full .dashboard-section-header h2{
+
+.recent-projects-full .dashboard-section-header h2 {
     font-size: clamp(24px, 2vw, 36px);
 }
 
 /* ── Liste de projets ────────────────────────────────────── */
 
-.project-list {
-    /*padding: 0 25px;*/
-}
-
 .project-list-item {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 16px 0;
+    padding: 12px 25px;
+    background: var(--color-bg-card);
+    margin-bottom: 8px;
+    text-decoration: none;
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -212,7 +152,7 @@
 .project-thumb {
     width: 40px;
     height: 40px;
-    background: #1A1A1E;
+    background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     display: flex;
     align-items: center;
@@ -245,7 +185,8 @@
     color: var(--text-muted);
 }
 
-/* Badges de statut */
+/* ── Badges de statut ────────────────────────────────────── */
+
 .status-badge {
     margin-left: auto;
     border: 1px solid var(--color-border);
@@ -259,9 +200,9 @@
 }
 
 .status-badge--in_progress { border-color: var(--color-primary); color: var(--color-primary); }
-.status-badge--draft { border-color: var(--color-border); color: var(--text-muted); }
-.status-badge--completed { border-color: #22c55e; color: #22c55e; }
-.status-badge--archived { border-color: #555; color: #555; }
+.status-badge--draft       { border-color: var(--color-border); color: var(--text-muted); }
+.status-badge--completed   { border-color: var(--color-green); color: var(--color-green); }
+.status-badge--archived    { border-color: var(--text-muted-dark); color: var(--text-muted-dark); }
 
 .empty-state {
     padding: 30px 0;
@@ -271,15 +212,11 @@
 
 /* ── Activité ────────────────────────────────────────────── */
 
-.activity-list {
-    padding: 0 25px;
-}
-
 .activity-item {
     display: flex;
     align-items: flex-start;
     gap: 14px;
-    padding: 14px 0;
+    padding: 14px 25px;
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -306,42 +243,18 @@
     color: var(--text-muted);
 }
 
-
-/* 1. Le style "Liste compacte" pour le haut du Dashboard */
-.project-list-item {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    background: #16161a;
-    margin-bottom: 8px;
-    text-decoration: none;
-}
-
-/* 2. Le style "Grandes Cartes" pour le bas (Ton souhait du 400px) */
-.project-cards-grid-large {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 24px;
-    margin: 30px 0;
-}
-
-/* On s'assure que le composant prend bien toute la place dans sa colonne */
-.project-cards-grid-large .project-card {
-    width: 100%;
-}
-
 /* ── Utilitaires locaux ──────────────────────────────────── */
 
-.text-bold { font-weight: 700; }
+.text-bold  { font-weight: 700; }
 .text-muted { color: var(--text-muted); }
+
 .highlight {
     color: var(--color-primary);
     font-style: italic;
 }
 
-/* ── Responsive ──────────────────────────────────── */
+/* ── Responsive ──────────────────────────────────────────── */
 
-/* À partir du desktop, on repasse en deux colonnes proportionnelles */
 @media (min-width: 1024px) {
     .dashboard-lower-grid {
         grid-template-columns: 1.3fr 0.7fr;

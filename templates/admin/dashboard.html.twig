@@ -1,59 +1,139 @@
 {# templates/admin/dashboard.html.twig #}
 {% extends 'admin/layout.html.twig' %}
 
-{% block title %}Admin - Vue d'ensemble{% endblock %}
+{% block title %}Admin — Vue d'ensemble{% endblock %}
+{% block admin_title %}Vue d'ensemble{% endblock %}
 
 {% block admin_content %}
-    {# CARTES DE STATISTIQUES (KPI) #}
+
+    {# ── KPI ──────────────────────────────────────────────────────── #}
     <div class="admin-stats-grid">
-        <div class="stat-card">
-            <span class="stat-title">Utilisateurs totaux</span>
-            <span class="stat-number">1,240</span>
-            <span class="stat-detail">Table <code class="db-code">user</code></span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-title">Projets créés</span>
-            <span class="stat-number">342</span>
-            <span class="stat-detail">Table <code class="db-code">project</code></span>
-        </div>
-        <div class="stat-card card-alert">
-            <span class="stat-title">Signalements actifs</span>
-            <span class="stat-number text-error">5</span>
-            <span class="stat-detail">Table <code class="db-code">report</code></span>
-        </div>
+
+        {% set icon_users %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        {% endset %}
+        {{ include('components/_stat_card.html.twig', {
+            icon:  icon_users,
+            value: stats.users_total,
+            label: 'Utilisateurs',
+            sub:   '+' ~ stats.users_new ~ ' ce mois',
+            color: 'blue',
+        }) }}
+
+        {% set icon_folder %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        {% endset %}
+        {{ include('components/_stat_card.html.twig', {
+            icon:  icon_folder,
+            value: stats.projects_total,
+            label: 'Projets',
+            sub:   stats.projects_public ~ ' publics',
+            color: 'yellow',
+        }) }}
+
+        {% set icon_alert %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        {% endset %}
+        {{ include('components/_stat_card.html.twig', {
+            icon:  icon_alert,
+            value: stats.reports,
+            label: 'Signalements actifs',
+            sub:   stats.users_banned ~ ' comptes bannis',
+            color: 'red',
+            alert: stats.reports > 0,
+        }) }}
+
     </div>
 
-    {# ZONE DE CONTENU : RECENT LOGS & MODERATION #}
+    {# ── Panels ────────────────────────────────────────────────────── #}
     <div class="admin-dashboard-panels">
-        <div class="panel-box">
-            <h3>🚨 Derniers signalements à traiter</h3>
-            <div class="table-wrapper">
-                <table class="admin-table">
-                    <thead>
-                    <tr>
-                        <th>Projet</th>
-                        <th>Raison</th>
-                        <th>Date</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {# Ici tu feras une boucle {% for report in reports %} plus tard #}
-                    <tr>
-                        <td><strong>L'Ombre du Passé</strong></td>
-                        <td><span class="tag-reason">Contenu inapproprié</span></td>
-                        <td class="text-muted">Il y a 2 heures</td>
-                        <td><button class="btn-table">Inspecter</button></td>
-                    </tr>
-                    <tr>
-                        <td>Le Fléau de Glace</td>
-                        <td><span class="tag-reason">Harcèlement</span></td>
-                        <td class="text-muted">Il y a 5 heures</td>
-                        <td><button class="btn-table">Inspecter</button></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+
+        {% embed 'components/_dashboard_panel.html.twig' with {
+            title:      'Derniers inscrits',
+            link_url:   path('admin_users', {_locale: app.request.locale}),
+        } %}
+            {% block panel_body %}
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead><tr>
+                            <th>Utilisateur</th>
+                            <th>Email</th>
+                            <th>Rôles</th>
+                            <th>Statut</th>
+                            <th></th>
+                        </tr></thead>
+                        <tbody>
+                        {% for user in recent_users %}
+                            <tr>
+                                <td><strong>{{ user.username }}</strong></td>
+                                <td class="text-muted">{{ user.email }}</td>
+                                <td>
+                                    {% for role in user.roles %}
+                                        {% if role != 'ROLE_USER' %}
+                                            <span class="role-badge role-badge--{{ role|lower|replace({'role_': ''}) }}">{{ role|replace({'ROLE_': ''}) }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% if user.isBanned %}
+                                        <span class="status-badge status-badge--banned">Banni</span>
+                                    {% else %}
+                                        <span class="status-badge status-badge--active">Actif</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ path('admin_user_show', {id: user.id, _locale: app.request.locale}) }}" class="btn-table">Voir</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="5" class="text-muted">Aucun utilisateur.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endblock %}
+        {% endembed %}
+
+        {% embed 'components/_dashboard_panel.html.twig' with {
+            title:      '🚨 Projets signalés',
+            link_url:   path('admin_moderation', {_locale: app.request.locale}),
+        } %}
+            {% block panel_body %}
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead><tr>
+                            <th>Projet</th>
+                            <th>Auteur</th>
+                            <th>Signalements</th>
+                            <th>Statut</th>
+                            <th></th>
+                        </tr></thead>
+                        <tbody>
+                        {% for project in flagged_projects %}
+                            <tr>
+                                <td><strong>{{ project.title }}</strong></td>
+                                <td class="text-muted">{{ project.createdBy.username }}</td>
+                                <td>
+                                    {% if project.reportCount > 0 %}
+                                        <span class="tag-reason">{{ project.reportCount }} signal.</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span>
+                                </td>
+                                <td>
+                                    <a href="{{ path('admin_project_show', {id: project.id, _locale: app.request.locale}) }}" class="btn-table">Inspecter</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="5" class="text-muted">Aucun signalement. ✓</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endblock %}
+        {% endembed %}
+
     </div>
+
 {% endblock %}

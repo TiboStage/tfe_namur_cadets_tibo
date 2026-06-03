@@ -1,0 +1,147 @@
+{# templates/website/pages/legal/cookies.html.twig #}
+{% extends 'website/layout.html.twig' %}
+
+{% block title %}Politique des Cookies — ScénArt{% endblock %}
+
+{% block content %}
+<div class="legal-page">
+    <div class="legal-container">
+
+        <header class="legal-header">
+            <p class="legal-label">Document légal</p>
+            <h1>Politique des Cookies</h1>
+            <p class="legal-meta">En vigueur depuis le 1er janvier 2026 · Dernière mise à jour : 1er janvier 2026</p>
+        </header>
+
+        <div class="legal-body">
+
+            <section>
+                <h2>Qu'est-ce qu'un cookie ?</h2>
+                <p>
+                    Un cookie est un petit fichier texte déposé sur votre appareil (ordinateur, tablette, smartphone)
+                    lors de la visite d'un site web. Il permet au site de mémoriser certaines informations à votre sujet
+                    afin d'améliorer votre expérience lors de vos visites ultérieures.
+                </p>
+                <p>
+                    Conformément à la directive européenne ePrivacy et à la législation belge, certains cookies
+                    nécessitent votre consentement préalable. ScénArt s'engage à n'utiliser que les cookies
+                    strictement nécessaires au fonctionnement du service.
+                </p>
+            </section>
+
+            <section>
+                <h2>Cookies utilisés par ScénArt</h2>
+
+                <h3>Cookies strictement nécessaires</h3>
+                <p>
+                    Ces cookies sont indispensables au fonctionnement de la Plateforme. Ils ne nécessitent pas votre
+                    consentement. Vous pouvez les désactiver via les paramètres de votre navigateur, mais cela empêchera
+                    le fonctionnement correct du site.
+                </p>
+
+                <div class="legal-table-wrap">
+                    <table class="legal-table">
+                        <thead><tr>
+                            <th>Nom</th>
+                            <th>Finalité</th>
+                            <th>Durée</th>
+                            <th>Type</th>
+                        </tr></thead>
+                        <tbody>
+                        <tr>
+                            <td><code>PHPSESSID</code></td>
+                            <td>Session d'authentification — identifie votre session sur le serveur, permet de rester connecté</td>
+                            <td>Session (supprimé à la fermeture du navigateur)</td>
+                            <td>Technique</td>
+                        </tr>
+                        <tr>
+                            <td><code>REMEMBERME</code></td>
+                            <td>Option « Se souvenir de moi » — maintient votre connexion entre les sessions</td>
+                            <td>7 jours</td>
+                            <td>Technique</td>
+                        </tr>
+                        <tr>
+                            <td><code>_locale</code></td>
+                            <td>Mémorisation de votre préférence de langue</td>
+                            <td>1 an</td>
+                            <td>Fonctionnel</td>
+                        </tr>
+                        <tr>
+                            <td><code>_csrf_token</code></td>
+                            <td>Protection contre les attaques CSRF (falsification de requêtes inter-sites)</td>
+                            <td>Session</td>
+                            <td>Sécurité</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Cookies analytiques</h3>
+                <p>
+                    ScénArt <strong>n'utilise pas</strong> de cookies analytiques tiers (Google Analytics, Matomo,
+                    etc.) qui permettraient de suivre votre navigation entre différents sites.
+                    Si cette politique devait évoluer, vous en seriez informé et votre consentement préalable
+                    serait sollicité.
+                </p>
+
+                <h3>Cookies publicitaires</h3>
+                <p>
+                    ScénArt <strong>n'utilise aucun cookie publicitaire</strong>. Aucune donnée de navigation n'est
+                    partagée avec des régies publicitaires.
+                </p>
+
+                <h3>Cookies de réseaux sociaux</h3>
+                <p>
+                    Notre Plateforme ne contient pas de boutons de partage vers les réseaux sociaux qui déposeraient
+                    des cookies tiers sans votre action explicite.
+                </p>
+            </section>
+
+            <section>
+                <h2>Comment gérer les cookies ?</h2>
+                <p>
+                    Vous pouvez contrôler et supprimer les cookies à tout moment via les paramètres de votre navigateur.
+                    Notez que la désactivation des cookies strictement nécessaires peut altérer le fonctionnement de ScénArt.
+                </p>
+                <p>Instructions pour les navigateurs les plus courants :</p>
+                <ul>
+                    <li><strong>Chrome :</strong> Paramètres → Confidentialité et sécurité → Cookies et autres données de site</li>
+                    <li><strong>Firefox :</strong> Paramètres → Vie privée et sécurité → Cookies et données de site</li>
+                    <li><strong>Safari :</strong> Préférences → Confidentialité → Cookies</li>
+                    <li><strong>Edge :</strong> Paramètres → Cookies et autorisations de site</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Modifications de la politique des cookies</h2>
+                <p>
+                    Nous pouvons mettre à jour cette politique à tout moment pour refléter des changements dans notre
+                    utilisation des cookies. La date de dernière mise à jour est indiquée en haut de page. Toute
+                    modification substantielle sera notifiée par email.
+                </p>
+            </section>
+
+            <section>
+                <h2>Contact</h2>
+                <p>
+                    Pour toute question concernant notre utilisation des cookies :
+                    <a href="mailto:privacy@scenart.be">privacy@scenart.be</a> ou
+                    <a href="{{ path('app_contact', {_locale: app.request.locale}) }}">notre formulaire de contact</a>.
+                </p>
+            </section>
+
+        </div>
+
+        <footer class="legal-footer">
+            <div class="legal-nav-links">
+                <a href="{{ path('app_legal_cgu', {_locale: app.request.locale}) }}">CGU</a>
+                <span>·</span>
+                <a href="{{ path('app_legal_privacy', {_locale: app.request.locale}) }}">Politique de confidentialité</a>
+                <span>·</span>
+                <a href="{{ path('app_contact', {_locale: app.request.locale}) }}">Contact</a>
+            </div>
+        </footer>
+
+    </div>
+</div>
+{% endblock %}

@@ -10,9 +10,14 @@
         <div>
             <h1>{{ 'location.index.title'|trans }} <span class="text-muted">{{ locations|length }}</span></h1>
         </div>
-        <a href="{{ path('app_location_new', {project_slug: project.slug}) }}" class="btn-creat">
+        {% if not (readonly ?? false) %}
+        <a href="{{ path('app_location_new', {project_slug: project.slug}) }}"
+           class="btn-creat"
+           data-turbo-frame="modal-frame"
+           data-action="click->modal#open">
             {{ 'location.index.new_btn'|trans }}
         </a>
+        {% endif %}
     </header>
 
     {% if locations is empty %}

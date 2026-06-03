@@ -1,0 +1,437 @@
+/* ═══════════════════════════════════════════════════════════
+   PROFIL CRÉATEUR — _creator.css
+   ═══════════════════════════════════════════════════════════ */
+
+.creator-page {
+    padding-bottom: 80px;
+}
+
+/* ── Carte de profil ───────────────────────────────────────── */
+.creator-profile {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    margin-bottom: 40px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ── Bannière de fond ──────────────────────────────────────── */
+.creator-profile__banner {
+    height: 120px;
+    background: linear-gradient(135deg, #0d0d18 0%, #0f0f1c 50%, #131320 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.creator-profile__banner-glow {
+    position: absolute;
+    top: -60px;
+    left: -60px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--color-primary-medium) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* ── En-tête du profil ─────────────────────────────────────── */
+.creator-profile__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 0 32px 28px;
+    position: relative;
+}
+
+/* ── Avatar ────────────────────────────────────────────────── */
+.creator-profile__avatar {
+    width: 88px;
+    height: 88px;
+    margin-top: -44px;
+    background: var(--color-bg-elevated);
+    border: 3px solid var(--color-bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    z-index: 1;
+    position: relative;
+}
+
+.creator-profile__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.creator-profile__avatar-letter {
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--color-primary);
+    line-height: 1;
+    background: var(--color-primary-glow);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Adapter l'avatar universel dans la carte de profil */
+.creator-profile__avatar .u-avatar {
+    width: 100%;
+    height: 100%;
+    font-size: 36px;
+    border-radius: 0;
+}
+.creator-profile__avatar .u-avatar__letter {
+    font-size: inherit;
+}
+
+/* ── Infos (mode vue) ──────────────────────────────────────── */
+.creator-profile__info {
+    flex: 1;
+    min-width: 0;
+    padding-top: 16px;
+}
+
+.creator-profile__name-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 4px;
+}
+
+.creator-profile__username {
+    font-size: 22px;
+    font-weight: 900;
+    margin: 0;
+    line-height: 1;
+}
+
+.creator-profile__fullname {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0 0 10px;
+}
+
+.creator-profile__bio {
+    font-size: 14px;
+    color: var(--text-main);
+    line-height: 1.7;
+    margin: 0 0 14px;
+    max-width: 600px;
+}
+
+.creator-profile__bio--empty {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.creator-profile__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.creator-profile__meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ── Bouton Modifier ───────────────────────────────────────── */
+.creator-profile__edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: var(--overlay-xs);
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    transition: border-color .15s, color .15s;
+    white-space: nowrap;
+}
+
+.creator-profile__edit-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* ── Formulaire d'édition inline ───────────────────────────── */
+.creator-profile__edit-form {
+    flex: 1;
+    min-width: 0;
+    padding-top: 16px;
+}
+
+.creator-edit__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 560px;
+    margin-bottom: 16px;
+}
+
+.creator-edit__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.creator-edit__field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.creator-edit__field label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text-muted);
+}
+
+.creator-edit__limit {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.creator-edit__field input,
+.creator-edit__field textarea {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    color: var(--text-main);
+    font-size: 13px;
+    padding: 8px 12px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color .15s;
+    resize: vertical;
+}
+
+.creator-edit__field input:focus,
+.creator-edit__field textarea:focus {
+    border-color: var(--color-primary);
+}
+
+.creator-edit__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.creator-edit__save {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    background: var(--color-primary);
+    border: none;
+    color: var(--text-dark);
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity .15s;
+}
+
+.creator-edit__save:hover:not(:disabled) {
+    opacity: .85;
+}
+
+.creator-edit__save:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.creator-edit__cancel {
+    padding: 8px 14px;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+}
+
+.creator-edit__cancel:hover {
+    border-color: var(--color-primary);
+    color: var(--text-main);
+}
+
+.profile-editor-error {
+    font-size: 12px;
+    color: var(--color-error);
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background: var(--color-error-bg);
+    border: 1px solid var(--color-error);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION PROJETS DU CRÉATEUR
+   ═══════════════════════════════════════════════════════════ */
+
+.creator-projects {
+    margin-bottom: 32px;
+}
+
+.creator-projects__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.creator-projects__header h2 {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.creator-projects__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    border: 2px dashed var(--color-border);
+}
+
+.creator-projects__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+/* ── Carte projet sur profil ───────────────────────────────── */
+.creator-project-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    color: var(--text-main);
+    transition: border-color .2s, transform .15s;
+    overflow: hidden;
+}
+
+.creator-project-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+}
+
+.creator-project-card__type {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.creator-project-card__type--film     { color: var(--color-blue);   background: color-mix(in srgb, var(--color-blue)   5%, transparent); }
+.creator-project-card__type--serie    { color: var(--color-purple); background: color-mix(in srgb, var(--color-purple) 5%, transparent); }
+.creator-project-card__type--jeu_video{ color: var(--color-green);  background: color-mix(in srgb, var(--color-green)  5%, transparent); }
+.creator-project-card__type--custom   { color: var(--color-primary); background: var(--color-primary-glow); }
+
+.creator-project-card__visibility {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.creator-project-card__visibility.is-public {
+    color: var(--color-green);
+}
+
+.creator-project-card__body {
+    flex: 1;
+    padding: 12px 14px;
+}
+
+.creator-project-card__title {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    line-height: 1.3;
+}
+
+.creator-project-card__desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.creator-project-card__footer {
+    padding: 7px 14px;
+    border-top: 1px solid var(--color-border);
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* ── Lien retour ───────────────────────────────────────────── */
+.creator-back {
+    margin-top: 16px;
+}
+
+.creator-back__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color .15s;
+}
+
+.creator-back__link:hover {
+    color: var(--color-primary);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 760px) {
+    .creator-profile__header {
+        flex-wrap: wrap;
+        padding: 0 16px 20px;
+    }
+    .creator-profile__avatar {
+        width: 70px;
+        height: 70px;
+        margin-top: -35px;
+    }
+    .creator-profile__avatar-letter {
+        font-size: 26px;
+    }
+    .creator-profile__username {
+        font-size: 18px;
+    }
+    .creator-edit__row {
+        grid-template-columns: 1fr;
+    }
+    .creator-projects__grid {
+        grid-template-columns: 1fr;
+    }
+}

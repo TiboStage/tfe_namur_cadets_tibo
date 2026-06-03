@@ -10,11 +10,11 @@
             <button class="language-toggle" data-action="language#toggle" aria-label="Changer de langue">
                     <span class="current-lang">
                         {% if app.request.locale == 'fr' %}
-                            {{ ux_icon('flagpack:fr', { class: 'flag-img' }) }} Français
+                            🇫🇷 Français
                         {% elseif app.request.locale == 'en' %}
-                            {{ ux_icon('flagpack:gb', { class: 'flag-img' }) }} English
+                            🇬🇧 English
                         {% elseif app.request.locale == 'nl' %}
-                            {{ ux_icon('flagpack:nl', { class: 'flag-img' }) }} Nederlands
+                            🇳🇱 Nederlands
                         {% endif %}
                     </span>
 
@@ -28,7 +28,7 @@
                 {# Français #}
                 <a href="{{ path(current_route, current_params|merge({'_locale': 'fr'})) }}"
                    class="language-option {% if app.request.locale == 'fr' %}active{% endif %}">
-                    {{ ux_icon('flagpack:fr', { class: 'flag-img' }) }}
+                    <span class="lang-flag">🇫🇷</span>
                     <div class="lang-info">
                         <span class="lang-name">Français</span>
                         <span class="lang-region">Belgique</span>
@@ -38,7 +38,7 @@
                 {# Anglais #}
                 <a href="{{ path(current_route, current_params|merge({'_locale': 'en'})) }}"
                    class="language-option {% if app.request.locale == 'en' %}active{% endif %}">
-                    {{ ux_icon('flagpack:gb', { class: 'flag-img' }) }}
+                    <span class="lang-flag">🇬🇧</span>
                     <div class="lang-info">
                         <span class="lang-name">English</span>
                         <span class="lang-region">International</span>
@@ -48,7 +48,7 @@
                 {# Néerlandais #}
                 <a href="{{ path(current_route, current_params|merge({'_locale': 'nl'})) }}"
                    class="language-option {% if app.request.locale == 'nl' %}active{% endif %}">
-                    {{ ux_icon('flagpack:nl', { class: 'flag-img' }) }}
+                    <span class="lang-flag">🇳🇱</span>
                     <div class="lang-info">
                         <span class="lang-name">Nederlands</span>
                         <span class="lang-region">België</span>
@@ -60,5 +60,7 @@
         <p class="copyright">
             © 2026 — TFE — EAFC Namur Cadets — Thibault Claerhoudt
         </p>
+
+        <span class="version-badge">v0.2.0</span>
     </div>
 </div>

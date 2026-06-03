@@ -1,0 +1,64 @@
+{% extends 'workshop/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block subnav %}{% endblock %}
+
+{% block title %}Notifications · Scénart{% endblock %}
+
+{% block content %}
+<div class="workshop-container notif-page">
+
+    <header class="notif-page__header">
+        <h1 class="notif-page__title">
+            {{ ux_icon('lucide:bell', {class: 'icon-base'}) }}
+            Notifications
+        </h1>
+        <p class="notif-page__subtitle text-muted">
+            Toutes vos alertes sont marquées comme lues à l'ouverture de cette page.
+        </p>
+    </header>
+
+    {% if notifications is empty %}
+        <div class="notif-empty">
+            {{ ux_icon('lucide:bell-off', {style: 'width:36px;height:36px;opacity:.2'}) }}
+            <p>Aucune notification pour l'instant.</p>
+        </div>
+    {% else %}
+        <div class="notif-list">
+            {% for notif in notifications %}
+            <div class="notif-row">
+                <span class="notif-row__icon notif-row__icon--{{ notif.type }}">
+                    {% if notif.type == 'invitation' %}
+                        {{ ux_icon('lucide:user-plus', {style: 'width:15px;height:15px'}) }}
+                    {% elseif notif.type == 'removed' %}
+                        {{ ux_icon('lucide:user-minus', {style: 'width:15px;height:15px'}) }}
+                    {% elseif notif.type == 'role_changed' %}
+                        {{ ux_icon('lucide:shield', {style: 'width:15px;height:15px'}) }}
+                    {% elseif notif.type == 'project_published' %}
+                        {{ ux_icon('lucide:globe', {style: 'width:15px;height:15px'}) }}
+                    {% elseif notif.type == 'comment' %}
+                        {{ ux_icon('lucide:message-square', {style: 'width:15px;height:15px'}) }}
+                    {% elseif notif.type == 'reply' %}
+                        {{ ux_icon('lucide:corner-down-right', {style: 'width:15px;height:15px'}) }}
+                    {% else %}
+                        {{ ux_icon('lucide:info', {style: 'width:15px;height:15px'}) }}
+                    {% endif %}
+                </span>
+
+                <div class="notif-row__body">
+                    {% if notif.link %}
+                        <a href="{{ notif.link }}" class="notif-row__content">{{ notif.content }}</a>
+                    {% else %}
+                        <span class="notif-row__content">{{ notif.content }}</span>
+                    {% endif %}
+                    <span class="notif-row__date text-muted">
+                        {{ notif.createdAt|date('d/m/Y à H:i') }}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

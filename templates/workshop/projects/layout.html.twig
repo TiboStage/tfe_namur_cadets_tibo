@@ -14,8 +14,14 @@
 
 
 {% block body %}
-    {% include 'workshop/_partials/_topbar.html.twig' %}
+{# ══════════════════════════════════════════════════════════
+   Le data-controller="modal" doit englober TOUT le contenu
+   pour que les data-action="click->modal#open" des triggers
+   puissent remonter jusqu'à lui via la chaîne d'ancêtres.
+   ══════════════════════════════════════════════════════════ #}
+<div data-controller="modal">
 
+    {% include 'workshop/_partials/_topbar.html.twig' %}
 
     <div class="workspace-container">
 
@@ -31,4 +37,29 @@
         </main>
 
     </div>
+
+    {# ══════════════════════════════════════════════════════════
+       MODAL GLOBAL — overlay cible du controller
+       data-modal-target="overlay" permet au controller de
+       manipuler cet élément via this.overlayTarget
+       ══════════════════════════════════════════════════════════ #}
+    <div class="ws-modal"
+         data-modal-target="overlay"
+         data-action="click->modal#backdropClick">
+        <div class="ws-modal-box">
+            <button type="button"
+                    class="ws-modal-close-btn"
+                    data-action="modal#close"
+                    aria-label="Fermer">
+                {{ ux_icon('lucide:x', {class: 'icon-sm'}) }}
+            </button>
+            <turbo-frame id="modal-frame">
+                <div class="ws-modal-loading">
+                    <span class="ws-modal-spinner"></span>
+                </div>
+            </turbo-frame>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

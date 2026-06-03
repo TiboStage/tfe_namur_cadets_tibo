@@ -1,0 +1,491 @@
+/* ═══════════════════════════════════════════════════════════
+   DOCUMENTATION — Page publique avec sidebar
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Layout deux colonnes ──────────────────────────────────── */
+.doc-page {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 80px);
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+    gap: 0;
+}
+
+/* ── Sidebar ───────────────────────────────────────────────── */
+.doc-sidebar {
+    border-right: 1px solid var(--color-border);
+    padding: 36px 0;
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+}
+
+.doc-sidebar__inner {
+    padding-right: 24px;
+}
+
+.doc-sidebar__brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-main);
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Navigation docs ───────────────────────────────────────── */
+.doc-nav__group {
+    margin-bottom: 24px;
+}
+
+.doc-nav__category {
+    display: block;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted-dark);
+    margin-bottom: 8px;
+    padding-left: 8px;
+}
+
+.doc-nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.doc-nav__link {
+    display: block;
+    padding: 6px 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: all 0.2s ease;
+    line-height: 1.4;
+}
+
+.doc-nav__link:hover {
+    color: var(--text-main);
+    border-left-color: var(--color-border-light);
+}
+
+.doc-nav__link.active {
+    color: var(--color-primary);
+    border-left-color: var(--color-primary);
+    font-weight: 600;
+}
+
+.doc-nav__empty {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ── Contenu principal ─────────────────────────────────────── */
+.doc-main {
+    padding: 36px 0 60px 48px;
+    min-width: 0;
+}
+
+.doc-content {
+    max-width: 720px;
+}
+
+.doc-content__meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.doc-content__category {
+    background: rgba(255, 184, 0, 0.1);
+    border: 1px solid rgba(255, 184, 0, 0.3);
+    color: var(--color-primary);
+    padding: 3px 10px;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* ── Rendu Markdown ────────────────────────────────────────── */
+.markdown-content {
+    color: var(--text-main);
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+.markdown-content h1 {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 24px;
+    line-height: 1.2;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.markdown-content h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 40px 0 16px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+}
+
+.markdown-content h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 28px 0 12px;
+    color: var(--color-primary);
+}
+
+.markdown-content h4,
+.markdown-content h5 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+}
+
+.markdown-content p {
+    margin: 0 0 16px;
+}
+
+.markdown-content a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.markdown-content a:hover {
+    opacity: 0.8;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: 24px;
+    margin: 0 0 16px;
+}
+
+.markdown-content li {
+    margin-bottom: 6px;
+}
+
+.markdown-content blockquote {
+    margin: 24px 0;
+    padding: 12px 20px;
+    border-left: 4px solid var(--color-primary);
+    background: rgba(255, 184, 0, 0.05);
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.markdown-content code {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid var(--color-border);
+    padding: 2px 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--color-primary);
+}
+
+.markdown-content pre {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    padding: 20px;
+    overflow-x: auto;
+    margin: 0 0 20px;
+}
+
+.markdown-content pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text-main);
+    font-size: 13px;
+}
+
+.markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 20px;
+    font-size: 14px;
+}
+
+.markdown-content th,
+.markdown-content td {
+    padding: 10px 14px;
+    border: 1px solid var(--color-border);
+    text-align: left;
+}
+
+.markdown-content th {
+    background: var(--color-bg-card);
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 32px 0;
+}
+
+.markdown-content img {
+    max-width: 100%;
+    border: 1px solid var(--color-border);
+}
+
+/* ── Pagination bas de page ────────────────────────────────── */
+.doc-pagination {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+}
+
+.doc-pagination__prev,
+.doc-pagination__next {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    padding: 14px 18px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--text-main);
+    transition: border-color 0.2s, transform 0.2s;
+    max-width: 45%;
+}
+
+.doc-pagination__prev:hover,
+.doc-pagination__next:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+.doc-pagination__next {
+    margin-left: auto;
+    text-align: right;
+}
+
+.doc-pagination__label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+}
+
+.doc-pagination__title {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ── Index (liste des catégories) ──────────────────────────── */
+.doc-index-title {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.doc-index-intro {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 36px;
+    line-height: 1.7;
+}
+
+.doc-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.doc-category-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    padding: 22px;
+    transition: border-color 0.2s;
+}
+
+.doc-category-card:hover {
+    border-color: var(--color-primary);
+}
+
+.doc-category-card__title {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 14px;
+    color: var(--color-primary);
+}
+
+.doc-category-card__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.doc-category-card__list li {
+    margin-bottom: 6px;
+}
+
+.doc-category-card__list a {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+}
+
+.doc-category-card__list a:hover {
+    color: var(--text-main);
+}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.doc-empty {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.doc-empty__icon {
+    color: var(--text-muted-dark);
+    margin-bottom: 20px;
+}
+
+.doc-empty h1 {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.doc-empty p {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+
+/* ── Sélecteur de langue (frontend) ───────────────────────── */
+.doc-lang-switcher {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.doc-lang-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    background: none;
+    transition: border-color 0.2s, color 0.2s;
+    letter-spacing: 0.3px;
+}
+
+.doc-lang-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--text-main);
+}
+
+.doc-lang-btn--active {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: rgba(255, 184, 0, 0.06);
+}
+
+/* ── Admin : onglets de langue ─────────────────────────────── */
+.doc-lang-tabs {
+    display: flex;
+    gap: 2px;
+}
+
+.doc-lang-tab {
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--color-border);
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.doc-lang-tab:hover {
+    color: var(--text-main);
+    border-color: var(--color-primary);
+}
+
+.doc-lang-tab--active {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background: rgba(255, 184, 0, 0.06);
+}
+
+/* ── Admin : form layout ───────────────────────────────────── */
+.doc-admin-form__layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.doc-editor-textarea {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 400px;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .doc-page {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+    }
+
+    .doc-sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+        padding: 20px 0;
+    }
+
+    .doc-sidebar__inner {
+        padding-right: 0;
+    }
+
+    .doc-main {
+        padding: 24px 0;
+    }
+
+    .doc-admin-form__layout {
+        grid-template-columns: 1fr;
+    }
+}

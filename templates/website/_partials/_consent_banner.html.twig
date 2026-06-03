@@ -1,0 +1,182 @@
+{# templates/website/_partials/_consent_banner.html.twig #}
+{# Bannière de consentement RGPD — 3 catégories de cookies #}
+{% trans_default_domain 'website' %}
+
+<div class="consent-wrapper"
+     data-controller="consent-banner"
+     aria-live="polite">
+
+    {# ══════════════════════════════════════════════════════
+       BANNIÈRE PRINCIPALE
+       ══════════════════════════════════════════════════════ #}
+    <div class="consent-banner"
+         role="dialog"
+         aria-label="{{ 'consent.banner.aria_label'|trans }}">
+        <div class="consent-banner__inner">
+
+            <div class="consent-banner__text">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                    <line x1="9"  y1="9"  x2="9.01"  y2="9"/>
+                    <line x1="15" y1="9"  x2="15.01" y2="9"/>
+                </svg>
+                <div>
+                    <p class="consent-banner__title">{{ 'consent.banner.title'|trans }}</p>
+                    <p class="consent-banner__desc">
+                        {{ 'consent.banner.desc'|trans }}
+                        <a href="{{ path('app_legal_cookies', {_locale: app.request.locale}) }}"
+                           class="consent-banner__link">{{ 'consent.banner.learn_more'|trans }}</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="consent-banner__actions">
+                <button type="button"
+                        class="btn-consent btn-consent--ghost"
+                        data-action="click->consent-banner#refuseAll">
+                    {{ 'consent.banner.refuse'|trans }}
+                </button>
+                <button type="button"
+                        class="btn-consent btn-consent--outline"
+                        data-action="click->consent-banner#openModal">
+                    {{ 'consent.banner.customize'|trans }}
+                </button>
+                <button type="button"
+                        class="btn-consent btn-consent--primary"
+                        data-action="click->consent-banner#acceptAll">
+                    {{ 'consent.banner.accept'|trans }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    {# ══════════════════════════════════════════════════════
+       MODAL PRÉFÉRENCES
+       ══════════════════════════════════════════════════════ #}
+    <div class="consent-modal"
+         data-consent-banner-target="modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="consent-modal-title">
+
+        {# Overlay cliquable #}
+        <div class="consent-modal__overlay"
+             data-action="click->consent-banner#closeModal"></div>
+
+        <div class="consent-modal__panel">
+
+            {# ── En-tête ── #}
+            <div class="consent-modal__header">
+                <h3 id="consent-modal-title">{{ 'consent.modal.title'|trans }}</h3>
+                <button type="button"
+                        class="consent-modal__close"
+                        data-action="click->consent-banner#closeModal"
+                        aria-label="{{ 'consent.modal.close_label'|trans }}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <line x1="18" y1="6"  x2="6"  y2="18"/>
+                        <line x1="6"  y1="6"  x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            {# ── Corps ── #}
+            <div class="consent-modal__body">
+
+                <p class="consent-modal__intro">{{ 'consent.modal.intro'|trans }}</p>
+
+                {# ─── Catégorie : Nécessaires (toujours actif) ─── #}
+                <div class="consent-category">
+                    <div class="consent-category__header">
+                        <div class="consent-category__info">
+                            <h4>{{ 'consent.category.necessary.title'|trans }}</h4>
+                            <p>{{ 'consent.category.necessary.desc'|trans }}</p>
+                        </div>
+                        <span class="consent-badge--always">{{ 'consent.always_active'|trans }}</span>
+                    </div>
+                    <ul class="consent-cookie-list">
+                        <li>
+                            <code>PHPSESSID</code>
+                            {{ 'consent.category.necessary.phpsessid'|trans }}
+                        </li>
+                        <li>
+                            <code>_csrf_token</code>
+                            {{ 'consent.category.necessary.csrf'|trans }}
+                        </li>
+                    </ul>
+                </div>
+
+                {# ─── Catégorie : Fonctionnels ─── #}
+                <div class="consent-category">
+                    <div class="consent-category__header">
+                        <div class="consent-category__info">
+                            <h4>{{ 'consent.category.functional.title'|trans }}</h4>
+                            <p>{{ 'consent.category.functional.desc'|trans }}</p>
+                        </div>
+                        <label class="consent-toggle"
+                               aria-label="{{ 'consent.category.functional.toggle'|trans }}">
+                            <input type="checkbox"
+                                   data-consent-banner-target="functionalToggle"
+                                   checked>
+                            <span class="consent-toggle__track">
+                                <span class="consent-toggle__thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                    <ul class="consent-cookie-list">
+                        <li>
+                            <code>_locale</code>
+                            {{ 'consent.category.functional.locale'|trans }}
+                        </li>
+                        <li>
+                            <code>REMEMBERME</code>
+                            {{ 'consent.category.functional.rememberme'|trans }}
+                        </li>
+                    </ul>
+                </div>
+
+                {# ─── Catégorie : Analytiques ─── #}
+                <div class="consent-category consent-category--last">
+                    <div class="consent-category__header">
+                        <div class="consent-category__info">
+                            <h4>{{ 'consent.category.analytics.title'|trans }}</h4>
+                            <p>{{ 'consent.category.analytics.desc'|trans }}</p>
+                        </div>
+                        <label class="consent-toggle"
+                               aria-label="{{ 'consent.category.analytics.toggle'|trans }}">
+                            <input type="checkbox"
+                                   data-consent-banner-target="analyticsToggle">
+                            <span class="consent-toggle__track">
+                                <span class="consent-toggle__thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                    <ul class="consent-cookie-list">
+                        <li class="consent-cookie-list__empty">
+                            {{ 'consent.category.analytics.none'|trans }}
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            {# ── Pied de modal ── #}
+            <div class="consent-modal__footer">
+                <a href="{{ path('app_legal_cookies', {_locale: app.request.locale}) }}"
+                   class="consent-modal__policy-link">
+                    {{ 'consent.modal.policy_link'|trans }}
+                </a>
+                <button type="button"
+                        class="btn-consent btn-consent--primary"
+                        data-action="click->consent-banner#savePreferences">
+                    {{ 'consent.modal.save'|trans }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>

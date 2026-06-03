@@ -9,7 +9,7 @@
 
 .toast-container .scenart-alert,
 .flash-container .scenart-alert {
-    background: #15151A !important; /* Le !important est un test rapide pour confirmer */
+    background: var(--color-bg-card) !important; /* Le !important est un test rapide pour confirmer */
     display: flex;
     align-items: center;
     /* ... reste du code ... */
@@ -50,9 +50,9 @@
     pointer-events: auto;
     gap: 15px;
     padding: 20px 25px;
-    background: #15151A;
+    background: var(--color-bg-card);
     border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--overlay-md);
     border-radius: 0;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
     animation: slideInDown 0.4s ease-out;
@@ -61,11 +61,11 @@
 /* ─── Variantes ──────────────────────────────────────────────────────────────── */
 
 .alert-success {
-    border-left: 5px solid #FFB800;
+    border-left: 5px solid var(--color-primary);
 }
 
 .alert-danger {
-    border-left: 5px solid #FF4B4B;
+    border-left: 5px solid var(--color-error);
 }
 
 .alert-warning {
@@ -87,7 +87,7 @@
 
 .alert-body p {
     margin: 0;
-    color: #FFFFFF;
+    color: var(--text-main);
     font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
@@ -100,18 +100,18 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--overlay-lg);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 5px;
     margin-left: auto;
     opacity: 0.7;
-    transition: var(--transition);
+    transition: var(--transition-fast);
 }
 
 .alert-close:hover {
-    color: #FFB800;
+    color: var(--color-primary);
     opacity: 1;
 }
 

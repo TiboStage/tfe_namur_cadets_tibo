@@ -10,7 +10,7 @@
         <header class="page-header">
             <div>
                 <a href="{{ path('app_note_index', {project_slug: project.slug}) }}" class="link-back">
-                    {{ ux_icon('lucide:arrow-left', {style: 'width: 14px; height: 14px;'}) }}
+                    {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }}
                     {{ 'note.back'|trans }}
                 </a>
                 <h1>{{ note.title }}</h1>
@@ -18,18 +18,20 @@
 
             <div class="page-header-actions">
                 <a href="{{ path('app_note_edit', {project_slug: project.slug, id: note.id}) }}"
-                   class="btn-export">
-                    {{ ux_icon('lucide:pencil', {style: 'width: 14px; height: 14px;'}) }}
+                   class="btn-export"
+                   data-turbo-frame="modal-frame"
+                   data-action="click->modal#open">
+                    {{ ux_icon('lucide:pencil', {class: 'icon-xs'}) }}
                     {{ 'common.edit'|trans }}
                 </a>
 
                 <form method="post"
                       action="{{ path('app_note_delete', {project_slug: project.slug, id: note.id}) }}"
-                      onsubmit="return confirm('{{ 'note.confirm_delete'|trans }}');"
-                      style="display: inline;">
+                      data-turbo-confirm="{{ 'note.confirm_delete'|trans }}"
+                      class="d-inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ note.id) }}">
                     <button type="submit" class="btn-delete">
-                        {{ ux_icon('lucide:trash-2', {style: 'width: 14px; height: 14px;'}) }}
+                        {{ ux_icon('lucide:trash-2', {class: 'icon-xs'}) }}
                         {{ 'common.delete'|trans }}
                     </button>
                 </form>
@@ -56,7 +58,7 @@
                 {# Contenu #}
                 <div class="info-card-section">
                     <h3 class="info-card-title">
-                        {{ ux_icon('lucide:file-text', {style: 'width: 18px; height: 18px;'}) }}
+                        {{ ux_icon('lucide:file-text', {class: 'icon-sm'}) }}
                         {{ 'note.show.content'|trans }}
                     </h3>
                     <div class="note-content">
@@ -68,7 +70,7 @@
                 {% if note.assignedTo %}
                     <div class="info-card-section">
                         <h3 class="info-card-title">
-                            {{ ux_icon('lucide:user', {style: 'width: 18px; height: 18px;'}) }}
+                            {{ ux_icon('lucide:user', {class: 'icon-sm'}) }}
                             {{ 'note.show.assigned_to'|trans }}
                         </h3>
                         <div class="note-assignee-display">
@@ -88,7 +90,7 @@
                 {# Auteur #}
                 <div class="info-card-section">
                     <h3 class="info-card-title">
-                        {{ ux_icon('lucide:user-check', {style: 'width: 18px; height: 18px;'}) }}
+                        {{ ux_icon('lucide:user-check', {class: 'icon-sm'}) }}
                         {{ 'note.show.author'|trans }}
                     </h3>
                     <div class="note-author">

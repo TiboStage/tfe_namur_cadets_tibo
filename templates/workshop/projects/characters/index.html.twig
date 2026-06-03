@@ -31,9 +31,14 @@
                         {{ ux_icon('lucide:list', {class: 'icon-xs'}) }}
                     </button>
                 </div>
-                <a href="{{ path('app_character_new', {project_slug: project.slug}) }}" class="btn-creat">
+                {% if not (readonly ?? false) %}
+                <a href="{{ path('app_character_new', {project_slug: project.slug}) }}"
+                   class="btn-creat"
+                   data-turbo-frame="modal-frame"
+                   data-action="click->modal#open">
                     {{ 'character.index.new_btn'|trans }}
                 </a>
+                {% endif %}
             </div>
         </header>
 

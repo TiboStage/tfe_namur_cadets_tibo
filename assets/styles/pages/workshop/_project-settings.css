@@ -1,0 +1,440 @@
+/* ============================================================
+   PAGE PARAMÈTRES DU PROJET — _project-settings.css
+   Design cohérent avec auth + profile pages
+   ============================================================ */
+
+/* ── Wrapper ─────────────────────────────────────────────── */
+.ps-wrapper {
+    max-width: 760px;
+    padding: 40px 40px 80px;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.ps-header {
+    margin-bottom: 32px;
+}
+
+.ps-header__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+.ps-header__back:hover { color: var(--text-main); }
+
+.ps-header__title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--text-main);
+    letter-spacing: -0.4px;
+}
+
+/* ── Onglets ─────────────────────────────────────────────── */
+.ps-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 28px;
+}
+
+.ps-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    letter-spacing: 0.2px;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.ps-tab:hover { color: var(--text-main); }
+
+.ps-tab--active {
+    color: var(--text-main);
+    border-bottom-color: var(--color-primary);
+}
+
+.ps-tab--danger { color: var(--text-muted); }
+.ps-tab--danger:hover { color: var(--color-error); }
+.ps-tab--danger.ps-tab--active {
+    color: var(--color-error);
+    border-bottom-color: var(--color-error);
+}
+
+/* ── Alerte ──────────────────────────────────────────────── */
+.ps-alert {
+    padding: 12px 16px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    border-left: 3px solid;
+}
+.ps-alert--error {
+    background: var(--color-error-bg);
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+/* ── Panel ───────────────────────────────────────────────── */
+.ps-panel { }
+
+/* ── Section ─────────────────────────────────────────────── */
+.ps-section {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    padding: 24px;
+    margin-bottom: 16px;
+}
+
+.ps-section--danger {
+    border-color: color-mix(in srgb, var(--color-error) 30%, transparent);
+}
+
+.ps-section__head {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.ps-section__title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    color: var(--color-primary);
+}
+
+.ps-section--danger .ps-section__title-row { color: var(--color-error); }
+
+.ps-section__title-row h2 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+/* ── Champs ──────────────────────────────────────────────── */
+.ps-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.ps-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.ps-field:last-child { margin-bottom: 0; }
+.ps-field--inline { margin-bottom: 0; }
+
+.ps-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.ps-required { color: var(--color-primary); }
+.ps-optional { font-weight: 400; color: var(--text-muted-dark); }
+
+.ps-input,
+.ps-textarea,
+.ps-select {
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    color: var(--text-main);
+    padding: 10px 13px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.ps-input:focus,
+.ps-textarea:focus,
+.ps-select:focus { border-color: var(--color-primary); }
+
+.ps-textarea { resize: vertical; }
+
+.ps-input--readonly {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.ps-readonly-hint {
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    color: var(--text-muted-dark);
+    text-transform: uppercase;
+}
+
+/* ── Actions ─────────────────────────────────────────────── */
+.ps-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 4px;
+}
+
+/* ── Structure — niveaux ─────────────────────────────────── */
+.ps-level-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ps-level-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+}
+
+.ps-level-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border: 2px solid var(--badge-color, var(--color-border));
+    color: var(--badge-color, var(--text-muted));
+}
+
+.ps-level-fields {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.ps-level-flags {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.ps-flag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border: 1px solid;
+}
+
+.ps-flag--green { color: var(--color-green); border-color: color-mix(in srgb, var(--color-green) 40%, transparent); }
+.ps-flag--blue  { color: var(--color-blue); border-color: color-mix(in srgb, var(--color-blue) 40%, transparent); }
+
+/* ── Collaborateurs ──────────────────────────────────────── */
+.ps-invite-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.ps-field--submit {
+    flex-shrink: 0;
+}
+
+.ps-empty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    padding: 12px 0;
+}
+
+.ps-member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.ps-member-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+.ps-member-row:last-child { border-bottom: none; }
+
+.ps-member-avatar { flex-shrink: 0; }
+
+.ps-member-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ps-member-username {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.ps-member-since {
+    font-size: 11px;
+}
+
+.ps-role-form { flex-shrink: 0; }
+
+.ps-select--small {
+    padding: 6px 10px;
+    font-size: 12px;
+    width: auto;
+}
+
+.ps-remove-btn {
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+}
+.ps-remove-btn:hover {
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+/* ── Danger ──────────────────────────────────────────────── */
+.btn--danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--color-error-light);
+    border: 1px solid color-mix(in srgb, var(--color-error) 40%, transparent);
+    color: var(--color-error);
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+.btn--danger:hover {
+    background: var(--color-error-bg);
+    border-color: var(--color-error);
+}
+
+/* ── Sélecteur de genres (paramètres projet) ─────────────── */
+
+.ps-genre-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.ps-genre-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--color-border);
+    background: var(--overlay-xs);
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    user-select: none;
+}
+
+.ps-genre-chip:has(.ps-genre-checkbox:disabled) {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.ps-genre-chip--checked,
+.ps-genre-chip:has(.ps-genre-checkbox:checked) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-primary-glow);
+}
+
+.ps-genre-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* ── Grille 3 colonnes (paramètres manuscrit) ─────────────── */
+.ps-row--3cols {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* ── Input avec unité suffixée ───────────────────────────── */
+.ps-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.ps-input-group .ps-input {
+    border-radius: 4px 0 0 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.ps-input-addon {
+    padding: 0 10px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    background: var(--overlay-sm);
+    border: 1px solid var(--overlay-md);
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    font-size: 11px;
+    color: var(--text-muted-light);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ps-optional {
+    font-weight: 400;
+    color: var(--text-muted-light);
+    font-size: 10px;
+    margin-left: 4px;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 700px) {
+    .ps-wrapper { padding: 24px 16px 60px; }
+    .ps-row { grid-template-columns: 1fr; }
+    .ps-row--3cols { grid-template-columns: 1fr; }
+    .ps-level-fields { grid-template-columns: 1fr; }
+    .ps-invite-row { flex-direction: column; }
+    .ps-tabs { overflow-x: auto; }
+}

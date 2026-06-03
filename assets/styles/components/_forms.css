@@ -87,7 +87,7 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 select:focus,
 textarea:focus {
-    border-color: var(--color-border-focus);
+    border-color: var(--color-primary);
 }
 
 /* ── ERREURS (Symfony + JavaScript) ────────────────────────────── */
@@ -202,9 +202,9 @@ textarea.is-valid {
 }
 
 .alert-warning {
-    background: var(--color-warning-bg);
-    border-color: var(--color-warning);
-    color: var(--color-warning);
+    background: var(--color-primary-glow);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
 }
 
 /* ═══════════════════════════════════════════════════════════════ */

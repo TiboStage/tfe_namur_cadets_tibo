@@ -1,0 +1,156 @@
+/* ============================================================
+   FORM FIELDS — _form-fields.css
+   Username check + Password strength indicator + Eye toggle
+   ============================================================ */
+
+/* ── Username check ─────────────────────────────────────────── */
+
+.uc-status {
+    min-height: 18px;
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.uc-loading  { color: var(--text-muted); font-weight: 400; }
+.uc-available { color: var(--color-green); }
+.uc-taken    { color: var(--color-red); }
+
+/* Champ verrouillé (cooldown actif) */
+.username-locked-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.username-locked-hint svg {
+    flex-shrink: 0;
+    color: var(--color-orange);
+}
+
+/* ── Wrapper input + œil ────────────────────────────────────── */
+
+.pw-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+
+.pw-input-wrap input {
+    flex: 1;
+    padding-right: 44px !important; /* espace pour le bouton œil */
+}
+
+.pw-toggle-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.15s;
+    flex-shrink: 0;
+}
+
+.pw-toggle-btn:hover {
+    color: var(--text-main);
+}
+
+.pw-toggle-btn svg {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+/* ── Panneau d'indicateur de force ──────────────────────────── */
+
+.pw-strength {
+    display: none;          /* Caché par défaut */
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 8px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-border);
+    animation: pw-fade-in 0.15s ease;
+}
+
+.pw-strength--open {
+    display: flex;
+}
+
+@keyframes pw-fade-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Règles individuelles ───────────────────────────────────── */
+
+.pw-rule {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+
+.pw-rule__dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-border);
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.15s;
+}
+
+/* Règle validée → vert */
+.pw-rule--pass {
+    color: var(--color-green);
+}
+
+.pw-rule--pass .pw-rule__dot {
+    background: var(--color-green);
+    transform: scale(1.2);
+}
+
+/* Règle invalidée (champ non vide) → rouge */
+.pw-rule--fail {
+    color: var(--color-red);
+}
+
+.pw-rule--fail .pw-rule__dot {
+    background: var(--color-red);
+}
+
+/* ── Statut correspondance ──────────────────────────────────── */
+
+.pw-match-status {
+    min-height: 18px;
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pw-match-ok   { color: var(--color-green); }
+.pw-match-fail { color: var(--color-red); }
+
+/* ── Dans le formulaire de profil : espacement ──────────────── */
+
+.pw-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}

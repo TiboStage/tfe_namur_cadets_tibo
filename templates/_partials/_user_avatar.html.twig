@@ -1,0 +1,32 @@
+{#
+  Partial universel — Avatar utilisateur.
+
+  Variables :
+    - user   : User  (required)
+    - size   : 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'  (default: 'md')
+    - class  : string — classes CSS supplémentaires (optional)
+    - link   : bool  — enveloppe dans un <a> vers le profil créateur (default: false)
+#}
+{% set _size  = size  ?? 'md' %}
+{% set _extra = class ?? '' %}
+{% set _link  = link  ?? false %}
+
+{% set _avatar %}
+<span class="u-avatar u-avatar--{{ _size }} {{ _extra }}"
+      {% if not user.avatarFilename %}style="background-color:{{ user.avatarColor }};"{% endif %}>
+    {% if user.avatarFilename %}
+        <img src="/uploads/avatars/{{ user.avatarFilename }}"
+             alt="{{ user.username }}"
+             class="u-avatar__img">
+    {% else %}
+        <span class="u-avatar__letter">{{ user.username|first|upper }}</span>
+    {% endif %}
+</span>
+{% endset %}
+
+{% if _link %}
+    <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: user.username}) }}"
+       class="u-avatar-link">{{ _avatar }}</a>
+{% else %}
+    {{ _avatar }}
+{% endif %}

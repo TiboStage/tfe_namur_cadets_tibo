@@ -1,0 +1,75 @@
+{# templates/admin/moderation/index.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+
+{% set flagged_count = flagged|length %}
+
+{% block title %}Admin — Modération{% endblock %}
+{% block admin_title %}Centre de modération{% endblock %}
+
+{% block admin_content %}
+
+    {% if flagged_count == 0 %}
+        <div class="admin-empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <h3>Aucun signalement actif</h3>
+            <p>Tous les projets ont un statut de modération neutre.</p>
+        </div>
+    {% else %}
+        <p class="text-muted mb-6">{{ flagged_count }} projet{{ flagged_count > 1 ? 's' : '' }} nécessite{{ flagged_count > 1 ? 'nt' : '' }} attention.</p>
+    {% endif %}
+
+    {% if flagged_count > 0 %}
+    <div class="panel-box panel-box--flush">
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead><tr>
+                    <th>Projet</th>
+                    <th>Auteur</th>
+                    <th>Signalements</th>
+                    <th>Statut actuel</th>
+                    <th>Changer le statut</th>
+                </tr></thead>
+                <tbody>
+                {% for project in flagged %}
+                    <tr>
+                        <td>
+                            <strong>{{ project.title }}</strong>
+                            <br><span class="text-muted text-2xs">{{ project.projectType|upper }}</span>
+                        </td>
+                        <td class="text-muted">
+                            <a href="{{ path('admin_user_show', {id: project.createdBy.id, _locale: app.request.locale}) }}">
+                                {{ project.createdBy.username }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if project.reportCount > 0 %}
+                                <span class="tag-reason">{{ project.reportCount }} signal.</span>
+                            {% else %}
+                                <span class="text-muted">Statut non-neutre</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span>
+                        </td>
+                        <td>
+                            <form method="post"
+                                  action="{{ path('admin_moderation_status', {id: project.id, _locale: app.request.locale}) }}"
+                                  class="mod-inline-form">
+                                <input type="hidden" name="_token" value="{{ csrf_token('mod_status_' ~ project.id) }}">
+                                <div class="mod-btn-group">
+                                    <button type="submit" name="status" value="clear"    class="btn-table btn-table--success"  title="Lever">✓</button>
+                                    <button type="submit" name="status" value="warning"  class="btn-table btn-table--warn"     title="Avertir">⚠</button>
+                                    <button type="submit" name="status" value="blocked"  class="btn-table btn-table--danger"   title="Bloquer">✕</button>
+                                    <button type="submit" name="status" value="approved" class="btn-table btn-table--primary"  title="Approuver">★</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}

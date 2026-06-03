@@ -1,0 +1,109 @@
+{# templates/modo/report_list.html.twig #}
+{% extends 'modo/layout.html.twig' %}
+
+{% block title %}Modo — Signalements{% endblock %}
+{% block modo_title %}Signalements utilisateurs{% endblock %}
+
+{% block modo_content %}
+
+    {# En-tête #}
+    <div class="modo-toolbar">
+        <div>
+            <p class="text-muted text-sm m-0">
+                {{ reports|length }} signalement{{ reports|length != 1 ? 's' : '' }} au total
+                {% if pending_count > 0 %}
+                    · <strong class="text-warning">{{ pending_count }} en attente</strong>
+                {% endif %}
+            </p>
+        </div>
+        <div class="modo-toolbar__actions">
+            {# Filtres rapides (optionnel — rechargement de page) #}
+        </div>
+    </div>
+
+    {% if reports is empty %}
+        <div class="admin-empty-state modo-empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p>Aucun signalement. La communauté se comporte bien !</p>
+        </div>
+    {% else %}
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th class="th-xs">#</th>
+                        <th>Type / Cible</th>
+                        <th>Raison</th>
+                        <th>Signalé par</th>
+                        <th>Date</th>
+                        <th>Statut</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for report in reports %}
+                    <tr class="{{ report.isPending() ? 'row--alert' : '' }}">
+                        <td class="text-muted">{{ report.id }}</td>
+
+                        {# Type + Cible #}
+                        <td>
+                            {% if report.targetType == 'project' %}
+                                <span class="tag-reason tag-reason--blue">Projet</span>
+                                <span class="report-target-label">
+                                    {{ report.targetProject ? report.targetProject.title : '<em class="text-muted">supprimé</em>'|raw }}
+                                </span>
+                            {% elseif report.targetType == 'comment' %}
+                                <span class="tag-reason tag-reason--purple">Commentaire</span>
+                                {% if report.targetComment %}
+                                    <span class="report-target-meta">
+                                        {{ report.targetComment.content|slice(0, 60) }}…
+                                    </span>
+                                {% else %}
+                                    <em class="text-muted report-target-del">supprimé</em>
+                                {% endif %}
+                            {% else %}
+                                <span class="tag-reason tag-reason--orange">Utilisateur</span>
+                                <span class="report-target-label">
+                                    {{ report.targetUser ? report.targetUser.username : '<em class="text-muted">supprimé</em>'|raw }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        {# Raison #}
+                        <td>
+                            <span class="tag-reason">{{ report.reasonLabel }}</span>
+                        </td>
+
+                        {# Signalé par #}
+                        <td class="text-muted td-sm">
+                            {{ report.reporter.username }}
+                        </td>
+
+                        {# Date #}
+                        <td class="text-muted td-2xs nowrap">
+                            {{ report.createdAt|date('d/m/Y H:i') }}
+                        </td>
+
+                        {# Statut #}
+                        <td>
+                            <span class="mod-badge mod-badge--{{ report.status }}">
+                                {% if report.status == 'pending' %}En attente
+                                {% elseif report.status == 'reviewed' %}Examiné
+                                {% elseif report.status == 'dismissed' %}Rejeté
+                                {% else %}Traité{% endif %}
+                            </span>
+                        </td>
+
+                        {# Action #}
+                        <td>
+                            <a href="{{ path('modo_report_show', {id: report.id, _locale: app.request.locale}) }}"
+                               class="btn-table">Voir →</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}

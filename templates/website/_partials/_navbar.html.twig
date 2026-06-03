@@ -21,25 +21,25 @@
 
         <ul class="nav-links">
             <li>
-                <a href="{{ path('app_home') }}"
+                <a href="{{ path('app_home', {_locale: app.request.locale}) }}"
                    class="{{ app.request.attributes.get('_route') starts with 'app_home' ? 'active' : '' }}">
                     {{ 'navbar.links.home'|trans }}
                 </a>
             </li>
             <li>
-                <a href="{{ path('app_examples') }}"
+                <a href="{{ path('app_examples', {_locale: app.request.locale}) }}"
                    class="{{ app.request.attributes.get('_route') starts with 'app_examples' ? 'active' : '' }}">
                     {{ 'navbar.links.examples'|trans }}
                 </a>
             </li>
             <li>
-                <a href="{{ path('app_pricing') }}"
+                <a href="{{ path('app_pricing', {_locale: app.request.locale}) }}"
                    class="{{ app.request.attributes.get('_route') starts with 'app_pricing' ? 'active' : '' }}">
                     {{ 'navbar.links.pricing'|trans }}
                 </a>
             </li>
             <li>
-                <a href="{{ path('app_contact') }}"
+                <a href="{{ path('app_contact', {_locale: app.request.locale}) }}"
                    class="{{ app.request.attributes.get('_route') starts with 'app_contact' ? 'active' : '' }}">
                     {{ 'navbar.links.contact'|trans }}
                 </a>

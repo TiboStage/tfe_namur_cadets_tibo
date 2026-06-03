@@ -40,15 +40,114 @@
 
             <hr class="my-5">
 
+            {# ══════════════════════════════════════════════════════════
+               SECTION COLLABORATEURS
+               ══════════════════════════════════════════════════════════ #}
+            <section class="members-section">
+
+                <div class="members-section__header">
+                    <h2 class="members-section__title">
+                        {{ ux_icon('lucide:users', {style: 'width:16px;height:16px'}) }}
+                        {{ 'projects.edit.members.title'|trans }}
+                    </h2>
+                    <p class="members-section__hint text-muted">
+                        {{ 'projects.edit.members.hint'|trans }}
+                    </p>
+                </div>
+
+                {# ── Formulaire d'invitation ─────────────────────────── #}
+                <form method="post"
+                      action="{{ path('app_project_member_invite', {_locale: app.request.locale, slug: project.slug}) }}"
+                      class="member-invite-form">
+                    <input type="hidden" name="_token" value="{{ csrf_token('member_invite_' ~ project.id) }}">
+
+                    <div class="member-invite-form__fields">
+                        <div class="member-invite-form__field">
+                            <label class="member-invite-form__label">{{ 'projects.edit.members.username_label'|trans }}</label>
+                            <input type="text"
+                                   name="username"
+                                   placeholder="{{ 'projects.edit.members.username_ph'|trans }}"
+                                   class="member-invite-form__input"
+                                   required autocomplete="off">
+                        </div>
+                        <div class="member-invite-form__field">
+                            <label class="member-invite-form__label">{{ 'projects.edit.members.role_label'|trans }}</label>
+                            <select name="role" class="member-invite-form__select">
+                                <option value="contributor">{{ 'projects.edit.members.role_contributor'|trans }}</option>
+                                <option value="editor">{{ 'projects.edit.members.role_editor'|trans }}</option>
+                                <option value="lead">{{ 'projects.edit.members.role_lead'|trans }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="member-invite-form__btn">
+                        {{ ux_icon('lucide:user-plus', {style: 'width:13px;height:13px'}) }}
+                        {{ 'projects.edit.members.invite_btn'|trans }}
+                    </button>
+                </form>
+
+                {# ── Liste des membres actuels ───────────────────────── #}
+                {% if project.projectMembers is empty %}
+                    <p class="members-empty text-muted">
+                        {{ ux_icon('lucide:user-x', {class: 'icon-xs'}) }}
+                        {{ 'projects.edit.members.empty'|trans }}
+                    </p>
+                {% else %}
+                    <div class="members-list">
+                        {% for member in project.projectMembers %}
+                        <div class="member-row">
+                            <div class="member-row__avatar">
+                                {{ member.user.username|first|upper }}
+                            </div>
+                            <div class="member-row__info">
+                                <span class="member-row__username">{{ member.user.username }}</span>
+                                <span class="member-row__fullname text-muted">{{ member.user.getFullName() }}</span>
+                            </div>
+                            <span class="member-row__since text-muted">
+                                {{ 'projects.edit.members.since'|trans }} {{ member.joinedAt|date('d/m/Y') }}
+                            </span>
+
+                            {# Changer le rôle #}
+                            <form method="post"
+                                  action="{{ path('app_project_member_role', {_locale: app.request.locale, slug: project.slug, userId: member.user.id}) }}"
+                                  class="member-row__role-form">
+                                <input type="hidden" name="_token" value="{{ csrf_token('member_role_' ~ project.id ~ '_' ~ member.user.id) }}">
+                                <select name="role" class="member-row__role-select"
+                                        onchange="this.closest('form').submit()">
+                                    <option value="contributor" {{ member.role == 'contributor' ? 'selected' : '' }}>{{ 'projects.roles.contributor'|trans }}</option>
+                                    <option value="editor"      {{ member.role == 'editor'      ? 'selected' : '' }}>{{ 'projects.roles.editor'|trans }}</option>
+                                    <option value="lead"        {{ member.role == 'lead'        ? 'selected' : '' }}>{{ 'projects.roles.lead'|trans }}</option>
+                                </select>
+                            </form>
+
+                            {# Retirer #}
+                            <form method="post"
+                                  action="{{ path('app_project_member_remove', {_locale: app.request.locale, slug: project.slug, userId: member.user.id}) }}"
+                                  class="member-row__remove-form">
+                                <input type="hidden" name="_token" value="{{ csrf_token('member_remove_' ~ project.id ~ '_' ~ member.user.id) }}">
+                                <button type="submit" class="member-row__remove-btn"
+                                        title="{{ 'projects.edit.members.remove_title'|trans({'%username%': member.user.username}) }}"
+                                        onclick="return confirm('{{ 'projects.edit.members.remove_confirm'|trans({'%username%': member.user.username})|e('js') }}')">
+                                    {{ ux_icon('lucide:x', {style: 'width:13px;height:13px'}) }}
+                                </button>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+            </section>
+
+            <hr class="my-5">
+
             {# Remplacement de la danger_zone par un formulaire de suppression classique #}
             <div class="danger-zone-fallback p-4 border border-danger rounded">
                 <h3 class="text-danger">{{ 'projects.edit.danger_title'|trans }}</h3>
                 <p>{{ 'projects.edit.danger_desc'|trans }}</p>
 
-                <form method="post" action="{{ path('app_project_delete', {slug: project.slug}) }}" onsubmit="return confirm('{{ 'projects.edit.danger_confirm'|trans }}');">
-                    {# On ajoute bien _project_ dans le nom du token ici #}
+                <form method="post"
+                      action="{{ path('app_project_delete', {slug: project.slug}) }}"
+                      data-turbo-confirm="{{ 'projects.edit.danger_confirm'|trans }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete_project_' ~ project.id) }}">
-
                     <button class="btn-delete">{{ 'projects.edit.danger_btn'|trans }}</button>
                 </form>
             </div>

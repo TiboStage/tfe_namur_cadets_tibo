@@ -1,0 +1,110 @@
+/* ============================================================
+   COOKIE BANNER — _cookie-banner.css
+   Bannière d'information cookies (ePrivacy — cookies nécessaires uniquement)
+   ============================================================ */
+
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+
+    background: var(--color-bg-card);
+    border-top: 1px solid var(--color-border);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
+
+    /* État initial : hors-écran en bas */
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+/* Visible — glisse vers le haut */
+.cookie-banner--visible {
+    transform: translateY(0);
+}
+
+/* Sortie — redescend */
+.cookie-banner--hiding {
+    transform: translateY(100%);
+}
+
+/* ── Contenu ──────────────────────────────────────────────── */
+
+.cookie-banner__inner {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 14px var(--container-padding);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.cookie-banner__text {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    flex: 1;
+}
+
+.cookie-banner__text svg {
+    flex-shrink: 0;
+    color: var(--color-primary);
+    margin-top: 2px;
+}
+
+.cookie-banner__link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: opacity 0.15s ease;
+}
+
+.cookie-banner__link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+/* ── Bouton Fermer ────────────────────────────────────────── */
+
+.cookie-banner__close {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--color-border-light);
+    color: var(--text-muted);
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+    flex-shrink: 0;
+}
+
+.cookie-banner__close:hover {
+    border-color: var(--text-muted);
+    color: var(--text-main);
+    background: rgba(255,255,255,0.04);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+    .cookie-banner__inner {
+        padding: 14px 20px;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .cookie-banner__close {
+        align-self: flex-end;
+    }
+}

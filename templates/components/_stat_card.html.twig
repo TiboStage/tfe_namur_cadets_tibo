@@ -1,0 +1,23 @@
+{#
+ * Composant stat card unifié — utilisé dans admin, modo et workshop.
+ *
+ * Paramètres :
+ *   icon   (string)  Markup SVG de l'icône (passé via {% set %} + |raw)
+ *   value  (mixed)   Valeur principale affichée
+ *   label  (string)  Libellé principal
+ *   sub    (string)  Texte secondaire, peut contenir un lien HTML [optionnel]
+ *   color  (string)  blue | yellow | red | muted  [défaut: muted]
+ *   alert  (bool)    Active la variante alerte (fond rouge discret) [défaut: false]
+ #}
+<div class="admin-stat-card {{ alert|default(false) ? 'admin-stat-card--alert' : '' }}">
+    <div class="asc-icon asc-icon--{{ color|default('muted') }}">
+        {{ icon|raw }}
+    </div>
+    <div class="asc-body">
+        <span class="asc-value">{{ value }}</span>
+        <span class="asc-label">{{ label }}</span>
+        {% if sub is defined and sub %}
+            <span class="asc-sub">{{ sub|raw }}</span>
+        {% endif %}
+    </div>
+</div>

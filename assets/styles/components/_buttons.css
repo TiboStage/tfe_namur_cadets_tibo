@@ -100,7 +100,7 @@
 
 .btn-primary-pricing {
     background: var(--color-primary);
-    color: #000;
+    color: var(--text-dark);
     padding: 16px;
     text-align: center;
     font-weight: 800;
@@ -167,7 +167,7 @@
 
 /* Bouton principal overlay noir */
 .btn--cta-black {
-    background: #000;
+    background: var(--text-dark);
     color: var(--text-main);
     padding: 14px 28px;
     font-weight: 800;
@@ -212,7 +212,7 @@
 /* Créer / Action principale */
 .btn-creat {
     background: var(--color-primary);
-    color: #000;
+    color: var(--text-dark);
     border: none;
     padding: 0 25px 0 20px;
     font-weight: 800;
@@ -257,6 +257,7 @@
     padding: 0 20px 0 18px;
     height: 50px;
     align-items: center;
+    text-decoration: none;
 }
 
 .btn-admin:hover {
@@ -265,10 +266,32 @@
     background-color: var(--color-error-bg);
 }
 
+/* Modérateur */
+.btn-modo {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+    display: flex;
+    gap: 5px;
+    padding: 0 20px 0 18px;
+    height: 50px;
+    align-items: center;
+    text-decoration: none;
+}
+
+.btn-modo:hover {
+    border-color: var(--color-orange);
+    color: var(--color-orange);
+    background-color: var(--color-orange-glow);
+}
+
 /* Petites actions inline */
 .btn-icon-small,
 .btn-action-small {
-    background: #1A1A1E;
+    background: var(--color-bg-inset);
     color: var(--text-muted);
     border: 1px solid var(--color-border);
     padding: 6px 12px;
@@ -285,18 +308,20 @@
 }
 
 
-/* Barre d'actions */
+/* Actions dans la barre de tabs — poussées à droite */
 .view-actions {
     display: flex;
-    justify-content: flex-end; /* Aligne à droite */
-    margin-bottom: 30px;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    margin-bottom: 1px;
 }
 
 /* Groupe de boutons */
 .btn-group {
     display: inline-flex;
-    background: #1a1a1e;
-    border: 1px solid #2a2a2e;
+    background: var(--color-bg-inset);
+    border: 1px solid var(--color-border-light);
     padding: 4px;
 }
 
@@ -304,25 +329,25 @@
 .btn-group .btn {
     background: transparent;
     border: none;
-    color: #9ca3af;
+    color: var(--text-muted);
     padding: 8px 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    width: 40px;  /* On force une largeur carrée pour l'icône */
+    width: 40px;
     height: 36px;
 }
 
 .btn-group .btn:hover {
-    color: #f5f5f5;
+    color: var(--text-main);
 }
 
 /* État actif (le bouton sélectionné) */
 .btn-group .btn.active {
-    background: #2a2a2e;
-    color: #FFB800;
+    background: var(--color-border-light);
+    color: var(--color-primary);
 }
 
 /* Taille de l'icône à l'intérieur */
@@ -338,16 +363,16 @@
 .btn-load-more {
     display: inline-flex;
     align-items: center;
-    gap: 8px; /* Espace entre l'icône et le texte */
+    gap: 8px;
     background: transparent;
-    border: 1px solid #2a2a2e;
-    color: #888;
+    border: 1px solid var(--color-border-light);
+    color: var(--text-muted);
     padding: 12px 24px;
     text-decoration: none;
     transition: 0.3s ease;
 }
 
 .btn-load-more:hover {
-    color: #fff;
-    border-color: #FFB800;
+    color: var(--text-main);
+    border-color: var(--color-primary);
 }
