@@ -4,7 +4,6 @@
 {% block title %}{{ element.title }} — {{ project.title }}{% endblock %}
 
 {% block editor_shell %}
-{% if element.isLeaf() %}
 {% set _editorI18n = {
     'type_action':        'manuscript.editor.type.action'|trans,
     'type_scene':         'manuscript.editor.type.scene'|trans,
@@ -35,22 +34,20 @@
     'char_other':         'manuscript.editor.stats.char_other'|trans,
     'note_aria':          'manuscript.editor.note.aria'|trans,
 } %}
-{% endif %}
-<div class="editor-shell right-collapsed {% if not element.isLeaf() %}editor-shell--folder{% endif %}"
-     {% if element.isLeaf() %}
-         data-controller="fountain-editor"
-         data-fountain-editor-save-url-value="{{ path('app_manuscript_save', {project_slug: project.slug, id: element.id}) }}"
-         data-fountain-editor-element-id-value="{{ element.id }}"
-         data-fountain-editor-element-title-value="{{ element.title }}"
-         data-fountain-editor-content-value="{{ element.content|json_encode|e('html_attr') }}"
-         data-fountain-editor-characters-value="{{ project.characters|map(c => {'id': c.id, 'name': ((c.firstName ~ ' ' ~ c.lastName)|trim) ?: c.name})|json_encode|e('html_attr') }}"
-         data-fountain-editor-locations-value="{{ project.locations|map(l => {'id': l.id, 'name': l.name})|json_encode|e('html_attr') }}"
-         data-fountain-editor-note-new-url-value="{{ path('app_note_new', {project_slug: project.slug, element_id: element.id}) }}"
-         data-fountain-editor-words-per-page-value="{{ project.settings.ms_words_per_page ?? 170 }}"
-         data-fountain-editor-reading-wpm-value="{{ project.settings.ms_reading_wpm ?? 200 }}"
-         data-fountain-editor-screen-time-per-page-value="{{ project.settings.ms_screen_time_per_page ?? 60 }}"
-         data-fountain-editor-i18n-value="{{ _editorI18n|json_encode|e('html_attr') }}"
-     {% endif %}>
+
+<div class="editor-shell right-collapsed"
+     data-controller="fountain-editor"
+     data-fountain-editor-save-url-value="{{ path('app_manuscript_save', {project_slug: project.slug, id: element.id}) }}"
+     data-fountain-editor-element-id-value="{{ element.id }}"
+     data-fountain-editor-element-title-value="{{ element.title }}"
+     data-fountain-editor-content-value="{{ element.content|json_encode|e('html_attr') }}"
+     data-fountain-editor-characters-value="{{ project.characters|map(c => {'id': c.id, 'name': ((c.firstName ~ ' ' ~ c.lastName)|trim) ?: c.name})|json_encode|e('html_attr') }}"
+     data-fountain-editor-locations-value="{{ project.locations|map(l => {'id': l.id, 'name': l.name})|json_encode|e('html_attr') }}"
+     data-fountain-editor-note-new-url-value="{{ path('app_note_new', {project_slug: project.slug, element_id: element.id}) }}"
+     data-fountain-editor-words-per-page-value="{{ project.settings.ms_words_per_page ?? 170 }}"
+     data-fountain-editor-reading-wpm-value="{{ project.settings.ms_reading_wpm ?? 200 }}"
+     data-fountain-editor-screen-time-per-page-value="{{ project.settings.ms_screen_time_per_page ?? 60 }}"
+     data-fountain-editor-i18n-value="{{ _editorI18n|json_encode|e('html_attr') }}">
 
     {# ══════════════════════════════════════════════════════════
        ZONE CENTRALE
@@ -61,7 +58,7 @@
         <header class="editor-topbar">
             <div class="editor-topbar-left">
 
-                {# Fil d'Ariane (cliquable) #}
+                {# Fil d'Ariane #}
                 <nav class="editor-breadcrumb">
                     <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}"
                        class="breadcrumb-parent breadcrumb-home" title="Manuscrit">
@@ -69,68 +66,57 @@
                     </a>
                     {% for ancestor in element.getAncestors() %}
                         <span class="breadcrumb-sep">/</span>
-                        <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: ancestor.id}) }}"
-                           class="breadcrumb-parent">{{ ancestor.title }}</a>
+                        <span class="breadcrumb-parent">{{ ancestor.title }}</span>
                     {% endfor %}
                     <span class="breadcrumb-sep">/</span>
                     <span class="breadcrumb-current">{{ element.title }}</span>
                 </nav>
 
                 <span class="element-type-pill">{{ element.elementType|upper }}</span>
-
-                {% if element.isLeaf() %}
-                    <span class="element-leaf-badge">{{ 'manuscript.show.leaf_badge'|trans }}</span>
-                {% else %}
-                    <span class="element-folder-badge">
-                        {{ ux_icon('lucide:folder', {class: 'icon-xs'}) }}
-                        <span>{{ 'manuscript.show.folder_badge'|trans }}</span>
-                    </span>
-                {% endif %}
+                <span class="element-leaf-badge">{{ 'manuscript.show.leaf_badge'|trans }}</span>
 
             </div>
 
             <div class="editor-topbar-right">
 
-                {% if element.isLeaf() %}
-                    {# Export Fountain #}
-                    <button class="topbar-btn" type="button"
-                            data-action="fountain-editor#exportFountain"
-                            title="Télécharger en format Fountain (.fountain)">
-                        {{ ux_icon('lucide:download', {class: 'icon-xs'}) }}
-                        <span class="topbar-label-sm">Fountain</span>
-                    </button>
+                {# Export Fountain #}
+                <button class="topbar-btn" type="button"
+                        data-action="fountain-editor#exportFountain"
+                        title="Télécharger en format Fountain (.fountain)">
+                    {{ ux_icon('lucide:download', {class: 'icon-xs'}) }}
+                    <span class="topbar-label-sm">Fountain</span>
+                </button>
 
-                    {# Export PDF #}
-                    <button class="topbar-btn" type="button"
-                            data-action="fountain-editor#exportPDF"
-                            title="Imprimer / Exporter en PDF">
-                        {{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}
-                        <span class="topbar-label-sm">PDF</span>
-                    </button>
+                {# Export PDF #}
+                <button class="topbar-btn" type="button"
+                        data-action="fountain-editor#exportPDF"
+                        title="Imprimer / Exporter en PDF">
+                    {{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}
+                    <span class="topbar-label-sm">PDF</span>
+                </button>
 
-                    <span class="topbar-sep"></span>
+                <span class="topbar-sep"></span>
 
-                    {# Mode lecture #}
-                    <button class="topbar-btn" type="button" id="btn-reading-mode"
-                            data-action="fountain-editor#toggleReading">
-                        {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
-                        <span id="reading-mode-label">{{ 'manuscript.show.reading_btn'|trans }}</span>
-                    </button>
+                {# Mode lecture #}
+                <button class="topbar-btn" type="button" id="btn-reading-mode"
+                        data-action="fountain-editor#toggleReading">
+                    {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
+                    <span id="reading-mode-label">{{ 'manuscript.show.reading_btn'|trans }}</span>
+                </button>
 
-                    {# Indicateur sauvegarde #}
-                    <span class="save-indicator save-indicator--saved"
-                          data-fountain-editor-target="saveIndicator">
-                        {{ 'manuscript.show.save_indicator'|trans }}
-                    </span>
+                {# Indicateur sauvegarde #}
+                <span class="save-indicator save-indicator--saved"
+                      data-fountain-editor-target="saveIndicator">
+                    {{ 'manuscript.show.save_indicator'|trans }}
+                </span>
 
-                    {# Bouton Sauvegarder #}
-                    <button class="topbar-btn topbar-btn-primary" type="button"
-                            data-action="click->fountain-editor#saveManual"
-                            data-fountain-editor-target="saveButton">
-                        {{ ux_icon('lucide:save', {class: 'icon-xs'}) }}
-                        {{ 'manuscript.show.save_btn'|trans }}
-                    </button>
-                {% endif %}
+                {# Bouton Sauvegarder #}
+                <button class="topbar-btn topbar-btn-primary" type="button"
+                        data-action="click->fountain-editor#saveManual"
+                        data-fountain-editor-target="saveButton">
+                    {{ ux_icon('lucide:save', {class: 'icon-xs'}) }}
+                    {{ 'manuscript.show.save_btn'|trans }}
+                </button>
 
                 {# Toggle inspecteur droit #}
                 <button class="sidebar-toggle sidebar-toggle--active" type="button" title="Inspecteur"
@@ -141,151 +127,69 @@
             </div>
         </header>
 
-        {# ══════════════════════════════════════════════════════
-           VUE DOSSIER (éléments non-feuilles)
-           ══════════════════════════════════════════════════════ #}
-        {% if not element.isLeaf() %}
-            <div class="folder-view">
-
-                <div class="folder-header">
-                    <div class="folder-icon-large">
-                        {{ ux_icon('lucide:folder-open', {style: 'width:40px;height:40px;'}) }}
-                    </div>
-                    <div>
-                        <h1 class="folder-title">{{ element.title }}</h1>
-                        <p class="folder-meta">
-                            {{ element.elementType|upper }}
-                            {% if element.getAncestors()|length > 0 %}
-                                &nbsp;·&nbsp; {{ element.getFullPath() }}
-                            {% endif %}
-                        </p>
-                    </div>
-                    {% set maxDepth = maxDepth %}
-                    {% if element.depth < maxDepth %}
-                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: element.depth + 1, parent_id: element.id}) }}"
-                           class="topbar-btn topbar-btn-primary">
-                            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
-                            {{ 'manuscript.show.add_child'|trans }}
-                        </a>
-                    {% endif %}
-                </div>
-
-                {% if element.summary %}
-                    <p class="folder-summary">{{ element.summary }}</p>
-                {% endif %}
-
-                {% if element.children is not empty %}
-                    <div class="folder-children-grid">
-                        {% for child in element.children %}
-                            <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: child.id}) }}"
-                               class="folder-child-card {% if child.isLeaf() %}folder-child-card--leaf{% endif %}">
-                                <div class="folder-child-icon">
-                                    {% if child.isLeaf() %}
-                                        {{ ux_icon('lucide:file-text', {class: 'icon-sm'}) }}
-                                    {% else %}
-                                        {{ ux_icon('lucide:folder', {class: 'icon-sm'}) }}
-                                    {% endif %}
-                                </div>
-                                <div class="folder-child-info">
-                                    <span class="folder-child-type">{{ child.elementType|upper }}</span>
-                                    <span class="folder-child-title">{{ child.title }}</span>
-                                    {% if child.summary %}
-                                        <span class="folder-child-summary">{{ child.summary|slice(0, 80) }}…</span>
-                                    {% endif %}
-                                </div>
-                                {% if child.isLeaf() %}
-                                    <span class="folder-child-badge">{{ 'manuscript.show.leaf_badge'|trans }}</span>
-                                {% else %}
-                                    <span class="folder-child-count">{{ child.children|length }} {{ 'manuscript.show.child_count'|trans({'%count%': child.children|length}) }}</span>
-                                {% endif %}
-                            </a>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="folder-empty-children">
-                        <p>{{ 'manuscript.show.empty_folder'|trans }}</p>
-                        {% set maxDepth = maxDepth %}
-                        {% if element.depth < maxDepth %}
-                            <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: element.depth + 1, parent_id: element.id}) }}"
-                               class="topbar-btn">
-                                {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
-                                {{ 'manuscript.show.create_first'|trans }}
-                            </a>
-                        {% endif %}
-                    </div>
-                {% endif %}
-
+        {# ── Toolbar types de blocs ─────────────────────────────────────────── #}
+        <div class="editor-toolbar">
+            <div class="editor-toolbar-group">
+                <button class="editor-toolbar-btn editor-toolbar-btn--scene" type="button"
+                        title="Décor intérieur (INT.)"
+                        data-action="fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="SCENE"
+                        data-fountain-editor-prefix-param="INT. ">INT.</button>
+                <button class="editor-toolbar-btn editor-toolbar-btn--scene" type="button"
+                        title="Décor extérieur (EXT.)"
+                        data-action="fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="SCENE"
+                        data-fountain-editor-prefix-param="EXT. ">EXT.</button>
             </div>
-
-        {# ══════════════════════════════════════════════════════
-           VUE ÉDITEUR (scènes / feuilles)
-           ══════════════════════════════════════════════════════ #}
-        {% else %}
-
-            {# ── Toolbar types de blocs ─────────────────────────────────────── #}
-            <div class="editor-toolbar">
-                <div class="editor-toolbar-group">
-                    <button class="editor-toolbar-btn editor-toolbar-btn--scene" type="button"
-                            title="Décor intérieur (INT.)"
-                            data-action="fountain-editor#setBlockTypeTool"
-                            data-fountain-editor-type-param="SCENE"
-                            data-fountain-editor-prefix-param="INT. ">INT.</button>
-                    <button class="editor-toolbar-btn editor-toolbar-btn--scene" type="button"
-                            title="Décor extérieur (EXT.)"
-                            data-action="fountain-editor#setBlockTypeTool"
-                            data-fountain-editor-type-param="SCENE"
-                            data-fountain-editor-prefix-param="EXT. ">EXT.</button>
-                </div>
-                <div class="editor-toolbar-sep"></div>
-                <div class="editor-toolbar-group">
-                    <button class="editor-toolbar-btn" type="button"
-                            title="Bloc Action"
-                            data-action="fountain-editor#setBlockTypeTool"
-                            data-fountain-editor-type-param="ACTION">Action</button>
-                    <button class="editor-toolbar-btn" type="button"
-                            title="Nom de personnage"
-                            data-action="fountain-editor#setBlockTypeTool"
-                            data-fountain-editor-type-param="CHARACTER">Personnage</button>
-                    <button class="editor-toolbar-btn" type="button"
-                            title="Réplique / dialogue"
-                            data-action="fountain-editor#setBlockTypeTool"
-                            data-fountain-editor-type-param="DIALOGUE">Dialogue</button>
-                    <button class="editor-toolbar-btn" type="button"
-                            title="Didascalie / parenthétique"
-                            data-action="fountain-editor#setBlockTypeTool"
-                            data-fountain-editor-type-param="PARENTHETICAL">Didascalie</button>
-                    <button class="editor-toolbar-btn" type="button"
-                            title="Transition (COUPE SUR…)"
-                            data-action="fountain-editor#setBlockTypeTool"
-                            data-fountain-editor-type-param="TRANSITION">Transition</button>
-                </div>
-                <span class="editor-toolbar-hint">Tab = cycle · Shift+Tab = inverse</span>
+            <div class="editor-toolbar-sep"></div>
+            <div class="editor-toolbar-group">
+                <button class="editor-toolbar-btn" type="button"
+                        title="Bloc Action"
+                        data-action="fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="ACTION">Action</button>
+                <button class="editor-toolbar-btn" type="button"
+                        title="Nom de personnage"
+                        data-action="fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="CHARACTER">Personnage</button>
+                <button class="editor-toolbar-btn" type="button"
+                        title="Réplique / dialogue"
+                        data-action="fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="DIALOGUE">Dialogue</button>
+                <button class="editor-toolbar-btn" type="button"
+                        title="Didascalie / parenthétique"
+                        data-action="fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="PARENTHETICAL">Didascalie</button>
+                <button class="editor-toolbar-btn" type="button"
+                        title="Transition (COUPE SUR…)"
+                        data-action="fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="TRANSITION">Transition</button>
             </div>
+            <span class="editor-toolbar-hint">Tab = cycle · Shift+Tab = inverse</span>
+        </div>
 
-            <div class="editor-paper-wrapper">
-                {# Mode lecture (caché par défaut) #}
-                <div class="fountain-preview hidden"
-                     data-fountain-editor-target="preview"></div>
+        <div class="editor-paper-wrapper">
+            {# Mode lecture (caché par défaut) #}
+            <div class="fountain-preview hidden"
+                 data-fountain-editor-target="preview"></div>
 
-                {# Mode écriture — container des pages (JS crée les .editor-page ici) #}
-                <div class="fountain-stage"
-                     data-fountain-editor-target="stage"></div>
-            </div>
+            {# Mode écriture — container des pages (JS crée les .editor-page ici) #}
+            <div class="fountain-stage"
+                 data-fountain-editor-target="stage"></div>
+        </div>
 
-            <footer class="editor-statusbar">
-                <span class="editor-type-pill"
-                      data-fountain-editor-target="typePill"
-                      data-type="ACTION">{{ 'manuscript.editor.type.action'|trans }}</span>
-                <span class="statusbar-sep">·</span>
-                <span data-fountain-editor-target="wordCount">0 {{ 'manuscript.editor.stats.word_one'|trans }}</span>
-                <span class="statusbar-sep">·</span>
-                <span data-fountain-editor-target="charCount">0 {{ 'manuscript.editor.stats.char_one'|trans }}</span>
-                <span class="statusbar-sep">·</span>
-                <span data-fountain-editor-target="lastSaved"></span>
-                <span class="statusbar-hint">{{ 'manuscript.show.statusbar.hint'|trans }}</span>
-            </footer>
+        <footer class="editor-statusbar">
+            <span class="editor-type-pill"
+                  data-fountain-editor-target="typePill"
+                  data-type="ACTION">{{ 'manuscript.editor.type.action'|trans }}</span>
+            <span class="statusbar-sep">·</span>
+            <span data-fountain-editor-target="wordCount">0 {{ 'manuscript.editor.stats.word_one'|trans }}</span>
+            <span class="statusbar-sep">·</span>
+            <span data-fountain-editor-target="charCount">0 {{ 'manuscript.editor.stats.char_one'|trans }}</span>
+            <span class="statusbar-sep">·</span>
+            <span data-fountain-editor-target="lastSaved"></span>
+            <span class="statusbar-hint">{{ 'manuscript.show.statusbar.hint'|trans }}</span>
+        </footer>
 
-        {% endif %}
     </main>
 
     {# ══════════════════════════════════════════════════════════
@@ -311,7 +215,6 @@
                       id="settings-form-{{ element.id }}"
                       data-settings-url="{{ settingsUrl }}">
 
-                    {# Résumé — toujours disponible #}
                     <div class="esetting-field">
                         <label class="esetting-label" for="setting-summary-{{ element.id }}">
                             {{ ux_icon('lucide:align-left', {class: 'icon-xs'}) }}
@@ -324,7 +227,6 @@
                                   placeholder="Résumé court…">{{ element.summary }}</textarea>
                     </div>
 
-                    {# Durée — uniquement si la config l'autorise #}
                     {% if currentConfig and currentConfig.hasDuration %}
                     <div class="esetting-field">
                         <label class="esetting-label" for="setting-duration-{{ element.id }}">
@@ -349,7 +251,6 @@
                     </div>
                     {% endif %}
 
-                    {# Visibilité — uniquement pour les épisodes de séries #}
                     {% if project.projectType == 'serie' and currentConfig and currentConfig.elementType == 'episode' %}
                     <div class="esetting-field">
                         <label class="esetting-label esetting-label--toggle">
@@ -366,7 +267,6 @@
                     </div>
                     {% endif %}
 
-                    {# Bouton save + feedback #}
                     <div class="esetting-actions">
                         <button type="submit" class="esetting-save-btn">
                             {{ ux_icon('lucide:save', {class: 'icon-xs'}) }}
@@ -447,8 +347,7 @@
             </div>
         </div>
 
-        {# ── Personnages détectés (feuille seulement) ───────── #}
-        {% if element.isLeaf() %}
+        {# ── Personnages détectés ────────────────────────────── #}
         <div class="epanel-section" data-controller="accordion">
             <button class="epanel-header" type="button" data-action="accordion#toggle">
                 {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
@@ -460,7 +359,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
 
         {# ── Notes globales du projet ───────────────────────── #}
         {% set projectNotes = project.notes|filter(n => n.status != 'archived' and n.linkedEntityType == 'project') %}
@@ -491,8 +389,7 @@
             </div>
         </div>
 
-        {# ── Statistiques (feuille seulement) ───────────────── #}
-        {% if element.isLeaf() %}
+        {# ── Statistiques ────────────────────────────────────── #}
         <div class="epanel-section" data-controller="accordion">
             <button class="epanel-header" type="button" data-action="accordion#toggle">
                 {{ ux_icon('lucide:bar-chart-2', {class: 'icon-xs'}) }}
@@ -529,7 +426,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
 
     </aside>
 </div>
@@ -556,7 +452,6 @@
             isPublic:        publicEl ? publicEl.checked : undefined,
         };
 
-        // Retire les clés undefined
         Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);
 
         try {

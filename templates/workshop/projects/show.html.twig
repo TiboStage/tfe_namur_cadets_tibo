@@ -2,212 +2,356 @@
 {% trans_default_domain 'workshop' %}
 
 {% block project_content %}
-    <div class="project-dashboard">
 
-        {# ── Header projet ────────────────────────────────────── #}
-        <header class="dashboard-header">
-            <div class="header-content">
-                <div class="project-meta">
-                    <span class="project-icon-lg">{{ project.title|first|upper }}</span>
-                    <div>
-                        <h1 class="project-title">{{ project.title }}</h1>
-                        <span class="project-type">{{ ('project_type.' ~ project.projectType)|trans({}, 'messages') }}</span>
+{# ── Mapping actions pour l'activité ────────────────────────── #}
+{% set action_meta = {
+    'project.create':     { icon: 'lucide:folder-plus',   color: 'green',  label: 'Projet créé' },
+    'project.edit':       { icon: 'lucide:pencil',         color: 'blue',   label: 'Projet modifié' },
+    'project.publish':    { icon: 'lucide:globe',          color: 'yellow', label: 'Projet publié' },
+    'manuscript.create':  { icon: 'lucide:file-plus',      color: 'green',  label: 'Scène créée' },
+    'manuscript.edit':    { icon: 'lucide:file-edit',      color: 'blue',   label: 'Scène modifiée' },
+    'manuscript.delete':  { icon: 'lucide:file-x',         color: 'red',    label: 'Scène supprimée' },
+    'character.create':   { icon: 'lucide:user-plus',      color: 'green',  label: 'Personnage créé' },
+    'character.edit':     { icon: 'lucide:user-pen',       color: 'blue',   label: 'Personnage modifié' },
+    'character.delete':   { icon: 'lucide:user-x',         color: 'red',    label: 'Personnage supprimé' },
+    'location.create':    { icon: 'lucide:map-pin-plus',   color: 'green',  label: 'Lieu créé' },
+    'location.edit':      { icon: 'lucide:map-pin',        color: 'blue',   label: 'Lieu modifié' },
+    'location.delete':    { icon: 'lucide:map-pin-off',    color: 'red',    label: 'Lieu supprimé' },
+    'note.create':        { icon: 'lucide:notebook-pen',   color: 'green',  label: 'Note créée' },
+    'note.edit':          { icon: 'lucide:notebook',       color: 'blue',   label: 'Note modifiée' },
+    'task.create':        { icon: 'lucide:square-plus',    color: 'green',  label: 'Tâche créée' },
+    'task.complete':      { icon: 'lucide:circle-check',   color: 'green',  label: 'Tâche terminée' },
+    'world_event.create': { icon: 'lucide:calendar-plus',  color: 'green',  label: 'Événement créé' },
+    'world_event.edit':   { icon: 'lucide:calendar',       color: 'blue',   label: 'Événement modifié' },
+} %}
+
+{% set task_progress = total_tasks > 0 ? ((done_tasks / total_tasks) * 100)|round : 0 %}
+
+<div class="proj-show">
+
+    {# ══════════════════════════════════════════════════════════
+       EN-TÊTE : titre + stats inline
+       ══════════════════════════════════════════════════════════ #}
+    <header class="proj-show__header">
+        <div class="proj-show__identity">
+            {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'lg'} %}
+            <div>
+                <h1 class="proj-show__title">{{ project.title }}</h1>
+                <div class="proj-show__meta">
+                    <span>{{ ('project_type.' ~ project.projectType)|trans({}, 'messages') }}</span>
+                    <span class="proj-show__meta-sep">·</span>
+                    <span class="status-badge status-badge--{{ project.status }}">
+                        {{ ('projects.status.' ~ project.status)|trans }}
+                    </span>
+                    <span class="proj-show__meta-sep">·</span>
+                    <span>{{ 'projects.show.stat_last_update'|trans }} {{ stats.last_update|date('d/m/Y') }}</span>
+                </div>
+            </div>
+        </div>
+
+        {% if not (readonly ?? false) %}
+        <div class="proj-show__header-actions">
+            <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}"
+               class="btn-creat">
+                {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                {{ 'projects.show.create_scene'|trans }}
+            </a>
+        </div>
+        {% endif %}
+    </header>
+
+    {# Description #}
+    {% if project.description %}
+        <p class="proj-show__desc">{{ project.description }}</p>
+    {% endif %}
+
+    {# ── Stats bar ──────────────────────────────────────────── #}
+    <div class="proj-show__stats">
+        <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}" class="proj-stat">
+            {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
+            <strong>{{ stats.scenes_count }}</strong>
+            <span>{{ 'projects.show.stat_scenes'|trans }}</span>
+        </a>
+        <div class="proj-stat-sep"></div>
+        <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="proj-stat">
+            {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
+            <strong>{{ stats.characters_count }}</strong>
+            <span>{{ 'projects.show.stat_characters'|trans }}</span>
+        </a>
+        <div class="proj-stat-sep"></div>
+        <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="proj-stat">
+            {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }}
+            <strong>{{ stats.locations_count }}</strong>
+            <span>{{ 'projects.show.stat_locations'|trans }}</span>
+        </a>
+        <div class="proj-stat-sep"></div>
+        <a href="{{ path('app_task_index', {project_slug: project.slug}) }}" class="proj-stat">
+            {{ ux_icon('lucide:check-square', {class: 'icon-xs'}) }}
+            <strong>{{ done_tasks }}/{{ total_tasks }}</strong>
+            <span>{{ 'nav.tasks'|trans }}</span>
+        </a>
+        <div class="proj-stat-sep"></div>
+        <div class="proj-stat">
+            {{ ux_icon('lucide:clock', {class: 'icon-xs'}) }}
+            <strong>{{ stats.last_update|date('d/m') }}</strong>
+            <span>{{ 'projects.show.stat_last_update'|trans }}</span>
+        </div>
+    </div>
+
+    {# ── Progression tâches ─────────────────────────────────── #}
+    {% if total_tasks > 0 %}
+    <div class="proj-show__progress">
+        <div class="proj-show__progress-bar">
+            <div class="proj-show__progress-fill" style="width: {{ task_progress }}%"></div>
+        </div>
+        <span class="proj-show__progress-label">{{ task_progress }}% {{ 'projects.show.tasks_done'|trans }}</span>
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════
+       GRILLE PRINCIPALE
+       ══════════════════════════════════════════════════════════ #}
+    <div class="proj-show__grid">
+
+        {# ── Colonne gauche : activité + scènes récentes ──────── #}
+        <div class="proj-show__main">
+
+            {# Activité récente (ActivityLog du projet) #}
+            <section class="proj-panel">
+                <div class="proj-panel__header">
+                    <h2>{{ ux_icon('lucide:activity', {class: 'icon-xs'}) }} {{ 'projects.show.recent_activity'|trans }}</h2>
+                </div>
+
+                {% if projectActivity is not empty %}
+                    <div class="proj-activity-list">
+                        {% for log in projectActivity %}
+                            {% set meta = action_meta[log.action] ?? { icon: 'lucide:circle', color: 'muted', label: log.action } %}
+                            <div class="proj-activity-item proj-activity-item--{{ meta.color }}">
+                                <span class="proj-activity-item__icon">
+                                    {{ ux_icon(meta.icon, {class: 'icon-xs'}) }}
+                                </span>
+                                <div class="proj-activity-item__body">
+                                    <span class="proj-activity-item__label">{{ meta.label }}</span>
+                                    {% if log.description %}
+                                        <span class="proj-activity-item__name">{{ log.description }}</span>
+                                    {% endif %}
+                                </div>
+                                <time class="proj-activity-item__time">{{ log.createdAt|date('d/m H:i') }}</time>
+                            </div>
+                        {% endfor %}
                     </div>
-                </div>
-            </div>
-            <p class="project-description">
-                {% if project.description %}
-                    {{ project.description }}
                 {% else %}
-                    {{ 'projects.show.dashboard_no_desc'|trans }}
-                {% endif %}
-            </p>
-        </header>
-
-        {# ── Grille statistiques ──────────────────────────────── #}
-        <section class="stats-section">
-            <div class="stat-card">
-                <div class="stat-icon">{{ ux_icon('lucide:file-text') }}</div>
-                <div class="stat-content">
-                    <span class="stat-value">{{ stats.scenes_count }}</span>
-                    <span class="stat-label">{{ 'projects.show.stat_scenes'|trans }}</span>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">{{ ux_icon('lucide:users') }}</div>
-                <div class="stat-content">
-                    <span class="stat-value">{{ stats.characters_count }}</span>
-                    <span class="stat-label">{{ 'projects.show.stat_characters'|trans }}</span>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">{{ ux_icon('lucide:map-pin') }}</div>
-                <div class="stat-content">
-                    <span class="stat-value">{{ stats.locations_count }}</span>
-                    <span class="stat-label">{{ 'projects.show.stat_locations'|trans }}</span>
-                </div>
-            </div>
-
-            <div class="stat-card stat-highlight">
-                <div class="stat-icon">{{ ux_icon('lucide:clock') }}</div>
-                <div class="stat-content">
-                    <span class="stat-value">{{ stats.last_update|date('d/m/Y') }}</span>
-                    <span class="stat-label">{{ 'projects.show.stat_last_update'|trans }}</span>
-                </div>
-            </div>
-        </section>
-
-        {# ── Contenu principal (2 colonnes) ───────────────────── #}
-        <div class="dashboard-grid">
-
-            {# Colonne gauche #}
-            <div class="grid-main">
-
-                {# Activité récente #}
-                <section class="dashboard-card">
-                    <h2 class="card-title">
-                        {{ ux_icon('lucide:activity') }}
-                        {{ 'projects.show.recent_activity'|trans }}
-                    </h2>
-
+                    {# Fallback : scènes récentes si aucun log #}
                     {% if recentUpdates is not empty %}
-                        <div class="activity-list">
+                        <div class="proj-activity-list">
                             {% for item in recentUpdates %}
                                 <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: item.id}) }}"
-                                   class="activity-item">
-                                    <div class="activity-icon">{{ ux_icon('lucide:file-text') }}</div>
-                                    <div class="activity-content">
-                                        <span class="activity-title">{{ item.title }}</span>
-                                        <span class="activity-time">{{ item.updatedAt|date('d/m/Y à H:i') }}</span>
+                                   class="proj-activity-item proj-activity-item--blue">
+                                    <span class="proj-activity-item__icon">
+                                        {{ ux_icon('lucide:file-edit', {class: 'icon-xs'}) }}
+                                    </span>
+                                    <div class="proj-activity-item__body">
+                                        <span class="proj-activity-item__label">Scène modifiée</span>
+                                        <span class="proj-activity-item__name">{{ item.title }}</span>
                                     </div>
-                                    <div class="activity-arrow">{{ ux_icon('lucide:chevron-right') }}</div>
+                                    <time class="proj-activity-item__time">{{ item.updatedAt|date('d/m H:i') }}</time>
                                 </a>
                             {% endfor %}
                         </div>
                     {% else %}
-                        <div class="empty-state">
-                            {{ ux_icon('lucide:inbox') }}
+                        <div class="proj-empty">
+                            {{ ux_icon('lucide:inbox', {class: 'proj-empty__icon'}) }}
                             <p>{{ 'projects.show.empty_activity'|trans }}</p>
                             <span>{{ 'projects.show.empty_activity_hint'|trans }}</span>
                         </div>
                     {% endif %}
-                </section>
+                {% endif %}
+            </section>
 
-            </div>
+            {# Commentaires récents #}
+            <section class="proj-panel">
+                <div class="proj-panel__header">
+                    <h2>{{ ux_icon('lucide:message-square', {class: 'icon-xs'}) }} {{ 'projects.show.recent_comments'|trans }}</h2>
+                    {% if project.visibility == 'public' %}
+                    <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}#comments"
+                       class="link-more">{{ 'projects.show.see_all_comments'|trans }}</a>
+                    {% endif %}
+                </div>
 
-            {# Commentaires récents (projet en ligne uniquement) #}
-            {% if project.visibility == 'public' %}
-            <section class="dashboard-card">
-                <h2 class="card-title">
-                    {{ ux_icon('lucide:message-square') }}
-                    {{ 'projects.show.recent_comments'|trans }}
-                </h2>
-                {% if recentComments is empty %}
-                    <div class="empty-state empty-state--compact">
-                        {{ ux_icon('lucide:message-circle') }}
-                        <p>{{ 'projects.show.empty_comments'|trans }}</p>
+                {% if project.visibility != 'public' %}
+                    <div class="proj-comments-gate">
+                        <span class="proj-comments-gate__icon">
+                            {{ ux_icon('lucide:eye-off', {class: 'icon-xs'}) }}
+                        </span>
+                        <p>Le projet n'est pas encore public.</p>
+                        {% if not (readonly ?? false) %}
+                        <button type="button"
+                                class="proj-comments-gate__btn"
+                                onclick="document.getElementById('publishModal').hidden = false">
+                            {{ ux_icon('lucide:globe', {class: 'icon-xs'}) }}
+                            Mettre en ligne
+                        </button>
+                        {% endif %}
+                    </div>
+                {% elseif recentComments is empty %}
+                    <div class="proj-empty">
+                        {{ ux_icon('lucide:message-circle', {class: 'proj-empty__icon'}) }}
+                        <p>Aucun commentaire pour l'instant.</p>
+                        <span>Les lecteurs pourront commenter via votre page publique.</span>
                     </div>
                 {% else %}
-                    <div class="activity-list">
+                    <div class="proj-activity-list">
                         {% for comment in recentComments %}
-                            <div class="activity-item">
-                                <div class="activity-item__meta">
-                                    <span class="comment-item__avatar activity-item__avatar">{{ comment.author.username|first|upper }}</span>
-                                    <strong class="activity-item__author">{{ comment.author.username }}</strong>
-                                    <span>{{ comment.createdAt|date('d/m/Y à H:i') }}</span>
+                            <div class="proj-comment-item">
+                                <span class="proj-comment-item__avatar">{{ comment.author.username|first|upper }}</span>
+                                <div class="proj-comment-item__body">
+                                    <strong>{{ comment.author.username }}</strong>
+                                    <p>{{ comment.content|length > 120 ? comment.content|slice(0,120) ~ '…' : comment.content }}</p>
                                 </div>
-                                <p class="activity-item__text">
-                                    {{ comment.content|length > 100 ? comment.content|slice(0,100) ~ '…' : comment.content }}
-                                </p>
+                                <time class="proj-activity-item__time">{{ comment.createdAt|date('d/m') }}</time>
                             </div>
                         {% endfor %}
                     </div>
-                    <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}#comments"
-                       class="btn-settings mt-2">
-                        {{ ux_icon('lucide:external-link') }}
-                        {{ 'projects.show.see_all_comments'|trans }}
-                    </a>
                 {% endif %}
             </section>
-            {% endif %}
-
-            {# Colonne droite #}
-            <div class="grid-sidebar">
-
-                {# Accès rapides (masqué en mode lecture) #}
-                {% if not (readonly ?? false) %}
-                <section class="dashboard-card card-accent">
-                    <h2 class="card-title">
-                        {{ ux_icon('lucide:zap') }}
-                        {{ 'projects.show.quick_access'|trans }}
-                    </h2>
-
-                    <div class="quick-actions">
-                        <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}"
-                           class="quick-action-btn">
-                            {{ ux_icon('lucide:plus') }}
-                            <span>{{ 'projects.show.create_scene'|trans }}</span>
-                        </a>
-
-                        <a href="{{ path('app_character_new', {project_slug: project.slug}) }}"
-                           class="quick-action-btn"
-                           data-turbo-frame="modal-frame"
-                           data-action="click->modal#open">
-                            {{ ux_icon('lucide:user-plus') }}
-                            <span>{{ 'projects.show.new_character'|trans }}</span>
-                        </a>
-
-                        <a href="{{ path('app_location_new', {project_slug: project.slug}) }}"
-                           class="quick-action-btn"
-                           data-turbo-frame="modal-frame"
-                           data-action="click->modal#open">
-                            {{ ux_icon('lucide:map-pin-plus') }}
-                            <span>{{ 'projects.show.new_location'|trans }}</span>
-                        </a>
-                    </div>
-                </section>
-                {% endif %}
-
-                {# Informations projet #}
-                <section class="dashboard-card">
-                    <h2 class="card-title">
-                        {{ ux_icon('lucide:info') }}
-                        {{ 'projects.show.info_section'|trans }}
-                    </h2>
-
-                    <div class="project-infos">
-                        <div class="info-item">
-                            <span class="info-label">{{ 'projects.show.info_type'|trans }}</span>
-                            <span class="info-value">{{ ('project_type.' ~ project.projectType)|trans({}, 'messages') }}</span>
-                        </div>
-
-                        <div class="info-item">
-                            <span class="info-label">{{ 'projects.show.info_created'|trans }}</span>
-                            <span class="info-value">{{ project.createdAt|date('d/m/Y') }}</span>
-                        </div>
-
-                        <div class="info-item">
-                            <span class="info-label">{{ 'projects.show.info_status'|trans }}</span>
-                            <span class="info-badge info-badge-{{ project.status|default('draft') }}">
-                                {{ ('projects.status.' ~ (project.status == 'finished' ? 'finished' : (project.status == 'in_progress' ? 'in_progress' : 'draft')))|trans }}
-                            </span>
-                        </div>
-                    </div>
-
-                    {% if not (readonly ?? false) %}
-                    <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
-                       class="btn-settings">
-                        {{ ux_icon('lucide:settings') }}
-                        {{ 'projects.show.settings_btn'|trans }}
-                    </a>
-                    {% endif %}
-                </section>
-
-            </div>
 
         </div>
 
-    </div>
+        {# ── Colonne droite : actions rapides + infos ─────────── #}
+        <div class="proj-show__sidebar">
+
+            {# Actions rapides #}
+            {% if not (readonly ?? false) %}
+            <section class="proj-panel proj-panel--accent">
+                <div class="proj-panel__header">
+                    <h2>{{ ux_icon('lucide:zap', {class: 'icon-xs'}) }} {{ 'projects.show.quick_access'|trans }}</h2>
+                </div>
+                <div class="proj-quick-actions">
+                    <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}"
+                       class="proj-quick-btn">
+                        {{ ux_icon('lucide:file-plus', {class: 'icon-xs'}) }}
+                        {{ 'projects.show.create_scene'|trans }}
+                    </a>
+                    <a href="{{ path('app_character_new', {project_slug: project.slug}) }}"
+                       class="proj-quick-btn"
+                       data-turbo-frame="modal-frame"
+                       data-action="click->modal#open">
+                        {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }}
+                        {{ 'projects.show.new_character'|trans }}
+                    </a>
+                    <a href="{{ path('app_location_new', {project_slug: project.slug}) }}"
+                       class="proj-quick-btn"
+                       data-turbo-frame="modal-frame"
+                       data-action="click->modal#open">
+                        {{ ux_icon('lucide:map-pin-plus', {class: 'icon-xs'}) }}
+                        {{ 'projects.show.new_location'|trans }}
+                    </a>
+                    <a href="{{ path('app_task_new', {project_slug: project.slug}) }}"
+                       class="proj-quick-btn"
+                       data-turbo-frame="modal-frame"
+                       data-action="click->modal#open">
+                        {{ ux_icon('lucide:square-plus', {class: 'icon-xs'}) }}
+                        {{ 'nav.tasks'|trans }}
+                    </a>
+
+                    {# ── Visibilité / mise en ligne ── #}
+                    <button type="button"
+                            class="proj-quick-btn proj-quick-btn--visibility proj-quick-btn--vis-{{ project.visibility }}"
+                            onclick="document.getElementById('publishModal').hidden = false">
+                        {% if project.visibility == 'public' %}
+                            {{ ux_icon('lucide:globe', {class: 'icon-xs'}) }}
+                            En ligne <span class="pqb-badge pqb-badge--live">LIVE</span>
+                        {% elseif project.visibility == 'private' %}
+                            {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
+                            Partagé
+                        {% else %}
+                            {{ ux_icon('lucide:eye-off', {class: 'icon-xs'}) }}
+                            Mettre en ligne…
+                        {% endif %}
+                    </button>
+                </div>
+            </section>
+            {% endif %}
+
+            {# Informations projet #}
+            <section class="proj-panel">
+                <div class="proj-panel__header">
+                    <h2>{{ ux_icon('lucide:info', {class: 'icon-xs'}) }} {{ 'projects.show.info_section'|trans }}</h2>
+                    {% if not (readonly ?? false) %}
+                    <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="link-more">
+                        {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="proj-info-list">
+                    <div class="proj-info-row">
+                        <span>{{ 'projects.show.info_type'|trans }}</span>
+                        <span>{{ ('project_type.' ~ project.projectType)|trans({}, 'messages') }}</span>
+                    </div>
+                    <div class="proj-info-row">
+                        <span>{{ 'projects.show.info_created'|trans }}</span>
+                        <span>{{ project.createdAt|date('d/m/Y') }}</span>
+                    </div>
+                    <div class="proj-info-row">
+                        <span>{{ 'projects.show.stat_last_update'|trans }}</span>
+                        <span>{{ stats.last_update|date('d/m/Y H:i') }}</span>
+                    </div>
+                    <div class="proj-info-row">
+                        <span>{{ 'projects.show.info_status'|trans }}</span>
+                        <span class="status-badge status-badge--{{ project.status }}">
+                            {{ ('projects.status.' ~ project.status)|trans }}
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            {# ── Équipe & collaborateurs ──────────────────────── #}
+            <section class="proj-panel">
+                <div class="proj-panel__header">
+                    <h2>{{ ux_icon('lucide:users', {class: 'icon-xs'}) }} Équipe</h2>
+                    {% if not (readonly ?? false) %}
+                    <a href="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: 'members'}) }}"
+                       class="link-more">
+                        {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
+                    </a>
+                    {% endif %}
+                </div>
+
+                {# Propriétaire #}
+                <div class="proj-team-list">
+                    <div class="proj-team-member">
+                        {{ include('_partials/_user_avatar.html.twig', {user: project.createdBy, size: 'sm'}) }}
+                        <div class="proj-team-info">
+                            <span class="proj-team-name">{{ project.createdBy.username }}</span>
+                            <span class="proj-team-role proj-team-role--owner">Propriétaire</span>
+                        </div>
+                    </div>
+
+                    {% for member in project.projectMembers %}
+                    <div class="proj-team-member">
+                        {{ include('_partials/_user_avatar.html.twig', {user: member.user, size: 'sm'}) }}
+                        <div class="proj-team-info">
+                            <span class="proj-team-name">{{ member.user.username }}</span>
+                            <span class="proj-team-role proj-team-role--{{ member.role }}">
+                                {{ member.role == 'lead' ? 'Co-responsable' : (member.role == 'editor' ? 'Éditeur' : 'Contributeur') }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if not (readonly ?? false) %}
+                <a href="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: 'members'}) }}"
+                   class="proj-invite-btn">
+                    {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }}
+                    Inviter des collaborateurs
+                </a>
+                {% endif %}
+            </section>
+
+        </div>
+
+    </div>{# /.proj-show__grid #}
+
+</div>{# /.proj-show #}
 {% endblock %}

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Controller\Workshop;
 
 use App\Entity\Project;
+use App\Entity\ScenarioElement;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Service\ActivityLogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +34,7 @@ class TaskController extends AbstractController
         private readonly TaskRepository $taskRepository,
         private readonly EntityManagerInterface $em,
         private readonly TranslatorInterface $translator,
+        private readonly ActivityLogService $activityLog,
     ) {}
 
     /**
@@ -43,30 +46,71 @@ class TaskController extends AbstractController
     {
         $this->checkProjectAccess($project, 'view');
 
-        $allTasks = $this->taskRepository->findBy(
+        $allTasksIncArchived = $this->taskRepository->findBy(
             ['project' => $project],
             ['priority' => 'DESC', 'createdAt' => 'DESC']
         );
 
-        // Groupe les tâches par statut pour la vue Kanban
-        $tasksByStatus = [
-            'todo' => [],
-            'in_progress' => [],
-            'review' => [],
-            'done' => [],
-        ];
+        $allTasks     = array_values(array_filter($allTasksIncArchived, fn($t) => $t->getStatus() !== 'archived'));
+        $archivedCount = count($allTasksIncArchived) - count($allTasks);
+
+        $today        = new \DateTimeImmutable('today');
+        $overdueCount = 0;
+        $urgentCount  = 0;
+        $doneCount    = 0;
 
         foreach ($allTasks as $task) {
-            $status = $task->getStatus();
-            if (isset($tasksByStatus[$status])) {
-                $tasksByStatus[$status][] = $task;
+            if ($task->getStatus() === 'done') {
+                $doneCount++;
+            } else {
+                if ($task->getDueDate() !== null && $task->getDueDate() < $today) {
+                    $overdueCount++;
+                }
+                if ($task->getPriority() === 'urgent') {
+                    $urgentCount++;
+                }
             }
         }
 
         return $this->render('workshop/projects/tasks/index.html.twig', [
-            'project' => $project,
-            'tasksByStatus' => $tasksByStatus,
-            'allTasks' => $allTasks,
+            'project'        => $project,
+            'allTasks'       => $allTasks,
+            'elementPaths'   => $this->resolveElementPaths($allTasks),
+            'overdueCount'   => $overdueCount,
+            'urgentCount'    => $urgentCount,
+            'doneCount'      => $doneCount,
+            'totalCount'     => count($allTasks),
+            'archivedCount'  => $archivedCount,
+            'currentStatus'  => 'all',
+        ]);
+    }
+
+    /**
+     * Vue archivées (chargement serveur)
+     */
+    public function filter(
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
+        string $status
+    ): Response {
+        $this->checkProjectAccess($project, 'view');
+
+        $tasks = $this->taskRepository->findBy(
+            ['project' => $project, 'status' => $status],
+            ['priority' => 'DESC', 'createdAt' => 'DESC']
+        );
+
+        $allCount = $this->taskRepository->count(['project' => $project]);
+
+        return $this->render('workshop/projects/tasks/index.html.twig', [
+            'project'       => $project,
+            'allTasks'      => $tasks,
+            'elementPaths'  => $this->resolveElementPaths($tasks),
+            'overdueCount'  => 0,
+            'urgentCount'   => 0,
+            'doneCount'     => 0,
+            'totalCount'    => $allCount,
+            'archivedCount' => $this->taskRepository->count(['project' => $project, 'status' => 'archived']),
+            'currentStatus' => $status,
         ]);
     }
 
@@ -84,14 +128,35 @@ class TaskController extends AbstractController
         $task->setProject($project);
         $task->setCreatedBy($this->getUser());
 
+        // Pré-lier à un élément narratif si passé en query param depuis l'inspector
+        $elementId = (int) $request->query->get('element_id', 0);
+        if ($elementId > 0) {
+            $task->setLinkedEntityType('scenario_element');
+            $task->setLinkedEntityId($elementId);
+        }
+
         $form = $this->createForm(TaskType::class, $task, [
             'project' => $project,
+            'action'  => $request->getRequestUri(),
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($task);
             $this->em->flush();
+
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+            $this->activityLog->log('task.create', $user, $project, $task->getTitle());
+            $this->em->flush();
+
+            if ($request->headers->get('Turbo-Frame') === 'modal-frame') {
+                return new Response(
+                    '<turbo-stream action="refresh"></turbo-stream>',
+                    200,
+                    ['Content-Type' => 'text/vnd.turbo-stream.html; charset=utf-8']
+                );
+            }
 
             $this->addFlash('success', $this->translator->trans(
                 'task.flash.created',
@@ -104,8 +169,9 @@ class TaskController extends AbstractController
             ]);
         }
 
-        return $this->render('workshop/projects/tasks/new.html.twig', [
+        return $this->render('workshop/projects/tasks/_form.html.twig', [
             'project' => $project,
+            'task' => $task,
             'form' => $form,
         ]);
     }
@@ -147,11 +213,20 @@ class TaskController extends AbstractController
 
         $form = $this->createForm(TaskType::class, $task, [
             'project' => $project,
+            'action'  => $request->getRequestUri(),
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
+
+            if ($request->headers->get('Turbo-Frame') === 'modal-frame') {
+                return new Response(
+                    '<turbo-stream action="refresh"></turbo-stream>',
+                    200,
+                    ['Content-Type' => 'text/vnd.turbo-stream.html; charset=utf-8']
+                );
+            }
 
             $this->addFlash('success', $this->translator->trans(
                 'task.flash.updated',
@@ -165,7 +240,7 @@ class TaskController extends AbstractController
             ]);
         }
 
-        return $this->render('workshop/projects/tasks/edit.html.twig', [
+        return $this->render('workshop/projects/tasks/_form.html.twig', [
             'project' => $project,
             'task' => $task,
             'form' => $form,
@@ -192,6 +267,11 @@ class TaskController extends AbstractController
             $this->em->remove($task);
             $this->em->flush();
 
+            // Réponse JSON si appel AJAX (optimistic delete)
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['success' => true]);
+            }
+
             $this->addFlash('success', $this->translator->trans(
                 'task.flash.deleted',
                 ['%title%' => $title],
@@ -202,6 +282,55 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('app_task_index', [
             'project_slug' => $project->getSlug(),
         ]);
+    }
+
+    // ─── Helpers ─────────────────────────────────────────────────────────────
+
+    /**
+     * @param Task[] $tasks
+     * @return array<int, ScenarioElement>
+     */
+    private function resolveElementPaths(array $tasks): array
+    {
+        $result = [];
+        $repo   = $this->em->getRepository(ScenarioElement::class);
+
+        foreach ($tasks as $task) {
+            if ($task->getLinkedEntityType() === 'scenario_element' && $task->getLinkedEntityId()) {
+                $element = $repo->find($task->getLinkedEntityId());
+                if ($element instanceof ScenarioElement) {
+                    $result[$task->getId()] = $element;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Changer rapidement la priorité d'une tâche (AJAX)
+     */
+    public function changePriority(
+        Request $request,
+        #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
+        Task $task
+    ): JsonResponse
+    {
+        $this->checkProjectAccess($project, 'edit');
+
+        if ($task->getProject() !== $project) {
+            throw $this->createNotFoundException();
+        }
+
+        $newPriority = $request->request->get('priority');
+
+        if (in_array($newPriority, ['low', 'normal', 'high', 'urgent'])) {
+            $task->setPriority($newPriority);
+            $this->em->flush();
+
+            return $this->json(['success' => true, 'priority' => $newPriority]);
+        }
+        return $this->json(['success' => false], 400);
     }
 
     /**
@@ -221,7 +350,7 @@ class TaskController extends AbstractController
 
         $newStatus = $request->request->get('status');
 
-        if (in_array($newStatus, ['todo', 'in_progress', 'review', 'done'])) {
+        if (in_array($newStatus, ['todo', 'in_progress', 'review', 'done', 'archived'])) {
             $task->setStatus($newStatus);
             $this->em->flush();
 

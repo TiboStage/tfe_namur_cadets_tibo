@@ -6,17 +6,30 @@
 
 # ===== AUTHENTIFICATION =====
 auth:
-    welcome: "Bienvenue {firstName} !"
-    welcome_back: "Bon retour {firstName} !"
+    welcome: "Bienvenue %firstName% !"
+    welcome_back: "Bon retour %firstName% !"
     logout: "À bientôt !"
     logout_success: "Vous êtes maintenant déconnecté"
     register_success: "Compte créé avec succès ! Veuillez vous connecter."
+
+# ===== PROFIL =====
+profile:
+    updated: "Profil mis à jour avec succès !"
+    username_locked: "Vous ne pouvez pas encore modifier votre pseudo. Réessayez dans %days% jours."
 
 # ===== PROJET =====
 project:
     created: "Projet créé avec succès !"
     updated: "Projet mis à jour."
     deleted: "Projet supprimé."
+    set_public: "Votre projet est maintenant visible dans l'Atlas !"
+    set_private: "Votre projet a été retiré de l'Atlas."
+    moderation_blocked: "Ce projet a été bloqué par la modération. Contactez le support pour plus d'informations."
+    session_expired: "Session expirée. Veuillez recommencer."
+    settings_saved: "Paramètres enregistrés."
+    settings_saved_slug: "Paramètres enregistrés. L'URL du projet a été mise à jour."
+    structure_updated: "Structure mise à jour."
+    visibility_invalid: "Visibilité invalide."
 
 # ===== PERSONNAGE =====
 character:
@@ -61,3 +74,53 @@ info:
     loading: "Chargement..."
     processing: "Traitement en cours..."
     saved_draft: "Brouillon sauvegardé automatiquement"
+
+# ===== ADMIN =====
+admin:
+    genre_created: "Genre créé avec succès."
+    genre_updated: "Genre mis à jour."
+    genre_deleted: "Genre supprimé."
+    documentation_created: "Article créé avec succès !"
+    documentation_updated: "Article mis à jour."
+    documentation_deleted: "Article supprimé."
+    user_roles_updated: "Rôles de %username% mis à jour."
+    project_status_updated: "Statut du projet « %title% » mis à jour : %status%."
+
+# ===== MODÉRATION =====
+moderation:
+    project_status_updated: "Statut du projet « %title% » mis à jour : %status%."
+    report_status_updated: "Statut du signalement mis à jour."
+    comment_hidden: "Commentaire masqué."
+    comment_shown: "Commentaire remis en ligne."
+    comment_deleted: "Commentaire supprimé définitivement."
+    unknown_action: "Action inconnue."
+
+# ===== COMMENTAIRES =====
+comment:
+    published: "Commentaire publié !"
+    deleted: "Commentaire supprimé."
+    csrf_invalid: "Token de sécurité invalide."
+    length_invalid: "Le commentaire doit faire entre 2 et 2000 caractères."
+    already_reported: "Vous avez déjà signalé cet élément."
+    reason_invalid: "Raison de signalement invalide."
+    report_submitted: "Signalement envoyé. Merci !"
+
+# ===== MEMBRES =====
+member:
+    csrf_invalid: "Token CSRF invalide."
+    role_invalid: "Rôle invalide."
+    user_not_found: "Utilisateur « %username% » introuvable."
+    already_owner: "Vous êtes déjà le propriétaire de ce projet."
+    already_collaborator: "« %username% » est déjà collaborateur de ce projet."
+    added: "« %username% » a été ajouté(e) comme %role%."
+    role_updated: "Rôle mis à jour."
+    removed: "« %name% » a été retiré(e) du projet."
+
+# ===== SCENARIO =====
+scenario:
+    element_deleted: "Élément supprimé."
+
+# ===== CSRF =====
+csrf:
+    invalid: "Token de sécurité invalide."
+    token_invalid: "Token invalide."

@@ -1,60 +1,86 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ReportRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Signalement d'un projet public par un utilisateur.
- * Statuts : 'pending' | 'reviewed' | 'dismissed'
+ * Signalement d'un projet, d'un commentaire ou d'un utilisateur.
+ * Traité par les modérateurs et administrateurs.
  */
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
 #[ORM\Table(name: 'report')]
 class Report
 {
-    private const VALID_STATUSES = ['pending', 'reviewed', 'dismissed'];
+    public const TYPE_PROJECT = 'project';
+    public const TYPE_COMMENT = 'comment';
+    public const TYPE_USER    = 'user';
+
+    public const REASON_SPAM          = 'spam';
+    public const REASON_INAPPROPRIATE = 'inappropriate';
+    public const REASON_HARASSMENT    = 'harassment';
+    public const REASON_COPYRIGHT     = 'copyright';
+    public const REASON_OTHER         = 'other';
+
+    public const REASONS = [
+        self::REASON_SPAM          => 'Spam / Publicité non sollicitée',
+        self::REASON_INAPPROPRIATE => 'Contenu inapproprié ou choquant',
+        self::REASON_HARASSMENT    => 'Harcèlement / Discours haineux',
+        self::REASON_COPYRIGHT     => 'Violation du droit d\'auteur',
+        self::REASON_OTHER         => 'Autre raison',
+    ];
+
+    public const STATUS_PENDING   = 'pending';
+    public const STATUS_REVIEWED  = 'reviewed';
+    public const STATUS_DISMISSED = 'dismissed';
+    public const STATUS_ACTIONED  = 'actioned';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Project::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ?Project $project = null;
+    /** project | comment | user */
+    #[ORM\Column(length: 20)]
+    public string $targetType = '';
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ?User $reporter = null;
-
-    // ─── Scalaires — property hooks PHP 8.4 ──────────────────────────────────
-
-    #[ORM\Column(type: 'text')]
-    public string $reason = '' {
-        get => $this->reason;
-        set => $this->reason = trim($value);
-    }
-
-    #[ORM\Column(type: 'string', length: 20)]
-    public string $status = 'pending' {
-        get => $this->status;
-        set {
-            if (!in_array($value, self::VALID_STATUSES)) {
-                throw new \InvalidArgumentException("Statut invalide : $value");
-            }
-            $this->status = $value;
-        }
-    }
-
-    // ─── Nullable ─────────────────────────────────────────────────────────────
+    #[ORM\Column(length: 50)]
+    public string $reason = '';
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $adminFeedback = null;
+    public ?string $description = null;
 
-    // ─── Timestamp ────────────────────────────────────────────────────────────
+    /** pending | reviewed | dismissed | actioned */
+    #[ORM\Column(length: 20)]
+    public string $status = self::STATUS_PENDING;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'reporter_id', nullable: false, onDelete: 'CASCADE')]
+    private ?User $reporter = null;
+
+    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\JoinColumn(name: 'target_project_id', nullable: true, onDelete: 'CASCADE')]
+    private ?Project $targetProject = null;
+
+    #[ORM\ManyToOne(targetEntity: Comment::class)]
+    #[ORM\JoinColumn(name: 'target_comment_id', nullable: true, onDelete: 'CASCADE')]
+    private ?Comment $targetComment = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'target_user_id', nullable: true, onDelete: 'SET NULL')]
+    private ?User $targetUser = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'reviewed_by_id', nullable: true, onDelete: 'SET NULL')]
+    private ?User $reviewedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $reviewedAt = null;
+
+    #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
     public function __construct()
@@ -63,20 +89,41 @@ class Report
     }
 
     public function getId(): ?int { return $this->id; }
-    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
-
-    public function getProject(): ?Project { return $this->project; }
-    public function setProject(?Project $project): static { $this->project = $project; return $this; }
 
     public function getReporter(): ?User { return $this->reporter; }
-    public function setReporter(?User $reporter): static { $this->reporter = $reporter; return $this; }
+    public function setReporter(?User $u): static { $this->reporter = $u; return $this; }
 
-    public function getAdminFeedback(): ?string { return $this->adminFeedback; }
-    public function setAdminFeedback(?string $v): static { $this->adminFeedback = $v; return $this; }
+    public function getTargetProject(): ?Project { return $this->targetProject; }
+    public function setTargetProject(?Project $p): static { $this->targetProject = $p; return $this; }
 
-    // Compat Forms
-    public function setReason(string $v): static { $this->reason = trim($v); return $this; }
-    public function setStatus(string $v): static { $this->status = $v; return $this; }
-    public function getReason(): string { return $this->reason; }
-    public function getStatus(): string { return $this->status; }
+    public function getTargetComment(): ?Comment { return $this->targetComment; }
+    public function setTargetComment(?Comment $c): static { $this->targetComment = $c; return $this; }
+
+    public function getTargetUser(): ?User { return $this->targetUser; }
+    public function setTargetUser(?User $u): static { $this->targetUser = $u; return $this; }
+
+    public function getReviewedBy(): ?User { return $this->reviewedBy; }
+    public function setReviewedBy(?User $u): static { $this->reviewedBy = $u; return $this; }
+
+    public function getReviewedAt(): ?\DateTimeImmutable { return $this->reviewedAt; }
+    public function setReviewedAt(?\DateTimeImmutable $at): static { $this->reviewedAt = $at; return $this; }
+
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+
+    public function getTarget(): Project|Comment|User|null
+    {
+        return match($this->targetType) {
+            self::TYPE_PROJECT => $this->targetProject,
+            self::TYPE_COMMENT => $this->targetComment,
+            self::TYPE_USER    => $this->targetUser,
+            default            => null,
+        };
+    }
+
+    public function getReasonLabel(): string
+    {
+        return self::REASONS[$this->reason] ?? $this->reason;
+    }
+
+    public function isPending(): bool { return $this->status === self::STATUS_PENDING; }
 }

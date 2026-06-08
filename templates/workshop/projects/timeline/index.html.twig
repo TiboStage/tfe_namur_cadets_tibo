@@ -3,130 +3,226 @@
 
 {% block title %}Chronologie — {{ project.title }}{% endblock %}
 
-{% block project_content %}
-<div class="tl-wrapper">
+{# ── Macro : chip de type avec icône ───────────────────────────────────── #}
+{% macro typeChip(type) %}
+    {% set cfg = {
+        plot:      {label: 'Intrigue',    icon: 'lucide:git-branch'},
+        character: {label: 'Personnage',  icon: 'lucide:user'},
+        world:     {label: 'Monde',       icon: 'lucide:globe'},
+        conflict:  {label: 'Conflit',     icon: 'lucide:swords'},
+        reveal:    {label: 'Révélation',  icon: 'lucide:sparkles'},
+    } %}
+    {% if type and cfg[type] is defined %}
+        <span class="chr-type-chip chr-type-chip--{{ type }}">
+            {{ ux_icon(cfg[type].icon, {style: 'width:10px;height:10px'}) }}
+            {{ cfg[type].label }}
+        </span>
+    {% endif %}
+{% endmacro %}
 
-    {# ── Header ────────────────────────────────────────────────────── #}
-    <div class="tl-header">
+{% import _self as self %}
+
+{% block project_content %}
+<div class="chr-container"
+     data-controller="chr-filter">
+
+    {# ════════════════════════════════════════════════════════
+       HEADER
+       ════════════════════════════════════════════════════════ #}
+    <header class="page-header">
         <div>
-            <h1 class="tl-header__title">
-                {{ ux_icon('lucide:clock', {class: 'icon-sm'}) }}
-                Chronologie narrative
-            </h1>
-            <p class="tl-header__sub text-muted">
-                {{ events|length }} événement{{ events|length != 1 ? 's' : '' }} dans la timeline de <strong>{{ project.title }}</strong>
+            <h1>Chronologie narrative</h1>
+            <p class="page-subtitle">
+                {% if events is not empty %}
+                    {{ events|length }} événement{{ events|length != 1 ? 's' : '' }}
+                    {% if minYear is not null %}
+                        · de l'An {{ minYear }} à l'An {{ maxYear }}
+                    {% endif %}
+                    · <strong>{{ project.title }}</strong>
+                {% else %}
+                    Construisez la timeline de votre univers narratif
+                {% endif %}
             </p>
         </div>
+
+        {% if not (readonly ?? false) and events is not empty %}
         <a href="{{ path('app_world_event_new', {_locale: app.request.locale, project_slug: project.slug}) }}"
-           class="btn btn--cta-yellow"
-            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+           class="btn-creat">
+            {{ ux_icon('lucide:plus', {style: 'width:15px;height:15px'}) }}
             Nouvel événement
         </a>
-    </div>
+        {% endif %}
+    </header>
 
-    {# ── État vide ─────────────────────────────────────────────────── #}
     {% if events is empty %}
-    <div class="tl-empty">
-        <div class="tl-empty__icon">
-            {{ ux_icon('lucide:calendar-x', {style: 'width:40px;height:40px'}) }}
+
+        {# ════════════════════════════════════════════════════════
+           ÉTAT VIDE
+           ════════════════════════════════════════════════════════ #}
+        <div class="page-empty">
+            {{ ux_icon('lucide:clock', {style: 'width:44px;height:44px'}) }}
+            <h3>Aucun événement pour le moment</h3>
+            <p>Jalonnez votre univers : batailles, naissances, catastrophes, révélations, tournants politiques…</p>
+            {% if not (readonly ?? false) %}
+            <a href="{{ path('app_world_event_new', {_locale: app.request.locale, project_slug: project.slug}) }}"
+               class="btn-creat">
+                {{ ux_icon('lucide:plus', {style: 'width:15px;height:15px'}) }}
+                Créer le premier événement
+            </a>
+            {% endif %}
         </div>
-        <h3 class="tl-empty__title">Aucun événement pour l'instant</h3>
-        <p class="tl-empty__desc text-muted">
-            Construisez la timeline de votre univers : batailles, naissances, catastrophes,
-            révélations…
-        </p>
-        <a href="{{ path('app_world_event_new', {_locale: app.request.locale, project_slug: project.slug}) }}"
-           class="btn btn--cta-yellow"
-            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
-            Créer le premier événement
-        </a>
-    </div>
 
     {% else %}
 
-    {# ── Regroupement par année ────────────────────────────────────── #}
-    {% set current_year = null %}
-
-    <div class="tl-timeline">
-
-        {% for event in events %}
-
-        {# Séparateur d'année #}
-        {% if event.year != current_year %}
-            {% if current_year is not null %}
-            </div>{# fin tl-year-group #}
-            {% endif %}
-            {% set current_year = event.year %}
-            <div class="tl-year-marker">
-                <span class="tl-year-pill">
-                    {{ event.year > 0 ? 'An ' ~ event.year : 'An ' ~ event.year ~ ' (avant J.C.)' }}
-                </span>
-            </div>
-            <div class="tl-year-group">
+        {# ════════════════════════════════════════════════════════
+           BARRE DE STATS TYPES
+           ════════════════════════════════════════════════════════ #}
+        {% if typeCounts is not empty %}
+        <div class="chr-stats">
+            {% set allTypes = {
+                plot:      {label: 'Intrigues',    icon: 'lucide:git-branch'},
+                character: {label: 'Personnages',  icon: 'lucide:user'},
+                world:     {label: 'Monde',        icon: 'lucide:globe'},
+                conflict:  {label: 'Conflits',     icon: 'lucide:swords'},
+                reveal:    {label: 'Révélations',  icon: 'lucide:sparkles'},
+                other:     {label: 'Autres',       icon: 'lucide:circle-dot'},
+            } %}
+            {% for typeKey, count in typeCounts %}
+                {% if allTypes[typeKey] is defined %}
+                <div class="chr-stat chr-stat--{{ typeKey }}">
+                    {{ ux_icon(allTypes[typeKey].icon, {style: 'width:14px;height:14px'}) }}
+                    <span class="chr-stat__count">{{ count }}</span>
+                    <span class="chr-stat__label">{{ allTypes[typeKey].label }}</span>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
         {% endif %}
 
-            {# ── Événement ──────────────────────────────────────────── #}
-            <div class="tl-event">
-                <div class="tl-event__dot"></div>
+        {# ════════════════════════════════════════════════════════
+           FILTRES
+           ════════════════════════════════════════════════════════ #}
+        <div class="chr-filters">
+            <button type="button"
+                    class="chr-filter-btn chr-filter-btn--active"
+                    data-action="click->chr-filter#filter"
+                    data-type=""
+                    aria-label="Tous les types">
+                Tous
+            </button>
+            {% for typeKey in ['plot', 'character', 'world', 'conflict', 'reveal'] %}
+                {% if typeCounts[typeKey] is defined %}
+                    {% set labels = {plot: 'Intrigue', character: 'Personnage', world: 'Monde', conflict: 'Conflit', reveal: 'Révélation'} %}
+                    <button type="button"
+                            class="chr-filter-btn chr-filter-btn--{{ typeKey }}"
+                            data-action="click->chr-filter#filter"
+                            data-type="{{ typeKey }}"
+                            aria-label="Filtrer {{ labels[typeKey] }}">
+                        {{ labels[typeKey] }}
+                    </button>
+                {% endif %}
+            {% endfor %}
+        </div>
 
-                <div class="tl-event__card">
-                    <div class="tl-event__card-header">
-                        <div class="tl-event__meta">
-                            {% if event.day and event.month %}
-                                <span class="tl-event__date">
-                                    {{ ux_icon('lucide:calendar', {style: 'width:11px;height:11px'}) }}
-                                    {{ '%02d'|format(event.day) }}/{{ '%02d'|format(event.month) }}/{{ event.year }}
-                                </span>
-                            {% elseif event.month %}
-                                <span class="tl-event__date">
-                                    {{ ux_icon('lucide:calendar', {style: 'width:11px;height:11px'}) }}
-                                    {{ '%02d'|format(event.month) }}/{{ event.year }}
-                                </span>
-                            {% endif %}
-                            {% if event.location %}
-                            <span class="tl-event__location">
-                                {{ ux_icon('lucide:map-pin', {style: 'width:11px;height:11px'}) }}
-                                {{ event.location.name }}
-                            </span>
-                            {% endif %}
+        {# ════════════════════════════════════════════════════════
+           TIMELINE
+           ════════════════════════════════════════════════════════ #}
+        <div class="chr-timeline">
+
+            {% for year, yearEvents in byYear %}
+
+            <div class="chr-year-block" data-year="{{ year }}">
+
+                {# Marqueur année #}
+                <div class="chr-year-marker">
+                    <div class="chr-year-marker__line"></div>
+                    <span class="chr-year-pill">
+                        {{ ux_icon('lucide:bookmark', {style: 'width:11px;height:11px'}) }}
+                        An {{ year }}
+                    </span>
+                    <div class="chr-year-marker__count">{{ yearEvents|length }} événement{{ yearEvents|length != 1 ? 's' : '' }}</div>
+                </div>
+
+                {# Événements de cette année #}
+                <div class="chr-events">
+                    {% for event in yearEvents %}
+                    <div class="chr-event {% if event.eventType %}chr-event--{{ event.eventType }}{% endif %}"
+                         data-type="{{ event.eventType ?? 'other' }}">
+
+                        {# Nœud sur la ligne #}
+                        <div class="chr-event__node">
+                            <div class="chr-event__dot"></div>
                         </div>
 
-                        <div class="tl-event__actions">
-                            <a href="{{ path('app_world_event_edit', {_locale: app.request.locale, project_slug: project.slug, id: event.id}) }}"
-                               class="tl-btn-icon"
-                               title="Modifier">
-                                {{ ux_icon('lucide:pencil', {style: 'width:13px;height:13px'}) }}
+                        {# Card #}
+                        <div class="chr-event__card">
+
+                            {# Row 1 : type + date + lieu + actions #}
+                            <div class="chr-event__header">
+                                <div class="chr-event__chips">
+                                    {{ self.typeChip(event.eventType) }}
+                                    {% if event.month %}
+                                        <span class="chr-date-chip">
+                                            {{ ux_icon('lucide:calendar', {style: 'width:10px;height:10px'}) }}
+                                            {% if event.day %}J{{ event.day }} · {% endif %}M{{ event.month }}
+                                        </span>
+                                    {% endif %}
+                                    {% if event.location %}
+                                        <span class="chr-loc-chip">
+                                            {{ ux_icon('lucide:map-pin', {style: 'width:10px;height:10px'}) }}
+                                            {{ event.location.name }}
+                                        </span>
+                                    {% endif %}
+                                    {% if event.linkedScene %}
+                                        <a href="{{ path('app_manuscript_show', {_locale: app.request.locale, project_slug: project.slug, id: event.linkedScene.id}) }}"
+                                           class="chr-scene-chip">
+                                            {{ ux_icon('lucide:file-text', {style: 'width:10px;height:10px'}) }}
+                                            {{ event.linkedScene.title }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+
+                                {% if not (readonly ?? false) %}
+                                <div class="chr-event__actions">
+                                    <a href="{{ path('app_world_event_edit', {_locale: app.request.locale, project_slug: project.slug, id: event.id}) }}"
+                                       class="tl-btn-icon" title="Modifier">
+                                        {{ ux_icon('lucide:pencil', {style: 'width:12px;height:12px'}) }}
+                                    </a>
+                                    <form method="post"
+                                          action="{{ path('app_world_event_delete', {_locale: app.request.locale, project_slug: project.slug, id: event.id}) }}"
+                                          onsubmit="return confirm('Supprimer « {{ event.title|e('js') }} » ?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                                        <button type="submit" class="tl-btn-icon tl-btn-icon--danger" title="Supprimer">
+                                            {{ ux_icon('lucide:trash-2', {style: 'width:12px;height:12px'}) }}
+                                        </button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            {# Row 2 : titre #}
+                            <a href="{{ path('app_world_event_show', {_locale: app.request.locale, project_slug: project.slug, id: event.id}) }}"
+                               class="chr-event__title">
+                                {{ event.title }}
                             </a>
-                            <form method="post"
-                                  action="{{ path('app_world_event_delete', {_locale: app.request.locale, project_slug: project.slug, id: event.id}) }}"
-                                  class="d-inline"
-                                  onsubmit="return confirm('Supprimer cet événement ?')">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
-                                <button type="submit" class="tl-btn-icon tl-btn-icon--danger" title="Supprimer">
-                                    {{ ux_icon('lucide:trash-2', {class: 'icon-2xs'}) }}
-                                </button>
-                            </form>
+
+                            {# Row 3 : description #}
+                            {% if event.description %}
+                            <p class="chr-event__desc">
+                                {{ event.description|striptags|slice(0, 200) }}{% if event.description|length > 200 %}…{% endif %}
+                            </p>
+                            {% endif %}
+
                         </div>
                     </div>
-
-                    <h3 class="tl-event__title">
-                        <a href="{{ path('app_world_event_show', {_locale: app.request.locale, project_slug: project.slug, id: event.id}) }}">
-                            {{ event.title }}
-                        </a>
-                    </h3>
-
-                    {% if event.description %}
-                    <p class="tl-event__desc text-muted">
-                        {{ event.description|striptags|slice(0, 220) }}{% if event.description|length > 220 %}…{% endif %}
-                    </p>
-                    {% endif %}
+                    {% endfor %}
                 </div>
-            </div>
 
-        {% endfor %}
+            </div>{# chr-year-block #}
 
-        </div>{# fin dernier tl-year-group #}
-    </div>{# fin tl-timeline #}
+            {% endfor %}
+
+        </div>{# chr-timeline #}
 
     {% endif %}
 

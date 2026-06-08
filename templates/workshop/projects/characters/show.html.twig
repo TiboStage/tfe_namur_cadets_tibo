@@ -11,7 +11,9 @@
                 <h1>
                     {{ character.name }}
                     {% if character.role %}
-                        <span class="project-type-badge">{{ character.role }}</span>
+                        <span class="character-card-role-badge character-role-{{ character.role }}">
+                            {{ ('character.role.' ~ character.role)|trans }}
+                        </span>
                     {% endif %}
                 </h1>
                 {% if character.nickname %}
@@ -19,9 +21,7 @@
                 {% endif %}
             </div>
             <a href="{{ path('app_character_edit', {project_slug: project.slug, id: character.id}) }}"
-               class="btn-export"
-               data-turbo-frame="modal-frame"
-               data-action="click->modal#open">
+               class="btn-export">
                 {{ 'character.show.edit_btn'|trans }}
             </a>
         </header>
@@ -94,7 +94,11 @@
                     </div>
                     <div class="stat-row">
                         <span class="text-muted">{{ 'character.info.role'|trans }}</span>
-                        <span>{{ character.role|default('—') }}</span>
+                        <span>
+                            {% if character.role %}
+                                {{ ('character.role.' ~ character.role)|trans }}
+                            {% else %}—{% endif %}
+                        </span>
                     </div>
                     <div class="stat-row">
                         <span class="text-muted">{{ 'character.info.created_at'|trans }}</span>

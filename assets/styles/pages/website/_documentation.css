@@ -7,8 +7,8 @@
     display: grid;
     grid-template-columns: 260px 1fr;
     min-height: calc(100vh - 80px);
-    max-width: var(--container-width);
-    margin: 0 auto;
+    max-width: 1700px;
+    margin: 30px auto;
     padding: 0 var(--container-padding);
     gap: 0;
 }
@@ -95,10 +95,6 @@
 .doc-main {
     padding: 36px 0 60px 48px;
     min-width: 0;
-}
-
-.doc-content {
-    max-width: 720px;
 }
 
 .doc-content__meta {

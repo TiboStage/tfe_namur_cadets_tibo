@@ -4,19 +4,23 @@
 {% block title %}{{ 'character.index.title'|trans }} — {{ project.title }}{% endblock %}
 
 {% block project_content %}
-    <div class="workshop-container">
+    <div class="dashboard-container"
+         data-controller="resource-filter"
+         data-resource-filter-container-id-value="characters-container">
 
         <header class="page-header">
             <div>
                 <h1>
                     {{ 'character.index.title'|trans }}
+                    {% if characters is not empty %}
                     <span class="text-muted">{{ characters|length }}</span>
+                    {% endif %}
                 </h1>
+                <p class="page-subtitle">{{ 'character.index.subtitle'|trans }}</p>
             </div>
+            {% if characters is not empty %}
             <div class="header-actions">
-                {# ── Switcher grille / liste ──────────────────────── #}
-                {# data-view-switcher-container-id-value pointe vers   #}
-                {# le bon conteneur, rétrocompatible avec les projets   #}
+                {# ── Switcher grille / liste ── #}
                 <div class="btn-group"
                      data-controller="view-switcher"
                      data-view-switcher-container-id-value="characters-container">
@@ -33,27 +37,70 @@
                 </div>
                 {% if not (readonly ?? false) %}
                 <a href="{{ path('app_character_new', {project_slug: project.slug}) }}"
-                   class="btn-creat"
-                   data-turbo-frame="modal-frame"
-                   data-action="click->modal#open">
+                   class="btn-creat">
                     {{ 'character.index.new_btn'|trans }}
                 </a>
                 {% endif %}
             </div>
+            {% endif %}
         </header>
 
         {% if characters is empty %}
 
-            <div class="no-items">
-                <p class="text-muted">{{ 'character.index.empty'|trans }}</p>
+            <div class="page-empty">
+                {{ ux_icon('lucide:users', {style: 'width:44px;height:44px'}) }}
+                <h3>{{ 'character.index.empty'|trans }}</h3>
+                {% if not (readonly ?? false) %}
+                <a href="{{ path('app_character_new', {project_slug: project.slug}) }}" class="btn-creat">
+                    {{ ux_icon('lucide:plus', {style: 'width:15px;height:15px'}) }}
+                    {{ 'character.index.empty_create'|trans }}
+                </a>
+                {% endif %}
             </div>
 
         {% else %}
 
-            {# ── Conteneur principal (même pattern que #projects-container) ── #}
+            {# ── Barre filtre / tri ── #}
+            <div class="resource-toolbar">
+                <div class="resource-filter-tabs">
+                    <button class="resource-filter-tab active" data-filter-btn
+                            data-action="click->resource-filter#filter"
+                            data-category="">
+                        {{ 'character.filter.all'|trans }}
+                        <span class="resource-filter-count">{{ characters|length }}</span>
+                    </button>
+                    {% for role in ['protagonist', 'antagonist', 'secondary', 'figurant'] %}
+                        {% set count = characters|filter(c => c.role == role)|length %}
+                        {% if count > 0 %}
+                            <button class="resource-filter-tab" data-filter-btn
+                                    data-action="click->resource-filter#filter"
+                                    data-category="{{ role }}">
+                                {{ ('character.filter.' ~ role)|trans }}
+                                <span class="resource-filter-count">{{ count }}</span>
+                            </button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="resource-sort-group">
+                    <button class="resource-sort-btn active" data-sort-btn
+                            data-action="click->resource-filter#sort"
+                            data-sort="default">
+                        {{ ux_icon('lucide:clock', {class: 'icon-3xs'}) }}
+                        {{ 'character.sort.date_desc'|trans }}
+                    </button>
+                    <button class="resource-sort-btn" data-sort-btn
+                            data-action="click->resource-filter#sort"
+                            data-sort="az">
+                        {{ ux_icon('lucide:arrow-up-az', {class: 'icon-3xs'}) }}
+                        {{ 'character.sort.az'|trans }}
+                    </button>
+                </div>
+            </div>
+
             <div id="characters-container" class="characters-grid">
 
-                {# ── Header liste (masqué en vue grille) ──────────── #}
+                {# ── Header liste ── #}
                 <div class="character-list-header">
                     <div>{{ 'character.index.title'|trans }}</div>
                     <div>{{ 'character.info.role'|trans }}</div>
@@ -63,8 +110,12 @@
 
                 {% for character in characters %}
 
-                    {# ── VUE GRILLE ────────────────────────────────── #}
-                    <div class="grid-only">
+                    {# ── VUE GRILLE ── #}
+                    <div class="grid-only"
+                         data-category="{{ character.role|default('') }}"
+                         data-id="{{ character.id }}"
+                         data-sort-name="{{ character.name|lower }}"
+                         data-sort-date="{{ character.createdAt|date('Y-m-d') }}">
                         <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}"
                            class="character-card">
 
@@ -82,10 +133,10 @@
 
                             <div class="character-card-body">
                                 {% if character.role %}
-                                    <span class="character-card-role-badge">
-                                    {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
-                                        {{ character.role }}
-                                </span>
+                                    <span class="character-card-role-badge character-role-{{ character.role }}">
+                                        {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
+                                        {{ ('character.role.' ~ character.role)|trans }}
+                                    </span>
                                 {% endif %}
                                 {% if character.description %}
                                     <p class="character-card-excerpt">{{ character.description }}</p>
@@ -93,20 +144,24 @@
                             </div>
 
                             <div class="character-card-footer">
-                            <span class="character-card-meta">
-                                {{ character.createdAt|date('d/m/Y') }}
-                            </span>
+                                <span class="character-card-meta">
+                                    {{ character.createdAt|date('d/m/Y') }}
+                                </span>
                                 <span class="character-card-arrow">
-                                {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
-                            </span>
+                                    {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
+                                </span>
                             </div>
 
                         </a>
                     </div>
 
-                    {# ── VUE LISTE ──────────────────────────────────── #}
+                    {# ── VUE LISTE ── #}
                     <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}"
-                       class="character-list-row list-only">
+                       class="character-list-row list-only"
+                       data-category="{{ character.role|default('') }}"
+                       data-id="{{ character.id }}"
+                       data-sort-name="{{ character.name|lower }}"
+                       data-sort-date="{{ character.createdAt|date('Y-m-d') }}">
 
                         <div class="character-list-main">
                             <div class="character-list-avatar">
@@ -121,7 +176,13 @@
                         </div>
 
                         <div class="character-list-role">
-                            {{ character.role|default('—') }}
+                            {% if character.role %}
+                                <span class="character-card-role-badge character-role-{{ character.role }}">
+                                    {{ ('character.role.' ~ character.role)|trans }}
+                                </span>
+                            {% else %}
+                                —
+                            {% endif %}
                         </div>
 
                         <div class="character-list-date">
@@ -135,6 +196,13 @@
                     </a>
 
                 {% endfor %}
+
+                {# ── Message état vide après filtrage ── #}
+                <div class="resource-empty-filtered" data-resource-filter-target="emptyMsg" style="display:none">
+                    {{ ux_icon('lucide:search-x', {class: 'icon-md'}) }}
+                    <p>{{ 'character.index.empty'|trans }}</p>
+                </div>
+
             </div>
 
         {% endif %}

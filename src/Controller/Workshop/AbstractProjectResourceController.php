@@ -3,6 +3,7 @@
 namespace App\Controller\Workshop;
 
 use App\Entity\Project;
+use App\Service\ActivityLogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
 
 #[IsGranted('ROLE_USER')]
 abstract class AbstractProjectResourceController extends AbstractController
@@ -19,6 +21,7 @@ abstract class AbstractProjectResourceController extends AbstractController
     public function __construct(
         protected readonly EntityManagerInterface $em,
         protected readonly TranslatorInterface    $translator,
+        protected readonly ActivityLogService     $activityLog,
     ) {}
 
     // ═══════════════════════════════════════════════════════════════
@@ -47,7 +50,8 @@ abstract class AbstractProjectResourceController extends AbstractController
         $this->checkProjectAccess($project, 'view');
 
         return $this->render($this->getTemplatePrefix() . '/index.html.twig', [
-            'project' => $project,
+            'project'  => $project,
+            'readonly' => $this->isReadOnly($project),
             $this->getEntitiesVariable() => $this->getEntities($project),
         ]);
     }
@@ -71,17 +75,29 @@ abstract class AbstractProjectResourceController extends AbstractController
             $this->em->persist($entity);
             $this->em->flush();
 
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+            $label = method_exists($entity, 'getName') ? $entity->getName()
+                : (method_exists($entity, 'getTitle') ? $entity->getTitle() : '');
+            $this->activityLog->log(
+                $this->getTranslationKey() . '.create',
+                $user,
+                $project,
+                $label ?: null,
+            );
+            $this->em->flush();
+
             $this->flashSuccess($this->getTranslationKey() . '.flash.created');
 
             return $this->redirectToRoute($this->getRoutePrefix() . '_show', [
                 'project_slug' => $project->getSlug(),
-                'id' => $entity->getId(),
+                'id'           => $entity->getId(),
             ]);
         }
 
         return $this->render($this->getTemplatePrefix() . '/new.html.twig', [
             'project' => $project,
-            'form' => $form,
+            'form'    => $form,
             $this->getEntityVariable() => $entity,
         ]);
     }
@@ -110,7 +126,8 @@ abstract class AbstractProjectResourceController extends AbstractController
         }
 
         return $this->render($this->getTemplatePrefix() . '/show.html.twig', [
-            'project' => $project,
+            'project'  => $project,
+            'readonly' => $this->isReadOnly($project),
             $this->getEntityVariable() => $entity,
         ]);
     }
@@ -143,17 +160,29 @@ abstract class AbstractProjectResourceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+            $label = method_exists($entity, 'getName') ? $entity->getName()
+                : (method_exists($entity, 'getTitle') ? $entity->getTitle() : '');
+            $this->activityLog->log(
+                $this->getTranslationKey() . '.edit',
+                $user,
+                $project,
+                $label ?: null,
+            );
+            $this->em->flush();
+
             $this->flashSuccess($this->getTranslationKey() . '.flash.updated');
 
             return $this->redirectToRoute($this->getRoutePrefix() . '_show', [
                 'project_slug' => $project->getSlug(),
-                'id' => $entity->getId(),
+                'id'           => $entity->getId(),
             ]);
         }
 
         return $this->render($this->getTemplatePrefix() . '/edit.html.twig', [
             'project' => $project,
-            'form' => $form,
+            'form'    => $form,
             $this->getEntityVariable() => $entity,
         ]);
     }
@@ -183,6 +212,16 @@ abstract class AbstractProjectResourceController extends AbstractController
         $tokenName = 'delete_' . $this->getTranslationKey() . '_' . $entity->getId();
 
         if ($this->isCsrfTokenValid($tokenName, $request->getPayload()->get('_token'))) {
+            $label = method_exists($entity, 'getName') ? $entity->getName()
+                : (method_exists($entity, 'getTitle') ? $entity->getTitle() : '');
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+            $this->activityLog->log(
+                $this->getTranslationKey() . '.delete',
+                $user,
+                $project,
+                $label ?: null,
+            );
             $this->em->remove($entity);
             $this->em->flush();
 

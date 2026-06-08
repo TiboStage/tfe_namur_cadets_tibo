@@ -104,6 +104,24 @@ class ScenarioElement
     #[ORM\Column(type: 'json')]
     public array $metadata = [];
 
+    /**
+     * Publication d'un épisode (uniquement pour les séries).
+     * Permet une publication épisode par épisode indépendamment du projet.
+     */
+    /**
+     * Vrai si cet élément est un nœud "feuille" (on y écrit).
+     * Copié depuis ProjectTypeConfig.hasContent à la création.
+     */
+    #[ORM\Column(options: ['default' => false])]
+    public bool $hasContent = false;
+
+    /**
+     * Publication d'un épisode (uniquement pour les séries).
+     * Permet une publication épisode par épisode indépendamment du projet.
+     */
+    #[ORM\Column(options: ['default' => false])]
+    public bool $isPublic = false;
+
     // ─── Timestamps ───────────────────────────────────────────────────────────
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -188,7 +206,44 @@ class ScenarioElement
     public function setSummary(string $v): static { $this->summary = trim($v); return $this; }
     public function setOrderIndex(int $v): static { $this->orderIndex = $v; return $this; }
     public function setDurationSeconds(int $v): static { $this->durationSeconds = $v; return $this; }
+    public function setHasContent(bool $v): static { $this->hasContent = $v; return $this; }
     public function setMetadata(array $v): static { $this->metadata = $v; return $this; }
+
+    // ─── Helpers narratifs ────────────────────────────────────────────────────
+
+    /**
+     * Un nœud feuille = on y écrit (déterminé par ProjectTypeConfig.hasContent).
+     * Copié dans $hasContent à la création — permet de naviguer sans jointure.
+     */
+    public function isLeaf(): bool
+    {
+        return $this->hasContent;
+    }
+
+    /**
+     * Retourne les ancêtres du plus haut au plus proche.
+     * @return self[]
+     */
+    public function getAncestors(): array
+    {
+        $ancestors = [];
+        $current   = $this->parent;
+        while ($current !== null) {
+            array_unshift($ancestors, $current);
+            $current = $current->getParent();
+        }
+        return $ancestors;
+    }
+
+    /**
+     * Retourne le chemin complet : "Acte I / Séquence 3 / Scène 5".
+     */
+    public function getFullPath(): string
+    {
+        $parts = array_map(fn(self $a) => $a->title, $this->getAncestors());
+        $parts[] = $this->title;
+        return implode(' / ', $parts);
+    }
 
     // ─── Getters compat Twig/code existant ───────────────────────────────────
 
@@ -199,5 +254,6 @@ class ScenarioElement
     public function getSummary(): string { return $this->summary; }
     public function getOrderIndex(): int { return $this->orderIndex; }
     public function getDurationSeconds(): int { return $this->durationSeconds; }
+    public function isHasContent(): bool { return $this->hasContent; }
     public function getMetadata(): array { return $this->metadata; }
 }

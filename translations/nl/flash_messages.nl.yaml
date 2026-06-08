@@ -6,17 +6,30 @@
 
 # ===== AUTHENTICATIE =====
 auth:
-    welcome: "Welkom {firstName}!"
-    welcome_back: "Welkom terug {firstName}!"
+    welcome: "Welkom %firstName%!"
+    welcome_back: "Welkom terug %firstName%!"
     logout: "Tot snel!"
     logout_success: "Je bent nu uitgelogd"
     register_success: "Account succesvol aangemaakt! Log in."
+
+# ===== PROFIEL =====
+profile:
+    updated: "Profiel succesvol bijgewerkt!"
+    username_locked: "Je kunt je gebruikersnaam nog niet wijzigen. Probeer het opnieuw over %days% dagen."
 
 # ===== PROJECT =====
 project:
     created: "Project succesvol aangemaakt!"
     updated: "Project bijgewerkt."
     deleted: "Project verwijderd."
+    set_public: "Je project is nu zichtbaar in de Atlas!"
+    set_private: "Je project is verwijderd uit de Atlas."
+    moderation_blocked: "Dit project is geblokkeerd door de moderatie. Neem contact op met de support voor meer informatie."
+    session_expired: "Sessie verlopen. Begin opnieuw."
+    settings_saved: "Instellingen opgeslagen."
+    settings_saved_slug: "Instellingen opgeslagen. De project-URL is bijgewerkt."
+    structure_updated: "Structuur bijgewerkt."
+    visibility_invalid: "Ongeldige zichtbaarheid."
 
 # ===== PERSONAGE =====
 character:
@@ -61,3 +74,53 @@ info:
     loading: "Laden..."
     processing: "Verwerken..."
     saved_draft: "Concept automatisch opgeslagen"
+
+# ===== ADMIN =====
+admin:
+    genre_created: "Genre succesvol aangemaakt."
+    genre_updated: "Genre bijgewerkt."
+    genre_deleted: "Genre verwijderd."
+    documentation_created: "Artikel succesvol aangemaakt!"
+    documentation_updated: "Artikel bijgewerkt."
+    documentation_deleted: "Artikel verwijderd."
+    user_roles_updated: "Rollen van %username% bijgewerkt."
+    project_status_updated: "Status van project '%title%' bijgewerkt: %status%."
+
+# ===== MODERATIE =====
+moderation:
+    project_status_updated: "Status van project '%title%' bijgewerkt: %status%."
+    report_status_updated: "Status van de melding bijgewerkt."
+    comment_hidden: "Reactie verborgen."
+    comment_shown: "Reactie hersteld."
+    comment_deleted: "Reactie definitief verwijderd."
+    unknown_action: "Onbekende actie."
+
+# ===== REACTIES =====
+comment:
+    published: "Reactie gepubliceerd!"
+    deleted: "Reactie verwijderd."
+    csrf_invalid: "Ongeldig beveiligingstoken."
+    length_invalid: "Reactie moet tussen 2 en 2000 tekens zijn."
+    already_reported: "Je hebt dit item al gemeld."
+    reason_invalid: "Ongeldige meldingsreden."
+    report_submitted: "Melding ingediend. Bedankt!"
+
+# ===== LEDEN =====
+member:
+    csrf_invalid: "Ongeldig CSRF-token."
+    role_invalid: "Ongeldige rol."
+    user_not_found: "Gebruiker '%username%' niet gevonden."
+    already_owner: "Je bent al de eigenaar van dit project."
+    already_collaborator: "'%username%' is al een medewerker van dit project."
+    added: "'%username%' is toegevoegd als %role%."
+    role_updated: "Rol bijgewerkt."
+    removed: "'%name%' is verwijderd uit het project."
+
+# ===== SCENARIO =====
+scenario:
+    element_deleted: "Element verwijderd."
+
+# ===== CSRF =====
+csrf:
+    invalid: "Ongeldig beveiligingstoken."
+    token_invalid: "Ongeldig token."

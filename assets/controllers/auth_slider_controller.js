@@ -40,10 +40,17 @@ export default class extends Controller {
         this._applyTab(this._mode, false);
         this._buildSwatches();
 
-        // Si un username est déjà présent (rechargement après erreur), mettre à jour la preview
-        if (this.hasUsernameInputTarget && this.usernameInputTarget.value.trim()) {
-            this._updateColorFromUsername(this.usernameInputTarget.value.trim());
-        }
+        // Couleur initiale : aléatoire dans la palette.
+        // Si le champ caché a déjà une valeur (rechargement après erreur de form),
+        // on conserve cette valeur plutôt que d'écraser le choix précédent.
+        const existingColor = this.hasAvatarColorInputTarget
+            ? this.avatarColorInputTarget.value.trim()
+            : '';
+        const initialColor = (existingColor && PALETTE.includes(existingColor))
+            ? existingColor
+            : PALETTE[Math.floor(Math.random() * PALETTE.length)];
+
+        this._pickColor(initialColor);
     }
 
     // ── Onglets ───────────────────────────────────────────────────────────────
@@ -131,34 +138,10 @@ export default class extends Controller {
     }
 
     // ── Username → couleur auto ───────────────────────────────────────────────
-
+    // La couleur n'est plus dérivée du username (hash supprimé).
+    // onUsernameInput reste branché dans le Twig pour d'éventuels futurs usages
+    // mais ne touche plus à la couleur.
     onUsernameInput(e) {
-        const username = e.target.value.trim();
-        // Si l'utilisateur n'a pas choisi manuellement, on auto-sélectionne depuis le username
-        if (!this._selectedColor && username) {
-            this._updateColorFromUsername(username);
-        } else if (!username) {
-            this._selectedColor = null;
-        }
-    }
-
-    _updateColorFromUsername(username) {
-        const color = this._hashColor(username);
-        this._syncColor(color);
-    }
-
-    /**
-     * Hash déterministe — miroir JS du PHP abs(crc32(strtolower(trim($username)))) % 8.
-     * Utilise un hash polynomial djb2 sur la chaîne normalisée.
-     */
-    _hashColor(str) {
-        const s = str.toLowerCase().trim();
-        let hash = 0;
-        for (let i = 0; i < s.length; i++) {
-            hash = ((hash << 5) - hash) + s.charCodeAt(i);
-            hash |= 0; // forcer int 32
-        }
-        const index = Math.abs(hash) % PALETTE.length;
-        return PALETTE[index];
+        // Réservé pour extension future (ex: mise à jour du preview du pseudo).
     }
 }

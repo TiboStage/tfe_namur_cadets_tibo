@@ -329,17 +329,6 @@
     margin-bottom: 20px;
 }
 
-.form-section-title {
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--color-primary);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--color-border);
-}
-
 /* ══════════════════════════════════════════════════════════════ */
 /* 6. ÉTAT VIDE                                                    */
 /* ══════════════════════════════════════════════════════════════ */
@@ -379,6 +368,155 @@
 
     .character-list-role,
     .character-list-header div:nth-child(2) { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 8. BARRE FILTRE / TRI (commune characters + locations)          */
+/* ══════════════════════════════════════════════════════════════ */
+
+.resource-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+    flex-wrap: wrap;
+}
+
+.resource-filter-tabs {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+}
+
+.resource-filter-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.resource-filter-tab:hover { color: var(--text-main); }
+
+.resource-filter-tab.active {
+    color: var(--text-main);
+    border-bottom-color: var(--color-primary);
+}
+
+.resource-filter-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 16px;
+    padding: 0 4px;
+    background: var(--overlay-sm);
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.resource-filter-tab.active .resource-filter-count {
+    background: var(--color-primary-medium);
+    color: var(--color-primary);
+}
+
+.resource-sort-group {
+    display: flex;
+    gap: 2px;
+}
+
+.resource-sort-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+
+.resource-sort-btn:hover { color: var(--text-main); }
+
+.resource-sort-btn.active {
+    color: var(--text-main);
+    background: var(--overlay-sm);
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 9. BADGES RÔLE COLORÉS (personnages)                           */
+/* ══════════════════════════════════════════════════════════════ */
+
+.character-role-protagonist {
+    border-color: rgba(255, 184, 0, 0.4);
+    color: var(--color-primary);
+}
+
+.character-role-antagonist {
+    border-color: rgba(220, 60, 60, 0.4);
+    color: #dc3c3c;
+}
+
+.character-role-secondary {
+    border-color: rgba(80, 160, 220, 0.4);
+    color: #50a0dc;
+}
+
+.character-role-figurant {
+    border-color: rgba(140, 140, 140, 0.4);
+    color: var(--text-muted);
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 10. AVATAR LIEUX + BADGES TYPE (locations)                     */
+/* ══════════════════════════════════════════════════════════════ */
+
+.location-card-avatar {
+    background: rgba(80, 160, 220, 0.08);
+    border-color: rgba(80, 160, 220, 0.25);
+    color: #50a0dc;
+}
+
+.location-list-avatar {
+    background: rgba(80, 160, 220, 0.08);
+    border-color: rgba(80, 160, 220, 0.25);
+    color: #50a0dc;
+}
+
+.location-type-interior  { border-color: rgba(180, 130, 80, 0.4); color: #b48250; }
+.location-type-exterior  { border-color: rgba(80, 180, 100, 0.4); color: #50b464; }
+.location-type-fantasy   { border-color: rgba(160, 80, 220, 0.4); color: #a050dc; }
+.location-type-historical{ border-color: rgba(200, 160, 60, 0.4); color: #c8a03c; }
+.location-type-futuristic{ border-color: rgba(60, 180, 220, 0.4); color: #3cb4dc; }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 11. ÉTAT VIDE APRÈS FILTRAGE                                   */
+/* ══════════════════════════════════════════════════════════════ */
+
+.resource-empty-filtered {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    text-align: center;
 }
 
 /* ═══════════════════════════════════════════════════════════════ */

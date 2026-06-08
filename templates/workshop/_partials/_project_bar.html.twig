@@ -1,0 +1,225 @@
+{% trans_default_domain 'workshop' %}
+
+{% set route = app.request.attributes.get('_route') %}
+
+{# ── Pré-calcul des compteurs ─────────────────────────────── #}
+{% set se_count     = project.scenarioElements|length %}
+{% set we_count     = project.worldEvents|length %}
+{% set char_count   = project.characters|length %}
+{% set loc_count    = project.locations|length %}
+{% set open_tasks   = project.tasks|filter(t => t.status != 'done')|length %}
+{% set active_notes = project.notes|filter(n => n.status != 'archived')|length %}
+
+<div class="project-bar">
+
+    {# ── Project switcher ─────────────────────────────────── #}
+    <div class="project-bar__left">
+
+        <div class="project-bar__switcher" data-controller="dropdown">
+
+            <button class="project-bar__project-btn"
+                    data-action="click->dropdown#toggle"
+                    type="button">
+                {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'xs'} %}
+                <span class="project-bar__project-name" title="{{ project.title }}">{{ project.title }}</span>
+                {{ ux_icon('lucide:chevron-down', {class: 'icon-xs project-bar__chevron'}) }}
+            </button>
+
+            <div class="project-bar__switcher-menu" data-dropdown-target="menu">
+
+                <div class="project-bar__switcher-current">
+                    {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'sm'} %}
+                    <div class="project-bar__switcher-info">
+                        <span class="project-bar__switcher-name" title="{{ project.title }}">{{ project.title }}</span>
+                        <span class="project-bar__switcher-type">{{ project.projectType }}</span>
+                    </div>
+                    <span class="project-bar__current-badge">{{ 'navbar.current_badge'|trans }}</span>
+                </div>
+
+                <div class="project-bar__switcher-list">
+                {% for other_project in app.user.projects|sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1) %}
+                    {% if other_project.id != project.id %}
+                        <a href="{{ path('app_project_show', {slug: other_project.slug}) }}"
+                           class="project-bar__switcher-item"
+                           title="{{ other_project.title }}">
+                            {% include 'workshop/_partials/_project_icon.html.twig' with {project: other_project, size: 'sm'} %}
+                            <div class="project-bar__switcher-info">
+                                <span class="project-bar__switcher-name">{{ other_project.title }}</span>
+                                <span class="project-bar__switcher-type">{{ other_project.projectType }}</span>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+                </div>
+
+                <div class="project-bar__switcher-footer">
+                    <a href="{{ path('app_project_index') }}">
+                        {{ ux_icon('lucide:folder', {class: 'icon-xs'}) }}
+                        {{ 'dashboard.recent_projects.view_all'|trans }}
+                    </a>
+                    <span class="project-bar__switcher-version">v{{ app_version.version }}</span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    {# ── Tabs de navigation (4 onglets primaires) ──────────── #}
+    <nav class="project-bar__nav">
+
+        <a href="{{ path('app_project_show', {slug: project.slug}) }}"
+           class="project-bar__tab {{ route == 'app_project_show' ? 'active' : '' }}">
+            {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
+            {{ 'nav.overview'|trans }}
+        </a>
+
+        <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}"
+           class="project-bar__tab {{ route starts with 'app_manuscript' ? 'active' : '' }}">
+            {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
+            {{ 'nav.manuscript'|trans }}
+            {% if se_count > 0 %}<span class="project-bar__count">{{ se_count }}</span>{% endif %}
+        </a>
+
+        <a href="{{ path('app_character_index', {project_slug: project.slug}) }}"
+           class="project-bar__tab {{ route starts with 'app_character' ? 'active' : '' }}">
+            {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
+            {{ 'nav.characters'|trans }}
+            {% if char_count > 0 %}<span class="project-bar__count">{{ char_count }}</span>{% endif %}
+        </a>
+
+        <a href="{{ path('app_location_index', {project_slug: project.slug}) }}"
+           class="project-bar__tab {{ route starts with 'app_location' ? 'active' : '' }}">
+            {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }}
+            {{ 'nav.locations'|trans }}
+            {% if loc_count > 0 %}<span class="project-bar__count">{{ loc_count }}</span>{% endif %}
+        </a>
+
+        {# ── Séparateur | entre primaires et secondaires ──── #}
+        <span class="project-bar__nav-sep"></span>
+
+        {# ── Onglets secondaires (desktop) ────────────────── #}
+        <a href="{{ path('app_world_event_index', {project_slug: project.slug}) }}"
+           class="project-bar__tab project-bar__tab--secondary {{ route starts with 'app_world_event' ? 'active' : '' }}">
+            {{ ux_icon('lucide:calendar-clock', {class: 'icon-xs'}) }}
+            {{ 'nav.timeline'|trans }}
+            {% if we_count > 0 %}<span class="project-bar__count">{{ we_count }}</span>{% endif %}
+        </a>
+
+        <a href="{{ path('app_task_index', {project_slug: project.slug}) }}"
+           class="project-bar__tab project-bar__tab--secondary {{ route starts with 'app_task' ? 'active' : '' }}">
+            {{ ux_icon('lucide:check-square', {class: 'icon-xs'}) }}
+            {{ 'nav.tasks'|trans }}
+            {% if open_tasks > 0 %}<span class="project-bar__count">{{ open_tasks }}</span>{% endif %}
+        </a>
+
+        <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
+           class="project-bar__tab project-bar__tab--secondary {{ route starts with 'app_note' ? 'active' : '' }}">
+            {{ ux_icon('lucide:file-edit', {class: 'icon-xs'}) }}
+            {{ 'nav.notes'|trans }}
+            {% if active_notes > 0 %}<span class="project-bar__count">{{ active_notes }}</span>{% endif %}
+        </a>
+
+        {# ── Plus mobile (tous les onglets) ───────────────── #}
+        <div class="project-bar__nav-more" data-controller="dropdown">
+            <button class="project-bar__tab project-bar__nav-more-btn"
+                    data-action="click->dropdown#toggle"
+                    type="button">
+                {{ 'projects.index.tab_more'|trans }}
+                {{ ux_icon('lucide:chevron-down', {class: 'icon-xs'}) }}
+            </button>
+            <div class="project-bar__nav-more-menu" data-dropdown-target="menu">
+                <a href="{{ path('app_project_show', {slug: project.slug}) }}"
+                   class="{{ route == 'app_project_show' ? 'active' : '' }}">
+                    {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
+                    {{ 'nav.overview'|trans }}
+                </a>
+                <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}"
+                   class="{{ route starts with 'app_manuscript' ? 'active' : '' }}">
+                    {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
+                    {{ 'nav.manuscript'|trans }}
+                    {% if se_count > 0 %}<span class="project-bar__count">{{ se_count }}</span>{% endif %}
+                </a>
+                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}"
+                   class="{{ route starts with 'app_character' ? 'active' : '' }}">
+                    {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
+                    {{ 'nav.characters'|trans }}
+                    {% if char_count > 0 %}<span class="project-bar__count">{{ char_count }}</span>{% endif %}
+                </a>
+                <a href="{{ path('app_location_index', {project_slug: project.slug}) }}"
+                   class="{{ route starts with 'app_location' ? 'active' : '' }}">
+                    {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }}
+                    {{ 'nav.locations'|trans }}
+                    {% if loc_count > 0 %}<span class="project-bar__count">{{ loc_count }}</span>{% endif %}
+                </a>
+                <a href="{{ path('app_world_event_index', {project_slug: project.slug}) }}"
+                   class="{{ route starts with 'app_world_event' ? 'active' : '' }}">
+                    {{ ux_icon('lucide:calendar-clock', {class: 'icon-xs'}) }}
+                    {{ 'nav.timeline'|trans }}
+                    {% if we_count > 0 %}<span class="project-bar__count">{{ we_count }}</span>{% endif %}
+                </a>
+                <a href="{{ path('app_task_index', {project_slug: project.slug}) }}"
+                   class="{{ route starts with 'app_task' ? 'active' : '' }}">
+                    {{ ux_icon('lucide:check-square', {class: 'icon-xs'}) }}
+                    {{ 'nav.tasks'|trans }}
+                    {% if open_tasks > 0 %}<span class="project-bar__count">{{ open_tasks }}</span>{% endif %}
+                </a>
+                <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
+                   class="{{ route starts with 'app_note' ? 'active' : '' }}">
+                    {{ ux_icon('lucide:file-edit', {class: 'icon-xs'}) }}
+                    {{ 'nav.notes'|trans }}
+                    {% if active_notes > 0 %}<span class="project-bar__count">{{ active_notes }}</span>{% endif %}
+                </a>
+                {# ── Séparateur + Paramètres (visible uniquement sur petits écrans) ── #}
+                <span class="project-bar__nav-more-divider"></span>
+                {% if not (readonly ?? false) %}
+                    <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
+                       class="project-bar__nav-more-settings {{ route starts with 'app_project_edit' ? 'active' : '' }}">
+                        {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
+                        {{ 'nav.settings'|trans }}
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}"
+                       class="project-bar__nav-more-settings" target="_blank" rel="noopener">
+                        {{ ux_icon('lucide:external-link', {class: 'icon-xs'}) }}
+                        {{ 'nav.public_page'|trans }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {# ── Spacer + Paramètres (extrémité droite, desktop) ─ #}
+        <span class="project-bar__nav-spacer"></span>
+
+        {% if not (readonly ?? false) %}
+            {% if app.user == project.createdBy %}
+                <a href="{{ path('app_project_moderation', {_locale: app.request.locale, slug: project.slug}) }}"
+                   class="project-bar__settings-btn {{ route == 'app_project_moderation' ? 'active' : '' }}"
+                   title="Modération">
+                    {{ ux_icon('lucide:shield', {class: 'icon-xs'}) }}
+                    <span class="project-bar__settings-label">Modération</span>
+                </a>
+            {% endif %}
+            <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
+               class="project-bar__settings-btn {{ route starts with 'app_project_edit' ? 'active' : '' }}"
+               title="{{ 'nav.settings'|trans }}">
+                {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
+                <span class="project-bar__settings-label">{{ 'nav.settings'|trans }}</span>
+            </a>
+        {% else %}
+            <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}"
+               class="project-bar__settings-btn" target="_blank" rel="noopener"
+               title="{{ 'nav.public_page'|trans }}">
+                {{ ux_icon('lucide:external-link', {class: 'icon-xs'}) }}
+                <span class="project-bar__settings-label">{{ 'nav.public_page'|trans }}</span>
+            </a>
+        {% endif %}
+
+    </nav>
+
+
+</div>
+
+{% if not (readonly ?? false) %}
+    {% include 'workshop/_partials/_publish_modal.html.twig' %}
+{% endif %}

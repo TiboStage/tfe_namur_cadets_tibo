@@ -137,6 +137,11 @@
     margin-bottom: 14px;
 }
 
+/* Couleurs par type sur le badge */
+.fn-page__type-badge--film     { color: var(--project-film);  border-color: var(--project-film); }
+.fn-page__type-badge--serie    { color: var(--project-serie); border-color: var(--project-serie); }
+.fn-page__type-badge--jeu_video { color: var(--project-jv);  border-color: var(--project-jv); }
+
 .fn-title {
     font-size: 26px;
     font-weight: 900;
@@ -188,13 +193,48 @@
     font-family: inherit;
 }
 
-.fn-type-card:hover {
-    border-color: var(--color-primary);
-    background: var(--color-bg-elevated);
+/* ── Fonds colorés par type ─────────────────────────────────── */
+.fn-type-card--film {
+    background: linear-gradient(155deg, rgba(230, 57, 70, 0.10) 0%, var(--color-bg-card) 52%);
+    border-color: rgba(230, 57, 70, 0.22);
+}
+.fn-type-card--serie {
+    background: linear-gradient(155deg, rgba(168, 85, 247, 0.10) 0%, var(--color-bg-card) 52%);
+    border-color: rgba(168, 85, 247, 0.22);
+}
+.fn-type-card--jeu_video {
+    background: linear-gradient(155deg, rgba(42, 157, 143, 0.10) 0%, var(--color-bg-card) 52%);
+    border-color: rgba(42, 157, 143, 0.22);
+}
+
+/* ── Hover par type ─────────────────────────────────────────── */
+.fn-type-card--film:hover {
+    border-color: var(--project-film);
+    background: linear-gradient(155deg, rgba(230, 57, 70, 0.18) 0%, var(--color-bg-elevated) 52%);
+    transform: translateY(-2px);
+}
+.fn-type-card--serie:hover {
+    border-color: var(--project-serie);
+    background: linear-gradient(155deg, rgba(168, 85, 247, 0.18) 0%, var(--color-bg-elevated) 52%);
+    transform: translateY(-2px);
+}
+.fn-type-card--jeu_video:hover {
+    border-color: var(--project-jv);
+    background: linear-gradient(155deg, rgba(42, 157, 143, 0.18) 0%, var(--color-bg-elevated) 52%);
     transform: translateY(-2px);
 }
 
-.fn-type-card__icon  { font-size: 32px; line-height: 1; margin-bottom: 4px; }
+/* ── Icône proj-icon dans la card ───────────────────────────── */
+.fn-type-card__icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+.fn-type-card__icon svg {
+    width: 28px;
+    height: 28px;
+}
 .fn-type-card__label { font-size: 18px; font-weight: 900; color: var(--text-main); letter-spacing: -0.3px; }
 .fn-type-card__desc  { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
 .fn-type-card__hint  { font-size: 11px; color: var(--text-muted-dark); letter-spacing: 0.2px; margin-top: 4px; font-style: italic; }
@@ -372,6 +412,11 @@
     white-space: nowrap;
 }
 
+/* Couleurs par type sur le récap badge */
+.fn-recap-badge--film     { color: var(--project-film);  border-color: var(--project-film); }
+.fn-recap-badge--serie    { color: var(--project-serie); border-color: var(--project-serie); }
+.fn-recap-badge--jeu_video { color: var(--project-jv);  border-color: var(--project-jv); }
+
 .fn-recap-title {
     font-size: 14px;
     font-weight: 700;
@@ -383,12 +428,64 @@
 
 /* ── Sélecteur de genres (step 2) ───────────────────────────── */
 
+.fn-genre-search-wrap {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.fn-genre-search {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 36px 8px 12px;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    color: var(--text-main);
+    font-size: 13px;
+    outline: none;
+    transition: border-color .15s;
+}
+
+.fn-genre-search::placeholder {
+    color: var(--text-muted);
+    opacity: .55;
+}
+
+.fn-genre-search:focus {
+    border-color: var(--color-primary);
+}
+
+.fn-genre-search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    opacity: .45;
+    pointer-events: none;
+    width: 15px;
+    height: 15px;
+}
+
+.fn-genre-no-results {
+    margin-top: 8px;
+    font-style: italic;
+    color: var(--text-muted);
+    opacity: .7;
+}
+
 .fn-genre-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 4px;
 }
+
+.fn-genre-grid::-webkit-scrollbar { width: 4px; }
+.fn-genre-grid::-webkit-scrollbar-track { background: transparent; }
+.fn-genre-grid::-webkit-scrollbar-thumb { background: var(--color-border); }
 
 .fn-genre-chip {
     display: inline-flex;

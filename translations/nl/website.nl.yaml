@@ -27,7 +27,7 @@ navbar:
 
     actions:
         workshop: "Werkplaats"
-        login: "Inloggen"
+        login: "Aanmelden"
         register: "Aanmelden"
 
 # ===== FOOTER =====
@@ -45,14 +45,56 @@ footer:
         tutorial: "Handleidingen"
     legal:
         title_section: "Juridisch"
+        cgu: "Gebruiksvoorwaarden"
         conf: "Privacy"
         cookies: "Cookies"
         contact: "Contact"
+        manage_cookies: "Cookies beheren"
+
+# ===== EENVOUDIGE COOKIEBANNER =====
+cookie_banner:
+    close: "Sluiten"
+    close_label: "Cookiebanner sluiten"
+
+# ===== COOKIETOESTEMMING (AVG) =====
+consent:
+    banner:
+        aria_label: "Cookie toestemmingsbanner"
+        title: "Wij gebruiken cookies"
+        desc: "Sommige zijn essentieel voor de werking van de site, andere verbeteren uw ervaring."
+        learn_more: "Meer informatie"
+        refuse: "Alles weigeren"
+        customize: "Aanpassen"
+        accept: "Alles accepteren"
+    modal:
+        title: "Cookie-instellingen"
+        close_label: "Voorkeursvenster sluiten"
+        intro: "Beheer uw cookievoorkeuren. U kunt deze instellingen op elk moment wijzigen via de link 'Cookies beheren' onderaan de pagina."
+        save: "Voorkeuren opslaan"
+        policy_link: "Cookiebeleid"
+    always_active: "Altijd actief"
+    category:
+        necessary:
+            title: "Noodzakelijke cookies"
+            desc: "Essentieel voor de werking van de site. Ze kunnen niet worden uitgeschakeld."
+            phpsessid: "— PHP-sessie, houdt u ingelogd"
+            csrf: "— Beveiligingstoken, beschermt formulieren"
+        functional:
+            title: "Functionele cookies"
+            desc: "Verbeteren uw ervaring door uw voorkeuren te onthouden."
+            toggle: "Functionele cookies inschakelen"
+            locale: "— Taalvoorkeur, 1 jaar opgeslagen"
+            rememberme: "— Ingelogd blijven, 7 dagen geldig (indien ingeschakeld)"
+        analytics:
+            title: "Analytische cookies"
+            desc: "Helpen het gebruik van de site te analyseren. Momenteel niet in gebruik."
+            toggle: "Analytische cookies inschakelen"
+            none: "Momenteel geen analytische cookies in gebruik"
 
 # ===== HOMEPAGINA =====
 home:
     hero:
-        badge: "✦ Een tool ontworpen voor wereldbouwers"
+        badge: "Een tool ontworpen voor wereldbouwers"
         title: "Verbeeld, Structureer,"
         title_highlight: "Schrijf."
         subtitle: "Breng je werelden tot leven, verduidelijk je scripts en verhalen.<br>Je verbeelding, zonder grenzen."
@@ -125,6 +167,13 @@ examples:
         view_project: "Project verkennen"
         author: "Door"
 
+    empty:
+        notice: "Sectie wordt voorbereid — de eerste projecten komen binnenkort"
+        title: "De eerste projecten komen binnenkort"
+        desc: "Zodra makers hun universums publiceren, vind je ze hier, gesorteerd op type en filterbaar."
+        cta_create: "Mijn eerste project maken"
+        cta_pricing: "Prijzen bekijken"
+
 # ===== PRIJZEN PAGINA =====
 pricing:
     header:
@@ -187,7 +236,7 @@ pricing:
     early_access:
         title: "Vroege toegang bezig."
         desc: "De tool is momenteel in actieve ontwikkeling. Als je het project wilt ondersteunen, kun je doneren via Ko-fi — 0% platformkosten."
-        btn: "☕ Steun het project"
+        btn: "Steun het project"
         kofi_url: "https://ko-fi.com/scenart"
 
 # ===== CONTACT PAGINA =====

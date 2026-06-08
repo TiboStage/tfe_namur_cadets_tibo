@@ -22,10 +22,14 @@ registration:
         too_short: "Votre nom d'utilisateur doit contenir au moins {{ limit }} caractères."
         too_long: "Votre nom d'utilisateur ne peut pas dépasser {{ limit }} caractères."
         unique: "Ce nom d'utilisateur est déjà pris. Soyez créatif !"
+        invalid_chars: "Le nom d'utilisateur ne peut contenir que des lettres, chiffres, tirets (-) et underscores (_). Les espaces ne sont pas autorisés."
 
     password:
         not_blank: "Un mot de passe est requis."
         length: "Votre mot de passe doit contenir au moins {{ limit }} caractères."
+        uppercase: "Le mot de passe doit contenir au moins une lettre majuscule."
+        digit: "Le mot de passe doit contenir au moins un chiffre."
+        special: "Le mot de passe doit contenir au moins un caractère spécial (!@#$…)."
 
     terms:
         must_agree: "Vous devez accepter les conditions d'utilisation."

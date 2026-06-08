@@ -132,7 +132,7 @@
 }
 
 .feature-card:hover {
-    background: var(--color-bg-elevated);
+    background: var(--color-bg-card);
 }
 
 .feature-icon {

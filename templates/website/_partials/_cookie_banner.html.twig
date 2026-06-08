@@ -20,12 +20,12 @@
         <button type="button"
                 class="cookie-banner__close"
                 data-action="click->cookie-banner#dismiss"
-                aria-label="Fermer la bannière cookies">
+                aria-label="{{ 'cookie_banner.close_label'|trans({}, 'website') }}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                 <line x1="18" y1="6" x2="6" y2="18"/>
                 <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
-            <span>Fermer</span>
+            <span>{{ 'cookie_banner.close'|trans({}, 'website') }}</span>
         </button>
     </div>
 </div>

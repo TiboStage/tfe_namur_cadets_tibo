@@ -21,8 +21,6 @@ class ErrorController extends AbstractController
             ?? $request->getLocale()
             ?? 'fr';
 
-        dump($locale); // ← temporaire pour débugger
-
         // Vérifie que la locale est valide
         if (!in_array($locale, ['fr', 'en'])) {
             $locale = 'fr';

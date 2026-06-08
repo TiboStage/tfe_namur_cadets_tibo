@@ -1,0 +1,116 @@
+# ============================================================
+# SCÉNART - Admin Panel Translations (EN)
+# ============================================================
+
+# ===== LAYOUT =====
+layout:
+    title: "Administration Panel"
+    exit: "Exit admin"
+    menu:
+        dashboard: "Overview"
+        users: "Users"
+        projects: "Projects"
+        moderation: "Moderation"
+        config: "Configuration"
+        documentation: "Documentation"
+        genres: "Genres"
+        moderator_panel: "Moderator Panel"
+
+# ===== GENRE =====
+genre:
+    list:
+        title: "Narrative genres"
+    form:
+        new_title: "New genre"
+        edit_title: "Edit genre"
+        new_header: "New genre"
+        edit_header: "Edit '%name%'"
+        back: "← Back to genres"
+        slug_label: "Slug"
+        slug_hint: "Unique technical key, lowercase + underscores only"
+        slug_placeholder: "e.g. science_fiction"
+        slug_warning: "Do not modify the slug of a genre already used by projects — this would break the association."
+        translations_label: "Translations"
+        translations_hint: "All 3 languages are required"
+        lang_fr: "French"
+        lang_nl: "Dutch"
+        lang_en: "English"
+        placeholder_fr: "E.g.: Thriller"
+        placeholder_nl: "E.g.: Thriller"
+        placeholder_en: "E.g.: Thriller"
+        types_label: "Compatible project types"
+        types_hint: "Leave all unchecked = compatible with all types"
+        type_film: "🎬 Film"
+        type_serie: "📺 Series"
+        type_jeu_video: "🎮 Video Game"
+        order_label: "Display order"
+        order_hint: "0 = first"
+        btn_save: "✓ Save changes"
+        btn_create: "+ Create genre"
+        btn_cancel: "Cancel"
+    btn:
+        delete: "Delete"
+
+# ===== CONFIG =====
+config:
+    platform_info: "Platform information"
+    field_name: "Name"
+    field_version: "Version"
+    field_framework: "Framework"
+    field_database: "Database"
+    field_environment: "Environment"
+    field_debug: "Debug"
+    debug_enabled: "Enabled"
+    debug_disabled: "Disabled"
+    sessions: "Active sessions"
+    sessions_hint: "Information about the current session."
+    field_logged_as: "Logged in as"
+    field_email: "Email"
+    field_roles: "Roles"
+    todo_section: "To implement"
+    todo_description: "This section will contain in a future version: open/closed registration settings, project limit per user, ..."
+
+# ===== DOCUMENTATION =====
+documentation:
+    title: "Documentation articles"
+    btn_delete: "Delete"
+
+# ===== USERS =====
+users:
+    show:
+        roles_title: "Roles"
+        save_roles: "Save roles"
+        moderation_title: "Account moderation"
+        projects_title: "%username%'s projects (%count%)"
+    btn_search: "Search"
+
+# ===== MODERATION =====
+moderation:
+    empty: "No active reports"
+    action:
+        clear: "Clear"
+        warn: "Warn"
+        block: "Block"
+        approve: "Approve"
+
+# ===== MODO LAYOUT =====
+modo:
+    title: "Moderator Panel"
+    exit: "Exit"
+    menu:
+        dashboard: "Overview"
+        flagged_projects: "Flagged projects"
+        reports: "Reports"
+        comments: "Comments"
+        admin_panel: "Admin Panel"
+
+# ===== REPORTS =====
+reports:
+    empty: "No active reports"
+    btn:
+        clear_title: "Clear report"
+        warning_title: "Warning"
+        block_title: "Block project"
+    detail:
+        title: "Report details"
+        actions_title: "Actions"

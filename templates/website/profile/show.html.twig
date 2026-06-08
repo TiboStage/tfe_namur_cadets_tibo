@@ -52,11 +52,13 @@
                 </div>
             </div>
 
+            {% if user.username matches '/^[a-z0-9_-]+$/' %}
             <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: user.username}) }}"
                class="pf-card__public-link">
                 {{ ux_icon('lucide:external-link', {class: 'icon-3xs'}) }}
                 {{ 'profile.card.view_public'|trans }}
             </a>
+            {% endif %}
         </div>
     </div>
 

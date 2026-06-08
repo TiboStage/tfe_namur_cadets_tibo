@@ -21,13 +21,28 @@ class WorldEvent
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'worldEvents')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Project $project = null;
 
     #[ORM\ManyToOne(targetEntity: Location::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Location $location = null;
+
+    /**
+     * Lien optionnel vers une scène du manuscrit.
+     * Soft-link : on stocke juste l'ID pour éviter une dépendance circulaire.
+     */
+    #[ORM\ManyToOne(targetEntity: ScenarioElement::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?ScenarioElement $linkedScene = null;
+
+    /**
+     * Type de l'événement : plot | character | world | conflict | reveal
+     * Permet de filtrer et de colorer les events sur la timeline.
+     */
+    #[ORM\Column(type: 'string', length: 30, nullable: true)]
+    private ?string $eventType = null;
 
     // ─── Scalaires — property hooks PHP 8.4 ────────────────────────────────
 
@@ -85,6 +100,8 @@ class WorldEvent
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getProject(): ?Project { return $this->project; }
     public function getLocation(): ?Location { return $this->location; }
+    public function getLinkedScene(): ?ScenarioElement { return $this->linkedScene; }
+    public function getEventType(): ?string { return $this->eventType; }
 
     // ─── Setters ────────────────────────────────────────────────────────────
 
@@ -97,6 +114,18 @@ class WorldEvent
     public function setLocation(?Location $location): static
     {
         $this->location = $location;
+        return $this;
+    }
+
+    public function setLinkedScene(?ScenarioElement $scene): static
+    {
+        $this->linkedScene = $scene;
+        return $this;
+    }
+
+    public function setEventType(?string $type): static
+    {
+        $this->eventType = $type;
         return $this;
     }
 

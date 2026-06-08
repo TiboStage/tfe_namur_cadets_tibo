@@ -56,16 +56,15 @@
     </div>
 
     {# ── Zone image ──────────────────────────────────────────────────────── #}
-    {% set _type_colors = { film: '#E63946', serie: '#A855F7', jeu_video: '#2A9D8F', custom: '#6B7280' } %}
-    {% set _type_color = _type_colors[project.projectType] ?? '#6B7280' %}
-    <div class="sc-card__media sc-card__media--{{ project.projectType != 'custom' ? project.projectType : 'film' }}"
-         {% if not project.coverFilename %}
-         style="background: linear-gradient(135deg, {{ _type_color }}33 0%, #0d0d10 100%);"
-         {% endif %}>
+    <div class="sc-card__media sc-card__media--{{ project.projectType }}">
         {% if project.coverFilename %}
             <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
                  alt="{{ project.title }}"
                  class="sc-card__cover-img">
+        {% else %}
+            <div class="sc-card__type-icon">
+                {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'lg'} %}
+            </div>
         {% endif %}
         <div class="sc-card__media-overlay"></div>
         <div class="sc-card__media-badges">

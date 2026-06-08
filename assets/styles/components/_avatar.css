@@ -20,7 +20,7 @@
 
 /* ── Tailles ─────────────────────────────────────────────── */
 .u-avatar--xs  { width: 20px; height: 20px; font-size: 9px;  border-radius: 3px; }
-.u-avatar--sm  { width: 26px; height: 26px; font-size: 11px; border-radius: 4px; }
+.u-avatar--sm  { width: 20px; height: 20px; font-size: 9px;  border-radius: 3px; }
 .u-avatar--md  { width: 32px; height: 32px; font-size: 13px; border-radius: 4px; }
 .u-avatar--lg  { width: 42px; height: 42px; font-size: 16px; border-radius: 5px; }
 .u-avatar--xl  { width: 56px; height: 56px; font-size: 20px; border-radius: 6px; }

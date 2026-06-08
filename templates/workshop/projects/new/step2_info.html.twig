@@ -16,7 +16,7 @@
 <div class="fn-page fn-page--narrow">
 
     <div class="fn-page__header">
-        <span class="fn-page__type-badge">{{ type_badge }}</span>
+        <span class="fn-page__type-badge fn-page__type-badge--{{ type }}">{{ type_badge }}</span>
         <h1 class="fn-title">{{ 'funnel.step2.title'|trans }}</h1>
         <p class="fn-subtitle">{{ 'funnel.step2.subtitle'|trans }}</p>
     </div>
@@ -66,9 +66,21 @@
                 <span class="fn-field__optional">{{ 'funnel.step2.optional_genres'|trans }}</span>
             </label>
             <p class="fn-hint">{{ 'funnel.step2.genres_hint'|trans }}</p>
-            <div class="fn-genre-grid">
+
+            <div class="fn-genre-search-wrap">
+                <input type="text"
+                       id="fn-genre-search"
+                       class="fn-genre-search"
+                       placeholder="{{ 'funnel.step2.genres_search_placeholder'|trans }}"
+                       autocomplete="off"
+                       spellcheck="false">
+                <svg class="fn-genre-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+
+            <div class="fn-genre-grid" id="fn-genre-grid">
                 {% for genre in genres %}
-                <label class="fn-genre-chip {{ genre.slug in (prev_genres ?? []) ? 'fn-genre-chip--checked' : '' }}">
+                <label class="fn-genre-chip {{ genre.slug in (prev_genres ?? []) ? 'fn-genre-chip--checked' : '' }}"
+                       data-label="{{ genre.getLabel(app.request.locale)|lower }}">
                     <input type="checkbox"
                            name="genres[]"
                            value="{{ genre.slug }}"
@@ -78,6 +90,9 @@
                 </label>
                 {% endfor %}
             </div>
+            <p class="fn-hint fn-genre-no-results" id="fn-genre-no-results" style="display:none">
+                {{ 'funnel.step2.genres_no_results'|trans }}
+            </p>
             <p class="fn-hint" id="fn-genre-counter"></p>
         </div>
         {% endif %}
@@ -95,32 +110,45 @@
     </form>
 
     <script>
-    // Limite à 3 genres sélectionnables + feedback visuel
     (function () {
-        const MAX = 3;
-        const boxes   = document.querySelectorAll('.fn-genre-checkbox');
-        const counter = document.getElementById('fn-genre-counter');
+        const MAX       = 3;
+        const boxes     = document.querySelectorAll('.fn-genre-checkbox');
+        const chips     = document.querySelectorAll('.fn-genre-chip');
+        const counter   = document.getElementById('fn-genre-counter');
+        const search    = document.getElementById('fn-genre-search');
+        const noResults = document.getElementById('fn-genre-no-results');
         const labelOne  = '{{ 'funnel.step2.genres_count_one'|trans|e('js') }}';
         const labelMany = '{{ 'funnel.step2.genres_count_many'|trans|e('js') }}';
+
+        function filterChips() {
+            const q = search ? search.value.toLowerCase().trim() : '';
+            let visible = 0;
+            chips.forEach(chip => {
+                const label     = chip.dataset.label || '';
+                const isChecked = chip.querySelector('.fn-genre-checkbox').checked;
+                const show      = !q || isChecked || label.includes(q);
+                chip.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+            if (noResults) noResults.style.display = (visible === 0) ? '' : 'none';
+        }
 
         function update() {
             const checked = [...boxes].filter(b => b.checked).length;
             if (counter) {
-                if (checked === 0) {
-                    counter.textContent = '';
-                } else if (checked === 1) {
-                    counter.textContent = labelOne;
-                } else {
-                    counter.textContent = labelMany.replace('%n%', checked);
-                }
+                counter.textContent = checked === 0 ? '' :
+                    checked === 1 ? labelOne :
+                    labelMany.replace('%n%', checked);
             }
             boxes.forEach(b => {
                 const chip = b.closest('.fn-genre-chip');
                 chip.classList.toggle('fn-genre-chip--checked', b.checked);
                 if (!b.checked) b.disabled = checked >= MAX;
             });
+            filterChips();
         }
 
+        if (search) search.addEventListener('input', filterChips);
         boxes.forEach(b => b.addEventListener('change', update));
         update();
     })();

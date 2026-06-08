@@ -23,12 +23,10 @@
             </div>
         </div>
 
-        {# Mockup dashboard — remplacer par une vraie capture quand disponible #}
+        {# Mockup dashboard statique #}
         <div class="container">
             <div class="hero-mockup">
-                <div class="hero-mockup-placeholder">
-                    {{ 'home.hero.mockup_placeholder'|trans }}
-                </div>
+                {% include 'website/_partials/_dashboard_mockup.html.twig' %}
             </div>
         </div>
     </section>

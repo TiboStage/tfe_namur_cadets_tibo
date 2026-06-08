@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Formulaire d'inscription.
@@ -36,6 +38,10 @@ class RegistrationFormType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => false,
                 // Placeholder traduit dans le Twig : 'register.username'|trans
+                'attr' => [
+                    'pattern' => '[a-zA-Z0-9_-]+',
+                    'title'   => 'Lettres, chiffres, _ et - uniquement',
+                ],
                 'constraints' => [
                     new NotBlank(
                         message: 'registration.username.not_blank'
@@ -45,6 +51,10 @@ class RegistrationFormType extends AbstractType
                         max: 30,
                         minMessage: 'registration.username.too_short',
                         maxMessage: 'registration.username.too_long',
+                    ),
+                    new Regex(
+                        pattern: '/^[a-zA-Z0-9_-]+$/',
+                        message: 'registration.username.invalid_chars'
                     ),
                 ],
             ])
@@ -59,15 +69,17 @@ class RegistrationFormType extends AbstractType
                 'attr'   => ['autocomplete' => 'new-password'],
                 // Placeholder traduit dans le Twig : 'register.password'|trans
                 'constraints' => [
-                    new NotBlank(
-                        message: 'registration.password.not_blank'
-                    ),
-                    new Length(
-                        min: 8,
-                        minMessage: 'registration.password.length',
-                        max: 4096,
-                    ),
+                    new NotBlank(message: 'registration.password.not_blank'),
+                    new Length(min: 8, minMessage: 'registration.password.length', max: 4096),
+                    new Regex(pattern: '/[A-Z]/',    message: 'registration.password.uppercase'),
+                    new Regex(pattern: '/[0-9]/',    message: 'registration.password.digit'),
+                    new Regex(pattern: '/[\W_]/',    message: 'registration.password.special'),
                 ],
+            ])
+            ->add('avatarColor', HiddenType::class, [
+                'label'    => false,
+                'required' => false,
+                'attr'     => ['data-auth-slider-target' => 'avatarColorInput'],
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped'      => false,

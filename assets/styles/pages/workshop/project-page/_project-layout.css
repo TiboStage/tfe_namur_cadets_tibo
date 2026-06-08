@@ -1,26 +1,26 @@
 /* =========================================================
-   WORKSPACE LAYOUT (sidebar + content)
+   WORKSPACE LAYOUT (project-bar + full-width content)
    ========================================================= */
-
-.workspace-container {
-    display: flex;
-
-    width: 100%;
-    height: calc(100vh - 80px);
-
-    background: var(--color-bg-dark);
-
-    overflow: hidden;
-}
 
 /* ── Main content area ────────────────────────────────── */
 
 .workspace-main {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    width: 100%;
+    height: calc(100vh - var(--workspace-offset));
     overflow-y: auto;
+    background: var(--color-bg-dark);
+}
+
+/* ── Wrapper contenu aligné sur la project-bar ────────── */
+
+.workspace-content {
+    width: calc(100% - 100px);
+    max-width: 1700px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
 }
 
 /* ── Masquer la navbar principale dans le workspace ──── */
@@ -54,5 +54,11 @@
     .workspace-main {
         width: 100%;
         min-width: 0;
+    }
+
+    /* Aligne sur la nav qui passe à width: 100% sur mobile */
+    .workspace-content {
+        width: 100%;
+        padding: 0 16px;
     }
 }

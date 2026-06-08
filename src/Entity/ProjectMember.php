@@ -24,7 +24,7 @@ class ProjectMember
 
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn( false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
     // ─── Scalaires — property hooks PHP 8.4 ──────────────────────────────────

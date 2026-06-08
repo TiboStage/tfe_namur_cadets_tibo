@@ -1,7 +1,7 @@
 {% extends 'admin/layout.html.twig' %}
 
 {% block admin_title %}
-    {{ mode == 'edit' ? 'Modifier le genre' : 'Nouveau genre' }}
+    {{ mode == 'edit' ? 'genre.form.edit_title'|trans({}, 'admin') : 'genre.form.new_title'|trans({}, 'admin') }}
 {% endblock %}
 
 {% block admin_content %}
@@ -10,8 +10,8 @@
     <div class="admin-section-header">
         <div>
             <a href="{{ path('admin_genre_index', {_locale: app.request.locale}) }}"
-               class="admin-back">← Retour aux genres</a>
-            <h2>{{ mode == 'edit' ? 'Modifier «&nbsp;' ~ genre.slug ~ '&nbsp;»' : 'Nouveau genre' }}</h2>
+               class="admin-back">{{ 'genre.form.back'|trans({}, 'admin') }}</a>
+            <h2>{{ mode == 'edit' ? 'genre.form.edit_header'|trans({'%name%': genre.slug}, 'admin') : 'genre.form.new_header'|trans({}, 'admin') }}</h2>
         </div>
     </div>
 
@@ -33,27 +33,27 @@
         {# ── Slug ────────────────────────────────────────────────────── #}
         <div class="admin-field">
             <label class="admin-label">
-                Slug <span class="admin-required">*</span>
-                <span class="admin-hint">Clé technique unique, lowercase + underscores uniquement</span>
+                {{ 'genre.form.slug_label'|trans({}, 'admin') }} <span class="admin-required">*</span>
+                <span class="admin-hint">{{ 'genre.form.slug_hint'|trans({}, 'admin') }}</span>
             </label>
             <input type="text"
                    name="slug"
                    class="admin-input"
                    value="{{ genre.slug }}"
-                   placeholder="ex : science_fiction"
+                   placeholder="{{ 'genre.form.slug_placeholder'|trans({}, 'admin') }}"
                    pattern="[a-z0-9_]+"
                    maxlength="50"
                    required>
             <p class="admin-field-note">
-                ⚠️ Ne modifiez pas le slug d'un genre déjà utilisé par des projets — cela romprait l'association.
+                ⚠️ {{ 'genre.form.slug_warning'|trans({}, 'admin') }}
             </p>
         </div>
 
         {# ── Traductions (obligatoires) ───────────────────────────────── #}
         <div class="admin-field">
             <label class="admin-label">
-                Traductions <span class="admin-required">*</span>
-                <span class="admin-hint">Les 3 langues sont obligatoires</span>
+                {{ 'genre.form.translations_label'|trans({}, 'admin') }} <span class="admin-required">*</span>
+                <span class="admin-hint">{{ 'genre.form.translations_hint'|trans({}, 'admin') }}</span>
             </label>
 
             <div class="admin-translations-grid">
@@ -79,11 +79,11 @@
         {# ── Types de projet compatibles ──────────────────────────────── #}
         <div class="admin-field">
             <label class="admin-label">
-                Types de projet compatibles
-                <span class="admin-hint">Laissez tout décoché = compatible avec tous les types</span>
+                {{ 'genre.form.types_label'|trans({}, 'admin') }}
+                <span class="admin-hint">{{ 'genre.form.types_hint'|trans({}, 'admin') }}</span>
             </label>
             <div class="admin-checkboxes">
-                {% for type, label in {film: '🎬 Film', serie: '📺 Série', jeu_video: '🎮 Jeu vidéo'} %}
+                {% for type, label in {film: 'genre.form.type_film'|trans({}, 'admin'), serie: 'genre.form.type_serie'|trans({}, 'admin'), jeu_video: 'genre.form.type_jeu_video'|trans({}, 'admin')} %}
                 <label class="admin-checkbox-label">
                     <input type="checkbox"
                            name="projectTypes[]"
@@ -98,8 +98,8 @@
         {# ── Ordre d'affichage ─────────────────────────────────────────── #}
         <div class="admin-field admin-field--short">
             <label class="admin-label">
-                Ordre d'affichage
-                <span class="admin-hint">0 = en premier</span>
+                {{ 'genre.form.order_label'|trans({}, 'admin') }}
+                <span class="admin-hint">{{ 'genre.form.order_hint'|trans({}, 'admin') }}</span>
             </label>
             <input type="number"
                    name="orderIndex"
@@ -111,10 +111,10 @@
         {# ── Actions ──────────────────────────────────────────────────── #}
         <div class="admin-form-actions">
             <button type="submit" class="btn btn--cta-yellow">
-                {{ mode == 'edit' ? '✓ Enregistrer les modifications' : '+ Créer le genre' }}
+                {{ mode == 'edit' ? 'genre.form.btn_save'|trans({}, 'admin') : 'genre.form.btn_create'|trans({}, 'admin') }}
             </button>
             <a href="{{ path('admin_genre_index', {_locale: app.request.locale}) }}"
-               class="btn btn--ghost">Annuler</a>
+               class="btn btn--ghost">{{ 'genre.form.btn_cancel'|trans({}, 'admin') }}</a>
         </div>
 
     </form>

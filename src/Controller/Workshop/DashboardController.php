@@ -2,6 +2,7 @@
 
 namespace App\Controller\Workshop;
 
+use App\Repository\ActivityLogRepository;
 use App\Repository\ProjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,35 +12,46 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class DashboardController extends AbstractController
 {
     public function __construct(
-        private readonly ProjectRepository $projectRepository,
+        private readonly ProjectRepository     $projectRepository,
+        private readonly ActivityLogRepository $activityLogRepository,
     ) {}
 
     public function index(): Response
     {
         $user = $this->getUser();
 
-        // ✅ OPTIMISÉ : 1 seule requête SQL avec JOIN + GROUP BY
+        // ── Projets avec stats (1 requête SQL) ───────────────────────────────
         $projectsWithStats = $this->projectRepository->findByUserWithStats($user);
 
-        // Extraire les projets et calculer les totaux
-        $projects = [];
+        $projects        = [];
         $totalCharacters = 0;
-        $totalLocations = 0;
-        $totalScenes = 0;
+        $totalLocations  = 0;
+        $totalScenes     = 0;
 
         foreach ($projectsWithStats as $row) {
-            $projects[] = $row[0];  // L'entité Project
+            $projects[]       = $row[0];
             $totalCharacters += (int) $row['character_count'];
-            $totalLocations += (int) $row['location_count'];
-            $totalScenes += (int) $row['scene_count'];
+            $totalLocations  += (int) $row['location_count'];
+            $totalScenes     += (int) $row['scene_count'];
         }
 
-        // Projets récents (5 derniers)
-        $recentProjects = array_slice($projects, 0, 5);
+        // ── Activité récente réelle (ActivityLog) ─────────────────────────────
+        $recentActivity = $this->activityLogRepository->findRecentByUser(
+            $user->getId(),
+            limit: 4
+        );
+
+        // ── Projets "en cours" (max 5 pour la section hero) ──────────────────
+        $heroProjects = array_slice($projects, 0, 5);
+
+        // ── Projets pour la grille basse (max 4) ─────────────────────────────
+        $gridProjects = array_slice($projects, 0, 4);
 
         return $this->render('workshop/dashboard.html.twig', [
             'projects'         => $projects,
-            'recentProjects'   => $recentProjects,
+            'hero_projects'    => $heroProjects,
+            'grid_projects'    => $gridProjects,
+            'recent_activity'  => $recentActivity,
             'projects_count'   => count($projects),
             'total_characters' => $totalCharacters,
             'total_locations'  => $totalLocations,

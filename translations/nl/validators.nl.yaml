@@ -22,6 +22,7 @@ registration:
         too_short: "Je gebruikersnaam moet minimaal {{ limit }} tekens lang zijn."
         too_long: "Je gebruikersnaam mag niet langer zijn dan {{ limit }} tekens."
         unique: "Deze gebruikersnaam is al bezet. Wees creatief!"
+        invalid_chars: "Een gebruikersnaam mag alleen letters, cijfers, koppeltekens (-) en underscores (_) bevatten. Spaties zijn niet toegestaan."
 
     password:
         not_blank: "Een wachtwoord is vereist."

@@ -1,196 +1,321 @@
 {% extends 'workshop/projects/layout.html.twig' %}
 {% trans_default_domain 'workshop' %}
 
-{% block title %}{{ 'task.index.title'|trans }}{% endblock %}
+{% block title %}{{ 'task.index.title'|trans }} — {{ project.title }}{% endblock %}
 
 {% block project_content %}
-    <div class="dashboard-container">
 
-        {# Header #}
-        <header class="page-header">
-            <div>
-                <h1>{{ 'task.index.title'|trans }}</h1>
-                <p class="page-subtitle">{{ 'task.index.subtitle'|trans }}</p>
-            </div>
+{# ── Racine Stimulus ──────────────────────────────────────────────────────── #}
+<div class="dashboard-container"
+     data-controller="task-list"
+     data-task-list-label-deleted-value="{{ 'task.toast.deleted'|trans }}"
+     data-task-list-label-undo-value="{{ 'task.toast.undo'|trans }}"
+     data-task-list-label-status-value="{{ 'task.toast.status_changed'|trans }}">
+
+    {# ── Header ───────────────────────────────────────────────────────────── #}
+    <header class="page-header">
+        <div>
+            <h1>{{ 'task.index.title'|trans }}</h1>
+            <p class="page-subtitle">{{ 'task.index.subtitle'|trans }}</p>
+        </div>
+        {% if not (readonly ?? false) and allTasks is not empty %}
+        <a href="{{ path('app_task_new', {project_slug: project.slug}) }}"
+           class="btn-creat"
+           data-turbo-frame="modal-frame"
+           data-action="click->modal#open">
+            {{ ux_icon('lucide:plus', {style: 'width:16px;height:16px'}) }}
+            {{ 'task.index.create'|trans }}
+        </a>
+        {% endif %}
+    </header>
+
+    {% if allTasks is empty %}
+
+        {# ── État vide ────────────────────────────────────────────────────── #}
+        <div class="page-empty">
+            {{ ux_icon('lucide:check-square', {style: 'width:44px;height:44px'}) }}
+            <h3>{{ 'task.index.empty.title'|trans }}</h3>
+            <p>{{ 'task.index.empty.message'|trans }}</p>
             {% if not (readonly ?? false) %}
             <a href="{{ path('app_task_new', {project_slug: project.slug}) }}"
                class="btn-creat"
                data-turbo-frame="modal-frame"
                data-action="click->modal#open">
-                {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
-                {{ 'task.index.create'|trans }}
+                {{ ux_icon('lucide:plus', {style: 'width:15px;height:15px'}) }}
+                {{ 'task.index.create_first'|trans }}
             </a>
             {% endif %}
-        </header>
+        </div>
 
-        {# État vide #}
-        {% if allTasks is empty %}
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    {{ ux_icon('lucide:check-square', {style: 'width: 48px; height: 48px;'}) }}
+    {% else %}
+
+        {# ══════════════════════════════════════════════════════════════════
+           RÉCAPITULATIF
+           ══════════════════════════════════════════════════════════════════ #}
+        {% set progressPct = totalCount > 0 ? ((doneCount / totalCount) * 100)|round : 0 %}
+
+        <div class="tl-summary">
+
+            <div class="tl-summary-card tl-summary-card--overdue">
+                <div class="tl-summary-card__icon">
+                    {{ ux_icon('lucide:alert-circle', {style: 'width:16px;height:16px'}) }}
                 </div>
-                <h3>{{ 'task.index.empty.title'|trans }}</h3>
-                <p>{{ 'task.index.empty.message'|trans }}</p>
-                <a href="{{ path('app_task_new', {project_slug: project.slug}) }}"
-                   class="btn-primary"
-                   data-turbo-frame="modal-frame"
-                   data-action="click->modal#open">
-                    {{ 'task.index.create_first'|trans }}
-                </a>
+                <div>
+                    <div class="tl-summary-card__val" data-summary="overdue">{{ overdueCount }}</div>
+                    <div class="tl-summary-card__label">{{ 'task.summary.overdue'|trans }}</div>
+                </div>
             </div>
 
-        {% else %}
+            <div class="tl-summary-card tl-summary-card--urgent">
+                <div class="tl-summary-card__icon">
+                    {{ ux_icon('lucide:zap', {style: 'width:16px;height:16px'}) }}
+                </div>
+                <div>
+                    <div class="tl-summary-card__val" data-summary="urgent">{{ urgentCount }}</div>
+                    <div class="tl-summary-card__label">{{ 'task.summary.urgent'|trans }}</div>
+                </div>
+            </div>
 
-            {# Vue liste — tâches triées avec chemin narratif #}
-            <div class="task-list-view">
-                {% for task in allTasks %}
-                    <div class="task-list-row task-priority-{{ task.priority }}">
-                        <div class="task-list-status">
-                            <span class="badge-status badge-status-{{ task.status }}">
-                                {{ ('task.status.' ~ task.status)|trans }}
-                            </span>
-                        </div>
-                        <div class="task-list-main">
-                            <a href="{{ path('app_task_show', {project_slug: project.slug, id: task.id}) }}"
-                               class="task-list-title">
-                                {{ task.title }}
-                            </a>
-                            {% if elementPaths[task.id] is defined %}
-                                {% set el = elementPaths[task.id] %}
-                                <div class="task-list-path">
-                                    {{ ux_icon('lucide:map-pin', {style: 'width: 11px; height: 11px;'}) }}
-                                    <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: el.id}) }}"
-                                       class="task-path-link">
-                                        {{ el.getFullPath() }}
-                                    </a>
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="task-list-meta">
-                            {% if task.priority in ['high', 'urgent'] %}
-                                <span class="badge-priority badge-priority-{{ task.priority }}">
-                                    {{ ('task.priority.' ~ task.priority)|trans }}
-                                </span>
-                            {% endif %}
-                            {% if task.assignedTo %}
-                                <div class="assignee-avatar" title="{{ task.assignedTo.username }}">
-                                    {{ task.assignedTo.username|first|upper }}
-                                </div>
-                            {% endif %}
-                            <a href="{{ path('app_task_edit', {project_slug: project.slug, id: task.id}) }}"
-                               class="btn-icon-sm" title="{{ 'common.edit'|trans }}"
-                               data-turbo-frame="modal-frame"
-                               data-action="click->modal#open">
-                                {{ ux_icon('lucide:pencil', {style: 'width: 13px; height: 13px;'}) }}
-                            </a>
-                        </div>
+            <div class="tl-summary-card tl-summary-card--progress">
+                <div class="tl-summary-card__icon">
+                    {{ ux_icon('lucide:check-circle', {style: 'width:16px;height:16px'}) }}
+                </div>
+                <div style="flex:1">
+                    <div class="tl-summary-card__val">
+                        <span data-summary="done">{{ doneCount }}</span>/<span data-summary="total">{{ totalCount }}</span>
                     </div>
+                    <div class="tl-summary-card__label">{{ 'task.summary.progress'|trans }}</div>
+                    <div class="tl-progress-bar" style="margin-top:6px;width:100%">
+                        <div class="tl-progress-bar__fill" style="width:{{ progressPct }}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            {% if archivedCount > 0 %}
+            <a href="{{ path('app_task_filter', {_locale: app.request.locale, project_slug: project.slug, status: 'archived'}) }}"
+               class="tl-summary-archived">
+                {{ ux_icon('lucide:archive', {style: 'width:13px;height:13px'}) }}
+                <span data-summary="archived">{{ archivedCount }}</span>
+                archivée{{ archivedCount > 1 ? 's' : '' }}
+            </a>
+            {% endif %}
+
+        </div>
+
+        {# ══════════════════════════════════════════════════════════════════
+           FILTRES
+           ══════════════════════════════════════════════════════════════════ #}
+        <div class="tl-filters">
+
+            {# Filtre statut #}
+            <div class="tl-filters__group">
+                <button type="button"
+                        class="tl-filter-btn tl-filter-status tl-filter-btn--active"
+                        data-action="click->task-list#filterStatus"
+                        data-status="">
+                    {{ 'task.filter.all'|trans }}
+                </button>
+                {% for s in ['todo', 'in_progress', 'review', 'done'] %}
+                <button type="button"
+                        class="tl-filter-btn tl-filter-status"
+                        data-action="click->task-list#filterStatus"
+                        data-status="{{ s }}">
+                    {{ ('task.status.' ~ s)|trans }}
+                </button>
                 {% endfor %}
             </div>
 
-            {# Vue Kanban #}
-            <div class="kanban-board">
+            <div class="tl-filters__sep"></div>
 
-                {# Colonne TODO #}
-                <div class="kanban-column">
-                    <div class="kanban-column-header kanban-header-todo">
-                        <h3>{{ 'task.status.todo'|trans }}</h3>
-                        <span class="kanban-count">{{ tasksByStatus.todo|length }}</span>
-                    </div>
-                    <div class="kanban-column-content">
-                        {% for task in tasksByStatus.todo %}
-                            {{ _self.renderTaskCard(task, project) }}
-                        {% endfor %}
-                    </div>
-                </div>
+            {# Filtre priorité #}
+            <select class="tl-filter-select"
+                    name="priority_filter"
+                    aria-label="{{ 'task.filter.all_priorities'|trans }}"
+                    data-action="change->task-list#filterPriority">
+                <option value="">{{ 'task.filter.all_priorities'|trans }}</option>
+                {% for p in ['low', 'normal', 'high', 'urgent'] %}
+                <option value="{{ p }}">{{ ('task.priority.' ~ p)|trans }}</option>
+                {% endfor %}
+            </select>
 
-                {# Colonne IN PROGRESS #}
-                <div class="kanban-column">
-                    <div class="kanban-column-header kanban-header-progress">
-                        <h3>{{ 'task.status.in_progress'|trans }}</h3>
-                        <span class="kanban-count">{{ tasksByStatus.in_progress|length }}</span>
-                    </div>
-                    <div class="kanban-column-content">
-                        {% for task in tasksByStatus.in_progress %}
-                            {{ _self.renderTaskCard(task, project) }}
-                        {% endfor %}
-                    </div>
-                </div>
+        </div>
 
-                {# Colonne REVIEW #}
-                <div class="kanban-column">
-                    <div class="kanban-column-header kanban-header-review">
-                        <h3>{{ 'task.status.review'|trans }}</h3>
-                        <span class="kanban-count">{{ tasksByStatus.review|length }}</span>
-                    </div>
-                    <div class="kanban-column-content">
-                        {% for task in tasksByStatus.review %}
-                            {{ _self.renderTaskCard(task, project) }}
-                        {% endfor %}
-                    </div>
-                </div>
+        {# ══════════════════════════════════════════════════════════════════
+           LISTE
+           ══════════════════════════════════════════════════════════════════ #}
 
-                {# Colonne DONE #}
-                <div class="kanban-column">
-                    <div class="kanban-column-header kanban-header-done">
-                        <h3>{{ 'task.status.done'|trans }}</h3>
-                        <span class="kanban-count">{{ tasksByStatus.done|length }}</span>
-                    </div>
-                    <div class="kanban-column-content">
-                        {% for task in tasksByStatus.done %}
-                            {{ _self.renderTaskCard(task, project) }}
-                        {% endfor %}
-                    </div>
-                </div>
-
-            </div>
-
+        {# ── Bandeau vue archivées ─────────────────────────────────────── #}
+        {% if currentStatus == 'archived' %}
+        <div class="tl-archived-banner">
+            {{ ux_icon('lucide:archive', {style: 'width:13px;height:13px'}) }}
+            Vue archivées — ces tâches ne s'affichent pas dans la vue principale.
+            <a href="{{ path('app_task_index', {_locale: app.request.locale, project_slug: project.slug}) }}"
+               class="tl-archived-back">
+                {{ ux_icon('lucide:arrow-left', {style: 'width:11px;height:11px'}) }}
+                Retour
+            </a>
+        </div>
         {% endif %}
 
-    </div>
-{% endblock %}
-
-{# Macro pour afficher une carte de tâche #}
-{% macro renderTaskCard(task, project) %}
-    <div class="kanban-card kanban-priority-{{ task.priority }}">
-        <div class="kanban-card-header">
-            <a href="{{ path('app_task_show', {project_slug: project.slug, id: task.id}) }}" class="kanban-card-title">
-                {{ task.title }}
-            </a>
-
-            {# Badge priorité #}
-            {% if task.priority in ['high', 'urgent'] %}
-                <span class="badge-priority badge-priority-{{ task.priority }}">
-                    {{ ('task.priority.' ~ task.priority)|trans }}
-                </span>
-            {% endif %}
+        {# En-tête colonnes #}
+        <div class="tl-header">
+            <span>{{ 'task.col.name'|trans }}</span>
+            <span class="tl-header-desc">{{ 'task.col.description'|trans }}</span>
+            <span>{{ 'task.col.status'|trans }}</span>
+            <span class="tl-header-priority">{{ 'task.col.priority'|trans }}</span>
+            <span>{{ 'task.col.assignee'|trans }}</span>
+            <span></span>
         </div>
 
-        {# Description courte #}
-        <div class="kanban-card-body">
-            <p>{{ task.description|striptags|slice(0, 100) }}...</p>
-        </div>
+        <div class="tl-body">
+        {% for task in allTasks %}
 
-        {# Footer avec assignation et actions #}
-        <div class="kanban-card-footer">
-            {% if task.assignedTo %}
-                <div class="task-assignee">
-                    <div class="assignee-avatar">
-                        {{ task.assignedTo.username|first|upper }}
-                    </div>
-                    <span class="assignee-name">{{ task.assignedTo.username }}</span>
+            {# Données sur la ligne pour le controller JS #}
+            <div class="tl-row tl-row--{{ task.status }}"
+                 id="task-row-{{ task.id }}"
+                 data-task-id="{{ task.id }}"
+                 data-task-status="{{ task.status }}"
+                 data-task-priority="{{ task.priority }}"
+                 data-task-title="{{ task.title|e('html_attr') }}"
+                 data-task-due="{{ task.dueDate ? task.dueDate|date('Y-m-d') : '' }}"
+                 data-status-url="{{ path('app_task_change_status', {_locale: app.request.locale, project_slug: project.slug, id: task.id}) }}"
+                 data-status-csrf="{{ csrf_token('task_status_' ~ task.id) }}"
+                 data-priority-url="{{ path('app_task_change_priority', {_locale: app.request.locale, project_slug: project.slug, id: task.id}) }}"
+                 data-priority-csrf="{{ csrf_token('task_priority_' ~ task.id) }}"
+                 data-delete-url="{{ path('app_task_delete', {_locale: app.request.locale, project_slug: project.slug, id: task.id}) }}"
+                 data-delete-csrf="{{ csrf_token('delete' ~ task.id) }}">
+
+                {# ── Nom + chemin narratif ─────────────────────────────── #}
+                <div class="tl-cell tl-cell--name">
+                    <a href="{{ path('app_task_show', {_locale: app.request.locale, project_slug: project.slug, id: task.id}) }}"
+                       class="tl-task-title">
+                        {{ task.title }}
+                    </a>
+                    {% if elementPaths[task.id] is defined %}
+                        {% set el = elementPaths[task.id] %}
+                        <div class="tl-task-path">
+                            {{ ux_icon('lucide:map-pin', {style: 'width:10px;height:10px'}) }}
+                            <a href="{{ path('app_manuscript_show', {_locale: app.request.locale, project_slug: project.slug, id: el.id}) }}">
+                                {{ el.getFullPath() }}
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
-            {% else %}
-                <span class="text-muted">{{ 'task.unassigned'|trans }}</span>
-            {% endif %}
 
-            <div class="kanban-card-actions">
-                <a href="{{ path('app_task_edit', {project_slug: project.slug, id: task.id}) }}"
-                   class="btn-icon-sm"
-                   title="{{ 'common.edit'|trans }}">
-                    {{ ux_icon('lucide:pencil', {class: 'icon-3xs'}) }}
-                </a>
+                {# ── Description courte ───────────────────────────────── #}
+                <div class="tl-cell tl-cell--desc">
+                    {% if task.description %}
+                        {{ task.description|striptags|slice(0, 70) }}{% if task.description|length > 70 %}…{% endif %}
+                    {% endif %}
+                </div>
+
+                {# ── Boutons de statut ────────────────────────────────── #}
+                <div class="tl-cell tl-cell--status">
+
+                    <button type="button"
+                            class="tl-status-btn {{ task.status == 'todo' ? 'tl-status-btn--active' : '' }}"
+                            data-action="click->task-list#changeStatus"
+                            data-status="todo"
+                            data-tooltip="{{ 'task.status.todo'|trans }}"
+                            aria-pressed="{{ task.status == 'todo' ? 'true' : 'false' }}"
+                            title="{{ 'task.status.todo'|trans }}">
+                        {{ ux_icon('lucide:circle', {style: 'width:13px;height:13px'}) }}
+                    </button>
+
+                    <button type="button"
+                            class="tl-status-btn {{ task.status == 'in_progress' ? 'tl-status-btn--active' : '' }}"
+                            data-action="click->task-list#changeStatus"
+                            data-status="in_progress"
+                            data-tooltip="{{ 'task.status.in_progress'|trans }}"
+                            aria-pressed="{{ task.status == 'in_progress' ? 'true' : 'false' }}"
+                            title="{{ 'task.status.in_progress'|trans }}">
+                        {{ ux_icon('lucide:loader-circle', {style: 'width:13px;height:13px'}) }}
+                    </button>
+
+                    <button type="button"
+                            class="tl-status-btn {{ task.status == 'review' ? 'tl-status-btn--active' : '' }}"
+                            data-action="click->task-list#changeStatus"
+                            data-status="review"
+                            data-tooltip="{{ 'task.status.review'|trans }}"
+                            aria-pressed="{{ task.status == 'review' ? 'true' : 'false' }}"
+                            title="{{ 'task.status.review'|trans }}">
+                        {{ ux_icon('lucide:eye', {style: 'width:13px;height:13px'}) }}
+                    </button>
+
+                    <button type="button"
+                            class="tl-status-btn {{ task.status == 'done' ? 'tl-status-btn--active' : '' }}"
+                            data-action="click->task-list#changeStatus"
+                            data-status="done"
+                            data-tooltip="{{ 'task.status.done'|trans }}"
+                            aria-pressed="{{ task.status == 'done' ? 'true' : 'false' }}"
+                            title="{{ 'task.status.done'|trans }}">
+                        {{ ux_icon('lucide:check-circle', {style: 'width:13px;height:13px'}) }}
+                    </button>
+
+                </div>
+
+                {# ── Priorité ─────────────────────────────────────────── #}
+                <div class="tl-cell tl-cell--priority">
+                    {% if not (readonly ?? false) %}
+                    <select class="tl-priority-select tl-priority-select--{{ task.priority }}"
+                            name="priority_{{ task.id }}"
+                            aria-label="{{ 'task.col.priority'|trans }}"
+                            data-action="change->task-list#changePriority"
+                            data-current-priority="{{ task.priority }}">
+                        {% for p in ['low', 'normal', 'high', 'urgent'] %}
+                        <option value="{{ p }}" {{ task.priority == p ? 'selected' : '' }}>
+                            {{ ('task.priority.' ~ p)|trans }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% else %}
+                    <span class="tl-priority tl-priority--{{ task.priority }}">
+                        {{ ('task.priority.' ~ task.priority)|trans }}
+                    </span>
+                    {% endif %}
+                </div>
+
+                {# ── Assigné ──────────────────────────────────────────── #}
+                <div class="tl-cell tl-cell--assignee">
+                    {% if task.assignedTo %}
+                        {{ include('_partials/_user_avatar.html.twig', {user: task.assignedTo, size: 'xs'}) }}
+                        <span class="tl-assignee-name">{{ task.assignedTo.username }}</span>
+                    {% endif %}
+                </div>
+
+                {# ── Actions ──────────────────────────────────────────── #}
+                <div class="tl-cell tl-cell--actions">
+                    {% if not (readonly ?? false) %}
+                        {% if currentStatus != 'archived' %}
+                        <button type="button"
+                                class="tl-btn-icon"
+                                data-action="click->task-list#archiveTask"
+                                title="Archiver">
+                            {{ ux_icon('lucide:archive', {style: 'width:13px;height:13px'}) }}
+                        </button>
+                        {% endif %}
+                        <a href="{{ path('app_task_edit', {_locale: app.request.locale, project_slug: project.slug, id: task.id}) }}"
+                           class="tl-btn-icon"
+                           title="{{ 'common.edit'|trans }}"
+                           data-turbo-frame="modal-frame"
+                           data-action="click->modal#open">
+                            {{ ux_icon('lucide:pencil', {style: 'width:13px;height:13px'}) }}
+                        </a>
+                        <button type="button"
+                                class="tl-btn-icon tl-btn-icon--danger"
+                                data-action="click->task-list#deleteTask"
+                                title="{{ 'common.delete'|trans }}">
+                            {{ ux_icon('lucide:trash-2', {style: 'width:13px;height:13px'}) }}
+                        </button>
+                    {% endif %}
+                </div>
+
             </div>
+
+        {% endfor %}
         </div>
-    </div>
-{% endmacro %}
+
+    {% endif %}
+
+</div>
+{% endblock %}

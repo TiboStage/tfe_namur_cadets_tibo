@@ -3,9 +3,11 @@ twig:
 
     globals:
         app_version: '@App\Service\VersionService'
+        turnstile_site_key: '%env(TURNSTILE_SITE_KEY)%'
+
+    form_themes:
+        - 'form/form_errors.html.twig'
 
 when@test:
     twig:
         strict_variables: true
-        form_themes:
-            - 'form/form_errors.html.twig'

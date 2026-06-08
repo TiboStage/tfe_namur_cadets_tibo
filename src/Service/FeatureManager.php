@@ -58,7 +58,7 @@ class FeatureManager
     public function isFeatureActive(Project $project, string $featureKey): bool
     {
         // Mode Simplifié : features implicites
-        if (!$project->settings['custom_mode'] ?? false) {
+        if (!($project->settings['custom_mode'] ?? false)) {
             return $this->isFeatureImplicitForType($project->getProjectType(), $featureKey);
         }
 

@@ -1,103 +1,380 @@
 {% extends 'workshop/projects/layout.html.twig' %}
 {% trans_default_domain 'workshop' %}
 
-{% block title %}{{ 'note.index.title'|trans }}{% endblock %}
+{% block title %}{{ 'note.index.title'|trans }} — {{ project.title }}{% endblock %}
+
+{% set statusLabels = {
+    'note':     'Référence',
+    'todo':     'À faire',
+    'done':     'Terminée',
+    'archived': 'Archivée',
+} %}
+
+{% set statusIcons = {
+    'note':     'lucide:pencil-line',
+    'todo':     'lucide:circle-dashed',
+    'done':     'lucide:circle-check',
+    'archived': 'lucide:archive',
+} %}
 
 {% block project_content %}
-    <div class="dashboard-container">
 
-        <header class="page-header">
-            <div>
-                <h1>{{ 'note.index.title'|trans }}</h1>
-                <p class="page-subtitle">{{ 'note.index.subtitle'|trans }}</p>
+{% set projectNotes = notes|filter(n => n.linkedEntityType == 'project') %}
+{% set elementNotes = notes|filter(n => n.linkedEntityType == 'scenario_element') %}
+
+<div class="dashboard-container"
+     data-controller="note-list"
+     data-note-list-label-deleted-value="Note supprimée"
+     data-note-list-label-undo-value="Annuler"
+     data-note-list-label-status-value="Statut mis à jour">
+
+    {# ── Header ───────────────────────────────────────────────────────────── #}
+    <header class="page-header">
+        <div>
+            <h1>{{ 'note.index.title'|trans }}</h1>
+            <p class="page-subtitle">{{ 'note.index.subtitle'|trans }}</p>
+        </div>
+        {% if not (readonly ?? false) and totalNotes > 0 %}
+        <a href="{{ path('app_note_new', {project_slug: project.slug}) }}"
+           class="btn-creat"
+           data-turbo-frame="modal-frame"
+           data-action="click->modal#open">
+            {{ ux_icon('lucide:plus', {style: 'width:16px;height:16px'}) }}
+            {{ 'note.index.create'|trans }}
+        </a>
+        {% endif %}
+    </header>
+
+    {# ══════════════════════════════════════════════════════════════════════
+       CAS 1 — Aucune note → état vide
+       ══════════════════════════════════════════════════════════════════════ #}
+    {% if totalNotes == 0 %}
+
+    <div class="page-empty">
+        {{ ux_icon('lucide:notebook-pen', {style: 'width:44px;height:44px'}) }}
+        <h3>{{ 'note.index.empty.title'|trans }}</h3>
+        <p>{{ 'note.index.empty.message'|trans }}</p>
+        {% if not (readonly ?? false) %}
+        <a href="{{ path('app_note_new', {project_slug: project.slug}) }}"
+           class="btn-creat"
+           data-turbo-frame="modal-frame"
+           data-action="click->modal#open">
+            {{ ux_icon('lucide:plus', {style: 'width:15px;height:15px'}) }}
+            {{ 'note.index.create_first'|trans }}
+        </a>
+        {% endif %}
+    </div>
+
+    {% else %}
+
+    {# ── Résumé ───────────────────────────────────────────────────────────── #}
+    {% set cntNote     = statusCounts['note']     ?? 0 %}
+    {% set cntTodo     = statusCounts['todo']     ?? 0 %}
+    {% set cntDone     = statusCounts['done']     ?? 0 %}
+    {% set cntArchived = statusCounts['archived'] ?? 0 %}
+
+    <div class="nl-summary">
+        <div class="nl-summary-stat">
+            <span class="nl-summary-val" data-summary="total">{{ totalNotes }}</span>
+            <span class="nl-summary-label">total</span>
+        </div>
+        <div class="nl-summary-sep"></div>
+        <div class="nl-summary-stat">
+            {{ ux_icon('lucide:pencil-line', {style: 'width:12px;height:12px'}) }}
+            <span class="nl-summary-val" data-summary="note">{{ cntNote }}</span>
+            <span class="nl-summary-label">référence</span>
+        </div>
+        <div class="nl-summary-stat nl-summary-stat--todo">
+            {{ ux_icon('lucide:circle-dashed', {style: 'width:12px;height:12px'}) }}
+            <span class="nl-summary-val" data-summary="todo">{{ cntTodo }}</span>
+            <span class="nl-summary-label">à faire</span>
+        </div>
+        <div class="nl-summary-stat nl-summary-stat--done">
+            {{ ux_icon('lucide:circle-check', {style: 'width:12px;height:12px'}) }}
+            <span class="nl-summary-val" data-summary="done">{{ cntDone }}</span>
+            <span class="nl-summary-label">terminées</span>
+        </div>
+        <div class="nl-summary-sep"></div>
+        {% if cntArchived > 0 %}
+        <a href="{{ path('app_note_filter', {project_slug: project.slug, status: 'archived'}) }}"
+           class="nl-summary-archived">
+            {{ ux_icon('lucide:archive', {style: 'width:12px;height:12px'}) }}
+            <span data-summary="archived">{{ cntArchived }}</span>
+            archivée{{ cntArchived > 1 ? 's' : '' }}
+        </a>
+        {% else %}
+        <span class="nl-summary-archived nl-summary-archived--empty">
+            {{ ux_icon('lucide:archive', {style: 'width:12px;height:12px'}) }}
+            0 archivée
+        </span>
+        {% endif %}
+    </div>
+
+    {# ── Filtres client-side ──────────────────────────────────────────────── #}
+    <div class="nl-filters">
+        <div class="nl-filters__group">
+            <button type="button"
+                    class="nl-filter-btn nl-filter-btn--active"
+                    data-action="click->note-list#filterStatus"
+                    data-status="">
+                Toutes
+            </button>
+            <button type="button"
+                    class="nl-filter-btn nl-filter-btn--note"
+                    data-action="click->note-list#filterStatus"
+                    data-status="note">
+                {{ ux_icon('lucide:pencil-line', {style: 'width:11px;height:11px'}) }}
+                Référence
+            </button>
+            <button type="button"
+                    class="nl-filter-btn nl-filter-btn--todo"
+                    data-action="click->note-list#filterStatus"
+                    data-status="todo">
+                {{ ux_icon('lucide:circle-dashed', {style: 'width:11px;height:11px'}) }}
+                À faire
+            </button>
+            <button type="button"
+                    class="nl-filter-btn nl-filter-btn--done"
+                    data-action="click->note-list#filterStatus"
+                    data-status="done">
+                {{ ux_icon('lucide:circle-check', {style: 'width:11px;height:11px'}) }}
+                Terminées
+            </button>
+        </div>
+        <div class="nl-filters__sep"></div>
+        <select class="nl-filter-select"
+                data-action="change->note-list#filterPriority">
+            <option value="">Priorité</option>
+            {% for p in ['low', 'normal', 'high', 'urgent'] %}
+            <option value="{{ p }}">{{ ('note.priority.' ~ p)|trans }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════════════
+       CAS 2 — Notes existent mais filtre vide (état initial avec filtre actif)
+       ══════════════════════════════════════════════════════════════════════ #}
+    {% if notes is empty %}
+
+    {% set emptyIcon  = statusIcons[currentStatus] is defined  ? statusIcons[currentStatus]  : 'lucide:search-x' %}
+    {% set emptyLabel = statusLabels[currentStatus] is defined ? statusLabels[currentStatus]|lower : currentStatus %}
+    <div class="nl-filter-empty">
+        {{ ux_icon(emptyIcon, {style: 'width:28px;height:28px;opacity:.3'}) }}
+        <p>Aucune note{% if currentStatus != 'all' %} {{ emptyLabel }}{% endif %} pour ce projet.</p>
+        {% if currentStatus == 'archived' %}
+        <a href="{{ path('app_note_index', {project_slug: project.slug}) }}" class="btn-export">
+            {{ ux_icon('lucide:arrow-left', {style: 'width:12px;height:12px'}) }}
+            Retour aux notes
+        </a>
+        {% endif %}
+    </div>
+
+    {% else %}
+
+    {# ── Bandeau vue archivées ───────────────────────────────────────────── #}
+    {% if currentStatus == 'archived' %}
+    <div class="nl-archived-banner">
+        {{ ux_icon('lucide:archive', {style: 'width:13px;height:13px'}) }}
+        Vue archivées — ces notes ne s'affichent pas dans la vue principale.
+        <a href="{{ path('app_note_index', {project_slug: project.slug}) }}" class="nl-archived-back">
+            {{ ux_icon('lucide:arrow-left', {style: 'width:11px;height:11px'}) }}
+            Retour
+        </a>
+    </div>
+    {% endif %}
+
+    {# ── Header colonnes ──────────────────────────────────────────────────── #}
+    <div class="nl-header">
+        <span>Titre</span>
+        <span>Statut</span>
+        <span class="nl-header-priority">Priorité</span>
+        <span class="nl-header-link">Lien</span>
+        <span>Auteur</span>
+        <span>Date</span>
+        <span></span>
+    </div>
+
+    {# ══ GROUPE 1 — Notes du projet ══════════════════════════════════════════ #}
+    {% if projectNotes is not empty %}
+    <div class="nl-group">
+        <div class="nl-group-header">
+            {{ ux_icon('lucide:folder', {style: 'width:12px;height:12px'}) }}
+            Notes du projet
+            <span class="nl-group-count">{{ projectNotes|length }}</span>
+        </div>
+        <div class="nl-body">
+        {% for note in projectNotes %}
+            {{ _self.noteRow(note, project, elementPaths, readonly ?? false) }}
+        {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {# ══ GROUPE 2+ — Notes liées à des scènes ════════════════════════════════ #}
+    {% if elementNotes is not empty %}
+        {% set elementGroups = {} %}
+        {% for note in elementNotes %}
+            {% set elKey = note.linkedEntityId|default(0) %}
+            {% set existing = elementGroups[elKey] ?? [] %}
+            {% set elementGroups = elementGroups|merge({(elKey): existing|merge([note])}) %}
+        {% endfor %}
+
+        {% for elId, groupNotes in elementGroups %}
+            {% set el = elementPaths[groupNotes[0].id] ?? null %}
+            <div class="nl-group">
+                <div class="nl-group-header">
+                    {{ ux_icon('lucide:file-text', {style: 'width:12px;height:12px'}) }}
+                    {% if el %}
+                        <a href="{{ path('app_manuscript_show', {_locale: app.request.locale, project_slug: project.slug, id: el.id}) }}"
+                           class="nl-group-link">{{ el.getFullPath() }}</a>
+                    {% else %}
+                        <span class="nl-group-deleted">Scène supprimée</span>
+                    {% endif %}
+                    <span class="nl-group-count">{{ groupNotes|length }}</span>
+                </div>
+                <div class="nl-body">
+                {% for note in groupNotes %}
+                    {{ _self.noteRow(note, project, elementPaths, readonly ?? false) }}
+                {% endfor %}
+                </div>
             </div>
-            {% if not (readonly ?? false) %}
-            <a href="{{ path('app_note_new', {project_slug: project.slug}) }}"
-               class="btn-creat"
+        {% endfor %}
+    {% endif %}
+
+    {% endif %}{# fin notes is empty #}
+    {% endif %}{# fin totalNotes == 0 #}
+
+</div>
+
+{# ── Macro ligne ──────────────────────────────────────────────────────────── #}
+{% macro noteRow(note, project, elementPaths, readonly) %}
+<div class="nl-row nl-row--{{ note.status }} nl-row--pri-{{ note.priority }}"
+     id="note-row-{{ note.id }}"
+     data-note-id="{{ note.id }}"
+     data-note-status="{{ note.status }}"
+     data-note-priority="{{ note.priority }}"
+     data-note-title="{{ note.title|e('html_attr') }}"
+     data-status-url="{{ path('app_note_change_status', {_locale: app.request.locale, project_slug: project.slug, id: note.id}) }}"
+     data-status-csrf="{{ csrf_token('note_status_' ~ note.id) }}"
+     data-priority-url="{{ path('app_note_change_priority', {_locale: app.request.locale, project_slug: project.slug, id: note.id}) }}"
+     data-priority-csrf="{{ csrf_token('note_priority_' ~ note.id) }}"
+     data-delete-url="{{ path('app_note_delete', {_locale: app.request.locale, project_slug: project.slug, id: note.id}) }}"
+     data-delete-csrf="{{ csrf_token('delete' ~ note.id) }}">
+
+    {# Titre + extrait #}
+    <div class="nl-cell nl-cell--title">
+        <a href="{{ path('app_note_show', {_locale: app.request.locale, project_slug: project.slug, id: note.id}) }}"
+           class="nl-title">{{ note.title }}</a>
+        {% if note.content %}
+            <span class="nl-excerpt">{{ note.content|striptags|slice(0, 60) }}{% if note.content|length > 60 %}…{% endif %}</span>
+        {% endif %}
+    </div>
+
+    {# Boutons statut rapide #}
+    <div class="nl-cell nl-cell--status">
+        {% if not readonly %}
+        <div class="nl-status-btns">
+            <button type="button"
+                    class="nl-status-btn nl-status-btn--note {{ note.status == 'note' ? 'nl-status-btn--active' : '' }}"
+                    data-action="click->note-list#changeStatus"
+                    data-status="note"
+                    title="Référence">
+                {{ ux_icon('lucide:pencil-line', {style: 'width:12px;height:12px'}) }}
+            </button>
+            <button type="button"
+                    class="nl-status-btn nl-status-btn--todo {{ note.status == 'todo' ? 'nl-status-btn--active' : '' }}"
+                    data-action="click->note-list#changeStatus"
+                    data-status="todo"
+                    title="À faire">
+                {{ ux_icon('lucide:circle-dashed', {style: 'width:12px;height:12px'}) }}
+            </button>
+            <button type="button"
+                    class="nl-status-btn nl-status-btn--done {{ note.status == 'done' ? 'nl-status-btn--active' : '' }}"
+                    data-action="click->note-list#changeStatus"
+                    data-status="done"
+                    title="Terminée">
+                {{ ux_icon('lucide:circle-check', {style: 'width:12px;height:12px'}) }}
+            </button>
+            <button type="button"
+                    class="nl-status-btn nl-status-btn--archived {{ note.status == 'archived' ? 'nl-status-btn--active' : '' }}"
+                    data-action="click->note-list#changeStatus"
+                    data-status="archived"
+                    title="Archiver">
+                {{ ux_icon('lucide:archive', {style: 'width:12px;height:12px'}) }}
+            </button>
+        </div>
+        {% else %}
+        <span class="nl-status nl-status--{{ note.status }}">
+            {{ ux_icon('lucide:circle', {style: 'width:11px;height:11px'}) }}
+            {{ note.status }}
+        </span>
+        {% endif %}
+    </div>
+
+    {# Priorité #}
+    <div class="nl-cell nl-cell--priority">
+        {% if not readonly %}
+        <select class="nl-priority-select nl-priority-select--{{ note.priority }}"
+                data-action="change->note-list#changePriority"
+                data-current-priority="{{ note.priority }}">
+            {% for p in ['low', 'normal', 'high', 'urgent'] %}
+            <option value="{{ p }}" {{ note.priority == p ? 'selected' }}>
+                {{ ('note.priority.' ~ p)|trans }}
+            </option>
+            {% endfor %}
+        </select>
+        {% else %}
+        <span class="nl-priority nl-priority--{{ note.priority }}">
+            {{ ('note.priority.' ~ note.priority)|trans }}
+        </span>
+        {% endif %}
+    </div>
+
+    {# Lien narratif #}
+    <div class="nl-cell nl-cell--link">
+        {% if note.linkedEntityType == 'scenario_element' and elementPaths[note.id] is defined %}
+            <span class="nl-link-badge nl-link-badge--scene">
+                {{ ux_icon('lucide:file-text', {style: 'width:10px;height:10px'}) }}
+                {{ elementPaths[note.id].title }}
+            </span>
+        {% else %}
+            <span class="nl-link-badge nl-link-badge--project">
+                {{ ux_icon('lucide:folder', {style: 'width:10px;height:10px'}) }}
+                Projet
+            </span>
+        {% endif %}
+    </div>
+
+    {# Auteur #}
+    <div class="nl-cell nl-cell--author">
+        {{ include('_partials/_user_avatar.html.twig', {user: note.author, size: 'xs'}) }}
+        <span class="nl-author-name">{{ note.author.username }}</span>
+    </div>
+
+    {# Date #}
+    <div class="nl-cell nl-cell--date">
+        <time title="{{ note.updatedAt|date('d/m/Y H:i') }}">{{ note.updatedAt|date('d/m/Y') }}</time>
+    </div>
+
+    {# Actions #}
+    <div class="nl-cell nl-cell--actions">
+        {% if not readonly %}
+            <a href="{{ path('app_note_edit', {_locale: app.request.locale, project_slug: project.slug, id: note.id}) }}"
+               class="nl-btn-icon" title="Modifier"
                data-turbo-frame="modal-frame"
                data-action="click->modal#open">
-                {{ ux_icon('lucide:plus', {style: 'width: 16px; height: 16px;'}) }}
-                {{ 'note.index.create'|trans }}
+                {{ ux_icon('lucide:pencil', {style: 'width:13px;height:13px'}) }}
             </a>
-            {% endif %}
-        </header>
-
-        {# Filtres par statut #}
-        <div class="filter-tabs">
-            <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
-               class="filter-tab {% if currentStatus == 'all' %}active{% endif %}">
-                {{ 'note.filter.all'|trans }}
-            </a>
-            <a href="{{ path('app_note_filter', {project_slug: project.slug, status: 'note'}) }}"
-               class="filter-tab {% if currentStatus == 'note' %}active{% endif %}">
-                {{ 'note.filter.notes'|trans }}
-            </a>
-            <a href="{{ path('app_note_filter', {project_slug: project.slug, status: 'todo'}) }}"
-               class="filter-tab {% if currentStatus == 'todo' %}active{% endif %}">
-                {{ 'note.filter.todos'|trans }}
-            </a>
-            <a href="{{ path('app_note_filter', {project_slug: project.slug, status: 'done'}) }}"
-               class="filter-tab {% if currentStatus == 'done' %}active{% endif %}">
-                {{ 'note.filter.done'|trans }}
-            </a>
-        </div>
-
-        {% if notes is empty %}
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    {{ ux_icon('lucide:sticky-note', {style: 'width: 48px; height: 48px;'}) }}
-                </div>
-                <h3>{{ 'note.index.empty.title'|trans }}</h3>
-                <p>{{ 'note.index.empty.message'|trans }}</p>
-                <a href="{{ path('app_note_new', {project_slug: project.slug}) }}"
-                   class="btn-primary"
-                   data-turbo-frame="modal-frame"
-                   data-action="click->modal#open">
-                    {{ 'note.index.create_first'|trans }}
-                </a>
-            </div>
-        {% else %}
-            <div class="notes-grid">
-                {% for note in notes %}
-                    <div class="note-card note-priority-{{ note.priority }}">
-                        <div class="note-card-header">
-                            <a href="{{ path('app_note_show', {project_slug: project.slug, id: note.id}) }}">
-                                {{ note.title }}
-                            </a>
-                            <span class="badge-status badge-status-{{ note.status }}">
-                                {{ ('note.status.' ~ note.status)|trans }}
-                            </span>
-                        </div>
-                        <div class="note-card-body">
-                            <p>{{ note.content|striptags|slice(0, 150) }}...</p>
-                        </div>
-
-                        {# Lien vers l'élément narratif associé #}
-                        {% if elementPaths[note.id] is defined %}
-                            {% set el = elementPaths[note.id] %}
-                            <div class="note-element-path">
-                                {{ ux_icon('lucide:file-text', {class: 'icon-3xs'}) }}
-                                <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: el.id}) }}"
-                                   class="note-element-link">
-                                    {{ el.getFullPath() }}
-                                </a>
-                            </div>
-                        {% endif %}
-
-                        <div class="note-card-footer">
-                            <span class="note-meta">{{ note.author.username }} • {{ note.createdAt|date('d/m/Y') }}</span>
-                            <div class="note-actions">
-                                <a href="{{ path('app_note_edit', {project_slug: project.slug, id: note.id}) }}"
-                                   data-turbo-frame="modal-frame"
-                                   data-action="click->modal#open">
-                                    {{ ux_icon('lucide:pencil', {class: 'icon-xs'}) }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+            <button type="button"
+                    class="nl-btn-icon nl-btn-icon--danger"
+                    data-action="click->note-list#deleteNote"
+                    title="Supprimer">
+                {{ ux_icon('lucide:trash-2', {style: 'width:13px;height:13px'}) }}
+            </button>
         {% endif %}
-
     </div>
+
+</div>
+{% endmacro %}
+
 {% endblock %}

@@ -48,9 +48,23 @@ final class PagesController extends AbstractController
         return $this->render('website/pages/pricing.html.twig');
     }
 
-    public function features(): Response
+    // ══════════════════════════════════════════════════════════════════════
+    // PAGES LÉGALES
+    // ══════════════════════════════════════════════════════════════════════
+
+    public function legalCgu(): Response
     {
-        return $this->render('website/pages/features.html.twig');
+        return $this->render('website/pages/legal/cgu.html.twig');
+    }
+
+    public function legalPrivacy(): Response
+    {
+        return $this->render('website/pages/legal/privacy.html.twig');
+    }
+
+    public function legalCookies(): Response
+    {
+        return $this->render('website/pages/legal/cookies.html.twig');
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -145,15 +159,6 @@ final class PagesController extends AbstractController
             ]);
         }
 
-        // ── Afficher le formulaire ─────────────────────────────────────
-        // Si requête AJAX pour charger le formulaire dans une modale
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('website/pages/_contact_form.html.twig', [
-                'form' => $form,
-            ]);
-        }
-
-        // Sinon page complète
         return $this->render('website/pages/contact.html.twig', [
             'form' => $form,
         ]);

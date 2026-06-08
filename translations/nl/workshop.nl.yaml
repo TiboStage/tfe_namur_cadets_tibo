@@ -9,17 +9,28 @@ navbar:
     actions:
         profile: "Profiel"
         logout: "Uitloggen"
+        admin: "Beheer"
+        moderation: "Moderatie"
+        public_profile: "Openbaar profiel"
+        my_projects: "Mijn projecten"
+        open_menu: "Menu openen"
         search:
             placeholder: "Zoek een scène, een personage..."
     links:
         dashboard: "Dashboard"
         projects: "Mijn projecten"
         collaborations: "Samenwerkingen"
+        files: "Documentatie"
         explore: "Verkennen"
+        documentation: "Documentatie"
         news: "Nieuws"
         create: "+ Maken"
     recent_projects: "Recente projecten"
     current_badge: "Huidig"
+    notifications:
+        title: "Meldingen"
+        mark_all: "Alles als gelezen markeren"
+        see_all: "Alle meldingen bekijken"
 
 # ===== DASHBOARD =====
 dashboard:
@@ -40,15 +51,16 @@ dashboard:
     actions:
         new_project_title: "Nieuw project"
         new_project_desc: "Videogame, serie, film"
-        new_project_btn: "+ Creëren"
+        new_project_btn: "Creëren"
         export_title: "Project exporteren"
         export_desc: "Formaat (.pdf, .xml)"
         export_btn: "↓ Exporteren"
 
     projects:
-        title: "Projecten in uitvoering"
+        title: "Mijn projecten"
         see_more: "Meer bekijken ↗"
         empty: "Nog geen projecten. Maak er een!"
+        create_next: "Blijf een project maken →"
 
     recent_projects:
         title: "Recente projecten"
@@ -63,35 +75,87 @@ dashboard:
         ago: "geleden"
         min: "min."
         no_activity: "Nog geen activiteit"
+        empty: "Nog geen activiteit geregistreerd."
+        empty_hint: "Maak een project, personage of scène om te beginnen."
+
+    default_author: "Auteur"
 
     quick_actions:
+        title: "Snelkoppelingen"
         new_project: "Nieuw project"
         new_character: "Nieuw personage"
         new_location: "Nieuwe locatie"
         new_scene: "Nieuwe scène"
+
+    recent_projects_section:
+        title: "Recente projecten"
+        see_all: "Alles bekijken"
+        see_more: "Meer projecten bekijken"
 
 # ===== PROJECTEN =====
 projects:
     index:
         title: "Mijn projecten"
         subtitle: "project(en) in totaal"
-        btn_new: "+ Nieuw project"
+        btn_new: "+ Aanmaken"
         empty: "Nog geen projecten."
         empty_btn: "Mijn eerste project maken"
         modified: "Gewijzigd op"
         btn_open: "Openen"
         btn_edit: "Bewerken"
+        tab_all: "Alle"
+        tab_mine: "Mijn projecten"
+        tab_collab: "Samenwerkingen"
+        tab_more: "Meer"
+        role_all: "Alle rollen"
+        role_filter_suffix: "· rol gefilterd"
+        empty_collab: "Geen samenwerkingen."
+        empty_collab_role: "Geen samenwerkingen voor deze rol."
+        col_name: "Projecten"
+        col_status: "Status"
+        col_role: "Rol"
+        col_progress: "Voortgang"
+        col_entities: "Entiteiten"
+        col_date: "Gewijzigd"
+        btn_edit_arrow: "Bewerken"
+        btn_open_arrow: "Openen"
+        prev: "Vorige"
+        next: "Volgende"
+        page_of: "Pagina %page% / %total%"
 
-    new:
-        title: "Nieuw project"
-        back: "← Mijn projecten"
-        label_title: "Projecttitel"
-        label_type: "Projecttype"
-        label_desc: "Beschrijving"
-        placeholder_title: "Bijv: De Schaduwen van Valoria"
-        placeholder_desc: "Beschrijf je universum in een paar zinnen..."
-        btn_cancel: "Annuleren"
-        btn_submit: "Project maken →"
+    roles:
+        owner: "Eigenaar"
+        lead: "Co-verantwoordelijke"
+        editor: "Redacteur"
+        contributor: "Bijdrager"
+
+    visibility:
+        public: "Online"
+        private: "Gedeeld"
+        unlisted: "Niet vermeld"
+        unpublished: "Niet gepubliceerd"
+
+    status:
+        finished: "Voltooid"
+        completed: "Voltooid"
+        in_progress: "Bezig"
+        draft: "Concept"
+        archived: "Gearchiveerd"
+
+    cta:
+        owner: "Project bewerken"
+        lead: "Werk hervatten"
+        collab: "Werkplaats openen"
+
+    card:
+        element: "element|elementen"
+        character: "personage|personages"
+        location: "locatie|locaties"
+        task: "taak|taken"
+        no_tasks: "Geen taken"
+        overdue: "%count% taak te laat|%count% taken te laat"
+        all_up_to_date: "Alle taken zijn bijgewerkt"
+        tasks_done: "%done%/%total% taak|%done%/%total% taken"
 
     edit:
         title: "Projectinstellingen"
@@ -104,6 +168,20 @@ projects:
         danger_desc: "Verwijdering is onomkeerbaar. Alle projectgegevens gaan verloren."
         danger_btn: "Dit project verwijderen"
         danger_confirm: "Dit project permanent verwijderen?"
+        members:
+            title: "Medewerkers"
+            hint: "Medewerkers hebben toegang tot het project op basis van hun rol. Alleen jij (de eigenaar) kunt ze beheren."
+            username_label: "Gebruikersnaam"
+            username_ph: "bijv. johndoe"
+            role_label: "Rol"
+            role_contributor: "Bijdrager — lezen + suggesties"
+            role_editor: "Redacteur — kan inhoud bewerken"
+            role_lead: "Co-verantwoordelijke — volledige toegang"
+            invite_btn: "Uitnodigen"
+            empty: "Nog geen medewerkers."
+            since: "Sinds"
+            remove_title: "%username% verwijderen"
+            remove_confirm: "%username% uit het project verwijderen?"
 
     show:
         back: "← Mijn projecten"
@@ -118,10 +196,175 @@ projects:
         btn_manage: "Beheren"
         btn_overview: "Overzicht"
         btn_manuscript: "Manuscript"
+        dashboard_no_desc: "Geen beschrijving voor dit project."
+        stat_scenes: "Scènes"
+        stat_characters: "Personages"
+        stat_locations: "Locaties"
+        stat_last_update: "Laatste wijziging"
+        recent_activity: "Recente activiteit"
+        empty_activity: "Geen recente activiteit"
+        empty_activity_hint: "Begin met schrijven om je wijzigingen hier te zien"
+        recent_comments: "Recente reacties"
+        empty_comments: "Nog geen reacties."
+        see_all_comments: "Alle reacties bekijken"
+        tasks_done: "voltooid"
+        quick_access: "Snelle acties"
+        create_scene: "Scène aanmaken"
+        new_character: "Nieuw personage"
+        new_location: "Nieuwe locatie"
+        info_section: "Informatie"
+        info_type: "Projecttype"
+        info_created: "Aangemaakt op"
+        info_status: "Status"
+        settings_btn: "Projectinstellingen"
+
+# ===== PROJECTCREATIE FUNNEL =====
+project_new:
+    # STAP 1: Moduskeuze
+    step1:
+        title: "Een nieuw project maken"
+        subtitle: "Kies je aanmaakmodus"
+
+        mode_simplifie:
+            title: "Vereenvoudigde modus"
+            badge: "Aanbevolen"
+            desc_1: "Snel aanmaken"
+            desc_2: "Begeleide configuratie"
+            desc_3: "Standaardstructuur"
+            button: "Starten in vereenvoudigde modus"
+
+        mode_custom:
+            title: "Aangepaste modus"
+            badge: "Geavanceerd"
+            desc_1: "Volledige controle"
+            desc_2: "Functiekeuze"
+            desc_3: "Geavanceerde aanpassing"
+            button: "Starten in aangepaste modus"
+
+    # STAP 2: Projecttype
+    step2:
+        title_simplifie: "Welk type project?"
+        title_custom: "Projectconfiguratie"
+        subtitle: "Deze keuze kan niet worden gewijzigd"
+
+        type:
+            film:
+                title: "Film"
+                subtitle: "Kort of speelfilm"
+                desc: "DE DRAMATISCHE BOG"
+                structure: "3-niveau structuur: Akte → Sequentie → Scène"
+                features_title: "HANDTEKENINGFUNCTIES:"
+                feature_1: "De Spanningsthermometer"
+                feature_1_desc: "Analyseer uw narratieve intensiteitscurve"
+                feature_2: "De Hartslag"
+                feature_2_desc: "Type en ritme van elke scène (Actie, Dialoog, Stilte, Expositie)"
+
+            serie:
+                title: "Serie"
+                subtitle: "Webserie of tv-serie"
+                desc: "MULTI-BOG ARCHITECTUUR"
+                structure: "4-niveau structuur: Seizoen → Aflevering → Akte → Scène"
+                features_title: "HANDTEKENINGFUNCTIES:"
+                feature_1: "De Storyline Tracker"
+                feature_1_desc: "Volg je verhaallijnen en detecteer vergeten draden"
+                feature_2: "De Cliffhanger"
+                feature_2_desc: "Spanningsintensiteit aan het einde van een aflevering"
+
+            jeu_video:
+                title: "Videogame"
+                subtitle: "Narratief indie-spel"
+                desc: "DE INTERACTIEVE QUEESTE"
+                structure: "4-niveau structuur: Hoofdstuk → Queesttype → Interessepunt → Scène"
+                features_title: "HANDTEKENINGFUNCTIES:"
+                feature_1: "Het Interactiviteitslabel"
+                feature_1_desc: "Inhoudstype: Cinematisch, Dialoogkeuzes, Gameplay"
+                feature_2: "De Werkelijkheidsconditioner"
+                feature_2_desc: "Narratieve vereisten om scènes te ontgrendelen"
+
+        custom:
+            slide1_title: "STAP 1/3: Projecttype"
+            slide2_title: "STAP 2/3: Beschikbare functies"
+            slide2_subtitle: "Je kunt functies mixen op basis van je behoeften"
+            slide3_title: "STAP 3/3: Geavanceerde configuratie"
+
+            structure_title: "NARRATIEVE STRUCTUUR"
+            structure_standard: "Standaard (Akte → Sequentie → Scène)"
+            structure_custom: "Aangepast (tot 5 niveaus)"
+            structure_label_placeholder: "Bijv: Deel, Hoofdstuk, Scène..."
+            structure_has_content: "Bevat tekst"
+            structure_add_level: "+ Niveau toevoegen (max 5)"
+
+            genres_title: "GENRES (meerdere keuzes)"
+
+        button_back: "← Terug"
+        button_next: "Volgende →"
+        button_validate: "Bevestigen →"
+
+    # STAP 3: Voltooiing
+    step3:
+        title: "Voltooiing"
+        subtitle: "Laatste details voor aanmaak"
+
+        form:
+            title_label: "Projecttitel *"
+            title_placeholder: "Bijv: De Schaduwen van Brussel"
+            description_label: "Beschrijving / Pitch"
+            description_placeholder: "Beschrijf je project in een paar zinnen..."
+            genres_label: "Genres (meerdere keuzes)"
+            cover_label: "Projectafbeelding"
+            cover_help: "(optioneel)"
+            cover_button: "Bestand kiezen"
+
+        recap:
+            title: "SAMENVATTING"
+            mode: "Modus:"
+            type: "Type:"
+            type_locked: "(kan niet worden gewijzigd)"
+            structure: "Structuur:"
+            genres: "Genres:"
+            features: "Geactiveerde functies:"
+            visibility: "Zichtbaarheid:"
+            visibility_private: "Privé"
+
+        button_create: "Project maken →"
+
+    genres:
+        film:
+            thriller: "Thriller"
+            horror: "Horror"
+            scifi: "Sciencefiction"
+            drama: "Drama"
+            comedy: "Komedie"
+            action: "Actie"
+            fantasy: "Fantasy"
+
+        serie:
+            drama: "Drama"
+            comedy: "Komedie"
+            thriller: "Thriller"
+            scifi: "Sciencefiction"
+            fantasy: "Fantasy"
+            animation: "Animatie"
+            romance: "Romantiek"
+
+        jeu_video:
+            rpg: "RPG"
+            action: "Actie"
+            adventure: "Avontuur"
+            platformer: "Platformspel"
+            puzzle: "Puzzel"
+            visual_novel: "Visual Novel"
+            simulation: "Simulatie"
+
+    error:
+        invalid_data: "Ongeldige gegevens. Probeer opnieuw."
+        missing_title: "Titel is verplicht."
+
 # ===== PERSONAGES =====
 character:
     index:
         title: "Personages"
+        subtitle: "Beheer de personages van uw project"
         new_btn: "+ Nieuw personage"
         empty: "Nog geen personages."
         empty_create: "Eerste personage maken"
@@ -131,11 +374,13 @@ character:
         back: "← Personages"
         submit: "Personage maken →"
         cancel: "Annuleren"
+        advanced: "Geavanceerde instellingen"
 
     edit:
         title: "Personage bewerken"
         submit: "Opslaan"
         cancel: "Annuleren"
+        advanced: "Geavanceerde instellingen"
         danger_zone: "Gevarenzone"
         danger_desc: "Verwijdering is onomkeerbaar."
         delete_btn: "Dit personage verwijderen"
@@ -160,10 +405,54 @@ character:
         firstname: "Voornaam"
         lastname: "Achternaam"
 
+    form:
+        section_identity: "Identiteit"
+        section_psychology: "Psychologie & boog"
+        name: "Naam van het personage"
+        name_placeholder: "Bijv.: Arthur Dupont"
+        firstname: "Voornaam"
+        firstname_placeholder: "Bijv.: Arthur"
+        lastname: "Achternaam"
+        lastname_placeholder: "Bijv.: Dupont"
+        nickname: "Bijnaam / Alias"
+        nickname_placeholder: "Bijv.: « De Architect »"
+        role: "Narratieve rol"
+        description: "Korte beschrijving"
+        description_placeholder: "Een korte beschrijving van dit personage..."
+        biography: "Biografie"
+        biography_placeholder: "De levensgeschiedenis van dit personage..."
+        goals: "Doelstellingen"
+        goals_placeholder: "Wat dit personage wil bereiken..."
+        motivations: "Motivaties"
+        motivations_placeholder: "Waarom handelt dit personage zo..."
+        arc: "Verhaalboog"
+        arc_placeholder: "Hoe evolueert dit personage in de loop van het verhaal..."
+
+    filter:
+        all: "Alle"
+        protagonist: "Protagonist"
+        antagonist: "Antagonist"
+        secondary: "Secundair"
+        figurant: "Figurant"
+
+    sort:
+        az: "A → Z"
+        za: "Z → A"
+        date_desc: "Nieuwste"
+        date_asc: "Oudste"
+
+    role:
+        protagonist: "Protagonist"
+        antagonist: "Antagonist"
+        secondary: "Secundair"
+        figurant: "Figurant"
+
+
 # ===== LOCATIES =====
 location:
     index:
         title: "Locaties"
+        subtitle: "Beheer de locaties van uw narratief universum"
         new_btn: "+ Nieuwe locatie"
         empty: "Nog geen locaties."
         empty_create: "Eerste locatie maken"
@@ -173,11 +462,13 @@ location:
         back: "← Locaties"
         submit: "Locatie maken →"
         cancel: "Annuleren"
+        advanced: "Geavanceerde instellingen"
 
     edit:
         title: "Locatie bewerken"
         submit: "Opslaan"
         cancel: "Annuleren"
+        advanced: "Geavanceerde instellingen"
         danger_zone: "Gevarenzone"
         danger_desc: "Verwijdering is onomkeerbaar."
         delete_btn: "Deze locatie verwijderen"
@@ -187,19 +478,595 @@ location:
         back: "← Locaties"
         edit_btn: "Bewerken"
         no_description: "Geen beschrijving voor deze locatie."
+        children: "Sub-locaties"
+        no_children: "Geen sub-locaties."
+        parent: "Bovenliggende locatie"
 
     info:
         title: "Informatie"
         type: "Type"
         created_at: "Aangemaakt op"
         updated_at: "Gewijzigd op"
+        parent: "Bovenliggende locatie"
 
-# ===== PROJECTCREATIE FUNNEL (vereenvoudigd - volledige versie beschikbaar op aanvraag) =====
-project_new:
+    form:
+        section_basic: "Algemene informatie"
+        name: "Naam van de locatie"
+        name_placeholder: "Bv.: Het Mistige Woud…"
+        type: "Type locatie"
+        description: "Beschrijving"
+        description_placeholder: "Beschrijf de sfeer, architectuur, ambiance…"
+
+    filter:
+        all: "Alle"
+        interior: "Interieur"
+        exterior: "Exterieur"
+        fantasy: "Fantasie"
+        historical: "Historisch"
+        futuristic: "Futuristisch"
+
+    sort:
+        az: "A → Z"
+        za: "Z → A"
+        date_desc: "Nieuwste"
+        date_asc: "Oudste"
+
+    type:
+        interior: "Interieur"
+        exterior: "Exterieur"
+        fantasy: "Fantasie"
+        historical: "Historisch"
+        futuristic: "Futuristisch"
+
+# ===== VERKENNING =====
+explore:
+    tag: "Verkenning"
+    title: "Publieke projecten"
+    projects_count: "project(en) beschikbaar"
+    search_placeholder: "Zoek naar een project, een auteur..."
+    filter:
+        all: "Alle"
+        film: "Film"
+        serie: "Serie"
+        jeu_video: "Videogame"
+        custom: "Aangepast"
+        mode: "Modus"
+        mode_project: "Project"
+        mode_author: "Auteur"
+        keywords: "Trefwoorden"
+        search_hint: "Universum, naam van een auteur…"
+        project_types: "Projecttypes"
+        all_types: "Alle types"
+        films: "Films"
+        series: "Series"
+        games: "Videogames"
+        add_filters: "Filters toevoegen"
+        genre_universal: "Universeel"
+        sort: "Sorteren op"
+        sort_recent: "Meest recent"
+        sort_oldest: "Oudste"
+        sort_az: "A-Z"
+        sort_za: "Z-A"
+        sort_name_az: "Naam A-Z"
+        sort_name_za: "Naam Z-A"
+    section:
+        films: "Laatste films"
+        series: "Laatste series"
+        games: "Laatste videogames"
+        creators: "Studio's & actieve auteurs"
+        see_all: "Alles bekijken"
+        empty_films: "Nog geen openbare films."
+        empty_series: "Nog geen openbare series."
+        empty_games: "Nog geen openbare videogames."
+    empty: "Geen projecten gevonden."
+    reset_filters: "Filters wissen"
+
+# ===== GEMEENSCHAPPELIJKE ACTIES =====
+common:
+    edit: "Bewerken"
+    delete: "Verwijderen"
+    cancel: "Annuleren"
+    update: "Opslaan"
+    create: "Maken"
+    created_at: "Aangemaakt op"
+    save: "Opslaan"
+    close: "Sluiten"
+    optional: "(optioneel)"
+    search: "Zoeken"
+    back: "Terug"
+
+# ===== NOTITIES =====
+note:
+    index:
+        title: "Notities"
+        subtitle: "Jouw notities en ideeën voor dit project"
+        create: "+ Nieuwe notitie"
+        empty:
+            title: "Nog geen notities"
+            message: "Maak je eerste notitie om je ideeën te organiseren."
+        create_first: "Notitie maken"
+
+    new:
+        title: "Nieuwe notitie"
+
+    edit:
+        title: "Notitie bewerken"
+
+    back: "← Notities"
+    confirm_delete: "Deze notitie definitief verwijderen?"
+
+    show:
+        content: "Inhoud"
+        assigned_to: "Toegewezen aan"
+        author: "Auteur"
+
+    filter:
+        all: "Alle"
+        notes: "Notities"
+        todos: "Te doen"
+        done: "Afgerond"
+
+    status:
+        note: "Notitie"
+        todo: "Te doen"
+        done: "Afgerond"
+        archived: "Gearchiveerd"
+
+    priority:
+        low: "Laag"
+        medium: "Normaal"
+        high: "Hoog"
+        urgent: "Urgent"
+
+    form:
+        section_main: "Inhoud van de notitie"
+        section_organization: "Organisatie"
+        title:
+            placeholder: "Titel van de notitie..."
+        content:
+            placeholder: "Schrijf je notitie hier..."
+
+# ===== TAKEN =====
+task:
+    index:
+        title: "Taken"
+        subtitle: "Beheer de taken van je project"
+        create: "+ Nieuwe taak"
+        empty:
+            title: "Nog geen taken"
+            message: "Maak je eerste taak om je werk te organiseren."
+        create_first: "Taak maken"
+    summary:
+        overdue: "Te laat"
+        urgent: "Urgent"
+        progress: "Voltooid"
+    filter:
+        all: "Alle"
+        all_priorities: "Alle prioriteiten"
+    col:
+        name: "Taak"
+        description: "Beschrijving"
+        status: "Status"
+        priority: "Prioriteit"
+        assignee: "Toegewezen"
+    toast:
+        deleted: "Taak verwijderd"
+        undo: "Ongedaan maken"
+        status_changed: "Status bijgewerkt"
+
+    new:
+        title: "Nieuwe taak"
+
+    edit:
+        title: "Taak bewerken"
+
+    back: "← Taken"
+    confirm_delete: "Deze taak definitief verwijderen?"
+    unassigned: "Niet toegewezen"
+
+    show:
+        description: "Beschrijving"
+        assigned_to: "Toegewezen aan"
+        created_by: "Gemaakt door"
+
+    status:
+        todo: "Te doen"
+        in_progress: "Bezig"
+        review: "In beoordeling"
+        done: "Afgerond"
+
+    priority:
+        low: "Laag"
+        medium: "Normaal"
+        high: "Hoog"
+        urgent: "Urgent"
+
+    form:
+        section_main: "Hoofdinformatie"
+        section_organization: "Organisatie"
+        title:
+            placeholder: "Titel van de taak..."
+        description:
+            placeholder: "Beschrijving van de taak..."
+
+# ===== TIJDLIJN =====
+world_event:
+    index:
+        title: "Tijdlijn"
+        subtitle: "De gebeurtenissen van je narratieve universum"
+        create: "+ Nieuwe gebeurtenis"
+        empty:
+            title: "Nog geen gebeurtenissen"
+            message: "Maak je eerste gebeurtenis om de tijdlijn van je universum op te bouwen."
+        create_first: "Gebeurtenis maken"
+
+    new:
+        title: "Nieuwe gebeurtenis"
+
+    edit:
+        title: "Gebeurtenis bewerken"
+
+    back: "← Tijdlijn"
+    confirm_delete: "Deze gebeurtenis definitief verwijderen?"
+    year: "Jaar"
+
+    show:
+        date: "Narratieve datum"
+        description: "Beschrijving"
+        location: "Locatie"
+
+    form:
+        section_main: "Informatie"
+        section_date: "Narratieve datum"
+        section_location: "Gekoppelde locatie"
+        date_help: "Gebruik de fictieve datums van je universum (bijv: Jaar 342, Maand 7, Dag 15)"
+        title:
+            placeholder: "Titel van de gebeurtenis..."
+        description:
+            placeholder: "Beschrijf deze gebeurtenis..."
+        year:
+            placeholder: "Jaar (bijv: 342)"
+        month:
+            placeholder: "Maand (1-12)"
+        day:
+            placeholder: "Dag (1-31)"
+
+# ===== MANUSCRIPT =====
+manuscript:
+    index:
+        title: "Manuscript"
+        btn_overview: "Projectoverzicht"
+        btn_new: "Nieuw element"
+        empty:
+            title: "Begin je manuscript"
+            message: "Maak je eerste narratieve element om te beginnen met schrijven."
+            btn: "Eerste element maken"
+        stats:
+            folder: "map|mappen"
+            script: "script|scripts"
+            word: "woord|woorden"
+            note: "gekoppelde notitie|gekoppelde notities"
+        tree:
+            add_element: "Element toevoegen"
+            add_first_child: "Eerste element toevoegen"
+            add_root: "Hoofdelement toevoegen"
+            empty_folder: "Leeg"
+            rename: "Hernoemen"
+
+    new:
+        title: "Nieuw element"
+        context_label: "Toevoegen aan"
+        root_path: "Manuscriptwortel"
+        type_question: "Welk type element?"
+        type_folder:
+            name: "Map"
+            desc: "Groepeert onderliggende elementen. Akten, afleveringen, sequenties…"
+        type_script:
+            name: "Script"
+            badge: "Schrijfpagina"
+            desc: "Bewerkbare pagina in Fountain-formaat. Scènes, dialogen, acties…"
+        field_title: "Titel"
+        placeholder: "Geef dit element een titel…"
+        cancel: "Annuleren"
+        submit_folder: "Map aanmaken"
+        submit_script: "Script aanmaken"
+        type_hint_script: "— SCÈNE"
+
+    show:
+        leaf_badge: "Script"
+        folder_badge: "Map"
+        child_count: "element|elementen"
+        add_child: "Onderliggend element toevoegen"
+        empty_folder: "Deze map is leeg."
+        create_first: "Eerste element maken"
+        reading_btn: "Lezen"
+        save_indicator: "Opgeslagen"
+        save_btn: "Opslaan"
+        inspector:
+            title: "Inspector"
+            element_notes: "Notities van dit element"
+            element_notes_empty: "Geen notities gekoppeld aan dit element."
+            new_note: "Nieuwe notitie"
+            all_notes: "Alle"
+            element_tasks: "Taken van dit element"
+            element_tasks_empty: "Geen taken gekoppeld aan dit element."
+            new_task: "Nieuwe taak"
+            detected_chars: "Gedetecteerde personages"
+            detected_chars_hint: "Typ een naam in HOOFDLETTERS om deze te detecteren."
+            project_notes: "Projectnotities"
+            project_notes_empty: "Geen actieve projectnotities."
+            all_project_notes: "Alle notities bekijken"
+            stats: "Statistieken"
+            stat_words: "Woorden"
+            stat_chars: "Tekens"
+            stat_last_saved: "Laatste opslag"
+        statusbar:
+            hint: "Tab: type wijzigen · Enter: nieuw blok · ⌫ leeg: verwijderen"
+
+    editor:
+        type:
+            action: "Actie"
+            scene: "Scène"
+            character: "Personage"
+            dialogue: "Dialoog"
+            parenthetical: "Toneelaanwijzing"
+            transition: "Overgang"
+        ph:
+            action: "Scènebeschrijving…"
+            scene: "EXT. LOCATIE — DAG/NACHT"
+            character: "NAAM PERSONAGE"
+            dialogue: "Tekst van het personage…"
+            parenthetical: "(toneelaanwijzing)"
+            transition: "VERVAAG UIT:"
+        mention:
+            char: "Personage"
+            loc: "Locatie"
+            hint: "↑↓ navigeren · ↵ bevestigen · Esc sluiten"
+        detect:
+            hint: "Gebruik Personage-blokken om personagenamen te detecteren."
+        mode:
+            reading: "Lezen"
+            writing: "Schrijven"
+        save:
+            dirty: "Niet opgeslagen"
+            saving: "Opslaan…"
+            saved: "Opgeslagen"
+            error: "Fout"
+            at: "Opgeslagen om %time%"
+        stats:
+            word_one: "woord"
+            word_other: "woorden"
+            char_one: "teken"
+            char_other: "tekens"
+        note:
+            aria: "Een notitie toevoegen aan dit blok"
+
+# ===== PROJECTCREATIE FUNNEL (nieuw) =====
+funnel:
+    layout:
+        nav_label: "Aanmaakapstappen"
+        step_type: "TYPE"
+        step_infos: "INFO"
+        step_structure: "STRUCTUUR"
+        cancel: "Annuleren"
     step1:
-        title: "Een nieuw project maken"
+        page_title: "Nieuw project — Type · ScénArt"
+        title: "Welk type project maak je?"
+        subtitle: "De narratieve structuur wordt aangepast aan je keuze. Je kunt het in de volgende stap aanpassen."
+        film_label: "Film"
+        film_desc: "Speelfilm, kortfilm, documentaire"
+        film_hint: "Akten → Sequenties → Scènes"
+        serie_label: "Serie"
+        serie_desc: "Seizoenen, afleveringen, narratieve bogen"
+        serie_hint: "Seizoenen → Afleveringen → Scènes"
+        game_label: "Videogame"
+        game_desc: "Hoofdstukken, quests, zones, tussenfilmpjes"
+        game_hint: "Hoofdstukken → Niveaus → Scènes"
     step2:
-        title_simplifie: "Welk type project?"
+        page_title: "Nieuw project — Titel · ScénArt"
+        title: "Geef je project een titel"
+        subtitle: "Je kunt dit op elk moment wijzigen via de instellingen."
+        field_title: "Titel"
+        field_desc: "Beschrijving"
+        field_genres: "Genre(s)"
+        optional: "(optioneel)"
+        optional_genres: "(optioneel — max 3)"
+        placeholder_title: "Bijv. De Laatste Akte, Kronieken van Arathos, Seizoen 1…"
+        placeholder_desc: "Beschrijf je project kort: universum, thema's, narratieve intentie…"
+        genres_hint: "Help de gemeenschap je project te vinden. Zonder selectie wordt het gemarkeerd als 'Niet geclassificeerd'."
+        genres_count_one: "1 genre geselecteerd"
+        genres_count_many: "%n% genres geselecteerd"
+        genres_search_placeholder: "Genres filteren..."
+        genres_no_results: "Geen genre komt overeen met uw zoekopdracht."
+        btn_back: "Terug"
+        btn_next: "Doorgaan"
     step3:
-        title: "Voltooiing"
-        button_create: "Project maken →"
+        page_title: "Nieuw project — Structuur · ScénArt"
+        title: "Hoe diep moet je structuur zijn?"
+        subtitle: "Kies het aantal narratieve niveaus. Namen zijn aanpasbaar."
+        depth_label: "Aantal niveaus"
+        depth_levels: "niveaus"
+        levels_label: "Niveaunamen"
+        levels_hint: "Namen zijn vooraf ingevuld op basis van het projecttype. Pas ze gerust aan."
+        preview: "Structuurvoorbeeld"
+        btn_back: "Terug"
+        btn_create: "Mijn project aanmaken"
+        label_content: "inhoud"
+        label_others: "+ meer %name%…"
+        label_level: "Niveau %n%"
+        film_act: "Akte"
+        film_sequence: "Sequentie"
+        film_scene: "Scène"
+        film_sub_scene: "Sub-scène"
+        serie_season: "Seizoen"
+        serie_episode: "Aflevering"
+        serie_act: "Akte"
+        serie_scene: "Scène"
+        game_chapter: "Hoofdstuk"
+        game_level: "Niveau"
+        game_zone: "Zone"
+        game_scene: "Scène"
+
+# ===== ZIJBALK NAVIGATIE =====
+nav:
+    writing: "Schrijven"
+    overview: "Overzicht"
+    manuscript: "Manuscript"
+    add_root: "Rootelement toevoegen"
+    add_child: "Onderliggend element toevoegen"
+    timeline: "Tijdlijn"
+    universe: "Universum"
+    characters: "Personages"
+    locations: "Locaties"
+    production: "Productie"
+    tasks: "Taken"
+    notes: "Notities"
+    collapse: "Inklappen"
+    readonly_mode: "Leesmodus"
+    public_page: "Openbare pagina"
+    online: "Online"
+    live: "Live"
+    private_vis: "Privé"
+    unpublished: "Niet gepubliceerd"
+    settings: "Projectinstellingen"
+
+# ===== PUBLICATIEMODAL =====
+publish_modal:
+    title: "Project publiceren"
+    close: "Sluiten"
+    unpublished_label: "Niet gepubliceerd"
+    unpublished_desc: "Alleen zichtbaar voor jou."
+    private_label: "Privé"
+    private_desc: "Zichtbaar voor uitgenodigde medewerkers."
+    public_label: "Online"
+    public_desc: "Zichtbaar voor alle bezoekers."
+    content_title: "Te publiceren inhoud"
+    content_hint: "Kies wat online zichtbaar is."
+    select_all: "Alles selecteren"
+    deselect_all: "Alles deselecteren"
+    element: "%count% element|%count% elementen"
+    cancel: "Annuleren"
+    apply: "Toepassen"
+
+# ===== PROJECTINSTELLINGEN =====
+settings:
+    title: "Instellingen"
+    tabs:
+        label: "Instellingstabbladen"
+        general: "Informatie"
+        structure: "Structuur"
+        members: "Medewerkers"
+        danger: "Gevaar"
+    types:
+        film: "Film"
+        serie: "Serie"
+        jeu_video: "Videogame"
+        custom: "Aangepast"
+    statuses:
+        draft: "Concept"
+        in_progress: "Bezig"
+        completed: "Voltooid"
+        archived: "Gearchiveerd"
+    general:
+        title: "Algemene informatie"
+        hint: "Titel, beschrijving en voortgang van het project."
+        field_title: "Titel"
+        field_description: "Beschrijving"
+        optional: "(optioneel)"
+        field_type: "Type"
+        type_readonly: "niet bewerkbaar"
+        field_status: "Status"
+    genres:
+        title: "Genre(s)"
+        hint: "Kies maximaal 3 genres. Zonder selectie wordt het project weergegeven als 'Niet geclassificeerd'."
+        search_placeholder: "Genres filteren..."
+        no_results: "Geen genre komt overeen met uw zoekopdracht."
+    manuscript:
+        title: "Manuscriptinstellingen"
+        hint: "Gebruikt om pagina's, schermtijd en leestijd in de editor te schatten."
+        words_per_page: "Woorden per pagina"
+        words_per_page_default: "(std: 170)"
+        unit_words: "woorden"
+    narrative:
+        title: "Narratieve niveaus"
+    invite:
+        title: "Medewerker uitnodigen"
+        placeholder: "bijv. alice_writes"
+    members_list:
+        title: "Huidige leden"
+        remove_title: "%username% verwijderen"
+    danger:
+        title: "Project verwijderen"
+    btn:
+        save: "Opslaan"
+        cancel: "Annuleren"
+        delete: "Verwijderen"
+
+# ===== REACTIES (stemmen) =====
+comment:
+    vote:
+        helpful: "Nuttig"
+        not_helpful: "Niet nuttig"
+        login_required: "Log in om te stemmen"
+
+# ===== REACTIESECTIE (templates) =====
+comment_section:
+    title: "Reacties"
+    form:
+        placeholder: "Deel je mening over dit project…"
+        hint: "2 – 2000 tekens"
+        submit: "Reageren"
+        login: "Log in"
+        login_suffix: "om een reactie achter te laten."
+    empty: "Nog geen reacties. Wees de eerste!"
+    reply: "↩ Antwoorden"
+    cancel: "× Annuleren"
+    report: "Melden"
+    delete: "Verwijderen"
+    delete_confirm: "Deze reactie verwijderen?"
+    hidden_badge: "verborgen"
+    reply_placeholder: "Jouw antwoord…"
+    reply_hint: "Antwoord op %username%"
+    reply_submit: "Antwoorden"
+
+# ===== MAKERSKAART =====
+creator:
+    card:
+        project_count: "{0} geen projecten|{1} %count% project|]1,Inf] %count% projecten"
+        member_since: "Lid sinds:"
+        no_bio: "Deze auteur heeft nog geen biografie geschreven."
+        support_singular: "steun"
+        support_plural: "steunbetuigingen"
+        see_profile: "Profiel bekijken"
+
+# ===== PUBLIEKE PROJECTKAART =====
+project_public:
+    type:
+        film: "Film"
+        serie: "Serie"
+        jeu_video: "Videogame"
+        custom: "Aangepast"
+    status:
+        finished: "Voltooid"
+        in_progress: "Bezig"
+        upcoming: "Concept"
+    cta:
+        finished: "Script lezen"
+        in_progress: "Updates volgen"
+        upcoming: "Ontdekken"
+    scene_count: "{0} geen scènes|{1} scène|]1,Inf] %count% scènes"
+    char_count: "{0} geen personages|{1} personage|]1,Inf] %count% personages"
+    by: "door"
+    comment_count: "{0} geen reacties|{1} reactie|]1,Inf] %count% reacties"
+    workshop_btn: "Werkplaats"
+
+# ===== PUBLIEKE PROJECTPAGINA =====
+project_show_public:
+    type:
+        film: "Film"
+        serie: "Serie"
+        jeu_video: "Videogame"
+    workshop_btn_owner: "Beheren in werkplaats"
+    workshop_btn_collab: "Werkplaats openen"
+    about_title: "Over"
+

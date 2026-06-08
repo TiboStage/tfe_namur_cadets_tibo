@@ -1,4 +1,4 @@
-{% extends 'workshop/projects/scenario/layout.html.twig' %}
+{% extends 'workshop/projects/layout.html.twig' %}
 {% trans_default_domain 'workshop' %}
 
 {% block title %}{{ project.title }} — {{ 'manuscript.index.title'|trans }}{% endblock %}
@@ -15,39 +15,83 @@
             {% if b.content is defined and b.content %}{% set wc = wc + (b.content|split(' ')|length) %}{% endif %}
         {% endfor %}
 
-        <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: element.id}) }}" class="ms-script-row">
-            <span class="ms-script-icon">{{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}</span>
-            <span class="ms-script-title">{{ element.title }}</span>
-            <span class="ms-script-meta">
-                {% if wc > 0 %}
-                    <span class="ms-script-words">{{ wc }} {{ 'manuscript.index.stats.word'|trans({'%count%': wc}) }}</span>
-                {% else %}
-                    <span class="ms-script-empty">{{ 'manuscript.index.tree.empty_folder'|trans }}</span>
-                {% endif %}
-                {% if notes|length > 0 %}
-                    <span class="ms-note-chip">{{ ux_icon('lucide:sticky-note', {class: 'icon-xs'}) }}{{ notes|length }}</span>
-                {% endif %}
-            </span>
-        </a>
+        {# Wrapper div pour que les boutons ↑↓ et le lien coexistent #}
+        <div class="ms-script-item" data-sort-id="{{ element.id }}">
+            <div class="ms-order-btns">
+                <button type="button" class="ms-order-btn ms-order-btn--up"
+                        title="Monter"
+                        data-action="click->ms-reorder#up">
+                    {{ ux_icon('lucide:chevron-up', {style: 'width:10px;height:10px;'}) }}
+                </button>
+                <button type="button" class="ms-order-btn ms-order-btn--down"
+                        title="Descendre"
+                        data-action="click->ms-reorder#down">
+                    {{ ux_icon('lucide:chevron-down', {style: 'width:10px;height:10px;'}) }}
+                </button>
+            </div>
+            <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: element.id}) }}"
+               class="ms-script-row">
+                <span class="ms-script-icon">{{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}</span>
+                <span class="ms-script-title">{{ element.title }}</span>
+                <span class="ms-script-meta">
+                    {% if wc > 0 %}
+                        <span class="ms-script-words">{{ wc }} {{ 'manuscript.index.stats.word'|trans({'%count%': wc}) }}</span>
+                    {% else %}
+                        <span class="ms-script-empty">{{ 'manuscript.index.tree.empty_folder'|trans }}</span>
+                    {% endif %}
+                    {% if notes|length > 0 %}
+                        <span class="ms-note-chip">{{ ux_icon('lucide:sticky-note', {class: 'icon-xs'}) }}{{ notes|length }}</span>
+                    {% endif %}
+                </span>
+            </a>
+        </div>
 
     {% else %}
 
         {% set childDepth = element.depth + 1 %}
         {% set childConfig = configMap[childDepth] is defined ? configMap[childDepth] : null %}
+        {% set hasChildren = element.children is not empty %}
 
-        <div class="ms-folder ms-folder--depth-{{ element.depth > 3 ? 3 : element.depth }}">
+        <div class="ms-folder ms-folder--depth-{{ element.depth > 3 ? 3 : element.depth }}"
+             data-sort-id="{{ element.id }}"
+             data-controller="ms-folder"
+             data-ms-folder-id-value="{{ element.id }}">
 
             <div class="ms-folder-header">
+
+                <div class="ms-order-btns">
+                    <button type="button" class="ms-order-btn ms-order-btn--up"
+                            title="Monter"
+                            data-action="click->ms-reorder#up">
+                        {{ ux_icon('lucide:chevron-up', {style: 'width:10px;height:10px;'}) }}
+                    </button>
+                    <button type="button" class="ms-order-btn ms-order-btn--down"
+                            title="Descendre"
+                            data-action="click->ms-reorder#down">
+                        {{ ux_icon('lucide:chevron-down', {style: 'width:10px;height:10px;'}) }}
+                    </button>
+                </div>
+
+                {% if hasChildren %}
+                    <button type="button"
+                            class="ms-chevron-btn"
+                            data-action="click->ms-folder#toggle"
+                            title="Réduire / développer">
+                        {{ ux_icon('lucide:chevron-down', {class: 'ms-chevron icon-xs', 'data-ms-folder-target': 'chevron'}) }}
+                    </button>
+                {% else %}
+                    <span class="ms-chevron-placeholder"></span>
+                {% endif %}
+
                 {{ ux_icon('lucide:folder-open', {class: 'icon-xs'}) }}
 
                 <span data-controller="inline-rename"
                       data-inline-rename-url-value="{{ path('app_manuscript_rename', {project_slug: project.slug, id: element.id}) }}"
                       data-inline-rename-title-value="{{ element.title }}"
                       class="ms-folder-title-wrap">
-                    <a href="{{ path('app_manuscript_show', {project_slug: project.slug, id: element.id}) }}"
-                       class="ms-folder-title"
-                       data-inline-rename-target="display"
-                       data-action="dblclick->inline-rename#startEdit:prevent">{{ element.title }}</a>
+                    <span class="ms-folder-title"
+                          data-inline-rename-target="display"
+                          data-action="dblclick->inline-rename#startEdit:prevent">{{ element.title }}</span>
                     <button type="button" class="ms-rename-btn" title="{{ 'manuscript.index.tree.rename'|trans }}"
                             data-action="click->inline-rename#startEdit">
                         {{ ux_icon('lucide:pencil', {style: 'width:10px;height:10px;'}) }}
@@ -67,8 +111,12 @@
                 {% endif %}
             </div>
 
-            {% if element.children is not empty %}
-                <div class="ms-folder-body">
+            {% if hasChildren %}
+                <div class="ms-folder-body"
+                     data-ms-folder-target="body"
+                     data-controller="ms-reorder"
+                     data-ms-reorder-url-value="{{ path('app_manuscript_reorder', {project_slug: project.slug}) }}"
+                     data-sort-parent-id="{{ element.id }}">
                     {% for child in element.children %}
                         {{ ms.renderNode(child, project, notesByElement, configMap) }}
                     {% endfor %}
@@ -90,48 +138,41 @@
     {% endif %}
 {% endmacro %}
 
-{% block editor_shell %}
+{% block project_content %}
 {% import _self as ms %}
 
 {% set rootConfig = configMap[1] is defined ? configMap[1] : null %}
 
-<div class="editor-main">
+<div class="workshop-container">
 
-    {# Topbar #}
-    <header class="editor-topbar">
-        <div class="editor-topbar-left">
-            <span class="editor-topbar-title">
+    <header class="page-header">
+        <div>
+            <h1>
                 {{ ux_icon('lucide:book-open', {class: 'icon-sm'}) }}
                 {{ 'manuscript.index.title'|trans }}
-            </span>
-            <span class="element-type-pill">{{ project.projectType|upper }}</span>
+                <span class="element-type-pill">{{ project.projectType|upper }}</span>
+            </h1>
         </div>
-        <div class="editor-topbar-right">
-            <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="topbar-btn">
-                {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
-                {{ 'manuscript.index.btn_overview'|trans }}
+        {% if rootConfig and rootElements is not empty %}
+            <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}"
+               class="btn-export">
+                {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                Nouveau {{ rootConfig.labelSingular|lower }}
             </a>
-            {% if rootConfig %}
-                <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}"
-                   class="topbar-btn topbar-btn-primary">
-                    {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
-                    Nouveau {{ rootConfig.labelSingular|lower }}
-                </a>
-            {% endif %}
-        </div>
+        {% endif %}
     </header>
 
     {% if rootElements is empty %}
 
-        {# État vide — formulaire inline #}
         <div class="ms-empty-start">
 
             <div class="ms-empty-structure">
                 <div class="ms-empty-structure-title">Structure de votre projet</div>
                 <div class="ms-empty-levels">
                     {% for d, lvl in configMap %}
+                        {% set lvlIcon = lvl.hasContent ? 'lucide:file-text' : 'lucide:folder' %}
                         <div class="ms-empty-level {% if d == 1 %}ms-empty-level--first{% endif %}" style="--lvl-color: {{ lvl.color }}">
-                            <span class="ms-empty-level-icon">{{ lvl.icon }}</span>
+                            <span class="ms-empty-level-icon">{{ ux_icon(lvlIcon, {class: 'icon-xs', style: 'color: ' ~ lvl.color}) }}</span>
                             <div class="ms-empty-level-text">
                                 <strong>{{ lvl.labelPlural }}</strong>
                                 <span>{{ lvl.hasContent ? 'contenu écrit' : 'structure' }}</span>
@@ -166,36 +207,42 @@
 
     {% else %}
 
-        {# Stats #}
         {% set allElements    = project.scenarioElements %}
         {% set totalScripts   = allElements|filter(e => e.isLeaf())|length %}
         {% set totalFolders   = allElements|filter(e => not e.isLeaf())|length %}
         {% set totalNoteCount = 0 %}
         {% for notes in notesByElement %}{% set totalNoteCount = totalNoteCount + notes|length %}{% endfor %}
 
-        <div class="ms-overview-stats">
-            <div class="ms-stat">
-                <span class="ms-stat-icon">{{ ux_icon('lucide:folder', {class: 'icon-sm'}) }}</span>
-                <div class="ms-stat-body"><span class="ms-stat-value">{{ totalFolders }}</span><span class="ms-stat-label">{{ 'manuscript.index.stats.folder'|trans({'%count%': totalFolders}) }}</span></div>
+        <div class="proj-show__stats ms-index-stats">
+            <div class="proj-stat">
+                {{ ux_icon('lucide:folder', {class: 'icon-xs'}) }}
+                <strong>{{ totalFolders }}</strong>
+                {{ 'manuscript.index.stats.folder'|trans({'%count%': totalFolders}) }}
             </div>
-            <div class="ms-stat">
-                <span class="ms-stat-icon">{{ ux_icon('lucide:file-text', {class: 'icon-sm'}) }}</span>
-                <div class="ms-stat-body"><span class="ms-stat-value">{{ totalScripts }}</span><span class="ms-stat-label">{{ 'manuscript.index.stats.script'|trans({'%count%': totalScripts}) }}</span></div>
+            <div class="proj-stat">
+                {{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}
+                <strong>{{ totalScripts }}</strong>
+                {{ 'manuscript.index.stats.script'|trans({'%count%': totalScripts}) }}
             </div>
-            <div class="ms-stat">
-                <span class="ms-stat-icon">{{ ux_icon('lucide:type', {class: 'icon-sm'}) }}</span>
-                <div class="ms-stat-body"><span class="ms-stat-value">{{ totalWordCount|number_format(0, ',', ' ') }}</span><span class="ms-stat-label">{{ 'manuscript.index.stats.word'|trans({'%count%': totalWordCount}) }}</span></div>
+            <div class="proj-stat">
+                {{ ux_icon('lucide:type', {class: 'icon-xs'}) }}
+                <strong>{{ totalWordCount|number_format(0, ',', ' ') }}</strong>
+                {{ 'manuscript.index.stats.word'|trans({'%count%': totalWordCount}) }}
             </div>
             {% if totalNoteCount > 0 %}
-            <div class="ms-stat ms-stat--notes">
-                <span class="ms-stat-icon">{{ ux_icon('lucide:sticky-note', {class: 'icon-sm'}) }}</span>
-                <div class="ms-stat-body"><span class="ms-stat-value">{{ totalNoteCount }}</span><span class="ms-stat-label">{{ 'manuscript.index.stats.note'|trans({'%count%': totalNoteCount}) }}</span></div>
+            <div class="proj-stat">
+                {{ ux_icon('lucide:sticky-note', {class: 'icon-xs'}) }}
+                <strong>{{ totalNoteCount }}</strong>
+                {{ 'manuscript.index.stats.note'|trans({'%count%': totalNoteCount}) }}
             </div>
             {% endif %}
         </div>
 
-        {# Arborescence #}
-        <div class="ms-overview-tree">
+        <div class="ms-overview-tree ms-overview-tree--flow"
+             data-controller="ms-reorder"
+             data-ms-reorder-url-value="{{ path('app_manuscript_reorder', {project_slug: project.slug}) }}"
+             data-sort-parent-id="">
+
             {% for root in rootElements %}
                 {{ ms.renderNode(root, project, notesByElement, configMap) }}
             {% endfor %}

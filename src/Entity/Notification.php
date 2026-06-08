@@ -23,6 +23,13 @@ class Notification
 
     // ─── Scalaires — property hooks PHP 8.4 ──────────────────────────────────
 
+    /**
+     * Type de notification pour l'icône / la couleur.
+     * 'info' | 'invitation' | 'removed' | 'role_changed' | 'project_published'
+     */
+    #[ORM\Column(length: 30)]
+    public string $type = 'info';
+
     #[ORM\Column(type: 'text')]
     public string $content = '' {
         get => $this->content;

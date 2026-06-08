@@ -1,0 +1,472 @@
+/* ============================================================
+   PAGE NOTES — _notes.css
+   ============================================================ */
+
+/* ── Résumé ──────────────────────────────────────────────── */
+.nl-summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    margin-bottom: 16px;
+}
+
+.nl-summary-sep {
+    width: 1px;
+    height: 20px;
+    background: var(--color-border);
+    margin: 0 4px;
+}
+
+.nl-summary-stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.nl-summary-stat--todo     { color: var(--color-blue, #2563eb); }
+.nl-summary-stat--done     { color: var(--color-green, #16a34a); }
+.nl-summary-stat--archived { color: var(--text-muted); }
+
+.nl-archived-banner {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--overlay-xs);
+    border: 1px solid var(--color-border);
+    margin-bottom: 8px;
+}
+
+.nl-archived-back {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+.nl-archived-back:hover { color: var(--text-main); }
+
+.nl-summary-archived {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--color-border);
+    padding: 2px 8px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.15s, border-color 0.15s;
+    margin-left: auto;
+}
+.nl-summary-archived:hover {
+    color: var(--text-main);
+    border-color: var(--text-muted);
+}
+.nl-summary-archived--empty {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+}
+
+.nl-summary-val {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+.nl-summary-stat--todo .nl-summary-val { color: var(--color-blue, #2563eb); }
+.nl-summary-stat--done .nl-summary-val { color: var(--color-green, #16a34a); }
+
+.nl-summary-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+/* ── Filtres ──────────────────────────────────────────────── */
+.nl-filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.nl-filters__group {
+    display: flex;
+    gap: 2px;
+}
+
+.nl-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    background: none;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    font-family: inherit;
+}
+
+.nl-filter-btn:hover { color: var(--text-main); }
+
+.nl-filter-btn--active {
+    color: var(--text-main);
+    background: var(--overlay-sm);
+    border-color: var(--color-primary);
+}
+
+/* ── Header colonnes ─────────────────────────────────────── */
+.nl-header {
+    display: grid;
+    grid-template-columns: 1fr 120px 90px 120px 100px 75px 60px;
+    padding: 6px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--color-border);
+    margin-bottom: 4px;
+}
+
+.nl-header-link    { }
+.nl-header-priority { }
+
+/* ── Groupe ───────────────────────────────────────────────── */
+.nl-group {
+    margin-bottom: 16px;
+}
+
+.nl-group-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-primary);
+    background: var(--overlay-xs);
+    border: 1px solid var(--color-border);
+    border-bottom: none;
+}
+
+.nl-group-count {
+    margin-left: 4px;
+    padding: 1px 6px;
+    background: var(--overlay-sm);
+    border: 1px solid var(--color-border);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.nl-group-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: 0;
+}
+.nl-group-link:hover { text-decoration: underline; }
+
+/* ── Corps ────────────────────────────────────────────────── */
+.nl-body {
+    border: 1px solid var(--color-border);
+}
+
+/* ── Ligne ────────────────────────────────────────────────── */
+.nl-row {
+    display: grid;
+    grid-template-columns: 1fr 120px 90px 120px 100px 75px 60px;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.1s;
+}
+.nl-row:last-child { border-bottom: none; }
+.nl-row:hover { background: var(--overlay-xs); }
+
+.nl-row--done { opacity: 0.6; }
+
+/* ── Cellules ─────────────────────────────────────────────── */
+.nl-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.nl-cell--title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.nl-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    transition: color 0.15s;
+}
+.nl-title:hover { color: var(--color-primary); }
+
+.nl-excerpt {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* Lien narratif */
+.nl-link-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    padding: 2px 7px;
+    border: 1px solid var(--color-border);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+.nl-link-badge--project {
+    color: var(--text-muted);
+    background: var(--overlay-xs);
+}
+
+.nl-link-badge--scene {
+    color: var(--color-primary);
+    border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+    background: var(--color-primary-glow, color-mix(in srgb, var(--color-primary) 6%, transparent));
+}
+
+/* Statut */
+.nl-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.nl-status--note     { color: var(--text-main); }
+.nl-status--todo     { color: var(--color-blue, #2563eb); }
+.nl-status--done     { color: var(--color-green, #16a34a); }
+.nl-status--archived { color: var(--text-muted); }
+
+/* Priorité */
+.nl-priority {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border: 1px solid;
+}
+
+.nl-priority--low    { color: var(--text-muted); border-color: var(--color-border); }
+.nl-priority--normal { color: var(--text-muted); border-color: var(--color-border); }
+.nl-priority--high   { color: var(--color-yellow, #d97706); border-color: color-mix(in srgb, var(--color-yellow, #d97706) 40%, transparent); }
+.nl-priority--urgent { color: var(--color-error); border-color: color-mix(in srgb, var(--color-error) 40%, transparent); }
+
+/* Auteur */
+.nl-cell--author { flex-wrap: nowrap; }
+
+.nl-author-name {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70px;
+}
+
+/* Date */
+.nl-cell--date time {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* Actions */
+.nl-cell--actions {
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+.nl-btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    transition: color 0.15s, border-color 0.15s;
+}
+.nl-btn-icon:hover {
+    color: var(--text-main);
+    border-color: var(--color-border);
+}
+
+.nl-btn-icon--danger:hover {
+    color: var(--color-error);
+    border-color: color-mix(in srgb, var(--color-error) 40%, transparent);
+}
+
+/* ── Filtre vide (notes existent mais pas dans ce filtre) ── */
+.nl-filter-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-card);
+}
+
+/* Couleurs des filtres actifs par catégorie */
+.nl-filter-btn--note.nl-filter-btn--active   { border-color: var(--text-main); color: var(--text-main); }
+.nl-filter-btn--todo.nl-filter-btn--active   { border-color: var(--color-blue, #2563eb); color: var(--color-blue, #2563eb); }
+.nl-filter-btn--done.nl-filter-btn--active   { border-color: var(--color-green, #16a34a); color: var(--color-green, #16a34a); }
+.nl-filter-btn--archived.nl-filter-btn--active { border-color: var(--text-muted); color: var(--text-muted); }
+
+/* Scène supprimée */
+.nl-group-deleted {
+    font-style: italic;
+    color: var(--text-muted);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* ── Boutons statut rapide ───────────────────────────────── */
+.nl-status-btns {
+    display: flex;
+    gap: 2px;
+}
+
+.nl-status-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    opacity: 0.4;
+}
+
+.nl-status-btn:hover { opacity: 1; border-color: var(--color-border); }
+
+.nl-status-btn--active { opacity: 1; border-color: currentColor; }
+
+.nl-status-btn--note.nl-status-btn--active     { color: var(--text-main); }
+.nl-status-btn--todo.nl-status-btn--active     { color: var(--color-blue, #2563eb); }
+.nl-status-btn--done.nl-status-btn--active     { color: var(--color-green, #16a34a); }
+.nl-status-btn--archived.nl-status-btn--active { color: var(--text-muted); }
+
+/* ── Select priorité inline ──────────────────────────────── */
+.nl-priority-select {
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    padding: 3px 8px;
+    font-size: 11px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s;
+    max-width: 90px;
+}
+.nl-priority-select:focus { border-color: var(--color-primary); }
+
+.nl-priority-select--high   { color: var(--color-yellow, #d97706); }
+.nl-priority-select--urgent { color: var(--color-error); }
+
+/* ── Séparateur dans filtres ─────────────────────────────── */
+.nl-filters__sep {
+    width: 1px;
+    height: 22px;
+    background: var(--color-border);
+    margin: 0 4px;
+}
+
+.nl-filter-select {
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    padding: 4px 8px;
+    font-size: 12px;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    width: auto;
+    max-width: 130px;
+}
+.nl-filter-select:focus { border-color: var(--color-primary); }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1000px) {
+    .nl-header,
+    .nl-row { grid-template-columns: 1fr 120px 90px 100px 60px; }
+    .nl-cell--link,
+    .nl-header-link { display: none; }
+}
+
+@media (max-width: 700px) {
+    .nl-header,
+    .nl-row { grid-template-columns: 1fr 120px 90px 60px; }
+    .nl-cell--author,
+    .nl-cell--date { display: none; }
+}
+
+@media (max-width: 500px) {
+    .nl-header { display: none; }
+    .nl-row { grid-template-columns: 1fr 120px 60px; }
+    .nl-cell--priority { display: none; }
+}

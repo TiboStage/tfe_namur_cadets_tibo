@@ -4,6 +4,7 @@
       - user          : App\Entity\User
       - project_count : int
 #}
+{% trans_default_domain 'workshop' %}
 
 <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: user.username}) }}"
    class="sc-card sc-card--creator">
@@ -14,7 +15,7 @@
 
         <div class="sc-card__media-badge">
             {{ ux_icon('lucide:folder', {class: 'icon-3xs'}) }}
-            {{ project_count }} projet{{ project_count != 1 ? 's' : '' }}
+            {{ 'creator.card.project_count'|trans({'%count%': project_count}) }}
         </div>
 
         {{ include('_partials/_user_avatar.html.twig', {user: user, size: 'xl'}) }}
@@ -30,7 +31,7 @@
             {% endif %}
 
             <span class="sc-card__meta-date">
-                Membre depuis : {{ user.createdAt|date('F Y') }}
+                {{ 'creator.card.member_since'|trans }} {{ user.createdAt|date('F Y') }}
             </span>
         </div>
 
@@ -38,7 +39,7 @@
             {% if user.getBio() %}
                 {{ user.getBio()|length > 120 ? user.getBio()|slice(0, 120) ~ '…' : user.getBio() }}
             {% else %}
-                <span class="sc-card__desc-placeholder">Cet auteur n'a pas encore rédigé de biographie.</span>
+                <span class="sc-card__desc-placeholder">{{ 'creator.card.no_bio'|trans }}</span>
             {% endif %}
         </p>
 
@@ -46,19 +47,31 @@
 
         <div class="sc-card__footer">
             <div class="sc-card__stats-group">
+                {# État initial du like : vrai si l'utilisateur connecté a déjà soutenu ce créateur #}
+                {% set already_liked = app.user is not null
+                    and app.user.id != user.id
+                    and user.isLikedBy(app.user) %}
+
                 <button type="button"
                         class="sc-card__like-btn"
                         data-controller="creator-like"
                         data-creator-like-url-value="{{ path('app_workshop_creator_like', {_locale: app.request.locale, username: user.username}) }}"
+                        data-creator-like-liked-value="{{ already_liked ? 'true' : 'false' }}"
                         data-action="click->creator-like#toggle"
-                        aria-pressed="false">
+                        data-label-singular="{{ 'creator.card.support_singular'|trans }}"
+                        data-label-plural="{{ 'creator.card.support_plural'|trans }}"
+                        aria-pressed="{{ already_liked ? 'true' : 'false' }}">
                     {{ ux_icon('lucide:hand-heart', {class: 'icon-xs'}) }}
                     <strong data-creator-like-target="count">{{ user.likesCount }}</strong>
-                    <span   data-creator-like-target="label">soutien{{ user.likesCount != 1 ? 's' : '' }}</span>
+                    <span data-creator-like-target="label">
+                        {{- user.likesCount == 1
+                            ? 'creator.card.support_singular'|trans
+                            : 'creator.card.support_plural'|trans -}}
+                    </span>
                 </button>
             </div>
             <div class="sc-card__footer-actions">
-                <span class="sc-card__cta sc-card__cta--ongoing">Voir le profil</span>
+                <span class="sc-card__cta sc-card__cta--ongoing">{{ 'creator.card.see_profile'|trans }}</span>
             </div>
         </div>
 

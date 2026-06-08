@@ -22,9 +22,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Project
 {
-    private const VALID_TYPES      = ['film', 'serie', 'jeu_video', 'custom'];
-    private const VALID_STATUSES   = ['draft', 'in_progress', 'completed', 'archived'];
-    private const VALID_MODERATION = ['clear', 'warned', 'suspended'];
+    private const VALID_TYPES       = ['film', 'serie', 'jeu_video', 'custom'];
+    private const VALID_STATUSES    = ['draft', 'in_progress', 'completed', 'archived'];
+    private const VALID_MODERATION  = ['clear', 'warning', 'blocked', 'approved'];
+    private const VALID_VISIBILITY  = ['unpublished', 'private', 'public'];
+
+    /**
+     * Labels lisibles pour l'affichage.
+     * 'unpublished' = Non publié (brouillon, invisible)
+     * 'private'     = Privé (visible des collaborateurs uniquement)
+     * 'public'      = En ligne (visible de tous)
+     */
+    public const VISIBILITY_UNPUBLISHED = 'unpublished';
+    public const VISIBILITY_PRIVATE     = 'private';
+    public const VISIBILITY_PUBLIC      = 'public';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -101,8 +112,25 @@ class Project
         }
     }
 
-    #[ORM\Column]
-    public bool $isPublic = false;
+    /**
+     * Visibilité du projet :
+     *   'unpublished' → Non publié (seulement le propriétaire)
+     *   'private'     → Privé (propriétaire + membres invités)
+     *   'public'      → En ligne (visible de tous)
+     */
+    #[ORM\Column(length: 20)]
+    #[Assert\Choice(
+        choices: ['unpublished', 'private', 'public'],
+        message: 'project.visibility.invalid',
+    )]
+    public string $visibility = 'unpublished' {
+        set {
+            if (!in_array($value, self::VALID_VISIBILITY, true)) {
+                throw new \InvalidArgumentException("Visibilité invalide : $value");
+            }
+            $this->visibility = $value;
+        }
+    }
 
     #[ORM\Column]
     public int $reportCount = 0;
@@ -239,9 +267,28 @@ class Project
         return $this->moderationStatus;
     }
 
+    /** Rétro-compatibilité — vrai si le projet est public. */
     public function isPublic(): bool
     {
-        return $this->isPublic;
+        return $this->visibility === self::VISIBILITY_PUBLIC;
+    }
+
+    public function getVisibility(): string
+    {
+        return $this->visibility;
+    }
+
+    /**
+     * Label lisible selon la visibilité courante.
+     * @return array{label: string, color: string}
+     */
+    public function getVisibilityInfo(): array
+    {
+        return match ($this->visibility) {
+            self::VISIBILITY_PUBLIC      => ['label' => 'En ligne',    'color' => 'green'],
+            self::VISIBILITY_PRIVATE     => ['label' => 'Privé',       'color' => 'orange'],
+            default                      => ['label' => 'Non publié',  'color' => 'muted'],
+        };
     }
 
     public function getReportCount(): int
@@ -379,9 +426,16 @@ class Project
         return $this;
     }
 
+    /** @deprecated Utiliser setVisibility() */
     public function setIsPublic(bool $isPublic): self
     {
-        $this->isPublic = $isPublic;
+        $this->visibility = $isPublic ? self::VISIBILITY_PUBLIC : self::VISIBILITY_UNPUBLISHED;
+        return $this;
+    }
+
+    public function setVisibility(string $visibility): self
+    {
+        $this->visibility = $visibility;
         return $this;
     }
 
@@ -409,23 +463,72 @@ class Project
      * Génère un slug unique à partir d'un titre.
      * Format : {slug-base}-{8-chars-alphanumeric}
      * Exemple : "Les Ombres de Bruxelles" → "les-ombres-de-bruxelles-k9m2p8x4"
+     *
+     * Appelé une seule fois à la création (PrePersist).
      */
     private function generateSlug(string $title): string
     {
         // Normalisation : minuscules, accents virés, espaces → tirets
-        $slug = strtolower(trim($title));
-        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $slug);
-        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
-        $slug = trim($slug, '-');
+        $base = $this->slugifyTitle($title);
 
-        // Suffixe random 8 caractères (alphanumeric)
-        $chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+        // Suffixe random 8 caractères (alphanumeric) — identité unique du projet
+        $chars  = '0123456789abcdefghijklmnopqrstuvwxyz';
         $suffix = '';
         for ($i = 0; $i < 8; $i++) {
             $suffix .= $chars[random_int(0, 35)];
         }
 
-        return $slug . '-' . $suffix;
+        return $base . '-' . $suffix;
+    }
+
+    /**
+     * Régénère la partie lisible du slug lorsque le titre change,
+     * en conservant le même suffixe aléatoire (identité du projet).
+     *
+     * Exemple : "god-of-war-motig0ic" renommé "The Last of Us"
+     *        →  "the-last-of-us-motig0ic"
+     *
+     * Appelé explicitement par le contrôleur quand le titre est modifié.
+     */
+    public function regenerateSlug(string $newTitle): void
+    {
+        // Titre vide → on ne touche pas au slug pour ne pas le casser
+        if (trim($newTitle) === '') {
+            return;
+        }
+
+        // Extraire le suffixe existant (toujours 8 alphanum après le dernier tiret)
+        $suffix = null;
+        if (preg_match('/-([a-z0-9]{8})$/', $this->slug, $matches)) {
+            $suffix = $matches[1];
+        }
+
+        // Sécurité : si le suffixe n'est pas trouvé (slug malformé),
+        // on en génère un nouveau pour ne pas créer de doublons
+        if ($suffix === null) {
+            $chars  = '0123456789abcdefghijklmnopqrstuvwxyz';
+            $suffix = '';
+            for ($i = 0; $i < 8; $i++) {
+                $suffix .= $chars[random_int(0, 35)];
+            }
+        }
+
+        $this->slug = $this->slugifyTitle($newTitle) . '-' . $suffix;
+    }
+
+    /**
+     * Convertit un titre en base de slug lisible.
+     * "Les Ombres de Bruxelles" → "les-ombres-de-bruxelles"
+     */
+    private function slugifyTitle(string $title): string
+    {
+        $slug = strtolower(trim($title));
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $slug) ?: $slug;
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+        $slug = trim($slug, '-');
+
+        // Fallback si le titre ne contient que des caractères spéciaux
+        return $slug !== '' ? $slug : 'projet';
     }
 
     /**

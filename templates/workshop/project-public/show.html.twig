@@ -26,12 +26,13 @@
         <div class="pub-project__hero-content workshop-container">
             <div class="pub-project__type-badge pub-project__type-badge--{{ project.projectType != 'custom' ? project.projectType : 'film' }}">
                 {% if project.projectType == 'serie' %}
-                    {{ ux_icon('lucide:tv-2', {class: 'icon-3xs'}) }} Série
+                    {{ ux_icon('lucide:tv-2', {class: 'icon-3xs'}) }}
                 {% elseif project.projectType == 'jeu_video' %}
-                    {{ ux_icon('lucide:gamepad-2', {class: 'icon-3xs'}) }} Jeu vidéo
+                    {{ ux_icon('lucide:gamepad-2', {class: 'icon-3xs'}) }}
                 {% else %}
-                    {{ ux_icon('lucide:film', {class: 'icon-3xs'}) }} Film
+                    {{ ux_icon('lucide:film', {class: 'icon-3xs'}) }}
                 {% endif %}
+                {{ ('project_show_public.type.' ~ project.projectType)|trans({}, 'workshop') }}
             </div>
 
             <h1 class="pub-project__title">{{ project.title }}</h1>
@@ -40,7 +41,7 @@
             <div class="pub-project__author">
                 <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: project.createdBy.username}) }}"
                    class="pub-project__author-link">
-                    <span class="pub-project__author-avatar">{{ project.createdBy.username|first|upper }}</span>
+                    {{ include('_partials/_user_avatar.html.twig', {user: project.createdBy, size: 'xs', class: 'pub-project__author-avatar'}) }}
                     <span class="pub-project__author-name">{{ project.createdBy.username }}</span>
                 </a>
                 <span class="pub-project__author-sep">·</span>
@@ -54,9 +55,9 @@
                        class="pub-project__workshop-btn">
                         {{ ux_icon('lucide:pencil', {style: 'width:15px;height:15px'}) }}
                         {% if is_owner %}
-                            Gérer dans l'atelier
+                            {{ 'project_show_public.workshop_btn_owner'|trans({}, 'workshop') }}
                         {% else %}
-                            Ouvrir l'atelier
+                            {{ 'project_show_public.workshop_btn_collab'|trans({}, 'workshop') }}
                         {% endif %}
                     </a>
                 </div>
@@ -75,7 +76,7 @@
             <section class="pub-project__section">
                 <h2 class="pub-project__section-title">
                     {{ ux_icon('lucide:align-left', {class: 'icon-xs'}) }}
-                    À propos
+                    {{ 'project_show_public.about_title'|trans({}, 'workshop') }}
                 </h2>
                 <p class="pub-project__description">{{ project.description }}</p>
             </section>
@@ -179,7 +180,7 @@
                 </div>
                 <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: project.createdBy.username}) }}"
                    class="pub-sidebar-creator">
-                    <div class="pub-sidebar-creator__avatar">{{ project.createdBy.username|first|upper }}</div>
+                    {{ include('_partials/_user_avatar.html.twig', {user: project.createdBy, size: 'md', class: 'pub-sidebar-creator__avatar'}) }}
                     <div class="pub-sidebar-creator__info">
                         <span class="pub-sidebar-creator__username">{{ project.createdBy.username }}</span>
                         <span class="pub-sidebar-creator__since">Membre depuis {{ project.createdBy.createdAt|date('Y') }}</span>
@@ -223,10 +224,26 @@
             </div>
             {% endif %}
 
+            {# Signaler le projet #}
+            {% if viewer is not null and viewer.id != project.createdBy.id %}
+            <div class="pub-sidebar-widget">
+                <button
+                    class="btn-report"
+                    data-action="click->report-modal#open"
+                    data-report-modal-url-param="{{ path('app_report', {_locale: app.request.locale, type: 'project', id: project.id}) }}"
+                    data-report-modal-token-param="{{ csrf_token('report_project_' ~ project.id) }}"
+                    data-report-modal-label-param="ce projet"
+                >
+                    {{ ux_icon('lucide:flag', {class: 'icon-3xs'}) }}
+                    Signaler ce projet
+                </button>
+            </div>
+            {% endif %}
+
         </aside>
     </div>
 
-    {# Retour à l'exploration + bouton signaler le projet #}
+    {# Retour à l'exploration #}
     <div class="workshop-container pub-project__back">
         <a href="{{ path('app_workshop_explore', {_locale: app.request.locale}) }}"
            class="pub-project__back-link">

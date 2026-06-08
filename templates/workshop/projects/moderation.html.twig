@@ -1,0 +1,215 @@
+{% extends 'workshop/projects/layout.html.twig' %}
+{% trans_default_domain 'workshop' %}
+
+{% block title %}Modération — {{ project.title }}{% endblock %}
+
+{% set action_meta = {
+    'project.create':    { icon: 'lucide:folder-plus',  color: 'green',  label: 'Projet créé' },
+    'project.edit':      { icon: 'lucide:pencil',        color: 'blue',   label: 'Projet modifié' },
+    'manuscript.create': { icon: 'lucide:file-plus',     color: 'green',  label: 'Scène créée' },
+    'manuscript.edit':   { icon: 'lucide:file-edit',     color: 'blue',   label: 'Scène modifiée' },
+    'manuscript.delete': { icon: 'lucide:file-x',        color: 'red',    label: 'Scène supprimée' },
+    'character.create':  { icon: 'lucide:user-plus',     color: 'green',  label: 'Personnage créé' },
+    'character.edit':    { icon: 'lucide:user-pen',      color: 'blue',   label: 'Personnage modifié' },
+    'location.create':   { icon: 'lucide:map-pin-plus',  color: 'green',  label: 'Lieu créé' },
+    'location.edit':     { icon: 'lucide:map-pin',       color: 'blue',   label: 'Lieu modifié' },
+    'note.create':       { icon: 'lucide:notebook-pen',  color: 'green',  label: 'Note créée' },
+    'task.create':       { icon: 'lucide:square-plus',   color: 'green',  label: 'Tâche créée' },
+    'task.complete':     { icon: 'lucide:circle-check',  color: 'green',  label: 'Tâche terminée' },
+} %}
+
+{% block project_content %}
+<div class="workshop-container">
+
+    {# ── En-tête ──────────────────────────────────────────────────── #}
+    <header class="page-header">
+        <div>
+            <p class="nm-breadcrumb">
+                <a href="{{ path('app_project_show', {slug: project.slug}) }}">
+                    {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
+                    {{ project.title }}
+                </a>
+                <span class="nm-breadcrumb-sep">/</span>
+                <span>Modération</span>
+            </p>
+            <h1>{{ ux_icon('lucide:shield', {class: 'icon-sm'}) }} Modération du projet</h1>
+        </div>
+        <a href="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: 'permissions'}) }}"
+           class="btn-export">
+            {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
+            Gérer les permissions
+        </a>
+    </header>
+
+    {# ── Propriétaire ─────────────────────────────────────────────── #}
+    <section class="mod-section">
+        <div class="mod-section-header">
+            {{ ux_icon('lucide:crown', {class: 'icon-xs'}) }}
+            Propriétaire du projet
+        </div>
+        <div class="mod-owner-row">
+            {{ include('_partials/_user_avatar.html.twig', {user: owner, size: 'md'}) }}
+            <div class="mod-owner-info">
+                <span class="mod-owner-name">{{ owner.username }}</span>
+                <span class="mod-owner-email">{{ owner.email }}</span>
+            </div>
+            <span class="mod-role-badge mod-role-badge--owner">
+                {{ ux_icon('lucide:crown', {style: 'width:10px;height:10px'}) }}
+                Propriétaire
+            </span>
+        </div>
+    </section>
+
+    {# ── Membres ──────────────────────────────────────────────────── #}
+    {% if membersData is empty %}
+
+    <section class="mod-section">
+        <div class="mod-section-header">
+            {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
+            Collaborateurs (0)
+        </div>
+        <div class="mod-empty">
+            {{ ux_icon('lucide:user-x', {style: 'width:28px;height:28px;opacity:.3'}) }}
+            <p>Aucun collaborateur sur ce projet.</p>
+            <a href="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: 'members'}) }}"
+               class="btn-creat">
+                {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }}
+                Inviter des collaborateurs
+            </a>
+        </div>
+    </section>
+
+    {% else %}
+
+    <section class="mod-section">
+        <div class="mod-section-header">
+            {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
+            Collaborateurs ({{ membersData|length }})
+            <a href="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: 'members'}) }}"
+               class="mod-section-link">
+                {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }}
+                Inviter
+            </a>
+        </div>
+
+        {% for data in membersData %}
+        {% set member = data.member %}
+        {% set user   = data.user %}
+
+        <div class="mod-member-card">
+
+            {# ── Identité + rôle ─────────────── #}
+            <div class="mod-member-head">
+                {{ include('_partials/_user_avatar.html.twig', {user: user, size: 'md'}) }}
+                <div class="mod-member-identity">
+                    <span class="mod-member-name">{{ user.username }}</span>
+                    <span class="mod-member-email">{{ user.email }}</span>
+                    <span class="mod-member-since">
+                        {{ ux_icon('lucide:calendar', {style: 'width:10px;height:10px'}) }}
+                        Membre depuis {{ member.joinedAt|date('d/m/Y') }}
+                    </span>
+                </div>
+
+                <div class="mod-member-actions">
+                    {# Changement de rôle #}
+                    <form method="post"
+                          action="{{ path('app_project_member_role', {_locale: app.request.locale, slug: project.slug, userId: user.id}) }}"
+                          class="mod-role-form">
+                        <input type="hidden" name="_token" value="{{ csrf_token('member_role_' ~ project.id ~ '_' ~ user.id) }}">
+                        <select name="role" class="mod-role-select" onchange="this.closest('form').submit()">
+                            {% for roleKey, roleLabel in roleLabels %}
+                            <option value="{{ roleKey }}" {{ member.role == roleKey ? 'selected' }}>
+                                {{ roleLabel }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+
+                    {# Retirer du projet #}
+                    <form method="post"
+                          action="{{ path('app_project_member_remove', {_locale: app.request.locale, slug: project.slug, userId: user.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('member_remove_' ~ project.id ~ '_' ~ user.id) }}">
+                        <button type="submit"
+                                class="mod-remove-btn"
+                                title="Retirer {{ user.username }} du projet"
+                                onclick="return confirm('Retirer {{ user.username }} du projet ?')">
+                            {{ ux_icon('lucide:user-x', {style: 'width:13px;height:13px'}) }}
+                            Retirer
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {# ── Permissions effectives ──────── #}
+            <div class="mod-member-perms">
+                <div class="mod-perms-label">
+                    {{ ux_icon('lucide:shield', {style: 'width:11px;height:11px'}) }}
+                    Permissions actives
+                    {% if data.isCustomized %}
+                        <span class="mod-custom-badge">personnalisées</span>
+                    {% else %}
+                        <span class="mod-default-badge">par défaut</span>
+                    {% endif %}
+                </div>
+                <div class="mod-perm-chips">
+                    {% for permKey in data.effectivePerms %}
+                    <span class="mod-perm-chip">{{ permKey }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# ── Statistiques d'activité ─────── #}
+            <div class="mod-member-stats">
+                <div class="mod-stat">
+                    <span class="mod-stat-value">{{ data.totalActions }}</span>
+                    <span class="mod-stat-label">actions</span>
+                </div>
+                {% set creates = 0 %}
+                {% set edits   = 0 %}
+                {% for action, count in data.actionCounts %}
+                    {% if 'create' in action %}{% set creates = creates + count %}{% endif %}
+                    {% if 'edit' in action %}{% set edits = edits + count %}{% endif %}
+                {% endfor %}
+                <div class="mod-stat">
+                    <span class="mod-stat-value mod-stat-value--green">{{ creates }}</span>
+                    <span class="mod-stat-label">créations</span>
+                </div>
+                <div class="mod-stat">
+                    <span class="mod-stat-value mod-stat-value--blue">{{ edits }}</span>
+                    <span class="mod-stat-label">modifications</span>
+                </div>
+            </div>
+
+            {# ── Activité récente ─────────────── #}
+            {% if data.recentLog is not empty %}
+            <div class="mod-member-activity">
+                <div class="mod-activity-label">Activité récente</div>
+                {% for log in data.recentLog %}
+                    {% set meta = action_meta[log.action] ?? { icon: 'lucide:circle', color: 'muted', label: log.action } %}
+                    <div class="mod-activity-item mod-activity-item--{{ meta.color }}">
+                        <span class="mod-activity-icon">
+                            {{ ux_icon(meta.icon, {style: 'width:11px;height:11px'}) }}
+                        </span>
+                        <span class="mod-activity-label-text">{{ meta.label }}</span>
+                        {% if log.description %}
+                            <span class="mod-activity-desc">{{ log.description }}</span>
+                        {% endif %}
+                        <time class="mod-activity-time">{{ log.createdAt|date('d/m H:i') }}</time>
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="mod-no-activity">
+                {{ ux_icon('lucide:inbox', {style: 'width:12px;height:12px'}) }}
+                Aucune activité enregistrée pour ce membre.
+            </div>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+
+    </section>
+    {% endif %}
+
+</div>
+{% endblock %}

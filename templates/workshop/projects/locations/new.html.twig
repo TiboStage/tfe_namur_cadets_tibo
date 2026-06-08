@@ -17,42 +17,44 @@
         </div>
     </header>
 
-    <turbo-frame id="modal-frame">
-        <div class="ws-modal-form-wrap">
+    <div class="form-page-wrapper" data-controller="advanced-form">
 
-            <h2 class="ws-modal-form-title">{{ 'location.new.title'|trans }}</h2>
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
 
-            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
-
-                <div class="form-block">
-                    <label class="form-label">{{ 'location.form.name'|trans }} <span class="required">*</span></label>
-                    {{ form_widget(form.name, {'attr': {'placeholder': 'location.form.name_placeholder'|trans}}) }}
-                    {{ form_errors(form.name) }}
-                </div>
-
-                <div class="form-block">
-                    <label class="form-label">{{ 'location.form.type'|trans }} <span class="required">*</span></label>
-                    <div class="select-wrapper">{{ form_widget(form.type) }}</div>
-                    {{ form_errors(form.type) }}
-                </div>
-
-                <div class="form-block">
-                    <label class="form-label">{{ 'location.form.description'|trans }}</label>
-                    {{ form_widget(form.description, {'attr': {'placeholder': 'location.form.description_placeholder'|trans}}) }}
-                    {{ form_errors(form.description) }}
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn-export" data-action="click->modal#close">
-                        {{ 'location.new.cancel'|trans }}
-                    </button>
-                    <button type="submit" class="btn-creat">{{ 'location.new.submit'|trans }}</button>
-                </div>
-
-            {{ form_end(form) }}
-
+        <div class="form-section">
+            {{ form_row(form.name, {'label': 'location.form.name'|trans, 'attr': {'placeholder': 'location.form.name_placeholder'|trans, 'autofocus': true}}) }}
+            {{ form_row(form.type, {'label': 'location.form.type'|trans}) }}
         </div>
-    </turbo-frame>
+
+        <label class="advanced-toggle">
+            <input type="checkbox"
+                   class="advanced-toggle__checkbox"
+                   data-advanced-form-target="checkbox"
+                   data-action="change->advanced-form#toggle">
+            <span class="advanced-toggle__label">
+                {{ ux_icon('lucide:settings-2', {style: 'width:13px;height:13px'}) }}
+                {{ 'location.new.advanced'|trans }}
+            </span>
+        </label>
+
+        <div data-advanced-form-target="panel" hidden>
+            <div class="advanced-panel">
+                <div class="advanced-panel__section">
+                    {{ form_row(form.description, {'label': 'location.form.description'|trans, 'attr': {'placeholder': 'location.form.description_placeholder'|trans, 'rows': 4}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ path('app_location_index', {project_slug: project.slug}) }}" class="btn-export">
+                {{ 'location.new.cancel'|trans }}
+            </a>
+            <button type="submit" class="btn-creat">{{ 'location.new.submit'|trans }}</button>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
 
 </div>
 {% endblock %}

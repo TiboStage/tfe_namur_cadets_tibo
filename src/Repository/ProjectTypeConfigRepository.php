@@ -7,6 +7,7 @@
 
 // ProjectTypeConfigRepository.php
 namespace App\Repository;
+use App\Entity\Project;
 use App\Entity\ProjectTypeConfig;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,5 +27,34 @@ class ProjectTypeConfigRepository extends ServiceEntityRepository
             ->orderBy('c.depth', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Configs d'un projet spécifique, triées par depth.
+     *
+     * @return ProjectTypeConfig[]
+     */
+    public function findByProject(Project $project): array
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.project = :project')
+            ->setParameter('project', $project)
+            ->orderBy('c.depth', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Retourne un tableau indexé par depth : [1 => config, 2 => config, …]
+     *
+     * @return array<int, ProjectTypeConfig>
+     */
+    public function findMapByProject(Project $project): array
+    {
+        $map = [];
+        foreach ($this->findByProject($project) as $config) {
+            $map[$config->depth] = $config;
+        }
+        return $map;
     }
 }

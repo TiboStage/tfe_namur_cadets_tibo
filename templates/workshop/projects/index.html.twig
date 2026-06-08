@@ -21,23 +21,54 @@
 
         {# Onglets scope + actions groupées sur la même ligne #}
         <div class="project-filters__tabs">
+            {# ── Onglets visibles desktop + onglet actif mobile ── #}
             <a href="{{ path('app_project_index', {_locale: app.request.locale}) }}"
                class="project-filter-tab {{ scope == 'all' ? 'is-active' : '' }}">
+                {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
                 {{ 'projects.index.tab_all'|trans }}
                 <span class="project-filter-tab__count">{{ owned_count + collab_count }}</span>
             </a>
             <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: 'mine'}) }}"
                class="project-filter-tab {{ scope == 'mine' ? 'is-active' : '' }}">
-                {{ ux_icon('lucide:user', {style: 'width:11px;height:11px'}) }}
+                {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
                 {{ 'projects.index.tab_mine'|trans }}
                 <span class="project-filter-tab__count">{{ owned_count }}</span>
             </a>
             <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: 'other'}) }}"
                class="project-filter-tab {{ scope == 'other' ? 'is-active' : '' }}">
-                {{ ux_icon('lucide:users', {style: 'width:11px;height:11px'}) }}
+                {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
                 {{ 'projects.index.tab_collab'|trans }}
                 <span class="project-filter-tab__count">{{ collab_count }}</span>
             </a>
+
+            {# ── Bouton "Plus" mobile uniquement ─────────────────── #}
+            <div class="project-filter-tab__more" data-controller="dropdown">
+                <button class="project-filter-tab project-filter-tab__more-btn"
+                        data-action="click->dropdown#toggle">
+                    {{ 'projects.index.tab_more'|trans }}
+                    {{ ux_icon('lucide:chevron-down', {class: 'icon-xs'}) }}
+                </button>
+                <div class="project-filter-tab__more-menu" data-dropdown-target="menu">
+                    <a href="{{ path('app_project_index', {_locale: app.request.locale}) }}"
+                       class="{{ scope == 'all' ? 'is-active' : '' }}">
+                        {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
+                        {{ 'projects.index.tab_all'|trans }}
+                        <span class="project-filter-tab__count">{{ owned_count + collab_count }}</span>
+                    </a>
+                    <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: 'mine'}) }}"
+                       class="{{ scope == 'mine' ? 'is-active' : '' }}">
+                        {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
+                        {{ 'projects.index.tab_mine'|trans }}
+                        <span class="project-filter-tab__count">{{ owned_count }}</span>
+                    </a>
+                    <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: 'other'}) }}"
+                       class="{{ scope == 'other' ? 'is-active' : '' }}">
+                        {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
+                        {{ 'projects.index.tab_collab'|trans }}
+                        <span class="project-filter-tab__count">{{ collab_count }}</span>
+                    </a>
+                </div>
+            </div>
 
             <div class="view-actions" data-controller="view-switcher">
                 <a href="{{ path('app_project_new_step1', {_locale: app.request.locale}) }}" class="btn-creat">
@@ -146,7 +177,7 @@
                             <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
                                  alt="" class="img-cover">
                         {% else %}
-                            {{ ux_icon('lucide:image', {class: 'icon-xs'}) }}
+                            {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'sm'} %}
                         {% endif %}
                     </div>
                     <div class="project-info">

@@ -27,7 +27,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 14px;
-    background: var(--color-bg-elevated);
+    background: var(--color-bg-input);
     border-bottom: 1px solid var(--color-border);
     gap: 8px;
     min-height:35px
@@ -108,8 +108,31 @@
     flex-shrink: 0;
 }
 
-.sc-card__media--serie      { background: linear-gradient(135deg, #1a1c28 0%, #111214 100%); }
-.sc-card__media--jeu_video  { background: linear-gradient(135deg, #111820 0%, #0e1014 100%); }
+.sc-card__media--film      { background: linear-gradient(135deg, rgba(230, 57,  70,  .12) 0%, #111214 100%); }
+.sc-card__media--serie     { background: linear-gradient(135deg, rgba(168, 85,  247, .12) 0%, #111214 100%); }
+.sc-card__media--jeu_video { background: linear-gradient(135deg, rgba( 42, 157, 143, .12) 0%, #111214 100%); }
+.sc-card__media--custom    { background: linear-gradient(135deg, rgba(139, 115,  85, .12) 0%, #111214 100%); }
+
+/* Icône type centrée (uniquement quand pas de couverture) */
+.sc-card__type-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.sc-card__type-icon .proj-icon {
+    width: 52px;
+    height: 52px;
+    opacity: 0.55;
+}
+
+.sc-card__type-icon .proj-icon svg {
+    width: 26px;
+    height: 26px;
+}
 
 /* Variante carte créateur — plus haute pour l'avatar */
 .sc-card__media--auteur {
@@ -207,7 +230,7 @@
 
 /* ── Status box (privé) ──────────────────────────────────── */
 .sc-card__status-box {
-    background: var(--color-bg-elevated);
+    background: var(--color-bg-dark);
     min-height: 68px;
     padding: 10px 12px;
     margin-bottom: 12px;
@@ -381,11 +404,23 @@
 /* État actif — déjà soutenu */
 .sc-card__like-btn--active {
     color: var(--color-red);
+    background: var(--color-red-glow, rgba(239, 68, 68, 0.08));
+}
+
+/* Icône du bouton like : remplie si actif */
+.sc-card__like-btn--active svg {
+    fill: var(--color-red);
+    stroke: var(--color-red);
 }
 
 .sc-card__like-btn--active:hover {
     color: var(--text-muted);
     background: var(--overlay-xs);
+}
+
+.sc-card__like-btn--active:hover svg {
+    fill: none;
+    stroke: currentColor;
 }
 
 .sc-card__like-btn strong {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Report;
@@ -13,33 +15,68 @@ class ReportRepository extends ServiceEntityRepository
         parent::__construct($registry, Report::class);
     }
 
-    /**
-     * Retourne les signalements en attente, triés du plus récent au plus ancien.
-     *
-     * @return Report[]
-     */
-    public function findPending(): array
+    /** @return Report[] */
+    public function findAllForModo(): array
     {
         return $this->createQueryBuilder('r')
-            ->where('r.status = :status')
-            ->setParameter('status', 'pending')
+            ->join('r.reporter', 'u')
+            ->addSelect('u')
+            ->leftJoin('r.targetProject', 'tp')
+            ->addSelect('tp')
+            ->leftJoin('r.targetComment', 'tc')
+            ->addSelect('tc')
+            ->leftJoin('r.targetUser', 'tu')
+            ->addSelect('tu')
             ->orderBy('r.createdAt', 'DESC')
+            ->setMaxResults(200)
             ->getQuery()
             ->getResult();
     }
 
-    /**
-     * Retourne les signalements d'un projet.
-     *
-     * @return Report[]
-     */
-    public function findByProject(int $projectId): array
+    /** @return Report[] */
+    public function findPending(): array
     {
         return $this->createQueryBuilder('r')
-            ->where('r.project = :projectId')
-            ->setParameter('projectId', $projectId)
-            ->orderBy('r.createdAt', 'DESC')
+            ->join('r.reporter', 'u')
+            ->addSelect('u')
+            ->leftJoin('r.targetProject', 'tp')
+            ->addSelect('tp')
+            ->leftJoin('r.targetComment', 'tc')
+            ->addSelect('tc')
+            ->leftJoin('r.targetUser', 'tu')
+            ->addSelect('tu')
+            ->where('r.status = :status')
+            ->setParameter('status', Report::STATUS_PENDING)
+            ->orderBy('r.createdAt', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function countPending(): int
+    {
+        return (int) $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('r.status = :status')
+            ->setParameter('status', Report::STATUS_PENDING)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function hasAlreadyReported(int $reporterId, string $targetType, int $targetId): bool
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('r.reporter = :reporter')
+            ->andWhere('r.targetType = :type')
+            ->setParameter('reporter', $reporterId)
+            ->setParameter('type', $targetType);
+
+        match ($targetType) {
+            Report::TYPE_PROJECT => $qb->andWhere('r.targetProject = :t')->setParameter('t', $targetId),
+            Report::TYPE_COMMENT => $qb->andWhere('r.targetComment = :t')->setParameter('t', $targetId),
+            Report::TYPE_USER    => $qb->andWhere('r.targetUser = :t')->setParameter('t', $targetId),
+        };
+
+        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
     }
 }

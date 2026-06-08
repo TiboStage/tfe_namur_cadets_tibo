@@ -23,9 +23,9 @@
 
 .subnav-links a {
     color: var(--text-muted);
-    margin: 0 20px 0 0;
+    margin: 0 14px 0 0;
     height: 100%;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     text-decoration: none;
     display: flex;
@@ -44,12 +44,17 @@
     border-bottom-color: var(--color-primary);
 }
 
+.subnav-links a.active .nav-count {
+    background: var(--color-primary-medium);
+    color: var(--color-primary);
+}
+
 /* ── Badge compteur ───────────────────────────────────────────── */
 .nav-count {
     background: var(--color-border);
     color: var(--text-muted);
-    padding: 1px 7px;
-    font-size: 10px;
+    padding: 1px 5px;
+    font-size: 9px;
     font-weight: 700;
 }
 

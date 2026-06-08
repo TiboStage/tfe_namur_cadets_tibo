@@ -3,6 +3,12 @@
 
 {% block title %}{{ 'meta.title'|trans }}{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {# Script Cloudflare Turnstile — chargé uniquement sur la page auth #}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endblock %}
+
 {% block body %}
 <div class="auth-fullpage"
      data-controller="auth-slider"
@@ -86,6 +92,10 @@
                 </button>
             </nav>
 
+            {# Wrapper relatif — nécessaire pour que le panneau en sortie
+               (position:absolute) soit contenu ici et ne perturbe pas le layout #}
+            <div class="auth-panels-wrapper">
+
             {# ══════════════════════════════════════════════
                PANNEAU CONNEXION
                ══════════════════════════════════════════════ #}
@@ -134,7 +144,7 @@
                                     data-password-field-target="toggleBtn"
                                     data-action="click->password-field#toggleVisibility"
                                     tabindex="-1"
-                                    aria-label="Voir le mot de passe">
+                                    aria-label="{{ 'show_password'|trans({}, 'auth') }}">
                                 <span class="pw-eye-show">{{ ux_icon('lucide:eye', {style: 'width:15px;height:15px'}) }}</span>
                                 <span class="pw-eye-hide" hidden>{{ ux_icon('lucide:eye-off', {style: 'width:15px;height:15px'}) }}</span>
                             </button>
@@ -147,6 +157,10 @@
                         <input type="checkbox" name="_remember_me" id="remember_me" value="1">
                         <label for="remember_me">{{ 'login.remember_me'|trans }}</label>
                     </div>
+
+                    <div class="cf-turnstile auth-captcha"
+                         data-sitekey="{{ turnstile_site_key }}"
+                         data-theme="dark"></div>
 
                     <button type="submit" class="btn btn--cta-yellow auth-submit">
                         {{ 'login.submit'|trans }}
@@ -270,6 +284,10 @@
                 </div>
                 {{ form_errors(registrationForm.agreeTerms) }}
 
+                <div class="cf-turnstile auth-captcha"
+                     data-sitekey="{{ turnstile_site_key }}"
+                     data-theme="dark"></div>
+
                 <button type="submit" class="btn btn--cta-yellow auth-submit">
                     {{ 'register.submit'|trans }}
                 </button>
@@ -277,6 +295,8 @@
                 {{ form_end(registrationForm) }}
 
             </div>
+
+            </div>{# /auth-panels-wrapper #}
 
         </div>
     </section>

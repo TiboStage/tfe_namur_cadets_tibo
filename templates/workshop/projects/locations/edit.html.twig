@@ -17,57 +17,57 @@
         </div>
     </header>
 
-    <turbo-frame id="modal-frame">
-        <div class="ws-modal-form-wrap">
+    <div class="form-page-wrapper" data-controller="advanced-form">
 
-            <h2 class="ws-modal-form-title">{{ 'location.edit.title'|trans }} — {{ location.name }}</h2>
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
 
-            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
-
-                <div class="form-block">
-                    <label class="form-label">{{ 'location.form.name'|trans }} <span class="required">*</span></label>
-                    {{ form_widget(form.name) }}
-                    {{ form_errors(form.name) }}
-                </div>
-
-                <div class="form-block">
-                    <label class="form-label">{{ 'location.form.type'|trans }}</label>
-                    <div class="select-wrapper">{{ form_widget(form.type) }}</div>
-                    {{ form_errors(form.type) }}
-                </div>
-
-                <div class="form-block">
-                    <label class="form-label">{{ 'location.form.description'|trans }}</label>
-                    {{ form_widget(form.description) }}
-                    {{ form_errors(form.description) }}
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn-export" data-action="click->modal#close">
-                        {{ 'location.edit.cancel'|trans }}
-                    </button>
-                    <button type="submit" class="btn-creat">{{ 'location.edit.submit'|trans }}</button>
-                </div>
-
-            {{ form_end(form) }}
-
-            {# ── Danger zone ─────────────────────────────────────── #}
-            <div class="danger-zone">
-                <div class="danger-zone-header">
-                    <h3>{{ 'location.edit.danger_zone'|trans }}</h3>
-                    <p>{{ 'location.edit.danger_desc'|trans }}</p>
-                </div>
-                <form method="post"
-                      action="{{ path('app_location_delete', {project_slug: project.slug, id: location.id}) }}"
-                      data-turbo-confirm="{{ 'location.edit.delete_confirm'|trans }}"
-                      data-turbo-frame="_top">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete_location_' ~ location.id) }}">
-                    <button type="submit" class="btn-danger">{{ 'location.edit.delete_btn'|trans }}</button>
-                </form>
-            </div>
-
+        <div class="form-section">
+            {{ form_row(form.name, {'label': 'location.form.name'|trans, 'attr': {'autofocus': true}}) }}
+            {{ form_row(form.type, {'label': 'location.form.type'|trans}) }}
         </div>
-    </turbo-frame>
+
+        <label class="advanced-toggle">
+            <input type="checkbox"
+                   class="advanced-toggle__checkbox"
+                   data-advanced-form-target="checkbox"
+                   data-action="change->advanced-form#toggle">
+            <span class="advanced-toggle__label">
+                {{ ux_icon('lucide:settings-2', {style: 'width:13px;height:13px'}) }}
+                {{ 'location.edit.advanced'|trans }}
+            </span>
+        </label>
+
+        <div data-advanced-form-target="panel" hidden>
+            <div class="advanced-panel">
+                <div class="advanced-panel__section">
+                    {{ form_row(form.description, {'label': 'location.form.description'|trans, 'attr': {'rows': 4}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ path('app_location_show', {project_slug: project.slug, id: location.id}) }}" class="btn-export">
+                {{ 'location.edit.cancel'|trans }}
+            </a>
+            <button type="submit" class="btn-creat">{{ 'location.edit.submit'|trans }}</button>
+        </div>
+
+        {{ form_end(form) }}
+
+        <div class="danger-zone">
+            <div class="danger-zone-header">
+                <h3>{{ 'location.edit.danger_zone'|trans }}</h3>
+                <p>{{ 'location.edit.danger_desc'|trans }}</p>
+            </div>
+            <form method="post"
+                  action="{{ path('app_location_delete', {project_slug: project.slug, id: location.id}) }}"
+                  data-turbo-confirm="{{ 'location.edit.delete_confirm'|trans }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_location_' ~ location.id) }}">
+                <button type="submit" class="btn-danger">{{ 'location.edit.delete_btn'|trans }}</button>
+            </form>
+        </div>
+
+    </div>
 
 </div>
 {% endblock %}

@@ -1,21 +1,7 @@
 {# templates/website/_partials/_navbar.html.twig #}
 {% trans_default_domain 'website' %}
 
-<div class="top-banner">
-    <p>
-        {% if app.user %}
-            {{ ux_icon('lucide:rocket', { class: 'icon-xs icon-primary' }) }}
-            {{ 'navbar.banner.user'|trans }}
-            <a href="{{ path('app_workshop_dashboard') }}" data-turbo="false">{{ 'navbar.banner.user_link'|trans }}</a>
-        {% else %}
-            {{ ux_icon('lucide:sparkles', { class: 'icon-xs icon-primary' }) }}
-            {{ 'navbar.banner.guest'|trans }}
-            <a href="{{ path('app_login') }}">{{ 'navbar.banner.guest_link'|trans }}</a>
-        {% endif %}
-    </p>
-</div>
-
-<nav class="main-nav">
+<nav class="main-nav" data-controller="mobile-nav">
     <div class="nav-container">
         <a href="{{ path('app_home') }}" class="logo-text">SCÉN<span class="highlight">ART</span></a>
 
@@ -54,9 +40,67 @@
                 </a>
                 <twig:UserProfile />
             {% else %}
-                <a href="{{ path('app_login') }}" class="btn-login">{{ 'navbar.actions.login'|trans }}</a>
-                <a href="{{ path('app_login') }}" class="btn-atelier">{{ 'navbar.actions.register'|trans }}</a>
+                <a href="{{ path('app_login') }}" class="btn-atelier">{{ 'navbar.actions.login'|trans }}</a>
+            {% endif %}
+        </div>
+
+        {# ── Burger (mobile uniquement) ──────────────────────────── #}
+        <button class="main-nav-burger"
+                type="button"
+                aria-label="{{ 'navbar.actions.open_menu'|trans }}"
+                data-action="mobile-nav#toggle">
+            {{ ux_icon('lucide:panel-right-open', {class: 'icon-base'}) }}
+        </button>
+    </div>
+
+    {# ── Drawer mobile ────────────────────────────────────────── #}
+    <div class="main-nav-drawer">
+        <div class="main-nav-drawer__header">
+            <a href="{{ path('app_home') }}">
+                <img src="{{ asset('images/favicons/favicon.png') }}" alt="Scénart" width="32">
+            </a>
+            <button class="main-nav-drawer__close"
+                    type="button"
+                    data-action="mobile-nav#close"
+                    aria-label="Fermer">
+                {{ ux_icon('lucide:panel-right-close', {class: 'icon-base'}) }}
+            </button>
+        </div>
+
+        <nav class="main-nav-drawer__links">
+            <a href="{{ path('app_home', {_locale: app.request.locale}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_home' ? 'active' : '' }}">
+                {{ ux_icon('lucide:house', {class: 'icon-xs'}) }}
+                {{ 'navbar.links.home'|trans }}
+            </a>
+            <a href="{{ path('app_examples', {_locale: app.request.locale}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_examples' ? 'active' : '' }}">
+                {{ ux_icon('lucide:layers', {class: 'icon-xs'}) }}
+                {{ 'navbar.links.examples'|trans }}
+            </a>
+            <a href="{{ path('app_pricing', {_locale: app.request.locale}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_pricing' ? 'active' : '' }}">
+                {{ ux_icon('lucide:tag', {class: 'icon-xs'}) }}
+                {{ 'navbar.links.pricing'|trans }}
+            </a>
+            <a href="{{ path('app_contact', {_locale: app.request.locale}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_contact' ? 'active' : '' }}">
+                {{ ux_icon('lucide:mail', {class: 'icon-xs'}) }}
+                {{ 'navbar.links.contact'|trans }}
+            </a>
+        </nav>
+
+        <div class="main-nav-drawer__actions">
+            {% if app.user %}
+                <a href="{{ path('app_workshop_dashboard') }}" class="btn-atelier" data-turbo="false">
+                    {{ 'navbar.actions.workshop'|trans }}
+                    {{ ux_icon('lucide:arrow-up-right', { class: 'icon-xs icon-inline' }) }}
+                </a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="btn-atelier">{{ 'navbar.actions.login'|trans }}</a>
             {% endif %}
         </div>
     </div>
+    <div class="mobile-nav-overlay" data-action="click->mobile-nav#close"></div>
+
 </nav>

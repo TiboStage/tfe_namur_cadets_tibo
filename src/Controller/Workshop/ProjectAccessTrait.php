@@ -18,8 +18,8 @@ trait ProjectAccessTrait
         /** @var User $user */
         $user = $this->getUser();
 
-        // Super admin — accès total
-        if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+        // Admin+ — accès total (respecte la hiérarchie des rôles)
+        if ($this->isGranted('ROLE_ADMIN')) {
             return;
         }
 
@@ -35,18 +35,40 @@ trait ProjectAccessTrait
         }
     }
 
+    protected function isReadOnly(Project $project): bool
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return false;
+        }
+
+        if ($project->getCreatedBy()->getId() === $user->getId()) {
+            return false;
+        }
+
+        foreach ($project->getProjectMembers() as $member) {
+            if ($member->getUser()->getId() === $user->getId()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private function canView(Project $project, User $user): bool
     {
         if ($project->isPublic()) {
             return true;
         }
 
-        if ($project->getCreatedBy() === $user) {
+        if ($project->getCreatedBy()->getId() === $user->getId()) {
             return true;
         }
 
         foreach ($project->getProjectMembers() as $member) {
-            if ($member->getUser() === $user) {
+            if ($member->getUser()->getId() === $user->getId()) {
                 return true;
             }
         }
@@ -56,12 +78,12 @@ trait ProjectAccessTrait
 
     private function canEdit(Project $project, User $user): bool
     {
-        if ($project->getCreatedBy() === $user) {
+        if ($project->getCreatedBy()->getId() === $user->getId()) {
             return true;
         }
 
         foreach ($project->getProjectMembers() as $member) {
-            if ($member->getUser() === $user && in_array($member->getRole(), ['editor', 'lead'])) {
+            if ($member->getUser()->getId() === $user->getId() && in_array($member->getRole(), ['editor', 'lead'])) {
                 return true;
             }
         }
@@ -71,6 +93,6 @@ trait ProjectAccessTrait
 
     private function canDelete(Project $project, User $user): bool
     {
-        return $project->getCreatedBy() === $user;
+        return $project->getCreatedBy()->getId() === $user->getId();
     }
 }

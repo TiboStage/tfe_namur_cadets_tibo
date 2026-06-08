@@ -22,6 +22,7 @@ registration:
         too_short: "Your username must be at least {{ limit }} characters."
         too_long: "Your username cannot exceed {{ limit }} characters."
         unique: "This username is already taken. Be creative!"
+        invalid_chars: "Username may only contain letters, numbers, hyphens (-) and underscores (_). Spaces are not allowed."
 
     password:
         not_blank: "A password is required."

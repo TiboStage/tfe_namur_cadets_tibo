@@ -21,7 +21,7 @@ class Task
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'task')]
+    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Project $project = null;
 
@@ -63,7 +63,7 @@ class Task
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $linkedEntityId = null;
 
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?\DateTimeImmutable $dueDate = null;
 
     #[ORM\Column(type: 'datetime_immutable')]

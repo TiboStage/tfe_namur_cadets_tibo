@@ -40,6 +40,14 @@
             </div>
 
             <div class="form-section">
+                <div class="form-section-title">Catégorie &amp; liens</div>
+                <div class="form-row-group">
+                    {{ form_row(form.eventType) }}
+                    {{ form_row(form.linkedScene) }}
+                </div>
+            </div>
+
+            <div class="form-section">
                 <div class="form-section-title">{{ 'world_event.form.section_location'|trans }}</div>
                 {{ form_row(form.location) }}
             </div>

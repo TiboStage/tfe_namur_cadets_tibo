@@ -22,21 +22,13 @@
 <div data-controller="modal">
 
     {% include 'workshop/_partials/_topbar.html.twig' %}
+    {% include 'workshop/_partials/_project_bar.html.twig' %}
 
-    <div class="workspace-container">
-
-        {# ── SIDEBAR (navigation projet) ───────────────────── #}
-        {% include 'workshop/_partials/_project_nav.html.twig' %}
-
-        {# ── CONTENT AREA ──────────────────────────────────── #}
-        <main class="workspace-main">
-
-            {# Contenu de la page projet #}
+    <main class="workspace-main">
+        <div class="workspace-content">
             {% block project_content %}{% endblock %}
-
-        </main>
-
-    </div>
+        </div>
+    </main>
 
     {# ══════════════════════════════════════════════════════════
        MODAL GLOBAL — overlay cible du controller
@@ -50,7 +42,7 @@
             <button type="button"
                     class="ws-modal-close-btn"
                     data-action="modal#close"
-                    aria-label="Fermer">
+                    aria-label="{{ 'common.close'|trans({}, 'workshop') }}">
                 {{ ux_icon('lucide:x', {class: 'icon-sm'}) }}
             </button>
             <turbo-frame id="modal-frame">

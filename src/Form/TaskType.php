@@ -76,6 +76,7 @@ class TaskType extends AbstractType
                     'task.status.in_progress' => 'in_progress',
                     'task.status.review' => 'review',
                     'task.status.done' => 'done',
+                    'task.status.archived' => 'archived',
                 ],
                 'attr' => [
                     'class' => 'form-control',
@@ -133,12 +134,20 @@ class TaskType extends AbstractType
      */
     private function getProjectMembers($project): array
     {
-        $members = [$project->getOwner()];
-        
-        foreach ($project->getProjectMembers() as $projectMember) {
-            $members[] = $projectMember->getUser();
+        $members = [];
+
+        $owner = $project->getOwner();
+        if ($owner !== null) {
+            $members[$owner->getId()] = $owner;
         }
-        
-        return array_unique($members);
+
+        foreach ($project->getProjectMembers() as $projectMember) {
+            $user = $projectMember->getUser();
+            if ($user !== null) {
+                $members[$user->getId()] = $user;
+            }
+        }
+
+        return array_values($members);
     }
 }

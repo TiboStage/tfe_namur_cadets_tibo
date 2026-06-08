@@ -47,6 +47,37 @@ app_contact:
         _locale: en|fr|nl
 
 # ═══════════════════════════════════════════════════════════════════
+# PAGES LÉGALES
+# ═══════════════════════════════════════════════════════════════════
+
+app_legal_cgu:
+    path:
+        fr: /{_locale}/mentions-legales/conditions-generales
+        en: /{_locale}/legal/terms-of-service
+        nl: /{_locale}/juridisch/gebruiksvoorwaarden
+    controller: App\Controller\Website\PagesController::legalCgu
+    requirements:
+        _locale: en|fr|nl
+
+app_legal_privacy:
+    path:
+        fr: /{_locale}/mentions-legales/confidentialite
+        en: /{_locale}/legal/privacy-policy
+        nl: /{_locale}/juridisch/privacybeleid
+    controller: App\Controller\Website\PagesController::legalPrivacy
+    requirements:
+        _locale: en|fr|nl
+
+app_legal_cookies:
+    path:
+        fr: /{_locale}/mentions-legales/cookies
+        en: /{_locale}/legal/cookies
+        nl: /{_locale}/juridisch/cookies
+    controller: App\Controller\Website\PagesController::legalCookies
+    requirements:
+        _locale: en|fr|nl
+
+# ═══════════════════════════════════════════════════════════════════
 # WORKSHOP — Projets
 # ═══════════════════════════════════════════════════════════════════
 
@@ -56,6 +87,15 @@ app_workshop_dashboard:
         en: /{_locale}/workshop
         nl: /{_locale}/werkplaats
     controller: App\Controller\Workshop\DashboardController::index
+    requirements:
+        _locale: en|fr|nl
+
+app_activity_log:
+    path:
+        fr: /{_locale}/atelier/activite
+        en: /{_locale}/workshop/activity
+        nl: /{_locale}/werkplaats/activiteit
+    controller: App\Controller\Workshop\ActivityLogController::index
     requirements:
         _locale: en|fr|nl
 
@@ -88,7 +128,7 @@ app_project_new_step1:
     controller: App\Controller\Workshop\ProjectController::newStep1
     requirements:
         _locale: en|fr|nl
-    methods: [GET]
+    methods: [GET, POST]
 
 app_project_new_step2:
     path:
@@ -98,7 +138,7 @@ app_project_new_step2:
     controller: App\Controller\Workshop\ProjectController::newStep2
     requirements:
         _locale: en|fr|nl
-    methods: [GET]
+    methods: [GET, POST]
 
 app_project_new_step3:
     path:
@@ -130,6 +170,16 @@ app_project_edit:
         _locale: en|fr|nl
         slug: '[a-z0-9-]+'
 
+app_project_moderation:
+    path:
+        fr: /{_locale}/atelier/projets/{slug}/moderation
+        en: /{_locale}/workshop/projects/{slug}/moderation
+        nl: /{_locale}/werkplaats/projecten/{slug}/moderatie
+    controller: App\Controller\Workshop\ProjectModerationController::index
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+
 app_project_delete:
     path:
         fr: /{_locale}/atelier/projets/{slug}/supprimer
@@ -139,6 +189,224 @@ app_project_delete:
     requirements:
         _locale: en|fr|nl
         slug: '[a-z0-9-]+'
+    methods: [POST]
+
+app_project_publish:
+    path:
+        fr: /{_locale}/atelier/projets/{slug}/publication
+        en: /{_locale}/workshop/projects/{slug}/publish
+        nl: /{_locale}/werkplaats/projecten/{slug}/publiceren
+    controller: App\Controller\Workshop\ProjectController::publish
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+    methods: [POST]
+
+# Rétro-compatibilité (redirige vers publish)
+app_project_toggle_visibility:
+    path:
+        fr: /{_locale}/atelier/projets/{slug}/visibilite
+        en: /{_locale}/workshop/projects/{slug}/visibility
+        nl: /{_locale}/werkplaats/projecten/{slug}/zichtbaarheid
+    controller: App\Controller\Workshop\ProjectController::toggleVisibility
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+    methods: [POST]
+
+# ── Collaborateurs d'un projet ─────────────────────────────────────────────
+app_project_member_invite:
+    path:
+        fr: /{_locale}/atelier/projets/{slug}/membres/inviter
+        en: /{_locale}/workshop/projects/{slug}/members/invite
+        nl: /{_locale}/werkplaats/projecten/{slug}/leden/uitnodigen
+    controller: App\Controller\Workshop\ProjectMemberController::invite
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+    methods: [POST]
+
+app_project_member_role:
+    path:
+        fr: /{_locale}/atelier/projets/{slug}/membres/{userId}/role
+        en: /{_locale}/workshop/projects/{slug}/members/{userId}/role
+        nl: /{_locale}/werkplaats/projecten/{slug}/leden/{userId}/rol
+    controller: App\Controller\Workshop\ProjectMemberController::updateRole
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+        userId: '\d+'
+    methods: [POST]
+
+app_project_member_remove:
+    path:
+        fr: /{_locale}/atelier/projets/{slug}/membres/{userId}/retirer
+        en: /{_locale}/workshop/projects/{slug}/members/{userId}/remove
+        nl: /{_locale}/werkplaats/projecten/{slug}/leden/{userId}/verwijderen
+    controller: App\Controller\Workshop\ProjectMemberController::remove
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+        userId: '\d+'
+    methods: [POST]
+
+# ── Notifications ───────────────────────────────────────────────────────────
+app_notifications:
+    path:
+        fr: /{_locale}/atelier/notifications
+        en: /{_locale}/workshop/notifications
+        nl: /{_locale}/werkplaats/meldingen
+    controller: App\Controller\Workshop\NotificationController::index
+    requirements:
+        _locale: en|fr|nl
+
+app_notifications_dropdown:
+    path:
+        fr: /{_locale}/atelier/notifications/dropdown
+        en: /{_locale}/workshop/notifications/dropdown
+        nl: /{_locale}/werkplaats/meldingen/dropdown
+    controller: App\Controller\Workshop\NotificationController::dropdown
+    requirements:
+        _locale: en|fr|nl
+
+app_notification_mark_read:
+    path:
+        fr: /{_locale}/atelier/notifications/{id}/lire
+        en: /{_locale}/workshop/notifications/{id}/read
+        nl: /{_locale}/werkplaats/meldingen/{id}/gelezen
+    controller: App\Controller\Workshop\NotificationController::markRead
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+app_notifications_mark_all_read:
+    path:
+        fr: /{_locale}/atelier/notifications/tout-lire
+        en: /{_locale}/workshop/notifications/read-all
+        nl: /{_locale}/werkplaats/meldingen/alles-gelezen
+    controller: App\Controller\Workshop\NotificationController::markAllRead
+    requirements:
+        _locale: en|fr|nl
+    methods: [POST]
+
+app_project_public:
+    path:
+        fr: /{_locale}/atelier/univers/{slug}
+        en: /{_locale}/workshop/universe/{slug}
+        nl: /{_locale}/werkplaats/universum/{slug}
+    controller: App\Controller\Workshop\PublicProjectController::show
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+
+# ── Lecteur public d'un élément narratif ─────────────────────────────────────
+app_element_reader:
+    path:
+        fr: /{_locale}/atelier/univers/{slug}/lire/{id}
+        en: /{_locale}/workshop/universe/{slug}/read/{id}
+        nl: /{_locale}/werkplaats/universum/{slug}/lezen/{id}
+    controller: App\Controller\Workshop\PublicProjectController::reader
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+        id: '\d+'
+
+# ── Commentaires ────────────────────────────────────────────────────────────
+app_comment_new:
+    path:
+        fr: /{_locale}/atelier/univers/{slug}/commenter
+        en: /{_locale}/workshop/universe/{slug}/comment
+        nl: /{_locale}/werkplaats/universum/{slug}/reageren
+    controller: App\Controller\Workshop\CommentController::new
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+    methods: [POST]
+
+app_comment_delete:
+    path:
+        fr: /{_locale}/atelier/commentaires/{id}/supprimer
+        en: /{_locale}/workshop/comments/{id}/delete
+        nl: /{_locale}/werkplaats/reacties/{id}/verwijderen
+    controller: App\Controller\Workshop\CommentController::delete
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+app_comment_vote:
+    path:
+        fr: /{_locale}/atelier/commentaires/{id}/voter
+        en: /{_locale}/workshop/comments/{id}/vote
+        nl: /{_locale}/werkplaats/reacties/{id}/stemmen
+    controller: App\Controller\Workshop\CommentController::vote
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+# ── Signalements ─────────────────────────────────────────────────────────────
+app_report:
+    path:
+        fr: /{_locale}/signaler/{type}/{id}
+        en: /{_locale}/report/{type}/{id}
+        nl: /{_locale}/melden/{type}/{id}
+    controller: App\Controller\Workshop\ReportController::report
+    requirements:
+        _locale: en|fr|nl
+        type: 'project|comment|user'
+        id: '\d+'
+    methods: [POST]
+
+app_workshop_explore:
+    path:
+        fr: /{_locale}/atelier/exploration
+        en: /{_locale}/workshop/explore
+        nl: /{_locale}/werkplaats/verkennen
+    controller: App\Controller\Workshop\ExplorationController::index
+    requirements:
+        _locale: en|fr|nl
+
+app_workshop_explore_search:
+    path:
+        fr: /{_locale}/atelier/exploration/recherche
+        en: /{_locale}/workshop/explore/search
+        nl: /{_locale}/werkplaats/verkennen/zoeken
+    controller: App\Controller\Workshop\ExplorationController::search
+    requirements:
+        _locale: en|fr|nl
+    methods: [GET]
+
+app_workshop_creator_show:
+    path:
+        fr: /{_locale}/atelier/createur/{username}
+        en: /{_locale}/workshop/creator/{username}
+        nl: /{_locale}/werkplaats/maker/{username}
+    controller: App\Controller\Workshop\CreatorController::show
+    requirements:
+        _locale: en|fr|nl
+        username: '[a-z0-9_-]+'
+
+app_workshop_creator_update:
+    path:
+        fr: /{_locale}/atelier/profil/modifier
+        en: /{_locale}/workshop/profile/update
+        nl: /{_locale}/werkplaats/profiel/bijwerken
+    controller: App\Controller\Workshop\CreatorController::update
+    requirements:
+        _locale: en|fr|nl
+    methods: [POST]
+
+app_workshop_creator_like:
+    path:
+        fr: /{_locale}/atelier/createur/{username}/soutenir
+        en: /{_locale}/workshop/creator/{username}/like
+        nl: /{_locale}/werkplaats/maker/{username}/steunen
+    controller: App\Controller\Workshop\CreatorController::toggleLike
+    requirements:
+        _locale: en|fr|nl
+        username: '[a-z0-9_-]+'
     methods: [POST]
 
 app_profile:
@@ -209,6 +477,41 @@ app_manuscript_delete:
         project_slug: '[a-z0-9-]+'
         id: \d+
     methods: [POST]
+
+app_manuscript_rename:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/manuscrit/{id}/renommer
+        en: /{_locale}/workshop/projects/{project_slug}/manuscript/{id}/rename
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/manuscript/{id}/hernoemen
+    controller: App\Controller\Workshop\ScenarioElementController::rename
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+    methods: [PATCH]
+
+app_manuscript_settings:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/manuscrit/{id}/parametres
+        en: /{_locale}/workshop/projects/{project_slug}/manuscript/{id}/settings
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/manuscript/{id}/instellingen
+    controller: App\Controller\Workshop\ScenarioElementController::settings
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+    methods: [PATCH]
+
+app_manuscript_reorder:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/manuscrit/reordonner
+        en: /{_locale}/workshop/projects/{project_slug}/manuscript/reorder
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/manuscript/herordenen
+    controller: App\Controller\Workshop\ScenarioElementController::reorder
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+    methods: [PATCH]
 
 # ═══════════════════════════════════════════════════════════════════
 # PERSONNAGES
@@ -398,6 +701,17 @@ app_task_index:
         _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
 
+app_task_filter:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/taches/filtre/{status}
+        en: /{_locale}/workshop/projects/{project_slug}/tasks/filter/{status}
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/taken/filter/{status}
+    controller: App\Controller\Workshop\TaskController::filter
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        status: '[a-z_]+'
+
 app_task_new:
     path:
         fr: /{_locale}/atelier/projets/{project_slug}/taches/nouveau
@@ -448,6 +762,18 @@ app_task_change_status:
         en: /{_locale}/workshop/projects/{project_slug}/tasks/{id}/status
         nl: /{_locale}/werkplaats/projecten/{project_slug}/taken/{id}/status
     controller: App\Controller\Workshop\TaskController::changeStatus
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+    methods: [POST]
+
+app_task_change_priority:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/taches/{id}/priorite
+        en: /{_locale}/workshop/projects/{project_slug}/tasks/{id}/priority
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/taken/{id}/prioriteit
+    controller: App\Controller\Workshop\TaskController::changePriority
     requirements:
         _locale: en|fr|nl
         project_slug: '[a-z0-9-]+'
@@ -523,6 +849,291 @@ app_note_delete:
         id: \d+
     methods: [POST]
 
+app_note_change_status:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/notes/{id}/statut
+        en: /{_locale}/workshop/projects/{project_slug}/notes/{id}/status
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/notities/{id}/status
+    controller: App\Controller\Workshop\NoteController::changeStatus
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+    methods: [POST]
+
+app_note_change_priority:
+    path:
+        fr: /{_locale}/atelier/projets/{project_slug}/notes/{id}/priorite
+        en: /{_locale}/workshop/projects/{project_slug}/notes/{id}/priority
+        nl: /{_locale}/werkplaats/projecten/{project_slug}/notities/{id}/prioriteit
+    controller: App\Controller\Workshop\NoteController::changePriority
+    requirements:
+        _locale: en|fr|nl
+        project_slug: '[a-z0-9-]+'
+        id: \d+
+    methods: [POST]
+
+
+# ═══════════════════════════════════════════════════════════════════
+# DOCUMENTATION (intégrée dans le workshop)
+# ═══════════════════════════════════════════════════════════════════
+
+app_documentation:
+    path:
+        fr: /{_locale}/documentation
+        en: /{_locale}/documentation
+        nl: /{_locale}/documentatie
+    controller: App\Controller\Workshop\DocumentationController::index
+    requirements:
+        _locale: en|fr|nl
+
+app_documentation_show:
+    path:
+        fr: /{_locale}/documentation/{slug}
+        en: /{_locale}/documentation/{slug}
+        nl: /{_locale}/documentatie/{slug}
+    controller: App\Controller\Workshop\DocumentationController::show
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+
+# ═══════════════════════════════════════════════════════════════════
+# SÉCURITÉ (Login / Logout / Register)
+# ═══════════════════════════════════════════════════════════════════
+
+app_login:
+    path: /{_locale}/login
+    controller: App\Controller\Website\SecurityController::login
+    requirements:
+        _locale: en|fr|nl
+
+app_logout:
+    path: /{_locale}/logout
+    controller: App\Controller\Website\SecurityController::logout
+    requirements:
+        _locale: en|fr|nl
+
+app_register:
+    path: /{_locale}/register
+    controller: App\Controller\Website\RegistrationController::register
+    requirements:
+        _locale: en|fr|nl
+    methods: [POST]
+
+# ═══════════════════════════════════════════════════════════════════
+# ADMINISTRATION
+# ═══════════════════════════════════════════════════════════════════
+
+admin_dashboard:
+    path: /{_locale}/admin
+    controller: App\Controller\Admin\AdminController::dashboard
+    requirements:
+        _locale: en|fr|nl
+
+admin_users:
+    path: /{_locale}/admin/utilisateurs
+    controller: App\Controller\Admin\AdminController::users
+    requirements:
+        _locale: en|fr|nl
+
+admin_user_show:
+    path: /{_locale}/admin/utilisateurs/{id}
+    controller: App\Controller\Admin\AdminController::userShow
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+
+admin_user_ban:
+    path: /{_locale}/admin/utilisateurs/{id}/ban
+    controller: App\Controller\Admin\AdminController::userBan
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+admin_user_roles:
+    path: /{_locale}/admin/utilisateurs/{id}/roles
+    controller: App\Controller\Admin\AdminController::userRoles
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+admin_projects:
+    path: /{_locale}/admin/projets
+    controller: App\Controller\Admin\AdminController::projects
+    requirements:
+        _locale: en|fr|nl
+
+admin_project_show:
+    path: /{_locale}/admin/projets/{id}
+    controller: App\Controller\Admin\AdminController::projectShow
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+
+admin_moderation:
+    path: /{_locale}/admin/moderation
+    controller: App\Controller\Admin\AdminController::moderation
+    requirements:
+        _locale: en|fr|nl
+
+admin_moderation_status:
+    path: /{_locale}/admin/moderation/{id}/statut
+    controller: App\Controller\Admin\AdminController::moderationStatus
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+admin_config:
+    path: /{_locale}/admin/configuration
+    controller: App\Controller\Admin\AdminController::config
+    requirements:
+        _locale: en|fr|nl
+
+# ── Documentation Admin ─────────────────────────────────────────
+
+admin_doc_index:
+    path: /{_locale}/admin/documentation
+    controller: App\Controller\Admin\DocumentationAdminController::index
+    requirements:
+        _locale: en|fr|nl
+
+admin_doc_new:
+    path: /{_locale}/admin/documentation/nouveau
+    controller: App\Controller\Admin\DocumentationAdminController::new
+    requirements:
+        _locale: en|fr|nl
+    methods: [GET, POST]
+
+admin_doc_edit:
+    path: /{_locale}/admin/documentation/{id}/modifier
+    controller: App\Controller\Admin\DocumentationAdminController::edit
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [GET, POST]
+
+admin_doc_delete:
+    path: /{_locale}/admin/documentation/{id}/supprimer
+    controller: App\Controller\Admin\DocumentationAdminController::delete
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+# ── Genres Admin ────────────────────────────────────────────────
+
+admin_genre_index:
+    path: /{_locale}/admin/genres
+    controller: App\Controller\Admin\GenreAdminController::index
+    requirements:
+        _locale: en|fr|nl
+
+admin_genre_new:
+    path: /{_locale}/admin/genres/nouveau
+    controller: App\Controller\Admin\GenreAdminController::new
+    requirements:
+        _locale: en|fr|nl
+
+admin_genre_edit:
+    path: /{_locale}/admin/genres/{id}/modifier
+    controller: App\Controller\Admin\GenreAdminController::edit
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+
+admin_genre_toggle:
+    path: /{_locale}/admin/genres/{id}/toggle
+    controller: App\Controller\Admin\GenreAdminController::toggle
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+admin_genre_delete:
+    path: /{_locale}/admin/genres/{id}/supprimer
+    controller: App\Controller\Admin\GenreAdminController::delete
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+# ── Modération ──────────────────────────────────────────────────
+
+modo_dashboard:
+    path: /{_locale}/modo
+    controller: App\Controller\Admin\ModoController::dashboard
+    requirements:
+        _locale: en|fr|nl
+
+modo_reports:
+    path: /{_locale}/modo/signalements
+    controller: App\Controller\Admin\ModoController::reports
+    requirements:
+        _locale: en|fr|nl
+
+modo_project_show:
+    path: /{_locale}/modo/projets/{id}
+    controller: App\Controller\Admin\ModoController::projectShow
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+
+modo_project_review:
+    path: /{_locale}/modo/projets/{id}/examiner
+    controller: App\Controller\Admin\ModoController::projectReview
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+# ── Signalements système (entité Report) ────────────────────────────────────
+modo_report_list:
+    path: /{_locale}/modo/signalements/systeme
+    controller: App\Controller\Admin\ModoController::reportList
+    requirements:
+        _locale: en|fr|nl
+
+modo_report_show:
+    path: /{_locale}/modo/signalements/systeme/{id}
+    controller: App\Controller\Admin\ModoController::reportShow
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+
+modo_report_review:
+    path: /{_locale}/modo/signalements/systeme/{id}/traiter
+    controller: App\Controller\Admin\ModoController::reportReview
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+# ── Modération commentaires ─────────────────────────────────────────────────
+modo_comments:
+    path: /{_locale}/modo/commentaires
+    controller: App\Controller\Admin\ModoController::comments
+    requirements:
+        _locale: en|fr|nl
+
+modo_comment_moderate:
+    path: /{_locale}/modo/commentaires/{id}/moderer
+    controller: App\Controller\Admin\ModoController::commentModerate
+    requirements:
+        _locale: en|fr|nl
+        id: '\d+'
+    methods: [POST]
+
+# ═══════════════════════════════════════════════════════════════════
+# API (sans préfixe locale)
+# ═══════════════════════════════════════════════════════════════════
+
+api_check_username:
+    path: /api/check-username
+    controller: App\Controller\Api\CheckUsernameController::check
+    methods: [GET]
 
 # ═══════════════════════════════════════════════════════════════════
 # CHARGEMENT AUTOMATIQUE DU RESTE

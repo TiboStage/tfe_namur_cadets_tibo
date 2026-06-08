@@ -11,7 +11,7 @@
     {% if count_flagged == 0 %}
         <div class="admin-empty-state">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <h3>Aucun signalement actif</h3>
+            <h3>{{ 'reports.empty'|trans({}, 'admin') }}</h3>
             <p>La modération est à jour.</p>
         </div>
     {% else %}
@@ -50,9 +50,9 @@
                                       class="mod-inline-form">
                                     <input type="hidden" name="_token" value="{{ csrf_token('modo_review_' ~ project.id) }}">
                                     <div class="mod-btn-group">
-                                        <button type="submit" name="status" value="clear"   class="btn-table btn-table--success" title="Lever le signalement">✓ Clear</button>
-                                        <button type="submit" name="status" value="warning" class="btn-table btn-table--warn"    title="Avertissement">⚠ Warn</button>
-                                        <button type="submit" name="status" value="blocked" class="btn-table btn-table--danger"  title="Bloquer le projet">✕ Block</button>
+                                        <button type="submit" name="status" value="clear"   class="btn-table btn-table--success" title="{{ 'reports.btn.clear_title'|trans({}, 'admin') }}">✓ Clear</button>
+                                        <button type="submit" name="status" value="warning" class="btn-table btn-table--warn"    title="{{ 'reports.btn.warning_title'|trans({}, 'admin') }}">⚠ Warn</button>
+                                        <button type="submit" name="status" value="blocked" class="btn-table btn-table--danger"  title="{{ 'reports.btn.block_title'|trans({}, 'admin') }}">✕ Block</button>
                                     </div>
                                 </form>
                             </td>

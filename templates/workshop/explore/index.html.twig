@@ -291,7 +291,7 @@
                     {% for project in latest_films %}
                         {{ include('workshop/_partials/_project_card_public.html.twig', {
                             project:       project,
-                            comment_count: 0,
+                            comment_count: comment_counts_map[project.id] ?? 0,
                             viewer_role:   viewer_roles_map[project.id] ?? null,
                         }) }}
                     {% endfor %}
@@ -320,7 +320,7 @@
                     {% for project in latest_series %}
                         {{ include('workshop/_partials/_project_card_public.html.twig', {
                             project:       project,
-                            comment_count: 0,
+                            comment_count: comment_counts_map[project.id] ?? 0,
                             viewer_role:   viewer_roles_map[project.id] ?? null,
                         }) }}
                     {% endfor %}
@@ -349,7 +349,7 @@
                     {% for project in latest_games %}
                         {{ include('workshop/_partials/_project_card_public.html.twig', {
                             project:       project,
-                            comment_count: 0,
+                            comment_count: comment_counts_map[project.id] ?? 0,
                             viewer_role:   viewer_roles_map[project.id] ?? null,
                         }) }}
                     {% endfor %}

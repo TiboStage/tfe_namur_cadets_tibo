@@ -1,0 +1,116 @@
+# ============================================================
+# SCÉNART - Admin Panel Traductions (FR)
+# ============================================================
+
+# ===== LAYOUT =====
+layout:
+    title: "Panneau d'administration"
+    exit: "Quitter l'admin"
+    menu:
+        dashboard: "Vue d'ensemble"
+        users: "Utilisateurs"
+        projects: "Projets"
+        moderation: "Modération"
+        config: "Configuration"
+        documentation: "Documentation"
+        genres: "Genres"
+        moderator_panel: "Panel Modérateur"
+
+# ===== GENRE =====
+genre:
+    list:
+        title: "Genres narratifs"
+    form:
+        new_title: "Nouveau genre"
+        edit_title: "Modifier le genre"
+        new_header: "Nouveau genre"
+        edit_header: "Modifier « %name% »"
+        back: "← Retour aux genres"
+        slug_label: "Slug"
+        slug_hint: "Clé technique unique, lowercase + underscores uniquement"
+        slug_placeholder: "ex : science_fiction"
+        slug_warning: "Ne modifiez pas le slug d'un genre déjà utilisé par des projets — cela romprait l'association."
+        translations_label: "Traductions"
+        translations_hint: "Les 3 langues sont obligatoires"
+        lang_fr: "Français"
+        lang_nl: "Nederlands"
+        lang_en: "English"
+        placeholder_fr: "Ex : Thriller"
+        placeholder_nl: "Bijv.: Thriller"
+        placeholder_en: "E.g.: Thriller"
+        types_label: "Types de projet compatibles"
+        types_hint: "Laissez tout décoché = compatible avec tous les types"
+        type_film: "🎬 Film"
+        type_serie: "📺 Série"
+        type_jeu_video: "🎮 Jeu vidéo"
+        order_label: "Ordre d'affichage"
+        order_hint: "0 = en premier"
+        btn_save: "✓ Enregistrer les modifications"
+        btn_create: "+ Créer le genre"
+        btn_cancel: "Annuler"
+    btn:
+        delete: "Supprimer"
+
+# ===== CONFIG =====
+config:
+    platform_info: "Informations plateforme"
+    field_name: "Nom"
+    field_version: "Version"
+    field_framework: "Framework"
+    field_database: "Base de données"
+    field_environment: "Environnement"
+    field_debug: "Debug"
+    debug_enabled: "Activé"
+    debug_disabled: "Désactivé"
+    sessions: "Sessions actives"
+    sessions_hint: "Informations sur la session courante."
+    field_logged_as: "Connecté en tant que"
+    field_email: "Email"
+    field_roles: "Rôles"
+    todo_section: "À implémenter"
+    todo_description: "Cette section contiendra dans une version future : paramètres d'inscription ouverte/fermée, limite de projets par utilisateur, ..."
+
+# ===== DOCUMENTATION =====
+documentation:
+    title: "Articles de documentation"
+    btn_delete: "Supprimer"
+
+# ===== USERS =====
+users:
+    show:
+        roles_title: "Rôles"
+        save_roles: "Enregistrer les rôles"
+        moderation_title: "Modération du compte"
+        projects_title: "Projets de %username% (%count%)"
+    btn_search: "Rechercher"
+
+# ===== MODÉRATION =====
+moderation:
+    empty: "Aucun signalement actif"
+    action:
+        clear: "Lever"
+        warn: "Avertir"
+        block: "Bloquer"
+        approve: "Approuver"
+
+# ===== MODO LAYOUT =====
+modo:
+    title: "Panel Modérateur"
+    exit: "Quitter"
+    menu:
+        dashboard: "Vue d'ensemble"
+        flagged_projects: "Projets signalés"
+        reports: "Signalements"
+        comments: "Commentaires"
+        admin_panel: "Panel Admin"
+
+# ===== SIGNALEMENTS =====
+reports:
+    empty: "Aucun signalement actif"
+    btn:
+        clear_title: "Lever le signalement"
+        warning_title: "Avertissement"
+        block_title: "Bloquer le projet"
+    detail:
+        title: "Détail du signalement"
+        actions_title: "Actions"

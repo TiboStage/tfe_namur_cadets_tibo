@@ -1,0 +1,48 @@
+/* ============================================================
+   ICÔNE / AVATAR PROJET — _project-icon.css
+   Composant réutilisable : fond coloré par type + pictogramme
+   Usage Twig : include 'workshop/_partials/_project_icon.html.twig'
+                with {project: project, size: 'md'}
+   ============================================================ */
+
+.proj-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ── Tailles ─────────────────────────────────────────────── */
+
+.proj-icon--xs { width: 20px; height: 20px; }
+.proj-icon--sm { width: 26px; height: 26px; }
+.proj-icon--md { width: 32px; height: 32px; }
+.proj-icon--lg { width: 48px; height: 48px; }
+
+/* Taille du SVG interne */
+.proj-icon--xs svg { width: 10px; height: 10px; }
+.proj-icon--sm svg { width: 13px; height: 13px; }
+.proj-icon--md svg { width: 15px; height: 15px; }
+.proj-icon--lg svg { width: 22px; height: 22px; }
+
+/* ── Types — fond coloré + icône assortie ────────────────── */
+
+.proj-icon--film {
+    background: var(--project-film-dim);
+    color: var(--project-film);
+}
+
+.proj-icon--serie {
+    background: var(--project-serie-dim);
+    color: var(--project-serie);
+}
+
+.proj-icon--jeu_video {
+    background: var(--project-jv-dim);
+    color: var(--project-jv);
+}
+
+.proj-icon--custom {
+    background: var(--project-custom-dim);
+    color: var(--project-custom);
+}

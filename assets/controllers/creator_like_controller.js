@@ -48,9 +48,13 @@ export default class extends Controller {
 
         const data = await response.json()
 
-        // Mise à jour du compteur et du libellé
+        // Mise à jour du compteur et du libellé (traduits via data-attributes)
         if (this.hasCountTarget) this.countTarget.textContent = data.count
-        if (this.hasLabelTarget) this.labelTarget.textContent = data.count !== 1 ? 'soutiens' : 'soutien'
+        if (this.hasLabelTarget) {
+            const singular = this.element.dataset.labelSingular || 'soutien'
+            const plural   = this.element.dataset.labelPlural   || 'soutiens'
+            this.labelTarget.textContent = data.count !== 1 ? plural : singular
+        }
 
         // Mise à jour de l'état actif
         this.likedValue = data.liked

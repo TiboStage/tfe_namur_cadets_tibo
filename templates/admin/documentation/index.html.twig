@@ -5,7 +5,7 @@
 {% block admin_content %}
 <div class="admin-section-header">
     <div>
-        <h3>Articles de documentation</h3>
+        <h3>{{ 'documentation.title'|trans({}, 'admin') }}</h3>
         <p class="text-muted">{{ articles|length }} article{{ articles|length > 1 ? 's' : '' }} au total</p>
     </div>
     <a href="{{ path('admin_doc_new', {_locale: app.request.locale}) }}" class="btn-primary">
@@ -67,7 +67,7 @@
                               class="d-inline">
                             <input type="hidden" name="_token"
                                    value="{{ csrf_token('delete_doc_' ~ article.id) }}">
-                            <button type="submit" class="btn-sm btn-sm--danger">Supprimer</button>
+                            <button type="submit" class="btn-sm btn-sm--danger">{{ 'documentation.btn_delete'|trans({}, 'admin') }}</button>
                         </form>
                     </td>
                 </tr>

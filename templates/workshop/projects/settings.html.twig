@@ -4,8 +4,8 @@
 
 {% block project_content %}
 
-{% set type_labels = {film: 'Film', serie: 'Série', jeu_video: 'Jeu vidéo', custom: 'Custom'} %}
-{% set status_labels = {draft: 'Brouillon', in_progress: 'En cours', completed: 'Terminé', archived: 'Archivé'} %}
+{% set type_labels = {film: 'settings.types.film'|trans({}, 'workshop'), serie: 'settings.types.serie'|trans({}, 'workshop'), jeu_video: 'settings.types.jeu_video'|trans({}, 'workshop'), custom: 'settings.types.custom'|trans({}, 'workshop')} %}
+{% set status_labels = {draft: 'settings.statuses.draft'|trans({}, 'workshop'), in_progress: 'settings.statuses.in_progress'|trans({}, 'workshop'), completed: 'settings.statuses.completed'|trans({}, 'workshop'), archived: 'settings.statuses.archived'|trans({}, 'workshop')} %}
 
 <div class="ps-wrapper">
 
@@ -17,21 +17,27 @@
                 {{ ux_icon('lucide:arrow-left', {style: 'width:13px;height:13px'}) }}
                 {{ project.title }}
             </a>
-            <h1 class="ps-header__title">Paramètres</h1>
+            <h1 class="ps-header__title">{{ 'settings.title'|trans({}, 'workshop') }}</h1>
         </div>
     </div>
 
     {# ── Onglets ──────────────────────────────────────────────────── #}
-    <nav class="ps-tabs" aria-label="Onglets des paramètres">
-        {% for t, label in {general: 'Informations', structure: 'Structure', members: 'Collaborateurs', danger: 'Danger'} %}
-        <a href="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: t}) }}"
-           class="ps-tab {{ tab == t ? 'ps-tab--active' : '' }} {{ t == 'danger' ? 'ps-tab--danger' : '' }}">
-            {% if t == 'general'    %}{{ ux_icon('lucide:settings-2',  {style: 'width:13px;height:13px'}) }}{% endif %}
-            {% if t == 'structure'  %}{{ ux_icon('lucide:git-branch',  {style: 'width:13px;height:13px'}) }}{% endif %}
-            {% if t == 'members'    %}{{ ux_icon('lucide:users',        {style: 'width:13px;height:13px'}) }}{% endif %}
-            {% if t == 'danger'     %}{{ ux_icon('lucide:triangle-alert',{style: 'width:13px;height:13px'}) }}{% endif %}
-            {{ label }}
-        </a>
+    <nav class="ps-tabs" aria-label="{{ 'settings.tabs.label'|trans({}, 'workshop') }}">
+        {% set tabs_map = {
+            general:     {label: 'settings.tabs.general'|trans({}, 'workshop'),    icon: 'lucide:settings-2'},
+            structure:   {label: 'settings.tabs.structure'|trans({}, 'workshop'),  icon: 'lucide:git-branch'},
+            members:     {label: 'settings.tabs.members'|trans({}, 'workshop'),    icon: 'lucide:users'},
+            permissions: {label: 'Permissions',                                    icon: 'lucide:shield'},
+            danger:      {label: 'settings.tabs.danger'|trans({}, 'workshop'),     icon: 'lucide:triangle-alert'},
+        } %}
+        {% for t, meta in tabs_map %}
+            {% if t != 'permissions' or isOwner %}
+            <a href="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: t}) }}"
+               class="ps-tab {{ tab == t ? 'ps-tab--active' : '' }} {{ t == 'danger' ? 'ps-tab--danger' : '' }}">
+                {{ ux_icon(meta.icon, {style: 'width:13px;height:13px'}) }}
+                {{ meta.label }}
+            </a>
+            {% endif %}
         {% endfor %}
     </nav>
 
@@ -59,34 +65,34 @@
                 <div class="ps-section__head">
                     <div class="ps-section__title-row">
                         {{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}
-                        <h2>Informations générales</h2>
+                        <h2>{{ 'settings.general.title'|trans({}, 'workshop') }}</h2>
                     </div>
-                    <p class="text-muted">Titre, description et état d'avancement du projet.</p>
+                    <p class="text-muted">{{ 'settings.general.hint'|trans({}, 'workshop') }}</p>
                 </div>
 
                 <div class="ps-field">
-                    <label class="ps-label">Titre <span class="ps-required">*</span></label>
+                    <label class="ps-label">{{ 'settings.general.field_title'|trans({}, 'workshop') }} <span class="ps-required">*</span></label>
                     <input type="text" name="title" class="ps-input"
                            value="{{ project.title }}" maxlength="150" required>
                 </div>
 
                 <div class="ps-field">
-                    <label class="ps-label">Description <span class="ps-optional">(optionnel)</span></label>
+                    <label class="ps-label">{{ 'settings.general.field_description'|trans({}, 'workshop') }} <span class="ps-optional">{{ 'settings.general.optional'|trans({}, 'workshop') }}</span></label>
                     <textarea name="description" class="ps-textarea" rows="4">{{ project.description }}</textarea>
                 </div>
 
                 <div class="ps-row">
                     <div class="ps-field">
-                        <label class="ps-label">Type</label>
+                        <label class="ps-label">{{ 'settings.general.field_type'|trans({}, 'workshop') }}</label>
                         <div class="ps-input ps-input--readonly">
                             {{ type_labels[project.projectType] ?? project.projectType }}
-                            <span class="ps-readonly-hint">non modifiable</span>
+                            <span class="ps-readonly-hint">{{ 'settings.general.type_readonly'|trans({}, 'workshop') }}</span>
                         </div>
                     </div>
                     <div class="ps-field">
-                        <label class="ps-label">Statut</label>
+                        <label class="ps-label">{{ 'settings.general.field_status'|trans({}, 'workshop') }}</label>
                         <select name="status" class="ps-select">
-                            {% for val, lbl in {draft: 'Brouillon', in_progress: 'En cours', completed: 'Terminé', archived: 'Archivé'} %}
+                            {% for val, lbl in status_labels %}
                             <option value="{{ val }}" {{ project.status == val ? 'selected' }}>{{ lbl }}</option>
                             {% endfor %}
                         </select>
@@ -100,17 +106,28 @@
                 <div class="ps-section__head">
                     <div class="ps-section__title-row">
                         {{ ux_icon('lucide:tag', {class: 'icon-xs'}) }}
-                        <h2>Genre(s)</h2>
+                        <h2>{{ 'settings.genres.title'|trans({}, 'workshop') }}</h2>
                     </div>
                     <p class="text-muted">
-                        Choisissez jusqu'à 3 genres. Sans sélection, le projet sera affiché comme "Non classé".
+                        {{ 'settings.genres.hint'|trans({}, 'workshop') }}
                     </p>
                 </div>
 
-                <div class="ps-genre-grid">
+                <div class="ps-genre-search-wrap">
+                    <input type="text"
+                           id="ps-genre-search"
+                           class="ps-genre-search"
+                           placeholder="{{ 'settings.genres.search_placeholder'|trans({}, 'workshop') }}"
+                           autocomplete="off"
+                           spellcheck="false">
+                    <svg class="ps-genre-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </div>
+
+                <div class="ps-genre-grid" id="ps-genre-grid">
                     {% for genre in available_genres %}
                     {% set isChecked = genre.slug in selected_genre_slugs %}
-                    <label class="ps-genre-chip {{ isChecked ? 'ps-genre-chip--checked' : '' }}">
+                    <label class="ps-genre-chip {{ isChecked ? 'ps-genre-chip--checked' : '' }}"
+                           data-label="{{ genre.getLabel(app.request.locale)|lower }}">
                         <input type="checkbox"
                                name="genres[]"
                                value="{{ genre.slug }}"
@@ -120,32 +137,58 @@
                     </label>
                     {% endfor %}
                 </div>
+                <p class="ps-genre-no-results" id="ps-genre-no-results" style="display:none">
+                    {{ 'settings.genres.no_results'|trans({}, 'workshop') }}
+                </p>
             </div>
             {% endif %}
+
+            <script>
+            (function () {
+                const chips     = document.querySelectorAll('.ps-genre-chip');
+                const search    = document.getElementById('ps-genre-search');
+                const noResults = document.getElementById('ps-genre-no-results');
+
+                if (!search) return;
+
+                search.addEventListener('input', function () {
+                    const q = this.value.toLowerCase().trim();
+                    let visible = 0;
+                    chips.forEach(chip => {
+                        const label     = chip.dataset.label || '';
+                        const isChecked = chip.querySelector('.ps-genre-checkbox').checked;
+                        const show      = !q || isChecked || label.includes(q);
+                        chip.style.display = show ? '' : 'none';
+                        if (show) visible++;
+                    });
+                    if (noResults) noResults.style.display = (visible === 0) ? '' : 'none';
+                });
+            })();
+            </script>
 
             {# ── Paramètres du manuscrit ──────────────────────────────── #}
             <div class="ps-section">
                 <div class="ps-section__head">
                     <div class="ps-section__title-row">
                         {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
-                        <h2>Paramètres du manuscrit</h2>
+                        <h2>{{ 'settings.manuscript.title'|trans({}, 'workshop') }}</h2>
                     </div>
                     <p class="text-muted">
-                        Utilisés pour estimer les pages, la durée à l'écran et le temps de lecture dans l'éditeur.
+                        {{ 'settings.manuscript.hint'|trans({}, 'workshop') }}
                     </p>
                 </div>
 
                 <div class="ps-row ps-row--3cols">
                     <div class="ps-field">
                         <label class="ps-label">
-                            Mots par page
-                            <span class="ps-optional">(std : 170)</span>
+                            {{ 'settings.manuscript.words_per_page'|trans({}, 'workshop') }}
+                            <span class="ps-optional">{{ 'settings.manuscript.words_per_page_default'|trans({}, 'workshop') }}</span>
                         </label>
                         <div class="ps-input-group">
                             <input type="number" name="ms_words_per_page" class="ps-input"
                                    value="{{ project.settings.ms_words_per_page ?? 170 }}"
                                    min="1" max="999">
-                            <span class="ps-input-addon">mots</span>
+                            <span class="ps-input-addon">{{ 'settings.manuscript.unit_words'|trans({}, 'workshop') }}</span>
                         </div>
                     </div>
 
@@ -180,10 +223,10 @@
             <div class="ps-actions">
                 <button type="submit" class="btn btn--cta-yellow">
                     {{ ux_icon('lucide:check', {class: 'icon-xs'}) }}
-                    Enregistrer
+                    {{ 'settings.btn.save'|trans({}, 'workshop') }}
                 </button>
                 <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: project.slug}) }}"
-                   class="btn btn--ghost">Annuler</a>
+                   class="btn btn--ghost">{{ 'settings.btn.cancel'|trans({}, 'workshop') }}</a>
             </div>
         </form>
 
@@ -207,7 +250,7 @@
                 <div class="ps-section__head">
                     <div class="ps-section__title-row">
                         {{ ux_icon('lucide:git-branch', {class: 'icon-xs'}) }}
-                        <h2>Niveaux narratifs</h2>
+                        <h2>{{ 'settings.narrative.title'|trans({}, 'workshop') }}</h2>
                     </div>
                     <p class="text-muted">
                         Modifiez les noms affichés pour chaque niveau de votre structure.
@@ -282,9 +325,9 @@
             <div class="ps-section__head">
                 <div class="ps-section__title-row">
                     {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }}
-                    <h2>Inviter un collaborateur</h2>
+                    <h2>{{ 'settings.invite.title'|trans({}, 'workshop') }}</h2>
                 </div>
-                <p class="text-muted">Entrez le nom d'utilisateur et choisissez le rôle.</p>
+                <p class="text-muted">{{ 'settings.invite.placeholder'|trans({}, 'workshop') }}</p>
             </div>
 
             <form method="post"
@@ -321,7 +364,7 @@
             <div class="ps-section__head">
                 <div class="ps-section__title-row">
                     {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
-                    <h2>Membres actuels</h2>
+                    <h2>{{ 'settings.members_list.title'|trans({}, 'workshop') }}</h2>
                 </div>
             </div>
 
@@ -358,7 +401,7 @@
                           action="{{ path('app_project_member_remove', {_locale: app.request.locale, slug: project.slug, userId: member.user.id}) }}">
                         <input type="hidden" name="_token" value="{{ csrf_token('member_remove_' ~ project.id ~ '_' ~ member.user.id) }}">
                         <button type="submit" class="ps-remove-btn"
-                                title="Retirer {{ member.user.username }}"
+                                title="{{ 'settings.members_list.remove_title'|trans({'%username%': member.user.username}, 'workshop') }}"
                                 onclick="return confirm('Retirer {{ member.user.username }} du projet ?')">
                             {{ ux_icon('lucide:x', {style: 'width:13px;height:13px'}) }}
                         </button>
@@ -367,6 +410,97 @@
                 {% endfor %}
             </div>
             {% endif %}
+        </div>
+
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════════
+       ONGLET PERMISSIONS
+       ══════════════════════════════════════════════════════════════ #}
+    {% if tab == 'permissions' and isOwner %}
+    <div class="ps-panel">
+
+        <div class="ps-section">
+            <div class="ps-section__head">
+                <div class="ps-section__title-row">
+                    {{ ux_icon('lucide:shield', {class: 'icon-xs'}) }}
+                    <h2>Permissions par rôle</h2>
+                </div>
+                <p class="text-muted">
+                    Définissez ce que chaque rôle peut faire dans ce projet.
+                    Le propriétaire a toujours accès à tout.
+                    <a href="{{ path('app_project_moderation', {_locale: app.request.locale, slug: project.slug}) }}"
+                       class="ps-link-inline">
+                        {{ ux_icon('lucide:arrow-up-right', {style: 'width:11px;height:11px'}) }}
+                        Voir la modération
+                    </a>
+                </p>
+            </div>
+
+            <form method="post"
+                  action="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: 'permissions'}) }}"
+                  class="ps-form">
+                <input type="hidden" name="_action" value="save_permissions">
+                <input type="hidden" name="_token"  value="{{ csrf_token('project_permissions_' ~ project.id) }}">
+
+                <div class="ps-perm-grid">
+
+                    {# ── En-tête : labels des rôles ── #}
+                    <div class="ps-perm-header">
+                        <div class="ps-perm-feature-col"></div>
+                        {% for role in permRoles %}
+                        <div class="ps-perm-role-col ps-perm-role-col--{{ roleColors[role] }}">
+                            <span class="ps-perm-role-name">{{ roleLabels[role] }}</span>
+                            <button type="submit" name="reset_{{ role }}" value="1"
+                                    class="ps-perm-reset-btn"
+                                    title="Réinitialiser aux valeurs par défaut"
+                                    onclick="return confirm('Réinitialiser les permissions de {{ roleLabels[role] }} aux valeurs par défaut ?')">
+                                {{ ux_icon('lucide:rotate-ccw', {style: 'width:10px;height:10px'}) }}
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {# ── Lignes par groupe ── #}
+                    {% for groupKey, perms in permGroups %}
+                    <div class="ps-perm-group">
+                        <div class="ps-perm-group-label">
+                            {{ ux_icon(groupIcons[groupKey], {style: 'width:12px;height:12px'}) }}
+                            {{ groupLabels[groupKey] }}
+                        </div>
+
+                        {% for permKey, permLabel in perms %}
+                        <div class="ps-perm-row">
+                            <div class="ps-perm-feature-col">
+                                <span class="ps-perm-label">{{ permLabel }}</span>
+                                <code class="ps-perm-key">{{ permKey }}</code>
+                            </div>
+                            {% for role in permRoles %}
+                            <div class="ps-perm-role-col">
+                                <label class="ps-perm-check">
+                                    <input type="checkbox"
+                                           class="ps-perm-check-box"
+                                           name="permissions[{{ role }}][]"
+                                           value="{{ permKey }}"
+                                           {% if permKey in effectivePerms[role] %}checked{% endif %}>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <div class="ps-perm-actions">
+                    <button type="submit" class="btn btn--cta-yellow">
+                        {{ ux_icon('lucide:save', {style: 'width:13px;height:13px'}) }}
+                        Enregistrer les permissions
+                    </button>
+                </div>
+            </form>
         </div>
 
     </div>
@@ -382,7 +516,7 @@
             <div class="ps-section__head">
                 <div class="ps-section__title-row">
                     {{ ux_icon('lucide:trash-2', {class: 'icon-xs'}) }}
-                    <h2>Supprimer le projet</h2>
+                    <h2>{{ 'settings.danger.title'|trans({}, 'workshop') }}</h2>
                 </div>
                 <p class="text-muted">
                     Cette action est <strong>irréversible</strong>. Tout le contenu (personnages, lieux, manuscrit,

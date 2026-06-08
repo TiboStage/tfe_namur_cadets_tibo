@@ -1,187 +1,230 @@
 {% extends 'workshop/layout.html.twig' %}
-
 {% trans_default_domain 'workshop' %}
 
-{% block title %}L'Atelier - Scénart{% endblock %}
+{% block title %}L'Atelier — Scénart{% endblock %}
 
 {% block content %}
-    <div class="workshop-container">
-        <div class="container-dashboard-structure">
 
-            <div class="intro-dashboard-structure">
+{# ── Mapping icônes / couleurs par type d'action ────────────────────────── #}
+{% set action_meta = {
+    'project.create':     { icon: 'lucide:folder-plus',   color: 'green',  label: 'Projet créé' },
+    'project.edit':       { icon: 'lucide:pencil',         color: 'blue',   label: 'Projet modifié' },
+    'project.delete':     { icon: 'lucide:trash-2',        color: 'red',    label: 'Projet supprimé' },
+    'project.publish':    { icon: 'lucide:globe',          color: 'yellow', label: 'Projet publié' },
+    'manuscript.create':  { icon: 'lucide:file-plus',      color: 'green',  label: 'Scène créée' },
+    'manuscript.edit':    { icon: 'lucide:file-edit',      color: 'blue',   label: 'Scène modifiée' },
+    'manuscript.delete':  { icon: 'lucide:file-x',         color: 'red',    label: 'Scène supprimée' },
+    'character.create':   { icon: 'lucide:user-plus',      color: 'green',  label: 'Personnage créé' },
+    'character.edit':     { icon: 'lucide:user-pen',       color: 'blue',   label: 'Personnage modifié' },
+    'character.delete':   { icon: 'lucide:user-x',         color: 'red',    label: 'Personnage supprimé' },
+    'location.create':    { icon: 'lucide:map-pin-plus',   color: 'green',  label: 'Lieu créé' },
+    'location.edit':      { icon: 'lucide:map-pin',        color: 'blue',   label: 'Lieu modifié' },
+    'location.delete':    { icon: 'lucide:map-pin-off',    color: 'red',    label: 'Lieu supprimé' },
+    'note.create':        { icon: 'lucide:notebook-pen',   color: 'green',  label: 'Note créée' },
+    'note.edit':          { icon: 'lucide:notebook',       color: 'blue',   label: 'Note modifiée' },
+    'note.delete':        { icon: 'lucide:notebook',       color: 'red',    label: 'Note supprimée' },
+    'task.create':        { icon: 'lucide:square-plus',    color: 'green',  label: 'Tâche créée' },
+    'task.complete':      { icon: 'lucide:circle-check',   color: 'green',  label: 'Tâche terminée' },
+    'task.delete':        { icon: 'lucide:square-x',       color: 'red',    label: 'Tâche supprimée' },
+    'world_event.create': { icon: 'lucide:calendar-plus',  color: 'green',  label: 'Événement créé' },
+    'world_event.edit':   { icon: 'lucide:calendar',       color: 'blue',   label: 'Événement modifié' },
+    'world_event.delete': { icon: 'lucide:calendar-x',     color: 'red',    label: 'Événement supprimé' },
+} %}
 
-                {# ── EN-TÊTE ─────────────────────────────────────────────── #}
-                <header class="dashboard-intro">
-                    <h1>
-                        {{ 'dashboard.greeting'|trans }}
-                        <span class="highlight">{{ app.user.firstName|default('dashboard.default_author'|trans) }}</span>
-                    </h1>
-                    <p class="text-muted">
-                        {{ "now"|date("l d F Y") }} — {{ projects_count }} {{ 'dashboard.subtitle'|trans }}
-                    </p>
-                </header>
+<div class="workshop-container">
 
-                {# ── STATS ───────────────────────────────────────────────── #}
-                <div class="admin-stats-grid">
+    {# ══════════════════════════════════════════════════════════════
+       SECTION HERO — Greeting + stats inline + projets + activité
+       ══════════════════════════════════════════════════════════════ #}
+    <div class="dash-hero">
 
-                    {% set icon_folder %}
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                    {% endset %}
-                    {% set sub_projects %}<a href="{{ path('app_project_index') }}" class="color-inherit">{{ 'dashboard.stats.projects_link'|trans }}</a>{% endset %}
-                    {{ include('components/_stat_card.html.twig', {
-                        icon:  icon_folder,
-                        value: projects_count,
-                        label: 'dashboard.stats.projects_value'|trans,
-                        sub:   sub_projects,
-                        color: 'yellow',
-                    }) }}
-
-                    {% set icon_users %}
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    {% endset %}
-                    {{ include('components/_stat_card.html.twig', {
-                        icon:  icon_users,
-                        value: total_characters,
-                        label: 'dashboard.stats.characters'|trans,
-                        color: 'blue',
-                    }) }}
-
-                    {% set icon_map %}
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    {% endset %}
-                    {{ include('components/_stat_card.html.twig', {
-                        icon:  icon_map,
-                        value: total_locations,
-                        label: 'dashboard.stats.locations'|trans,
-                        color: 'muted',
-                    }) }}
-
-                    {% set icon_film %}
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
-                    {% endset %}
-                    {{ include('components/_stat_card.html.twig', {
-                        icon:  icon_film,
-                        value: total_scenes,
-                        label: 'dashboard.stats.scenes'|trans,
-                        color: 'muted',
-                    }) }}
-
-                </div>
-
-                {# ── GRILLE BASSE ─────────────────────────────────────────── #}
-                <div class="dashboard-lower-grid">
-
-                    {# Projets en cours #}
-                    <section class="dashboard-section">
-                        <div class="dashboard-section-header">
-                            <h2>{{ 'dashboard.projects.title'|trans }}</h2>
-                            <a href="{{ path('app_project_index') }}" class="link-more">
-                                {{ 'dashboard.projects.see_more'|trans }}
-                            </a>
-                        </div>
-
-                        <div class="project-list">
-                            {% if projects is empty %}
-                                <p class="text-muted empty-state">{{ 'dashboard.projects.empty'|trans }}</p>
-                            {% else %}
-                                {% for project in projects|slice(0, 4) %}
-                                    <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="project-list-item">
-                                        <div class="project-thumb">{{ project.title|first|upper }}</div>
-                                        <div class="project-info">
-                                            <span class="project-title">{{ project.title }}</span>
-                                            <span class="project-meta text-muted">
-                                                {{ project.projectType }} — {{ project.updatedAt|date('d/m/Y') }}
-                                            </span>
-                                        </div>
-                                        <span class="status-badge status-badge--{{ project.status }}">{{ project.status }}</span>
-                                    </a>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                    </section>
-
-                    {# Activité récente #}
-                    <section class="dashboard-section">
-                        <div class="dashboard-section-header">
-                            <h2>{{ 'dashboard.activity.title'|trans }}</h2>
-                            <a href="{{ path('app_project_index') }}" class="link-more">{{ 'dashboard.activity.see_all'|trans }}</a>
-                        </div>
-
-                        <div class="activity-list">
-                            {% if recentProjects is empty %}
-                                <p class="text-muted empty-state">{{ 'dashboard.projects.empty'|trans }}</p>
-                            {% else %}
-                                {% for project in recentProjects %}
-                                    <a href="{{ path('app_project_show', {slug: project.slug}) }}" class="activity-item">
-                                        <span class="activity-dot"></span>
-                                        <div class="activity-text">
-                                            <p><strong>{{ project.title }}</strong></p>
-                                            <span class="text-muted">{{ project.updatedAt|date('d/m/Y à H:i') }}</span>
-                                        </div>
-                                        <span class="status-badge status-badge--{{ project.status }}">{{ project.status }}</span>
-                                    </a>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                    </section>
-
-                </div>
-
+        {# ── Greeting ──────────────────────────────────────────────── #}
+        <div class="dash-greeting">
+            <div>
+                <h1 class="dash-greeting__title">
+                    {{ 'dashboard.greeting'|trans }}
+                    <span class="highlight">{{ app.user.firstName|default('dashboard.default_author'|trans) }}</span>
+                </h1>
+                <p class="dash-greeting__sub">
+                    {{ "now"|date("l d F Y") }}
+                </p>
             </div>
-
-            {# ── ACTIONS RAPIDES (colonne droite) ─────────────────────── #}
-            <div class="child-dashboard-structure">
-                <div class="action-stack">
-                    <div class="dashboard-section-header">
-                        <h2>{{ 'dashboard.quick_actions.title'|trans }}</h2>
-                    </div>
-                    <div class="quick-action-card-structure">
-                        <div class="quick-action-card">
-                            <a href="{{ path('app_project_new') }}" class="btn-creat">
-                                {{ 'dashboard.actions.new_project_btn'|trans }}
-                            </a>
-                        </div>
-                        <div class="quick-action-card">
-                            <button class="btn-export">{{ 'dashboard.actions.export_btn'|trans }}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <a href="{{ path('app_project_new_step1', {_locale: app.request.locale}) }}" class="btn-creat">
+                {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                {{ 'dashboard.actions.new_project_btn'|trans }}
+            </a>
         </div>
 
-        {# ── PROJETS RÉCENTS (grille de cartes) ───────────────────────── #}
-        <section class="dashboard-section recent-projects-full">
-            <div class="dashboard-section-header">
-                <h2>{{ 'dashboard.recent_projects_section.title'|trans }}</h2>
-                <a href="{{ path('app_project_index') }}" class="link-more">
+        {# ── Stats inline ──────────────────────────────────────────── #}
+        <div class="dash-stats-bar">
+            <div class="dash-stat">
+                {{ ux_icon('lucide:folder', {class: 'icon-xs'}) }}
+                <strong>{{ projects_count }}</strong>
+                <span>{{ 'dashboard.stats.projects_value'|trans }}</span>
+            </div>
+            <div class="dash-stat-sep"></div>
+            <div class="dash-stat">
+                {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
+                <strong>{{ total_characters }}</strong>
+                <span>{{ 'dashboard.stats.characters'|trans }}</span>
+            </div>
+            <div class="dash-stat-sep"></div>
+            <div class="dash-stat">
+                {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
+                <strong>{{ total_scenes }}</strong>
+                <span>{{ 'dashboard.stats.scenes'|trans }}</span>
+            </div>
+            <div class="dash-stat-sep"></div>
+            <div class="dash-stat">
+                {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }}
+                <strong>{{ total_locations }}</strong>
+                <span>{{ 'dashboard.stats.locations'|trans }}</span>
+            </div>
+        </div>
+
+        {# ── Grille principale : Projets | Activité ────────────────── #}
+        <div class="dash-main-grid">
+
+            {# ── Mes projets ──────────────────────────────────────── #}
+            <section class="dash-panel">
+                <div class="dash-panel__header">
+                    <h2>{{ 'dashboard.projects.title'|trans }}</h2>
+                    {% if projects_count > 5 %}
+                        <a href="{{ path('app_project_index', {_locale: app.request.locale}) }}" class="link-more">
+                            {{ 'dashboard.projects.see_more'|trans }}
+                        </a>
+                    {% endif %}
+                </div>
+
+                {% if hero_projects is empty %}
+                    <div class="dash-empty">
+                        {{ ux_icon('lucide:folder-open', {class: 'dash-empty__icon'}) }}
+                        <p>{{ 'dashboard.projects.empty'|trans }}</p>
+                        <a href="{{ path('app_project_new_step1', {_locale: app.request.locale}) }}" class="btn-creat">
+                            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                            {{ 'dashboard.actions.new_project_btn'|trans }}
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="dash-project-list">
+                        {% for project in hero_projects %}
+                            {% set total_tasks = project.tasks|length %}
+                            {% set done_tasks  = project.tasks|filter(t => t.status == 'done')|length %}
+                            {% set progress    = total_tasks > 0 ? ((done_tasks / total_tasks) * 100)|round : 0 %}
+                            <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: project.slug}) }}"
+                               class="dash-project-row">
+                                {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'md'} %}
+                                <div class="dash-project-row__info">
+                                    <span class="dash-project-row__title">{{ project.title }}</span>
+                                    <div class="dash-project-row__meta">
+                                        <span class="dash-project-row__type">{{ ('project_type.' ~ project.projectType)|trans({}, 'messages') }}</span>
+                                        {% if total_tasks > 0 %}
+                                            <span class="dash-project-row__prog">
+                                                <span class="dash-project-row__prog-bar" style="width: {{ progress }}%"></span>
+                                            </span>
+                                            <span class="dash-project-row__prog-label">{{ done_tasks }}/{{ total_tasks }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <span class="status-badge status-badge--{{ project.status }}">
+                                    {{ ('projects.status.' ~ project.status)|trans }}
+                                </span>
+                            </a>
+                        {% endfor %}
+
+                        {% if projects_count == 0 or hero_projects|length < 3 %}
+                            <div class="dash-project-row dash-project-row--cta">
+                                {{ ux_icon('lucide:plus-circle', {class: 'icon-xs'}) }}
+                                <a href="{{ path('app_project_new_step1', {_locale: app.request.locale}) }}">
+                                    {{ 'dashboard.projects.create_next'|trans }}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </section>
+
+            {# ── Activité récente ─────────────────────────────────── #}
+            <section class="dash-panel">
+                <div class="dash-panel__header">
+                    <h2>{{ 'dashboard.activity.title'|trans }}</h2>
+                </div>
+
+                {% if recent_activity is empty %}
+                    <div class="dash-empty">
+                        {{ ux_icon('lucide:activity', {class: 'dash-empty__icon'}) }}
+                        <p>{{ 'dashboard.activity.empty'|trans }}</p>
+                        <span class="dash-empty__hint">{{ 'dashboard.activity.empty_hint'|trans }}</span>
+                    </div>
+                {% else %}
+                    <div class="dash-activity-list">
+                        {% for log in recent_activity %}
+                            {% set meta = action_meta[log.action] ?? { icon: 'lucide:circle', color: 'muted', label: log.action } %}
+                            <div class="dash-activity-item dash-activity-item--{{ meta.color }}">
+                                <span class="dash-activity-item__icon">
+                                    {{ ux_icon(meta.icon, {class: 'icon-xs'}) }}
+                                </span>
+                                <div class="dash-activity-item__body">
+                                    <span class="dash-activity-item__label">{{ meta.label }}</span>
+                                    {% if log.description %}
+                                        <span class="dash-activity-item__name">{{ log.description }}</span>
+                                    {% endif %}
+                                    {% if log.project %}
+                                        <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: log.project.slug}) }}"
+                                           class="dash-activity-item__project">
+                                            {{ log.project.title }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <time class="dash-activity-item__time" datetime="{{ log.createdAt|date('c') }}">
+                                    {{ log.createdAt|date('d/m H:i') }}
+                                </time>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="dash-panel__footer">
+                        <a href="{{ path('app_activity_log', {_locale: app.request.locale}) }}" class="dash-panel__footer-link">
+                            {{ ux_icon('lucide:history', {class: 'icon-3xs'}) }}
+                            Voir toute l'activité
+                        </a>
+                    </div>
+                {% endif %}
+            </section>
+
+        </div>{# /.dash-main-grid #}
+
+    </div>{# /.dash-hero #}
+
+    {# ══════════════════════════════════════════════════════════════
+       SECTION BASSE — Grille de cartes projets
+       ══════════════════════════════════════════════════════════════ #}
+    <section class="dashboard-section recent-projects-full">
+        <div class="dashboard-section-header">
+            <h2>{{ 'dashboard.recent_projects_section.title'|trans }}</h2>
+            {% if projects_count > 4 %}
+                <a href="{{ path('app_project_index', {_locale: app.request.locale}) }}" class="link-more">
                     {{ 'dashboard.recent_projects_section.see_all'|trans }}
                     {{ ux_icon('lucide:arrow-right', {class: 'icon-3xs'}) }}
                 </a>
-            </div>
-
-            <div class="sc-cards-grid">
-                {% if projects is empty %}
-                    <p class="text-muted">{{ 'dashboard.projects.empty'|trans }}</p>
-                {% else %}
-                    {% for project in projects|slice(0, 4) %}
-                        {{ include('workshop/_partials/_project_card_private.html.twig', {
-                            project: project,
-                            role: 'owner',
-                        }) }}
-                    {% endfor %}
-                {% endif %}
-            </div>
-
-            {% if projects|length > 4 %}
-                <div class="load-more-container">
-                    <a href="{{ path('app_project_index') }}" class="btn-load-more">
-                        {{ ux_icon('lucide:chevron-down', {width: 18, height: 18}) }}
-                        {{ 'dashboard.recent_projects_section.see_more'|trans }}
-                    </a>
-                </div>
             {% endif %}
-        </section>
+        </div>
 
-    </div>
+        {% if grid_projects is empty %}
+            <div class="dash-empty" style="padding: 40px 0;">
+                {{ ux_icon('lucide:folder-open', {class: 'dash-empty__icon'}) }}
+                <p>{{ 'dashboard.projects.empty'|trans }}</p>
+            </div>
+        {% else %}
+            <div class="sc-cards-grid">
+                {% for project in grid_projects %}
+                    {{ include('workshop/_partials/_project_card_private.html.twig', {
+                        project: project,
+                        role: 'owner',
+                    }) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+
+</div>
 {% endblock %}

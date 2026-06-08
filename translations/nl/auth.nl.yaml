@@ -9,11 +9,18 @@ meta:
     title: "Inloggen & Aanmelden - Scénart"
     profile_title: "Mijn profiel — Scénart"
 
+# ===== TABBLADEN =====
+tab:
+    login: "Inloggen"
+    register: "Account aanmaken"
+
 # ===== INLOGGEN =====
 login:
-    title: "Inloggen"
+    title: "Welkom terug!"
+    subtitle: "Log in om verder te gaan met je projecten."
     email: "Email"
     password: "Wachtwoord"
+    remember_me: "Mij onthouden"
     submit: "Inloggen"
 
 # ===== AANMELDEN =====
@@ -46,12 +53,20 @@ profile:
         title: "Mijn profiel"
         subtitle: "Beheer je persoonlijke informatie"
 
+    card:
+        member_since: "Lid sinds"
+        last_login: "Ingelogd"
+        view_public: "Mijn openbaar profiel bekijken"
+        project: "project|projecten"
+
     sections:
         identity: "Identiteit"
         identity_desc: "Je publieke informatie"
         security: "Beveiliging"
         security_desc: "Wijzig je wachtwoord"
         stats: "Statistieken"
+        avatar_color: "Avatarkleur"
+        avatar_color_desc: "Pas de kleur van je initiaal aan."
 
     form:
         firstname: "Voornaam"
@@ -62,9 +77,20 @@ profile:
         confirm_password: "Bevestig wachtwoord"
         password_hint: "Laat leeg om je huidige wachtwoord te behouden (min. 8 tekens)"
         btn_save: "Wijzigingen opslaan"
+        btn_cancel: "Annuleren"
+        username_locked_msg: "Wijziging beschikbaar over %count% dag.|Wijziging beschikbaar over %count% dagen."
+        password_show: "Wachtwoord tonen"
+        password_show_confirm: "Bevestiging tonen"
+        avatar_color_hint: "Sla het formulier op om de wijziging toe te passen."
+        rule_length: "Min. 8 tekens"
+        rule_uppercase: "Één hoofdletter (A–Z)"
+        rule_digit: "Één cijfer (0–9)"
+        rule_special: "Één speciaal teken (!@#…)"
 
     stats:
         member_since: "Lid sinds"
         projects: "Gemaakte projecten"
         last_login: "Laatste login"
         never: "Nooit"
+
+show_password: "Wachtwoord weergeven"

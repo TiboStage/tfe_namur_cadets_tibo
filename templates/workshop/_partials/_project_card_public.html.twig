@@ -13,19 +13,21 @@
       - Sinon : CTA varie selon le statut du projet (finished → "Lire" / in_progress → "Suivre").
 #}
 
+{% trans_default_domain 'workshop' %}
+
 {% set comment_count = comment_count|default(0) %}
 {% set viewer_role   = viewer_role|default(null) %}
 
-{# ── Labels ──────────────────────────────────────────────────────────────── #}
-{% set type_label = project.projectType == 'serie' ? 'Série'
-                  : (project.projectType == 'jeu_video' ? 'Jeu vidéo' : 'Film') %}
+{# ── Labels traduits ──────────────────────────────────────────────────────── #}
+{% set type_label = ('project_public.type.' ~ project.projectType)|trans %}
 
 {% set status_class = project.status == 'finished' ? 'complete' : 'ongoing' %}
-{% set status_label = project.status == 'finished' ? 'Histoire complète ✨'
-                    : (project.status == 'in_progress' ? 'En cours ✍️' : 'À venir') %}
+{% set status_key   = project.status == 'finished' ? 'finished'
+                    : (project.status == 'in_progress' ? 'in_progress' : 'upcoming') %}
+{% set status_label = ('project_public.status.' ~ status_key)|trans %}
 
-{% set cta_label = project.status == 'finished' ? 'Lire le scénario'
-                 : (project.status == 'in_progress' ? 'Suivre la parution' : 'Découvrir') %}
+{% set cta_key   = status_key %}
+{% set cta_label = ('project_public.cta.' ~ cta_key)|trans %}
 
 {# ── Compteurs ───────────────────────────────────────────────────────────── #}
 {% set nb_elements = project.scenarioElements|length %}
@@ -52,31 +54,25 @@
     </div>
 
     {# ── Zone image — dégradé dynamique selon le type de projet ─────────── #}
-    {% set _type_colors = {
-        film:      '#E63946',
-        serie:     '#A855F7',
-        jeu_video: '#2A9D8F',
-        custom:    '#6B7280'
-    } %}
-    {% set _type_color = _type_colors[project.projectType] ?? '#6B7280' %}
-    <div class="sc-card__media sc-card__media--{{ project.projectType != 'custom' ? project.projectType : 'film' }}"
-         {% if not project.coverFilename %}
-         style="background: linear-gradient(135deg, {{ _type_color }}33 0%, #0d0d10 100%);"
-         {% endif %}>
+    <div class="sc-card__media sc-card__media--{{ project.projectType }}">
         {% if project.coverFilename %}
             <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
                  alt="{{ project.title }}"
                  class="sc-card__cover-img">
+        {% else %}
+            <div class="sc-card__type-icon">
+                {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'lg'} %}
+            </div>
         {% endif %}
         <div class="sc-card__media-overlay"></div>
         <div class="sc-card__media-badges">
             <span class="sc-card__mbadge">
                 {{ ux_icon('lucide:layers', {style: 'width:10px;height:10px'}) }}
-                {{ nb_elements }} scène{{ nb_elements != 1 ? 's' : '' }}
+                {{ 'project_public.scene_count'|trans({'%count%': nb_elements}) }}
             </span>
             <span class="sc-card__mbadge">
                 {{ ux_icon('lucide:users', {style: 'width:10px;height:10px'}) }}
-                {{ nb_chars }} perso{{ nb_chars != 1 ? 's' : '' }}
+                {{ 'project_public.char_count'|trans({'%count%': nb_chars}) }}
             </span>
         </div>
     </div>
@@ -89,7 +85,7 @@
         <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: project.createdBy.username}) }}"
            class="sc-card__creator">
             {{ include('_partials/_user_avatar.html.twig', {user: project.createdBy, size: 'xs'}) }}
-            <span class="sc-card__creator-name">par @{{ project.createdBy.username }}</span>
+            <span class="sc-card__creator-name">{{ 'project_public.by'|trans }} @{{ project.createdBy.username }}</span>
         </a>
 
         {# Description #}
@@ -104,7 +100,7 @@
         <div class="sc-card__footer">
             <span class="sc-card__date">
                 {{ ux_icon('lucide:message-circle', {style: 'width:11px;height:11px'}) }}
-                {{ comment_count }} commentaire{{ comment_count != 1 ? 's' : '' }}
+                {{ comment_count }}
             </span>
 
             <div class="sc-card__footer-actions">
@@ -113,7 +109,7 @@
                     <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: project.slug}) }}"
                        class="sc-card__cta-workshop">
                         {{ ux_icon('lucide:pencil', {style: 'width:11px;height:11px'}) }}
-                        Atelier
+                        {{ 'project_public.workshop_btn'|trans }}
                     </a>
                 {% endif %}
 

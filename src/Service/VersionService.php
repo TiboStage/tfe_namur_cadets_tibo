@@ -4,7 +4,7 @@ namespace App\Service;
 
 class VersionService
 {
-    public const VERSION = '0.1.1';
+    public const VERSION = '0.8.0';
 
     public function getVersion(): string
     {

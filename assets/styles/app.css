@@ -12,11 +12,13 @@
 @import "components/_form-fields.css";
 @import "components/_cookie-banner.css";
 @import "components/_consent-banner.css";
+@import "components/_dashboard-mockup.css";
 @import "components/_publish-modal.css";
 @import "components/_notifications.css";
 @import "components/_comments.css";
 @import "components/_report-modal.css";
 @import "components/_avatar.css";
+@import "components/_project-icon.css";
 
 /* --- 3. LAYOUTS (La structure commune) --- */
 @import "layouts/website/_navbar.css";
@@ -71,6 +73,12 @@
 
 /* Gestion des membres de projet */
 @import "pages/workshop/_members.css";
+
+/* Liste des tâches */
+@import "pages/workshop/_tasks.css";
+
+/* Notes */
+@import "pages/workshop/_notes.css";
 
 /* --- 5. EXCEPTIONS & ERREURS --- */
 @import "components/_error-pages.css";

@@ -1,0 +1,23 @@
+{# ── Icône / Avatar projet ──────────────────────────────────────
+   Paramètres :
+     project — objet Project (doit exposer .projectType)
+     size    — 'xs' | 'sm' | 'md' | 'lg'   (défaut : 'md')
+
+   Rendu : <span class="proj-icon proj-icon--{type} proj-icon--{size}">
+               <svg .../>
+           </span>
+   ─────────────────────────────────────────────────────────────── #}
+
+{% set _type_icons = {
+    film:      'lucide:film',
+    serie:     'lucide:tv-2',
+    jeu_video: 'lucide:gamepad-2',
+    custom:    'lucide:scroll'
+} %}
+
+{% set _icon = _type_icons[project.projectType] ?? 'lucide:scroll' %}
+{% set _size = size ?? 'md' %}
+
+<span class="proj-icon proj-icon--{{ project.projectType }} proj-icon--{{ _size }}">
+    {{- ux_icon(_icon) -}}
+</span>

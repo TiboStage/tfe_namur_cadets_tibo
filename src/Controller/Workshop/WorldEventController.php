@@ -8,6 +8,7 @@ use App\Entity\Project;
 use App\Entity\WorldEvent;
 use App\Form\WorldEventType;
 use App\Repository\WorldEventRepository;
+use App\Service\ActivityLogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,6 +32,7 @@ class WorldEventController extends AbstractController
         private readonly WorldEventRepository $worldEventRepository,
         private readonly EntityManagerInterface $em,
         private readonly TranslatorInterface $translator,
+        private readonly ActivityLogService $activityLog,
     ) {}
 
     /**
@@ -44,9 +46,27 @@ class WorldEventController extends AbstractController
 
         $events = $this->worldEventRepository->findByProjectChronological($project);
 
+        // Regrouper par année
+        $byYear = [];
+        foreach ($events as $event) {
+            $byYear[$event->getYear()][] = $event;
+        }
+
+        // Stats par type
+        $typeCounts = [];
+        foreach ($events as $event) {
+            $type = $event->getEventType() ?? 'other';
+            $typeCounts[$type] = ($typeCounts[$type] ?? 0) + 1;
+        }
+
         return $this->render('workshop/projects/timeline/index.html.twig', [
-            'project' => $project,
-            'events' => $events,
+            'project'    => $project,
+            'events'     => $events,
+            'byYear'     => $byYear,
+            'typeCounts' => $typeCounts,
+            'minYear'    => $events ? min(array_keys($byYear)) : null,
+            'maxYear'    => $events ? max(array_keys($byYear)) : null,
+            'readonly'   => $this->isReadOnly($project),
         ]);
     }
 
@@ -70,6 +90,11 @@ class WorldEventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($event);
+            $this->em->flush();
+
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+            $this->activityLog->log('world_event.create', $user, $project, $event->getTitle());
             $this->em->flush();
 
             $this->addFlash('success', $this->translator->trans(

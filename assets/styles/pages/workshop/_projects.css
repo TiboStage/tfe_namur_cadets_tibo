@@ -45,22 +45,150 @@
     border-bottom-color: var(--color-primary);
 }
 
+.project-filter-tab.is-active svg {
+    color: var(--color-primary);
+}
+
 .project-filter-tab__count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 5px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
     background: var(--overlay-sm);
     color: var(--text-muted);
     font-size: 10px;
     font-weight: 700;
+    border-radius: 8px;
 }
 
 .project-filter-tab.is-active .project-filter-tab__count {
     background: var(--color-primary-medium);
     color: var(--color-primary);
+}
+
+/* ── Bouton "Plus" — mobile uniquement ───────────────────── */
+.project-filter-tab__more {
+    display: none;
+    position: relative;
+}
+
+/* Bouton : même base que les tabs + bordure visible */
+.project-filter-tab__more-btn {
+    gap: 5px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color .15s, color .15s, background .15s;
+}
+
+.project-filter-tab__more-btn:hover {
+    color: var(--text-main);
+    border-color: var(--color-border-light);
+    border-bottom-color: transparent;
+}
+
+.project-filter-tab__more.is-open .project-filter-tab__more-btn {
+    color: var(--text-main);
+    border-color: var(--color-border-light);
+    background: var(--color-bg-elevated);
+}
+
+.project-filter-tab__more-btn svg:last-child {
+    transition: transform .15s;
+    opacity: .6;
+}
+
+.project-filter-tab__more.is-open .project-filter-tab__more-btn svg:last-child {
+    transform: rotate(180deg);
+}
+
+/* Menu dropdown */
+.project-filter-tab__more-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border-light);
+    box-shadow: 0 12px 32px rgba(0,0,0,.6);
+    z-index: 50;
+    min-width: 200px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.project-filter-tab__more-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.project-filter-tab__more-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    transition: background .15s ease, color .15s ease;
+}
+
+.project-filter-tab__more-menu a:last-child {
+    border-bottom: none;
+}
+
+.project-filter-tab__more-menu a:hover {
+    background: var(--overlay-sm);
+    color: var(--text-main);
+}
+
+.project-filter-tab__more-menu a.is-active {
+    color: var(--color-primary);
+    background: var(--color-primary-dim);
+}
+
+.project-filter-tab__more-menu a.is-active svg {
+    color: var(--color-primary);
+}
+
+.project-filter-tab__more-menu .project-filter-tab__count {
+    margin-left: auto;
+}
+
+@media (max-width: 640px) {
+    /* Cacher les onglets inactifs, sauf le bouton Plus lui-même */
+    .project-filter-tab:not(.is-active):not(.project-filter-tab__more-btn) {
+        display: none;
+    }
+
+    /* Afficher le bouton Plus */
+    .project-filter-tab__more {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Tabs bar : laisser de la place au btn-creat */
+    .project-filters__tabs {
+        gap: 2px;
+    }
+
+    /* Onglet actif + Plus : taille cohérente */
+    .project-filter-tab {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
 }
 
 /* Pills de rôle */
@@ -288,11 +416,23 @@
 .project-mini-thumb {
     width: 40px;
     height: 40px;
-    background: var(--color-bg-inset);
+    flex-shrink: 0;
     border: 1px solid var(--color-border-light);
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+}
+
+/* Quand c'est un proj-icon (pas de cover), il remplit le thumb */
+.project-mini-thumb .proj-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+.project-mini-thumb .proj-icon svg {
+    width: 18px;
+    height: 18px;
 }
 
 .col-main { flex: 3; display: flex; align-items: center; gap: 15px; }
@@ -327,17 +467,17 @@
     background: var(--color-green-glow);
 }
 
-/* ── 5. FORMULAIRES (CRÉATION/ÉDITION) ─────────────────── */
-.project-form input[type="text"],
-.project-form textarea,
-.project-form select {
-    background: var(--color-bg-inset);
-    border: 1px solid var(--color-border-light);
-    color: var(--text-main);
-    padding: 12px 16px;
-    width: 100%;
-    outline: none;
-}
+/*!* ── 5. FORMULAIRES (CRÉATION/ÉDITION) ─────────────────── *!*/
+/*.project-form input[type="text"],*/
+/*.project-form textarea,*/
+/*.project-form select {*/
+/*    background: var(--color-bg-inset);*/
+/*    border: 1px solid var(--color-border-light);*/
+/*    color: var(--text-main);*/
+/*    padding: 12px 16px;*/
+/*    width: 100%;*/
+/*    outline: none;*/
+/*}*/
 
 .type-selector {
     display: grid;
@@ -368,6 +508,11 @@
 @media (max-width: 768px) {
     .projects-grid { grid-template-columns: 1fr; }
     .project-list-header { display: none !important; }
+    .type-selector { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 400px) {
+    .type-selector { grid-template-columns: 1fr; }
 }
 
 /* ── 7. PAGINATION ──────────────────────────────────────────── */

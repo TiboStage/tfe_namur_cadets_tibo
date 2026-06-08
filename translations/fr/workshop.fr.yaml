@@ -9,6 +9,11 @@ navbar:
     actions:
         profile: "Profil"
         logout: "Déconnexion"
+        admin: "Administration"
+        moderation: "Modération"
+        public_profile: "Profil public"
+        my_projects: "Mes projets"
+        open_menu: "Ouvrir le menu"
         search:
             placeholder: "Rechercher une scène, un personnage..."
     links:
@@ -17,10 +22,15 @@ navbar:
 #        collaborations: "Collaborations"
         files: "Documentations"
         explore:        "Exploration"
+        documentation:  "Documentation"
         news:           "Actualités"
         create:         "+ Créer"
     recent_projects: "Projets récents"
     current_badge:      "En cours"
+    notifications:
+        title: "Notifications"
+        mark_all: "Tout marquer lu"
+        see_all: "Voir toutes les notifications"
 # ===== DASHBOARD =====
 dashboard:
     greeting: "Bonjour,"
@@ -40,15 +50,16 @@ dashboard:
     actions:
         new_project_title: "Nouveau projet"
         new_project_desc: "Jeu vidéo, série, film"
-        new_project_btn: "+ Créer"
+        new_project_btn: "Créer"
         export_title: "Exporter un projet"
         export_desc: "Format (.pdf, .xml)"
         export_btn: "↓ Exporter"
 
     projects:
-        title: "Projets en cours"
+        title: "Mes projets"
         see_more: "Voir plus ↗"
         empty: "Aucun projet pour le moment. Créez-en un !"
+        create_next: "Continuer à créer un projet →"
 
     recent_projects:
         title: "Projets récents"
@@ -63,24 +74,87 @@ dashboard:
         ago: "il y a"
         min: "min."
         no_activity: "Aucune activité pour le moment"
+        empty: "Pas encore d'activité enregistrée."
+        empty_hint: "Crée un projet, un personnage ou une scène pour commencer."
+
+    default_author: "Auteur"
 
     quick_actions:
+        title: "Raccourcis"
         new_project: "Nouveau projet"
         new_character: "Nouveau personnage"
         new_location: "Nouveau lieu"
         new_scene: "Nouvelle scène"
+
+    recent_projects_section:
+        title: "Projets récents"
+        see_all: "Voir tous"
+        see_more: "Voir plus de projets"
 
 # ===== PROJETS =====
 projects:
     index:
         title: "Mes projets"
         subtitle: "projet(s) au total"
-        btn_new: "+ Nouveau projet"
+        btn_new: "+ Créer"
         empty: "Aucun projet pour le moment."
         empty_btn: "Créer mon premier projet"
         modified: "Modifié le"
         btn_open: "Ouvrir"
         btn_edit: "Modifier"
+        tab_all: "Tous"
+        tab_mine: "Mes projets"
+        tab_collab: "Collaborations"
+        tab_more: "Plus"
+        role_all: "Tous les rôles"
+        role_filter_suffix: "· rôle filtré"
+        empty_collab: "Aucune collaboration."
+        empty_collab_role: "Aucune collaboration pour ce rôle."
+        col_name: "Projets"
+        col_status: "Statut"
+        col_role: "Rôle"
+        col_progress: "Progression"
+        col_entities: "Entités"
+        col_date: "Modifié"
+        btn_edit_arrow: "Éditer"
+        btn_open_arrow: "Ouvrir"
+        prev: "Précédent"
+        next: "Suivant"
+        page_of: "Page %page% / %total%"
+
+    roles:
+        owner: "Propriétaire"
+        lead: "Co-responsable"
+        editor: "Éditeur"
+        contributor: "Contributeur"
+
+    visibility:
+        public: "En ligne"
+        private: "Partagé"
+        unlisted: "Non répertorié"
+        unpublished: "Non publié"
+
+    status:
+        finished: "Terminé"
+        completed: "Terminé"
+        in_progress: "En cours"
+        draft: "Brouillon"
+        archived: "Archivé"
+
+    cta:
+        owner: "Éditer le projet"
+        lead: "Reprendre le travail"
+        collab: "Ouvrir l'atelier"
+
+    card:
+        element: "élément|éléments"
+        character: "personnage|personnages"
+        location: "lieu|lieux"
+        task: "tâche|tâches"
+        no_tasks: "Aucune tâche"
+        overdue: "%count% tâche en retard|%count% tâches en retard"
+        all_up_to_date: "Toutes les tâches sont à jour"
+        tasks_done: "%done%/%total% tâche|%done%/%total% tâches"
 
 #    new:
 #        title: "Nouveau projet"
@@ -104,6 +178,20 @@ projects:
         danger_desc: "La suppression est irréversible. Toutes les données du projet seront perdues."
         danger_btn: "Supprimer ce projet"
         danger_confirm: "Supprimer définitivement ce projet ?"
+        members:
+            title: "Collaborateurs"
+            hint: "Les collaborateurs peuvent accéder au projet selon leur rôle. Seul vous (le propriétaire) pouvez les gérer."
+            username_label: "Nom d'utilisateur"
+            username_ph: "ex : johndoe"
+            role_label: "Rôle"
+            role_contributor: "Contributeur — lecture + suggestions"
+            role_editor: "Éditeur — peut modifier le contenu"
+            role_lead: "Co-responsable — accès complet"
+            invite_btn: "Inviter"
+            empty: "Aucun collaborateur pour l'instant."
+            since: "Depuis"
+            remove_title: "Retirer %username%"
+            remove_confirm: "Retirer %username% du projet ?"
 
     show:
         back: "← Mes projets"
@@ -116,8 +204,29 @@ projects:
         section_locations: "Lieux"
         section_tags: "Tags"
         btn_manage: "Gérer"
-        btn_overview: "Aperçu"      # FR
-        btn_manuscript: "Manuscrit"   # FR
+        btn_overview: "Aperçu"
+        btn_manuscript: "Manuscrit"
+        dashboard_no_desc: "Aucune description pour ce projet."
+        stat_scenes: "Scènes"
+        stat_characters: "Personnages"
+        stat_locations: "Lieux"
+        stat_last_update: "Dernière modification"
+        recent_activity: "Activité récente"
+        empty_activity: "Aucune activité récente"
+        empty_activity_hint: "Commencez à écrire pour voir vos modifications ici"
+        recent_comments: "Commentaires récents"
+        empty_comments: "Aucun commentaire pour l'instant."
+        see_all_comments: "Voir tous les commentaires"
+        tasks_done: "complétées"
+        quick_access: "Accès rapides"
+        create_scene: "Créer une scène"
+        new_character: "Nouveau personnage"
+        new_location: "Nouveau lieu"
+        info_section: "Informations"
+        info_type: "Type de projet"
+        info_created: "Créé le"
+        info_status: "Statut"
+        settings_btn: "Paramètres du projet"
 
 # ===== CRÉATION DE PROJET (FUNNEL) =====
 project_new:
@@ -270,6 +379,7 @@ project_new:
 character:
     index:
         title: "Personnages"
+        subtitle: "Gérez les personnages de votre projet"
         new_btn: "+ Nouveau personnage"
         empty: "Aucun personnage pour le moment."
         empty_create: "Créer le premier personnage"
@@ -279,41 +389,85 @@ character:
         back: "← Personnages"
         submit: "Créer le personnage →"
         cancel: "Annuler"
+        advanced: "Paramètres avancés"
 
     edit:
         title: "Modifier le personnage"
         submit: "Enregistrer"
         cancel: "Annuler"
+        advanced: "Paramètres avancés"
         danger_zone: "Zone de danger"
         danger_desc: "La suppression est irréversible."
         delete_btn: "Supprimer ce personnage"
         delete_confirm: "Supprimer ce personnage ?"
 
     show:
-        back: "← Personnages"          # déjà là
-        edit_btn: "Modifier"            # déjà là
-        no_description: "..."           # déjà là
-        description: "Description"      # ← AJOUTER
-        biography: "Biographie"         # ← AJOUTER
-        goals: "Objectifs"              # ← AJOUTER
-        motivations: "Motivations"      # ← AJOUTER
-        arc: "Arc narratif"             # ← AJOUTER
+        back: "← Personnages"
+        edit_btn: "Modifier"
+        no_description: "Aucune description pour ce personnage."
+        description: "Description"
+        biography: "Biographie"
+        goals: "Objectifs"
+        motivations: "Motivations"
+        arc: "Arc narratif"
 
-    # Sous character: → info: (après "role")
     info:
-        title: "Informations"           # déjà là
-        role: "Rôle"                    # déjà là
-        created_at: "Créé le"           # déjà là
-        relations: "Relations"          # déjà là
-        no_relations: "..."             # déjà là
-        firstname: "Prénom"             # ← AJOUTER
-        lastname: "Nom"                 # ← AJOUTER
+        title: "Informations"
+        role: "Rôle"
+        created_at: "Créé le"
+        relations: "Relations"
+        no_relations: "Aucune relation définie."
+        firstname: "Prénom"
+        lastname: "Nom"
+
+    form:
+        section_identity: "Identité"
+        section_psychology: "Psychologie & arc"
+        name: "Nom du personnage"
+        name_placeholder: "Ex : Arthur Dupont"
+        firstname: "Prénom"
+        firstname_placeholder: "Ex : Arthur"
+        lastname: "Nom de famille"
+        lastname_placeholder: "Ex : Dupont"
+        nickname: "Surnom / Alias"
+        nickname_placeholder: "Ex : « L'Architecte »"
+        role: "Rôle narratif"
+        description: "Description courte"
+        description_placeholder: "Une brève description de ce personnage..."
+        biography: "Biographie"
+        biography_placeholder: "L'histoire de vie de ce personnage..."
+        goals: "Objectifs"
+        goals_placeholder: "Ce que ce personnage veut accomplir..."
+        motivations: "Motivations"
+        motivations_placeholder: "Pourquoi ce personnage agit-il ainsi..."
+        arc: "Arc narratif"
+        arc_placeholder: "Comment ce personnage évolue-t-il au fil de l'histoire..."
+
+    filter:
+        all: "Tous"
+        protagonist: "Protagoniste"
+        antagonist: "Antagoniste"
+        secondary: "Secondaire"
+        figurant: "Figurant"
+
+    sort:
+        az: "A → Z"
+        za: "Z → A"
+        date_desc: "Plus récent"
+        date_asc: "Plus ancien"
+
+    role:
+        protagonist: "Protagoniste"
+        antagonist: "Antagoniste"
+        secondary: "Secondaire"
+        figurant: "Figurant"
 
 
 # ===== LIEUX =====
 location:
     index:
         title: "Lieux"
+        subtitle: "Gérez les lieux de votre univers narratif"
         new_btn: "+ Nouveau lieu"
         empty: "Aucun lieu pour le moment."
         empty_create: "Créer le premier lieu"
@@ -323,11 +477,13 @@ location:
         back: "← Lieux"
         submit: "Créer le lieu →"
         cancel: "Annuler"
+        advanced: "Paramètres avancés"
 
     edit:
         title: "Modifier le lieu"
         submit: "Enregistrer"
         cancel: "Annuler"
+        advanced: "Paramètres avancés"
         danger_zone: "Zone de danger"
         danger_desc: "La suppression est irréversible."
         delete_btn: "Supprimer ce lieu"
@@ -337,9 +493,595 @@ location:
         back: "← Lieux"
         edit_btn: "Modifier"
         no_description: "Aucune description pour ce lieu."
+        children: "Sous-lieux"
+        no_children: "Aucun sous-lieu."
+        parent: "Lieu parent"
 
     info:
         title: "Informations"
         type: "Type"
         created_at: "Créé le"
         updated_at: "Modifié le"
+        parent: "Lieu parent"
+
+    form:
+        section_basic: "Informations générales"
+        name: "Nom du lieu"
+        name_placeholder: "Ex : La forêt de Brume…"
+        type: "Type de lieu"
+        description: "Description"
+        description_placeholder: "Décrivez l'ambiance, l'architecture, l'atmosphère…"
+
+    filter:
+        all: "Tous"
+        interior: "Intérieur"
+        exterior: "Extérieur"
+        fantasy: "Fantastique"
+        historical: "Historique"
+        futuristic: "Futuriste"
+
+    sort:
+        az: "A → Z"
+        za: "Z → A"
+        date_desc: "Plus récent"
+        date_asc: "Plus ancien"
+
+    type:
+        interior: "Intérieur"
+        exterior: "Extérieur"
+        fantasy: "Fantastique"
+        historical: "Historique"
+        futuristic: "Futuriste"
+
+# ===== EXPLORATION =====
+explore:
+    tag: "Exploration"
+    title: "Projets publics"
+    projects_count: "projet(s) disponible(s)"
+    search_placeholder: "Rechercher un projet, un auteur..."
+    filter:
+        all: "Tous"
+        film: "Film"
+        serie: "Série"
+        jeu_video: "Jeu vidéo"
+        custom: "Custom"
+        mode: "Mode"
+        mode_project: "Projet"
+        mode_author: "Auteur"
+        keywords: "Mots clé"
+        search_hint: "Titre d'un univers, nom d'un auteur…"
+        project_types: "Types de projets"
+        all_types: "Tous types"
+        films: "Films"
+        series: "Séries"
+        games: "Jeux Vidéo"
+        add_filters: "Ajouter des filtres"
+        genre_universal: "Universel"
+        sort: "Trier par"
+        sort_recent: "Plus récents"
+        sort_oldest: "Plus anciens"
+        sort_az: "A-Z"
+        sort_za: "Z-A"
+        sort_name_az: "Nom A-Z"
+        sort_name_za: "Nom Z-A"
+    section:
+        films: "Les derniers films"
+        series: "Les dernières séries"
+        games: "Les derniers jeux vidéo"
+        creators: "Studios & auteurs actifs"
+        see_all: "Voir tous"
+        empty_films: "Aucun film public pour l'instant."
+        empty_series: "Aucune série publique pour l'instant."
+        empty_games: "Aucun jeu vidéo public pour l'instant."
+    empty: "Aucun projet ne correspond à votre recherche."
+    reset_filters: "Réinitialiser les filtres"
+
+# ===== ACTIONS COMMUNES =====
+common:
+    edit: "Modifier"
+    delete: "Supprimer"
+    cancel: "Annuler"
+    update: "Enregistrer"
+    create: "Créer"
+    created_at: "Créé le"
+    save: "Sauvegarder"
+    close: "Fermer"
+    optional: "(optionnel)"
+    search: "Rechercher"
+    back: "Retour"
+
+# ===== NOTES =====
+note:
+    index:
+        title: "Notes"
+        subtitle: "Vos notes et idées pour ce projet"
+        create: "+ Nouvelle note"
+        empty:
+            title: "Aucune note pour le moment"
+            message: "Créez votre première note pour organiser vos idées."
+        create_first: "Créer une note"
+
+    new:
+        title: "Nouvelle note"
+
+    edit:
+        title: "Modifier la note"
+
+    back: "← Notes"
+    confirm_delete: "Supprimer cette note définitivement ?"
+
+    show:
+        content: "Contenu"
+        assigned_to: "Assigné à"
+        author: "Auteur"
+
+    filter:
+        all: "Toutes"
+        notes: "Notes"
+        todos: "À faire"
+        done: "Terminées"
+
+    status:
+        note: "Note"
+        todo: "À faire"
+        done: "Terminé"
+        archived: "Archivé"
+
+    priority:
+        low: "Faible"
+        medium: "Normale"
+        high: "Haute"
+        urgent: "Urgente"
+
+    form:
+        section_main: "Contenu de la note"
+        section_organization: "Organisation"
+        title:
+            placeholder: "Titre de la note..."
+        content:
+            placeholder: "Rédigez votre note ici..."
+
+# ===== TÂCHES =====
+task:
+    index:
+        title: "Tâches"
+        subtitle: "Gérez les tâches de votre projet"
+        create: "+ Nouvelle tâche"
+        empty:
+            title: "Aucune tâche pour le moment"
+            message: "Créez votre première tâche pour organiser votre travail."
+        create_first: "Créer une tâche"
+    summary:
+        overdue: "En retard"
+        urgent: "Urgentes"
+        progress: "Terminées"
+    filter:
+        all: "Tous"
+        all_priorities: "Toutes priorités"
+    col:
+        name: "Tâche"
+        description: "Description"
+        status: "Statut"
+        priority: "Priorité"
+        assignee: "Assigné"
+    toast:
+        deleted: "Tâche supprimée"
+        undo: "Annuler"
+        status_changed: "Statut mis à jour"
+
+    new:
+        title: "Nouvelle tâche"
+
+    edit:
+        title: "Modifier la tâche"
+
+    back: "← Tâches"
+    confirm_delete: "Supprimer cette tâche définitivement ?"
+    unassigned: "Non assigné"
+
+    show:
+        description: "Description"
+        assigned_to: "Assigné à"
+        created_by: "Créé par"
+
+    status:
+        todo: "À faire"
+        in_progress: "En cours"
+        review: "En révision"
+        done: "Terminé"
+
+    priority:
+        low: "Faible"
+        medium: "Normale"
+        high: "Haute"
+        urgent: "Urgente"
+
+    form:
+        section_main: "Informations principales"
+        section_organization: "Organisation"
+        title:
+            placeholder: "Titre de la tâche..."
+        description:
+            placeholder: "Description de la tâche..."
+
+# ===== CHRONOLOGIE =====
+world_event:
+    index:
+        title: "Chronologie"
+        subtitle: "Les événements de votre univers narratif"
+        create: "+ Nouvel événement"
+        empty:
+            title: "Aucun événement pour le moment"
+            message: "Créez votre premier événement pour construire la chronologie de votre univers."
+        create_first: "Créer un événement"
+
+    new:
+        title: "Nouvel événement"
+
+    edit:
+        title: "Modifier l'événement"
+
+    back: "← Chronologie"
+    confirm_delete: "Supprimer cet événement définitivement ?"
+    year: "An"
+
+    show:
+        date: "Date narrative"
+        description: "Description"
+        location: "Lieu"
+
+    form:
+        section_main: "Informations"
+        section_date: "Date narrative"
+        section_location: "Lieu lié"
+        date_help: "Utilisez les dates fictives de votre univers (ex : An 342, Mois 7, Jour 15)"
+        title:
+            placeholder: "Titre de l'événement..."
+        description:
+            placeholder: "Décrivez cet événement..."
+        year:
+            placeholder: "An (ex : 342)"
+        month:
+            placeholder: "Mois (1-12)"
+        day:
+            placeholder: "Jour (1-31)"
+
+# ===== MANUSCRIT =====
+manuscript:
+    index:
+        title: "Manuscrit"
+        btn_overview: "Aperçu projet"
+        btn_new: "Nouvel élément"
+        empty:
+            title: "Commencez votre manuscrit"
+            message: "Créez votre premier élément narratif pour commencer l'écriture."
+            btn: "Créer le premier élément"
+        stats:
+            folder: "dossier|dossiers"
+            script: "script|scripts"
+            word: "mot|mots"
+            note: "note liée|notes liées"
+        tree:
+            add_element: "Ajouter un élément"
+            add_first_child: "Ajouter un premier élément"
+            add_root: "Ajouter un élément racine"
+            empty_folder: "Vide"
+            rename: "Renommer"
+
+    new:
+        title: "Nouvel élément"
+        context_label: "Ajouter dans"
+        root_path: "Racine du manuscrit"
+        type_question: "Quel type d'élément ?"
+        type_folder:
+            name: "Dossier"
+            desc: "Regroupe des éléments enfants. Acts, épisodes, séquences…"
+        type_script:
+            name: "Script"
+            badge: "Page d'écriture"
+            desc: "Page rédigeable au format Fountain. Scènes, dialogues, actions…"
+        field_title: "Titre"
+        placeholder: "Donnez un titre à cet élément…"
+        cancel: "Annuler"
+        submit_folder: "Créer le dossier"
+        submit_script: "Créer le script"
+        type_hint_script: "— SCÈNE"
+
+    show:
+        leaf_badge: "Script"
+        folder_badge: "Dossier"
+        child_count: "élément|éléments"
+        add_child: "Ajouter un élément enfant"
+        empty_folder: "Ce dossier est vide."
+        create_first: "Créer le premier élément"
+        reading_btn: "Lecture"
+        save_indicator: "Sauvegardé"
+        save_btn: "Sauvegarder"
+        inspector:
+            title: "Inspecteur"
+            element_notes: "Notes de cet élément"
+            element_notes_empty: "Aucune note liée à cet élément."
+            new_note: "Nouvelle note"
+            all_notes: "Toutes"
+            element_tasks: "Tâches de cet élément"
+            element_tasks_empty: "Aucune tâche liée à cet élément."
+            new_task: "Nouvelle tâche"
+            detected_chars: "Personnages détectés"
+            detected_chars_hint: "Écrivez un nom en MAJUSCULES pour le détecter."
+            project_notes: "Notes du projet"
+            project_notes_empty: "Aucune note de projet active."
+            all_project_notes: "Voir toutes les notes"
+            stats: "Statistiques"
+            stat_words: "Mots"
+            stat_chars: "Caractères"
+            stat_last_saved: "Dernière sauvegarde"
+        statusbar:
+            hint: "Tab : changer le type · Entrée : nouveau bloc · ⌫ vide : supprimer"
+
+    editor:
+        type:
+            action: "Action"
+            scene: "Décor"
+            character: "Personnage"
+            dialogue: "Dialogue"
+            parenthetical: "Didascalie"
+            transition: "Transition"
+        ph:
+            action: "Description de la scène…"
+            scene: "INT./EXT. LIEU — JOUR/NUIT"
+            character: "NOM DU PERSONNAGE"
+            dialogue: "Réplique du personnage…"
+            parenthetical: "(didascalie)"
+            transition: "FONDU ENCHAÎNÉ :"
+        mention:
+            char: "Personnage"
+            loc: "Lieu"
+            hint: "↑↓ naviguer · ↵ valider · Échap fermer"
+        detect:
+            hint: "Utilisez des blocs Personnage pour détecter les noms."
+        mode:
+            reading: "Lecture"
+            writing: "Écriture"
+        save:
+            dirty: "Non sauvegardé"
+            saving: "Sauvegarde…"
+            saved: "Sauvegardé"
+            error: "Erreur"
+            at: "Sauvegardé à %time%"
+        stats:
+            word_one: "mot"
+            word_other: "mots"
+            char_one: "caractère"
+            char_other: "caractères"
+        note:
+            aria: "Ajouter une note sur ce bloc"
+
+# ===== FUNNEL CRÉATION PROJET =====
+funnel:
+    layout:
+        nav_label: "Étapes de création"
+        step_type: "TYPE"
+        step_infos: "INFOS"
+        step_structure: "STRUCTURE"
+        cancel: "Annuler"
+    step1:
+        page_title: "Nouveau projet — Type · ScénArt"
+        title: "Quel type de projet créez-vous ?"
+        subtitle: "La structure narrative sera adaptée à votre choix. Vous pourrez la personnaliser à l'étape suivante."
+        film_label: "Film"
+        film_desc: "Long métrage, court métrage, documentaire"
+        film_hint: "Actes → Séquences → Scènes"
+        serie_label: "Série"
+        serie_desc: "Saisons, épisodes, arcs narratifs"
+        serie_hint: "Saisons → Épisodes → Scènes"
+        game_label: "Jeu vidéo"
+        game_desc: "Chapitres, quêtes, zones, cinématiques"
+        game_hint: "Chapitres → Niveaux → Scènes"
+    step2:
+        page_title: "Nouveau projet — Titre · ScénArt"
+        title: "Donnez un titre à votre projet"
+        subtitle: "Vous pourrez le modifier à tout moment depuis les paramètres."
+        field_title: "Titre"
+        field_desc: "Description"
+        field_genres: "Genre(s)"
+        optional: "(optionnel)"
+        optional_genres: "(optionnel — max 3)"
+        placeholder_title: "Ex : Le Dernier Acte, Chroniques d'Arathos, Saison 1…"
+        placeholder_desc: "Décrivez brièvement votre projet : univers, thèmes, intention narrative…"
+        genres_hint: "Aidez la communauté à trouver votre projet. Sans sélection, il sera marqué « Non classé »."
+        genres_count_one: "1 genre sélectionné"
+        genres_count_many: "%n% genres sélectionnés"
+        genres_search_placeholder: "Filtrer les genres..."
+        genres_no_results: "Aucun genre ne correspond à cette recherche."
+        btn_back: "Retour"
+        btn_next: "Continuer"
+    step3:
+        page_title: "Nouveau projet — Structure · ScénArt"
+        title: "Quelle profondeur pour votre structure ?"
+        subtitle: "Choisissez le nombre de niveaux narratifs. Les noms sont personnalisables."
+        depth_label: "Nombre de niveaux"
+        depth_levels: "niveaux"
+        levels_label: "Noms des niveaux"
+        levels_hint: "Noms pré-remplis selon le type de projet. Modifiez-les librement."
+        preview: "Aperçu de la structure"
+        btn_back: "Retour"
+        btn_create: "Créer mon projet"
+        label_content: "contenu"
+        label_others: "+ d'autres %name%…"
+        label_level: "Niveau %n%"
+        film_act: "Acte"
+        film_sequence: "Séquence"
+        film_scene: "Scène"
+        film_sub_scene: "Sous-scène"
+        serie_season: "Saison"
+        serie_episode: "Épisode"
+        serie_act: "Acte"
+        serie_scene: "Scène"
+        game_chapter: "Chapitre"
+        game_level: "Niveau"
+        game_zone: "Zone"
+        game_scene: "Scène"
+
+# ===== NAVIGATION SIDEBAR =====
+nav:
+    writing: "Écriture"
+    overview: "Aperçu"
+    manuscript: "Manuscrit"
+    add_root: "Ajouter un élément racine"
+    add_child: "Ajouter un enfant"
+    timeline: "Chronologie"
+    universe: "Univers"
+    characters: "Personnages"
+    locations: "Lieux"
+    production: "Production"
+    tasks: "Tâches"
+    notes: "Notes"
+    collapse: "Réduire"
+    readonly_mode: "Mode lecture"
+    public_page: "Page publique"
+    online: "En ligne"
+    live: "Live"
+    private_vis: "Privé"
+    unpublished: "Non publié"
+    settings: "Paramètres du projet"
+
+# ===== MODAL DE PUBLICATION =====
+publish_modal:
+    title: "Publication du projet"
+    close: "Fermer"
+    unpublished_label: "Non publié"
+    unpublished_desc: "Visible uniquement par vous."
+    private_label: "Privé"
+    private_desc: "Visible par les collaborateurs invités."
+    public_label: "En ligne"
+    public_desc: "Visible par tous les visiteurs."
+    content_title: "Contenu à publier"
+    content_hint: "Choisissez ce qui sera visible en ligne."
+    select_all: "Tout sélectionner"
+    deselect_all: "Tout désélectionner"
+    element: "%count% élément|%count% éléments"
+    cancel: "Annuler"
+    apply: "Appliquer"
+
+# ===== SETTINGS PROJET =====
+settings:
+    title: "Paramètres"
+    tabs:
+        label: "Onglets des paramètres"
+        general: "Informations"
+        structure: "Structure"
+        members: "Collaborateurs"
+        danger: "Danger"
+    types:
+        film: "Film"
+        serie: "Série"
+        jeu_video: "Jeu vidéo"
+        custom: "Custom"
+    statuses:
+        draft: "Brouillon"
+        in_progress: "En cours"
+        completed: "Terminé"
+        archived: "Archivé"
+    general:
+        title: "Informations générales"
+        hint: "Titre, description et état d'avancement du projet."
+        field_title: "Titre"
+        field_description: "Description"
+        optional: "(optionnel)"
+        field_type: "Type"
+        type_readonly: "non modifiable"
+        field_status: "Statut"
+    genres:
+        title: "Genre(s)"
+        hint: "Choisissez jusqu'à 3 genres. Sans sélection, le projet sera affiché comme « Non classé »."
+        search_placeholder: "Filtrer les genres..."
+        no_results: "Aucun genre ne correspond à cette recherche."
+    manuscript:
+        title: "Paramètres du manuscrit"
+        hint: "Utilisés pour estimer les pages, la durée à l'écran et le temps de lecture dans l'éditeur."
+        words_per_page: "Mots par page"
+        words_per_page_default: "(std : 170)"
+        unit_words: "mots"
+    narrative:
+        title: "Niveaux narratifs"
+    invite:
+        title: "Inviter un collaborateur"
+        placeholder: "ex : alice_writes"
+    members_list:
+        title: "Membres actuels"
+        remove_title: "Retirer %username%"
+    danger:
+        title: "Supprimer le projet"
+    btn:
+        save: "Enregistrer"
+        cancel: "Annuler"
+        delete: "Supprimer"
+
+# ===== COMMENTAIRES (votes) =====
+comment:
+    vote:
+        helpful: "Utile"
+        not_helpful: "Pas utile"
+        login_required: "Connectez-vous pour voter"
+
+# ===== SECTION COMMENTAIRES (templates) =====
+comment_section:
+    title: "Commentaires"
+    form:
+        placeholder: "Partagez votre avis sur ce projet…"
+        hint: "2 – 2000 caractères"
+        submit: "Commenter"
+        login: "Connectez-vous"
+        login_suffix: "pour laisser un commentaire."
+    empty: "Aucun commentaire pour l'instant. Soyez le premier !"
+    reply: "↩ Répondre"
+    cancel: "× Annuler"
+    report: "Signaler"
+    delete: "Supprimer"
+    delete_confirm: "Supprimer ce commentaire ?"
+    hidden_badge: "masqué"
+    reply_placeholder: "Votre réponse…"
+    reply_hint: "Réponse à %username%"
+    reply_submit: "Répondre"
+
+# ===== CARTE CRÉATEUR =====
+creator:
+    card:
+        project_count: "{0} aucun projet|{1} %count% projet|]1,Inf] %count% projets"
+        member_since: "Membre depuis :"
+        no_bio: "Cet auteur n'a pas encore rédigé de biographie."
+        support_singular: "soutien"
+        support_plural: "soutiens"
+        see_profile: "Voir le profil"
+
+# ===== CARTE PROJET PUBLIC =====
+project_public:
+    type:
+        film: "Film"
+        serie: "Série"
+        jeu_video: "Jeu vidéo"
+        custom: "Custom"
+    status:
+        finished: "Terminé"
+        in_progress: "En cours"
+        upcoming: "Brouillon"
+    cta:
+        finished: "Lire le scénario"
+        in_progress: "Suivre la parution"
+        upcoming: "Découvrir"
+    scene_count: "{0} aucune scène|{1} scène|]1,Inf] %count% scènes"
+    char_count: "{0} aucun perso|{1} perso|]1,Inf] %count% persos"
+    by: "par"
+    comment_count: "{0} aucun commentaire|{1} commentaire|]1,Inf] %count% commentaires"
+    workshop_btn: "Atelier"
+
+# ===== PAGE PROJET PUBLIC =====
+project_show_public:
+    type:
+        film: "Film"
+        serie: "Série"
+        jeu_video: "Jeu vidéo"
+    workshop_btn_owner: "Gérer dans l'atelier"
+    workshop_btn_collab: "Ouvrir l'atelier"
+    about_title: "À propos"
+

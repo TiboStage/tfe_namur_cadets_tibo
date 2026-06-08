@@ -27,7 +27,7 @@ navbar:
 
     actions:
         workshop: "Workshop"
-        login: "Login"
+        login: "Sign in"
         register: "Sign Up"
 
 # ===== FOOTER =====
@@ -45,14 +45,56 @@ footer:
         tutorial: "Tutorials"
     legal:
         title_section: "Legal"
+        cgu: "Terms of Service"
         conf: "Privacy"
         cookies: "Cookies"
         contact: "Contact"
+        manage_cookies: "Manage cookies"
+
+# ===== SIMPLE COOKIE BANNER =====
+cookie_banner:
+    close: "Close"
+    close_label: "Close cookie banner"
+
+# ===== COOKIE CONSENT (GDPR) =====
+consent:
+    banner:
+        aria_label: "Cookie consent banner"
+        title: "We use cookies"
+        desc: "Some are essential to the site's operation, others improve your experience."
+        learn_more: "Learn more"
+        refuse: "Refuse all"
+        customize: "Customize"
+        accept: "Accept all"
+    modal:
+        title: "Cookie settings"
+        close_label: "Close preferences window"
+        intro: "Manage your preferences. You can change these settings at any time via the 'Manage cookies' link at the bottom of the page."
+        save: "Save preferences"
+        policy_link: "Cookie policy"
+    always_active: "Always active"
+    category:
+        necessary:
+            title: "Necessary cookies"
+            desc: "Essential for the site to work. They cannot be disabled."
+            phpsessid: "— PHP session, keeps you logged in"
+            csrf: "— Security token, protects forms"
+        functional:
+            title: "Functional cookies"
+            desc: "Improve your experience by remembering your preferences."
+            toggle: "Enable functional cookies"
+            locale: "— Language preference, stored for 1 year"
+            rememberme: "— Stay logged in, valid for 7 days (if enabled)"
+        analytics:
+            title: "Analytics cookies"
+            desc: "Help analyse site usage to improve it. Not currently in use."
+            toggle: "Enable analytics cookies"
+            none: "No analytics cookies currently in use"
 
 # ===== HOMEPAGE =====
 home:
     hero:
-        badge: "✦ A tool designed for world builders"
+        badge: "A tool designed for world builders"
         title: "Imagine, Structure,"
         title_highlight: "Write."
         subtitle: "Bring your worlds to life, clarify your scripts and stories.<br>Your imagination, limitless."
@@ -125,6 +167,13 @@ examples:
         view_project: "Explore project"
         author: "By"
 
+    empty:
+        notice: "Section being prepared — the first projects are coming soon"
+        title: "The first projects are coming soon"
+        desc: "Once creators publish their universes, you'll find them here, sorted by type and filterable."
+        cta_create: "Create my first project"
+        cta_pricing: "See pricing"
+
 # ===== PRICING PAGE =====
 pricing:
     header:
@@ -187,7 +236,7 @@ pricing:
     early_access:
         title: "Early access in progress."
         desc: "The tool is currently in active development. If you'd like to support the project, you can make a donation via Ko-fi — 0% platform fees."
-        btn: "☕ Support the project"
+        btn: "Support the project"
         kofi_url: "https://ko-fi.com/scenart"
 
 # ===== CONTACT PAGE =====

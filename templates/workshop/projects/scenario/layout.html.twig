@@ -18,21 +18,11 @@
 <div data-controller="modal">
 
     {% include 'workshop/_partials/_topbar.html.twig' %}
+    {% include 'workshop/_partials/_project_bar.html.twig' %}
 
-    <div class="workspace-container">
-
-        {# ── Sidebar projet avec arbre manuscrit intégré ─── #}
-        {% include 'workshop/_partials/_project_nav.html.twig' with {
-            manuscriptTree:   rootElements is defined ? rootElements : [],
-            currentElement:   element is defined ? element : null,
-        } %}
-
-        {# ── Zone éditeur ───────────────────────────────── #}
-        <main class="workspace-main workspace-main--editor">
-            {% block editor_shell %}{% endblock %}
-        </main>
-
-    </div>
+    <main class="workspace-main workspace-main--editor">
+        {% block editor_shell %}{% endblock %}
+    </main>
 
     {# ══════════════════════════════════════════════════════════
        MODAL GLOBAL — overlay cible du controller

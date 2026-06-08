@@ -5,15 +5,17 @@
 .top-nav {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 0 var(--container-padding);
-    margin: auto;
-    height: 80px;
+    height: 52px;
     background: var(--color-bg-dark);
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 1px solid var(--color-border);
+    border: 1px solid var(--color-border);
+    justify-self: center;
+    padding: 0 10px;
+    width: calc(100% - 100px);
+    max-width: 1700px;
+    margin-top: 10px;
 }
 
 /* ── Gauche ──────────────────────────────────────────────── */
@@ -84,8 +86,8 @@
     background: transparent;
     border: 1px solid var(--color-border);
     color: var(--text-muted);
-    width: 50px;
-    height: 50px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,45 +100,771 @@
     color: var(--text-main);
 }
 
-.profile-pill {
+
+/* ── user-trigger dans la workshop top-nav ───────────────── */
+.top-nav .user-trigger {
+    height: 36px;
+    min-width: 130px;
+    padding: 0 8px 0 10px;
+    gap: 7px;
+}
+
+/* ── Badges de rôle (Admin / Modo) ───────────────────────── */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.user-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    padding: 1px 5px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.user-role-badge--admin {
+    color: var(--color-primary);
+    background: var(--color-primary-glow);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.user-role-badge--modo {
+    color: #06b6d4;
+    background: rgba(6, 182, 212, .1);
+    border: 1px solid rgba(6, 182, 212, .25);
+}
+
+.up-badge-icon {
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   TOP-NAV SLIM — contexte projet
+   ============================================================ */
+
+/* ============================================================
+   PROJECT BAR
+   ============================================================ */
+
+.project-bar {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    background: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    padding: 0 20px;
+    width: calc(100% - 100px);
+    max-width: 1700px;
+    justify-self: center;
+}
+
+/* ── Left : breadcrumb + switcher ───────────────────────── */
+
+.project-bar__left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding-right: 20px;
+    border-right: 1px solid var(--color-border);
+    height: 100%;
+}
+
+
+/* Project switcher button */
+
+.project-bar__switcher {
+    position: relative;
+}
+
+.project-bar__project-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 6px;
+    transition: background 0.15s;
+}
+
+.project-bar__project-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.project-bar__project-icon {
+    width: 20px;
+    height: 20px;
+    background: var(--color-primary);
+    color: var(--text-dark);
+    font-size: 10px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.project-bar__project-name {
+    max-width: 12ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.project-bar__chevron {
+    color: var(--text-muted);
+    transition: transform 0.15s;
+    flex-shrink: 0;
+}
+
+.project-bar__switcher.is-open .project-bar__chevron {
+    transform: rotate(180deg);
+}
+
+/* Switcher dropdown */
+
+.project-bar__switcher-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: -6px;
+    min-width: 260px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border-light);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    z-index: 200;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.project-bar__switcher-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.project-bar__switcher-current,
+.project-bar__switcher-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: var(--color-bg-card);
-    padding: 0 12px 0 15px;
-    height: 38px;
-    border: 1px solid var(--color-border);
+    padding: 10px 14px;
+    color: var(--text-main);
     text-decoration: none;
-    transition: border-color 0.2s ease;
+    transition: background 0.12s;
 }
 
-.profile-pill:hover {
-    border-color: var(--text-muted);
+.project-bar__switcher-current {
+    border-bottom: 1px solid var(--color-border);
+    cursor: default;
 }
 
-.profile-text {
+.project-bar__switcher-item:hover {
+    background: var(--overlay-sm);
+}
+
+.project-bar__switcher-list {
+    max-height: 276px; /* ~5,5 items */
+    overflow-y: auto;
+}
+
+.project-bar__switcher-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.project-bar__switcher-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.project-bar__switcher-list::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+}
+
+.project-bar__switcher-list::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+.project-bar__switcher-icon {
+    width: 26px;
+    height: 26px;
+    background: var(--color-primary);
+    color: var(--text-dark);
+    font-size: 12px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.project-bar__switcher-info {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
     gap: 1px;
+    flex: 1;
+    min-width: 0;
 }
 
-.user-name {
+.project-bar__switcher-name {
+    font-size: 13px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 12ch;
+}
+
+.project-bar__switcher-type {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.project-bar__current-badge {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--color-primary);
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.project-bar__switcher-footer {
+    padding: 8px 14px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.project-bar__switcher-footer a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 12px;
-    font-weight: 800;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.project-bar__switcher-footer a:hover {
     color: var(--text-main);
 }
 
-.badge-premium {
-    font-size: 9px;
-    font-weight: 800;
-    color: var(--color-primary);
-    display: flex;
-    align-items: center;
-    gap: 3px;
+.project-bar__switcher-version {
+    font-size: 10px;
+    color: var(--text-muted);
+    opacity: .45;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-/* Avatar : cercle car c'est une convention UI acceptable */
+/* ── Nav tabs ────────────────────────────────────────────── */
+
+.project-bar__nav {
+    display: flex;
+    align-items: stretch;
+    flex: 1;
+    height: 100%;
+    padding: 0 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.project-bar__nav::-webkit-scrollbar {
+    display: none;
+}
+
+.project-bar__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 13px;
+    height: 100%;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    margin-bottom: -1px;
+    font-family: inherit;
+}
+
+.project-bar__tab:hover {
+    color: var(--text-main);
+}
+
+.project-bar__tab.active {
+    color: var(--text-main);
+    border-bottom-color: var(--color-primary);
+}
+
+.project-bar__tab.active svg {
+    color: var(--color-primary);
+}
+
+.project-bar__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 15px;
+    padding: 0 4px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.project-bar__tab.active .project-bar__count {
+    background: var(--color-primary-medium);
+    color: var(--color-primary);
+}
+
+/* ── Séparateur | entre primaires et secondaires ────────── */
+
+.project-bar__nav-sep {
+    width: 1px;
+    height: 16px;
+    background: var(--color-border);
+    margin: 0 6px;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+/* ── Onglets secondaires (desktop uniquement) ───────────── */
+
+.project-bar__tab--secondary {
+    color: var(--text-muted);
+    opacity: .75;
+}
+
+.project-bar__tab--secondary:hover,
+.project-bar__tab--secondary.active {
+    opacity: 1;
+}
+
+/* ── Spacer pousse le bouton settings à droite ──────────── */
+
+.project-bar__nav-spacer {
+    flex: 1;
+}
+
+/* ── Bouton Paramètres (extrémité droite) ───────────────── */
+
+.project-bar__settings-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 100%;
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-left: 1px solid var(--color-border);
+    flex-shrink: 0;
+    white-space: nowrap;
+    transition: color .15s, background .15s;
+}
+
+.project-bar__settings-btn:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, .03);
+}
+
+.project-bar__settings-btn.active {
+    color: var(--color-primary);
+}
+
+/* ── Plus mobile (navigation tabs) ─────────────────────── */
+
+.project-bar__nav-more {
+    display: none;
+    position: relative;
+    height: 100%;
+    align-items: center;
+}
+
+.project-bar__nav-more-btn {
+    gap: 5px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color .15s, color .15s, background .15s;
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.project-bar__nav-more-btn:hover {
+    color: var(--text-main);
+    border-color: var(--color-border-light);
+}
+
+.project-bar__nav-more.is-open .project-bar__nav-more-btn {
+    color: var(--text-main);
+    border-color: var(--color-border-light);
+    background: var(--color-bg-elevated);
+}
+
+.project-bar__nav-more-btn svg:last-child {
+    transition: transform .15s;
+    opacity: .6;
+}
+
+.project-bar__nav-more.is-open .project-bar__nav-more-btn svg:last-child {
+    transform: rotate(180deg);
+}
+
+.project-bar__nav-more-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border-light);
+    box-shadow: 0 12px 32px rgba(0,0,0,.6);
+    z-index: 200;
+    min-width: 210px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.project-bar__nav-more-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.project-bar__nav-more-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    transition: background .15s ease, color .15s ease;
+}
+
+.project-bar__nav-more-menu a:last-child {
+    border-bottom: none;
+}
+
+.project-bar__nav-more-menu a:hover {
+    background: var(--overlay-sm);
+    color: var(--text-main);
+}
+
+.project-bar__nav-more-menu a.active {
+    color: var(--color-primary);
+    background: var(--color-primary-dim);
+}
+
+.project-bar__nav-more-menu a.active svg {
+    color: var(--color-primary);
+}
+
+.project-bar__nav-more-menu .project-bar__count {
+    margin-left: auto;
+}
+
+/* ── Séparateur dans le dropdown ── */
+
+.project-bar__nav-more-divider {
+    display: block;
+    height: 1px;
+    background: var(--color-border);
+    margin: 4px 0;
+}
+
+/* Lien Paramètres dans le dropdown (mis en valeur légèrement) */
+.project-bar__nav-more-settings {
+    color: var(--text-muted) !important;
+}
+
+.project-bar__visibility-btn.is-public {
+    color: var(--color-green, #4caf7d);
+}
+
+.project-bar__live-badge {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--color-green, #4caf7d);
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   BURGER + RESPONSIVE
+   ============================================================ */
+
+.topbar-burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+}
+
+.topbar-burger:hover {
+    border-color: var(--color-border-light);
+    color: var(--text-main);
+}
+
+/* ── Mobile nav drawer (caché par défaut) ────────────────── */
+.mobile-nav-drawer  { display: none; }
+.mobile-nav-overlay { display: none; }
+
+@media (max-width: 768px) {
+    /* Topbar mobile */
+    .nav-left { display: none; }
+
+    .top-nav {
+        width: 100%;
+        padding: 0 var(--container-padding);
+        border: none;
+        align-items: center;
+    }
+
+    .top-nav .user-trigger {
+        height: 36px;
+    }
+
+    /* Burger visible */
+    .topbar-burger { display: flex; }
+
+    /* Drawer slide-in depuis la gauche */
+    .mobile-nav-drawer {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 280px;
+        border-right: 1px solid var(--color-border);
+        z-index: 300;
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+    }
+
+    .mobile-nav-open .mobile-nav-drawer {
+        transform: translateX(0);
+    }
+
+    .mobile-nav-drawer__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--color-border);
+        background: var(--color-bg-dark);
+    }
+
+    .mobile-nav-drawer__close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 4px;
+        transition: color .15s;
+    }
+    .mobile-nav-drawer__close:hover { color: var(--text-main); }
+
+    .mobile-nav-drawer__links {
+        display: flex;
+        flex-direction: column;
+        padding: 8px 0;
+        flex: 1;
+        overflow-y: auto;
+        background: var(--color-bg-dark);
+    }
+
+    .mobile-nav-drawer__back {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 20px;
+        color: var(--text-muted-dark);
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        border-bottom: 1px solid var(--color-border);
+        background: rgba(255,255,255,.02);
+        transition: color .12s;
+        margin-bottom: 4px;
+    }
+    .mobile-nav-drawer__back:hover {
+        color: var(--text-muted);
+    }
+
+    .mobile-nav-drawer__links a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 20px;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        border-bottom: 1px solid rgba(255,255,255,.04);
+        transition: color .12s, background .12s;
+    }
+    .mobile-nav-drawer__links a:last-child { border-bottom: none; }
+    .mobile-nav-drawer__links a:hover {
+        color: var(--text-main);
+        background: rgba(255,255,255,.04);
+    }
+    .mobile-nav-drawer__links a.active {
+        color: var(--color-primary);
+        border-left: 2px solid var(--color-primary);
+        padding-left: 18px;
+    }
+
+    /* Overlay sombre derrière le drawer */
+    .mobile-nav-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.6);
+        z-index: 299;
+    }
+    .mobile-nav-open .mobile-nav-overlay { display: block; }
+
+    /* Project-bar : full width + sans bordures latérales comme la topbar */
+    .project-bar {
+        width: 100%;
+        border-left: none;
+        border-right: none;
+        padding: 0 16px;
+    }
+
+    /* Texte projet masqué sur mobile */
+    .project-bar__project-name,
+    .project-bar__chevron {
+        display: none;
+    }
+
+    .project-bar__left {
+        border-right: none;
+        padding-right: 8px;
+    }
+
+    /* overflow:auto clippe le menu dropdown — désactivé sur mobile */
+    .project-bar__nav {
+        overflow: visible;
+    }
+    .project-bar { justify-content: space-between; }
+}
+
+/* ── Palier intermédiaire : ≤ 1100px ──────────────────────────
+   Onglets primaires visibles, secondaires cachés → "Plus"
+   Paramètres : icône seule (texte masqué)
+   ─────────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+    /* Cacher séparateur + onglets secondaires inline */
+    .project-bar__nav-sep,
+    .project-bar__tab--secondary {
+        display: none;
+    }
+
+    /* Afficher le bouton "Plus" */
+    .project-bar__nav-more {
+        display: flex;
+    }
+
+    /* Paramètres : icône seule, le label disparaît */
+    .project-bar__settings-label {
+        display: none;
+    }
+
+    /* Réduire le padding du bouton settings (icône seule) */
+    .project-bar__settings-btn {
+        padding: 0 10px;
+    }
+
+    /* Le séparateur + Paramètres dans le dropdown "Plus" sont inutiles à ce palier
+       car Paramètres est déjà visible via settings-btn */
+    .project-bar__nav-more-divider,
+    .project-bar__nav-more-menu .project-bar__nav-more-settings {
+        display: none;
+    }
+
+    /* overflow visible pour que le dropdown ne soit pas clippé */
+    .project-bar__nav {
+        overflow: visible;
+    }
+}
+
+/* ── Palier mobile : ≤ 768px ──────────────────────────────────
+   Tous les onglets inline cachés → uniquement "Actions"
+   Paramètres accessible depuis le dropdown Actions
+   ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    /* Tous les onglets inline masqués (y compris l'onglet actif) */
+    .project-bar__tab:not(.project-bar__nav-more-btn) {
+        display: none;
+    }
+
+    /* Séparateur, spacer, settings-btn masqués */
+    .project-bar__nav-sep,
+    .project-bar__nav-spacer,
+    .project-bar__settings-btn {
+        display: none;
+    }
+
+    /* Le lien Paramètres + séparateur dans le dropdown redevient visible */
+    .project-bar__nav-more-divider {
+        display: block;
+    }
+    .project-bar__nav-more-menu .project-bar__nav-more-settings {
+        display: flex;
+    }
+}
+
+/* ── Avatar : cercle car c'est une convention UI acceptable */
 .avatar-circle {
     width: 30px;
     height: 30px;

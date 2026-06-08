@@ -4,42 +4,220 @@
 {% block title %}{{ 'location.index.title'|trans }} — {{ project.title }}{% endblock %}
 
 {% block project_content %}
-<div class="workshop-container">
+    <div class="dashboard-container"
+         data-controller="resource-filter"
+         data-resource-filter-container-id-value="locations-container">
 
-    <header class="page-header">
-        <div>
-            <h1>{{ 'location.index.title'|trans }} <span class="text-muted">{{ locations|length }}</span></h1>
-        </div>
-        {% if not (readonly ?? false) %}
-        <a href="{{ path('app_location_new', {project_slug: project.slug}) }}"
-           class="btn-creat"
-           data-turbo-frame="modal-frame"
-           data-action="click->modal#open">
-            {{ 'location.index.new_btn'|trans }}
-        </a>
-        {% endif %}
-    </header>
-
-    {% if locations is empty %}
-        <div class="no-items">
-            <p class="text-muted">{{ 'location.index.empty'|trans }}</p>
-        </div>
-    {% else %}
-        <div class="characters-grid">
-            {% for location in locations %}
-                <a href="{{ path('app_location_show', {project_slug: project.slug, id: location.id}) }}" class="character-card">
-                    <div class="character-card-avatar">
-                        {{ location.name|first|upper }}
-                    </div>
-                    <div class="character-card-info">
-                        <span class="character-card-name">{{ location.name }}</span>
-                        <span class="character-card-role text-muted">{{ location.type|default('—') }}</span>
-                    </div>
-                    <span class="project-type-badge">{{ location.type }}</span>
+        <header class="page-header">
+            <div>
+                <h1>
+                    {{ 'location.index.title'|trans }}
+                    {% if locations is not empty %}
+                    <span class="text-muted">{{ locations|length }}</span>
+                    {% endif %}
+                </h1>
+                <p class="page-subtitle">{{ 'location.index.subtitle'|trans }}</p>
+            </div>
+            {% if locations is not empty %}
+            <div class="header-actions">
+                {# ── Switcher grille / liste ── #}
+                <div class="btn-group"
+                     data-controller="view-switcher"
+                     data-view-switcher-container-id-value="locations-container"
+                     data-view-switcher-grid-class-value="characters-grid"
+                     data-view-switcher-list-class-value="characters-list">
+                    <button class="btn btn--sm active"
+                            data-action="click->view-switcher#switch"
+                            data-view="grid">
+                        {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
+                    </button>
+                    <button class="btn btn--sm"
+                            data-action="click->view-switcher#switch"
+                            data-view="list">
+                        {{ ux_icon('lucide:list', {class: 'icon-xs'}) }}
+                    </button>
+                </div>
+                {% if not (readonly ?? false) %}
+                <a href="{{ path('app_location_new', {project_slug: project.slug}) }}"
+                   class="btn-creat">
+                    {{ 'location.index.new_btn'|trans }}
                 </a>
-            {% endfor %}
-        </div>
-    {% endif %}
+                {% endif %}
+            </div>
+            {% endif %}
+        </header>
 
-</div>
+        {% if locations is empty %}
+
+            <div class="page-empty">
+                {{ ux_icon('lucide:map-pin', {style: 'width:44px;height:44px'}) }}
+                <h3>{{ 'location.index.empty'|trans }}</h3>
+                {% if not (readonly ?? false) %}
+                <a href="{{ path('app_location_new', {project_slug: project.slug}) }}" class="btn-creat">
+                    {{ ux_icon('lucide:plus', {style: 'width:15px;height:15px'}) }}
+                    {{ 'location.index.empty_create'|trans }}
+                </a>
+                {% endif %}
+            </div>
+
+        {% else %}
+
+            {# ── Barre filtre / tri ── #}
+            <div class="resource-toolbar">
+                <div class="resource-filter-tabs">
+                    <button class="resource-filter-tab active" data-filter-btn
+                            data-action="click->resource-filter#filter"
+                            data-category="">
+                        {{ 'location.filter.all'|trans }}
+                        <span class="resource-filter-count">{{ locations|length }}</span>
+                    </button>
+                    {% for type in ['interior', 'exterior', 'fantasy', 'historical', 'futuristic'] %}
+                        {% set count = locations|filter(l => l.type == type)|length %}
+                        {% if count > 0 %}
+                            <button class="resource-filter-tab" data-filter-btn
+                                    data-action="click->resource-filter#filter"
+                                    data-category="{{ type }}">
+                                {{ ('location.filter.' ~ type)|trans }}
+                                <span class="resource-filter-count">{{ count }}</span>
+                            </button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="resource-sort-group">
+                    <button class="resource-sort-btn active" data-sort-btn
+                            data-action="click->resource-filter#sort"
+                            data-sort="default">
+                        {{ ux_icon('lucide:clock', {class: 'icon-3xs'}) }}
+                        {{ 'location.sort.date_desc'|trans }}
+                    </button>
+                    <button class="resource-sort-btn" data-sort-btn
+                            data-action="click->resource-filter#sort"
+                            data-sort="az">
+                        {{ ux_icon('lucide:arrow-up-az', {class: 'icon-3xs'}) }}
+                        {{ 'location.sort.az'|trans }}
+                    </button>
+                </div>
+            </div>
+
+            <div id="locations-container" class="characters-grid">
+
+                {# ── Header liste ── #}
+                <div class="character-list-header">
+                    <div>{{ 'location.index.title'|trans }}</div>
+                    <div>{{ 'location.info.type'|trans }}</div>
+                    <div>{{ 'location.info.created_at'|trans }}</div>
+                    <div></div>
+                </div>
+
+                {% for location in locations %}
+
+                    {# ── VUE GRILLE ── #}
+                    <div class="grid-only"
+                         data-category="{{ location.type|default('') }}"
+                         data-id="{{ location.id }}"
+                         data-sort-name="{{ location.name|lower }}"
+                         data-sort-date="{{ location.createdAt|date('Y-m-d') }}">
+                        <a href="{{ path('app_location_show', {project_slug: project.slug, id: location.id}) }}"
+                           class="character-card">
+
+                            <div class="character-card-header">
+                                <div class="character-card-avatar location-card-avatar">
+                                    {{ ux_icon('lucide:map-pin', {class: 'icon-sm'}) }}
+                                </div>
+                                <div class="character-card-identity">
+                                    <span class="character-card-name">{{ location.name }}</span>
+                                    {% if location.parent %}
+                                        <span class="character-card-nickname">
+                                            {{ ux_icon('lucide:corner-up-right', {class: 'icon-3xs'}) }}
+                                            {{ location.parent.name }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="character-card-body">
+                                {% if location.type %}
+                                    <span class="character-card-role-badge location-type-{{ location.type }}">
+                                        {{ ux_icon('lucide:tag', {class: 'icon-xs'}) }}
+                                        {{ ('location.type.' ~ location.type)|trans }}
+                                    </span>
+                                {% endif %}
+                                {% if location.description %}
+                                    <p class="character-card-excerpt">{{ location.description }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="character-card-footer">
+                                <span class="character-card-meta">
+                                    {{ location.createdAt|date('d/m/Y') }}
+                                    {% if location.children|length > 0 %}
+                                        · {{ location.children|length }}
+                                        {{ ux_icon('lucide:map-pin', {class: 'icon-3xs'}) }}
+                                    {% endif %}
+                                </span>
+                                <span class="character-card-arrow">
+                                    {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
+                                </span>
+                            </div>
+
+                        </a>
+                    </div>
+
+                    {# ── VUE LISTE ── #}
+                    <a href="{{ path('app_location_show', {project_slug: project.slug, id: location.id}) }}"
+                       class="character-list-row list-only"
+                       data-category="{{ location.type|default('') }}"
+                       data-id="{{ location.id }}"
+                       data-sort-name="{{ location.name|lower }}"
+                       data-sort-date="{{ location.createdAt|date('Y-m-d') }}">
+
+                        <div class="character-list-main">
+                            <div class="character-list-avatar location-list-avatar">
+                                {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }}
+                            </div>
+                            <div>
+                                <div class="character-list-name">{{ location.name }}</div>
+                                {% if location.parent %}
+                                    <div class="character-list-nickname">
+                                        {{ ux_icon('lucide:corner-up-right', {class: 'icon-3xs'}) }}
+                                        {{ location.parent.name }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="character-list-role">
+                            {% if location.type %}
+                                <span class="character-card-role-badge location-type-{{ location.type }}">
+                                    {{ ('location.type.' ~ location.type)|trans }}
+                                </span>
+                            {% else %}
+                                —
+                            {% endif %}
+                        </div>
+
+                        <div class="character-list-date">
+                            {{ location.createdAt|date('d/m/Y') }}
+                        </div>
+
+                        <div class="character-list-action">
+                            {{ ux_icon('lucide:chevron-right', {class: 'icon-xs'}) }}
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+                {# ── Message état vide après filtrage ── #}
+                <div class="resource-empty-filtered" data-resource-filter-target="emptyMsg" style="display:none">
+                    {{ ux_icon('lucide:search-x', {class: 'icon-md'}) }}
+                    <p>{{ 'location.index.empty'|trans }}</p>
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
 {% endblock %}

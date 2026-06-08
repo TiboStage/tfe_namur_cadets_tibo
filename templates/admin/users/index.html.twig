@@ -12,7 +12,7 @@
             <input type="search" name="q" value="{{ q }}"
                    placeholder="Rechercher par email ou pseudo…"
                    class="admin-search-input">
-            <button type="submit" class="btn-table">Rechercher</button>
+            <button type="submit" class="btn-table">{{ 'users.btn_search'|trans({}, 'admin') }}</button>
             {% if q %}
                 <a href="{{ path('admin_users', {_locale: app.request.locale}) }}" class="btn-table">✕ Effacer</a>
             {% endif %}

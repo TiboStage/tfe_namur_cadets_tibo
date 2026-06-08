@@ -27,7 +27,7 @@ navbar:
 
     actions:
         workshop: "Atelier"
-        login: "Connexion"
+        login: "S'identifier"
         register: "Inscription"
 
 # ===== FOOTER =====
@@ -45,14 +45,56 @@ footer:
         tutorial: "Tutoriels"
     legal:
         title_section: "Légal"
+        cgu: "CGU"
         conf: "Confidentialité"
         cookies: "Cookies"
         contact: "Contact"
+        manage_cookies: "Gérer mes cookies"
+
+# ===== BANNIÈRE COOKIES SIMPLE =====
+cookie_banner:
+    close: "Fermer"
+    close_label: "Fermer la bannière cookies"
+
+# ===== CONSENTEMENT COOKIES (RGPD) =====
+consent:
+    banner:
+        aria_label: "Bannière de consentement cookies"
+        title: "Nous utilisons des cookies"
+        desc: "Certains sont essentiels au fonctionnement du site, d'autres améliorent votre expérience."
+        learn_more: "En savoir plus"
+        refuse: "Tout refuser"
+        customize: "Personnaliser"
+        accept: "Tout accepter"
+    modal:
+        title: "Paramètres des cookies"
+        close_label: "Fermer la fenêtre de préférences"
+        intro: "Gérez vos préférences. Vous pouvez modifier ces paramètres à tout moment via le lien « Gérer mes cookies » en bas de page."
+        save: "Enregistrer mes préférences"
+        policy_link: "Politique des cookies"
+    always_active: "Toujours actif"
+    category:
+        necessary:
+            title: "Cookies nécessaires"
+            desc: "Indispensables au fonctionnement du site. Ils ne peuvent pas être désactivés."
+            phpsessid: "— Session PHP, maintient votre connexion active"
+            csrf: "— Jeton de sécurité, protège les formulaires"
+        functional:
+            title: "Cookies fonctionnels"
+            desc: "Améliorent votre expérience en mémorisant vos préférences d'utilisation."
+            toggle: "Activer les cookies fonctionnels"
+            locale: "— Langue préférée, mémorisée pendant 1 an"
+            rememberme: "— Rester connecté, valide 7 jours (si la case est cochée)"
+        analytics:
+            title: "Cookies analytiques"
+            desc: "Permettent d'analyser l'utilisation du site pour l'améliorer. Non utilisés pour l'instant."
+            toggle: "Activer les cookies analytiques"
+            none: "Aucun cookie analytique actuellement utilisé"
 
 # ===== PAGE D'ACCUEIL =====
 home:
     hero:
-        badge: "✦ Un outil conçu pour les bâtisseurs de mondes"
+        badge: "Un outil conçu pour les bâtisseurs de mondes"
         title: "Imaginez, Structurez,"
         title_highlight: "Écrivez."
         subtitle: "Donnez vie à vos mondes, clarifiez vos scripts et histoires.<br>Votre imagination, sans limites."
@@ -124,6 +166,13 @@ examples:
         empty_message: "Aucun projet ne correspond à cette catégorie pour le moment."
         view_project: "Explorer le projet"
         author: "Par"
+
+    empty:
+        notice: "Section en cours de préparation — les premiers projets arrivent bientôt"
+        title: "Les premiers projets arrivent bientôt"
+        desc: "Dès que des créateurs publieront leurs univers, vous les retrouverez ici, classés par type et filtrables."
+        cta_create: "Créer mon premier projet"
+        cta_pricing: "Voir les tarifs"
 
 # ===== PAGE TARIFS =====
 pricing:

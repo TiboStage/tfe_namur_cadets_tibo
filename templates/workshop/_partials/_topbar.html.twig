@@ -1,63 +1,57 @@
 {% trans_default_domain 'workshop' %}
 
-<header class="section-header">
+<header class="section-header{% if project is defined %} project-context{% endif %}"
+        data-controller="mobile-nav">
 
     <div class="top-nav">
+
+        {# ── Gauche : logo + liens nav (desktop) ─────────────────── #}
+        <div class="nav-left">
+            <a href="{{ path('app_home') }}" class="topbar-logo">
+                <img src="{{ asset('images/favicons/favicon_workshop.png') }}" alt="Scénart" width="28">
+            </a>
+
+            <div class="subnav-links">
+                <a href="{{ path('app_workshop_dashboard') }}"
+                   class="{{ app.request.attributes.get('_route') starts with 'app_workshop_dashboard' ? 'active' : '' }}">
+                    {{ 'navbar.links.dashboard'|trans }}
+                </a>
+
+                <a href="{{ path('app_project_index') }}"
+                   class="{{ app.request.attributes.get('_route') starts with 'app_project_'
+                             and not (app.request.attributes.get('_route') starts with 'app_project_public')
+                             ? 'active' : '' }}">
+                    {{ 'navbar.links.projects'|trans }}
+                    <span class="nav-count">{{ projects_count|default(0) }}</span>
+                </a>
+
+                <a href="{{ path('app_workshop_explore', {_locale: app.request.locale}) }}"
+                   class="{{ app.request.attributes.get('_route') starts with 'app_workshop_explore'
+                             or app.request.attributes.get('_route') starts with 'app_project_public'
+                             or app.request.attributes.get('_route') starts with 'app_workshop_creator'
+                             or app.request.attributes.get('_route') starts with 'app_element_reader'
+                             ? 'active' : '' }}">
+                    {{ 'navbar.links.explore'|trans }}
+                </a>
+
+                <a href="{{ path('app_documentation', {_locale: app.request.locale}) }}"
+                   class="{{ app.request.attributes.get('_route') starts with 'app_documentation' ? 'active' : '' }}">
+                    {{ 'navbar.links.documentation'|trans }}
+                </a>
+            </div>
+        </div>
 
         {# ── Burger (mobile uniquement) ──────────────────────────── #}
         <button class="topbar-burger"
                 type="button"
                 aria-label="{{ 'navbar.actions.open_menu'|trans }}"
-                onclick="document.dispatchEvent(new CustomEvent('sidebar:toggle'))">
-            {{ ux_icon('lucide:menu', {class: 'icon-base'}) }}
+                data-action="mobile-nav#toggle">
+            {{ ux_icon('lucide:panel-left-open', {class: 'icon-base'}) }}
         </button>
 
-        <div class="subnav-links">
-            <a href="{{ path('app_home') }}" class="topbar-logo">
-                <img src="{{ asset('images/favicons/favicon_workshop.png') }}" alt="Scénart" width="28">
-            </a>
-            <a href="{{ path('app_workshop_dashboard') }}"
-               class="{{ app.request.attributes.get('_route') starts with 'app_workshop_dashboard' ? 'active' : '' }}">
-                {{ 'navbar.links.dashboard'|trans }}
-            </a>
-
-            <a href="{{ path('app_project_index') }}"
-               class="{{ app.request.attributes.get('_route') starts with 'app_project_'
-                         and not (app.request.attributes.get('_route') starts with 'app_project_public')
-                         ? 'active' : '' }}">
-                {{ 'navbar.links.projects'|trans }}
-                <span class="nav-count">{{ projects_count|default(0) }}</span>
-            </a>
-
-            <a href="{{ path('app_workshop_explore', {_locale: app.request.locale}) }}"
-               class="{{ app.request.attributes.get('_route') starts with 'app_workshop_explore'
-                         or app.request.attributes.get('_route') starts with 'app_project_public'
-                         or app.request.attributes.get('_route') starts with 'app_workshop_creator'
-                         or app.request.attributes.get('_route') starts with 'app_element_reader'
-                         ? 'active' : '' }}">
-                {{ 'navbar.links.explore'|trans }}
-            </a>
-            <a href="{{ path('app_documentation', {_locale: app.request.locale}) }}"
-               class="{{ app.request.attributes.get('_route') starts with 'app_documentation' ? 'active' : '' }}">
-                {{ 'navbar.links.documentation'|trans }}
-            </a>
-        </div>
-
-
-{#        <div class="nav-center">#}
-{#            <div class="search-bar">#}
-{#                {{ ux_icon('lucide:search', {class: 'icon-sm'}) }}#}
-{#                <label>#}
-{#                    <input type="text" placeholder="{{ 'navbar.actions.search.placeholder'|trans }}">#}
-{#                </label>#}
-{#            </div>#}
-{#        </div>#}
-
+        {# ── Droite : notifs + user ───────────────────────────────── #}
         <div class="nav-right">
 
-
-
-            {# ── Cloche de notifications ──────────────────────── #}
             <div class="notification-wrapper"
                  data-controller="notifications"
                  data-notifications-dropdown-url-value="{{ path('app_notifications_dropdown', {_locale: app.request.locale}) }}"
@@ -78,7 +72,6 @@
                     {% endif %}
                 </button>
 
-                {# Dropdown #}
                 <div class="notification-dropdown" hidden data-notifications-target="dropdown">
                     <div class="notification-dropdown__header">
                         <span class="notification-dropdown__title">{{ 'navbar.notifications.title'|trans }}</span>
@@ -105,5 +98,56 @@
         </div>
 
     </div>
+
+    {# ── Drawer mobile (pages sans sidebar projet) ────────────── #}
+    <div class="mobile-nav-drawer">
+        <div class="mobile-nav-drawer__header">
+            <a href="{{ path('app_home') }}" class="topbar-logo">
+                <img src="{{ asset('images/favicons/favicon_workshop.png') }}" alt="Scénart" width="32">
+            </a>
+            <button class="mobile-nav-drawer__close"
+                    type="button"
+                    data-action="mobile-nav#close"
+                    aria-label="Fermer">
+                {{ ux_icon('lucide:panel-left-close', {class: 'icon-base'}) }}
+            </button>
+        </div>
+
+        <nav class="mobile-nav-drawer__links">
+            <a href="{{ path('app_home') }}" class="mobile-nav-drawer__back">
+                {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }}
+                Retour au site
+            </a>
+
+            <a href="{{ path('app_workshop_dashboard') }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_workshop_dashboard' ? 'active' : '' }}">
+                {{ ux_icon('lucide:layout-dashboard', {class: 'icon-xs'}) }}
+                {{ 'navbar.links.dashboard'|trans }}
+            </a>
+            <a href="{{ path('app_project_index') }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_project_'
+                         and not (app.request.attributes.get('_route') starts with 'app_project_public')
+                         ? 'active' : '' }}">
+                {{ ux_icon('lucide:folder', {class: 'icon-xs'}) }}
+                {{ 'navbar.links.projects'|trans }}
+                <span class="nav-count">{{ projects_count|default(0) }}</span>
+            </a>
+            <a href="{{ path('app_workshop_explore', {_locale: app.request.locale}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_workshop_explore'
+                         or app.request.attributes.get('_route') starts with 'app_project_public'
+                         or app.request.attributes.get('_route') starts with 'app_workshop_creator'
+                         or app.request.attributes.get('_route') starts with 'app_element_reader'
+                         ? 'active' : '' }}">
+                {{ ux_icon('lucide:compass', {class: 'icon-xs'}) }}
+                {{ 'navbar.links.explore'|trans }}
+            </a>
+            <a href="{{ path('app_documentation', {_locale: app.request.locale}) }}"
+               class="{{ app.request.attributes.get('_route') starts with 'app_documentation' ? 'active' : '' }}">
+                {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
+                {{ 'navbar.links.documentation'|trans }}
+            </a>
+        </nav>
+    </div>
+    <div class="mobile-nav-overlay" data-action="click->mobile-nav#close"></div>
 
 </header>

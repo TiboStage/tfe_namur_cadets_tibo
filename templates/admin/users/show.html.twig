@@ -35,7 +35,7 @@
 
             {# ── Rôles ─────────────────────────────────────────────── #}
             <div class="panel-box">
-                <h3>Rôles</h3>
+                <h3>{{ 'users.show.roles_title'|trans({}, 'admin') }}</h3>
                 <form method="post"
                       action="{{ path('admin_user_roles', {id: user.id, _locale: app.request.locale}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('admin_roles_' ~ user.id) }}">
@@ -61,7 +61,7 @@
                     </div>
 
                     {% if user != app.user %}
-                        <button type="submit" class="btn-table mt-4">Enregistrer les rôles</button>
+                        <button type="submit" class="btn-table mt-4">{{ 'users.show.save_roles'|trans({}, 'admin') }}</button>
                     {% else %}
                         <p class="text-muted text-sm mt-2">Vous ne pouvez pas modifier vos propres rôles.</p>
                     {% endif %}
@@ -70,7 +70,7 @@
 
             {# ── Ban / déban ───────────────────────────────────────── #}
             <div class="panel-box">
-                <h3>Modération du compte</h3>
+                <h3>{{ 'users.show.moderation_title'|trans({}, 'admin') }}</h3>
 
                 <p class="text-muted mb-5 text-base">
                     {% if user.isBanned %}
@@ -102,7 +102,7 @@
             {# ── Projets ───────────────────────────────────────────── #}
             <div class="panel-box col-full">
                 <div class="panel-header">
-                    <h3>Projets de {{ user.username }} ({{ projects|length }})</h3>
+                    <h3>{{ 'users.show.projects_title'|trans({'%username%': user.username, '%count%': projects|length}, 'admin') }}</h3>
                 </div>
                 <div class="table-wrapper">
                     <table class="admin-table">

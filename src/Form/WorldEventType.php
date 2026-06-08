@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Entity\Location;
+use App\Entity\ScenarioElement;
 use App\Entity\WorldEvent;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -123,6 +125,36 @@ class WorldEventType extends AbstractType
                         notInRangeMessage: 'world_event.day.invalid_range',
                     ),
                 ],
+            ])
+
+            // Type d'événement
+            ->add('eventType', ChoiceType::class, [
+                'label' => 'world_event.form.event_type',
+                'translation_domain' => 'workshop_interface',
+                'required' => false,
+                'placeholder' => 'world_event.form.event_type.placeholder',
+                'choices' => [
+                    'world_event.type.plot'      => 'plot',
+                    'world_event.type.character' => 'character',
+                    'world_event.type.world'     => 'world',
+                    'world_event.type.conflict'  => 'conflict',
+                    'world_event.type.reveal'    => 'reveal',
+                ],
+                'attr' => ['class' => 'form-control'],
+            ])
+
+            // Scène liée du manuscrit (optionnel)
+            ->add('linkedScene', EntityType::class, [
+                'label' => 'world_event.form.linked_scene',
+                'translation_domain' => 'workshop_interface',
+                'class' => ScenarioElement::class,
+                'choice_label' => fn(ScenarioElement $el) => $el->getFullPath(),
+                'placeholder' => 'world_event.form.linked_scene.placeholder',
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+                'choices' => $project
+                    ? $project->getScenarioElements()->filter(fn($e) => $e->isLeaf())
+                    : [],
             ])
 
             // Lieu lié (optionnel)

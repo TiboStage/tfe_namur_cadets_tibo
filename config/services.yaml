@@ -25,5 +25,19 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    # ─── Markdown (Twig extra-bundle) ────────────────────────────────────────
+    # Fournit le filtre |markdown_to_html aux templates Twig
+    League\CommonMark\CommonMarkConverter: ~
+
+    Twig\Extra\Markdown\MarkdownInterface:
+        class: Twig\Extra\Markdown\LeagueMarkdown
+        arguments:
+            $converter: '@League\CommonMark\CommonMarkConverter'
+
+    # ─── Cloudflare Turnstile ────────────────────────────────────────────────
+    App\Service\TurnstileService:
+        arguments:
+            $secretKey: '%env(TURNSTILE_SECRET_KEY)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

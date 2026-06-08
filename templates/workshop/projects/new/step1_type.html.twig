@@ -23,10 +23,12 @@
                 {key: 'jeu_video', icon: 'lucide:gamepad-2', label: 'funnel.step1.game_label', desc: 'funnel.step1.game_desc',  hint: 'funnel.step1.game_hint'},
             ] %}
             <button type="submit"
-                    class="fn-type-card"
+                    class="fn-type-card fn-type-card--{{ card.key }}"
                     name="project_type"
                     value="{{ card.key }}">
-                <span class="fn-type-card__icon">{{ ux_icon(card.icon, {style: 'width:28px;height:28px'}) }}</span>
+                <span class="proj-icon proj-icon--{{ card.key }} fn-type-card__icon">
+                    {{- ux_icon(card.icon) -}}
+                </span>
                 <span class="fn-type-card__label">{{ card.label|trans }}</span>
                 <span class="fn-type-card__desc">{{ card.desc|trans }}</span>
                 <span class="fn-type-card__hint">ex. {{ card.hint|trans }}</span>

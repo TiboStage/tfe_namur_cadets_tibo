@@ -9,12 +9,19 @@ meta:
     title: "Login & Register - Scénart"
     profile_title: "My profile — Scénart"
 
+# ===== TABS =====
+tab:
+    login: "Sign in"
+    register: "Create account"
+
 # ===== LOGIN =====
 login:
-    title: "Sign In"
+    title: "Welcome back!"
+    subtitle: "Sign in to continue with your projects."
     email: "Email"
     password: "Password"
-    submit: "Sign In"
+    remember_me: "Remember me"
+    submit: "Sign in"
 
 # ===== REGISTER =====
 register:
@@ -46,13 +53,21 @@ profile:
         title: "My profile"
         subtitle: "Manage your personal information"
     
+    card:
+        member_since: "Member since"
+        last_login: "Last login"
+        view_public: "View my public profile"
+        project: "project|projects"
+
     sections:
         identity: "Identity"
         identity_desc: "Your public information"
         security: "Security"
         security_desc: "Change your password"
         stats: "Statistics"
-    
+        avatar_color: "Avatar color"
+        avatar_color_desc: "Customize the color of your initial."
+
     form:
         firstname: "First name"
         lastname: "Last name"
@@ -62,9 +77,20 @@ profile:
         confirm_password: "Confirm password"
         password_hint: "Leave blank to keep your current password (min. 8 characters)"
         btn_save: "Save changes"
-    
+        btn_cancel: "Cancel"
+        username_locked_msg: "Change available in %count% day.|Change available in %count% days."
+        password_show: "Show password"
+        password_show_confirm: "Show confirmation"
+        avatar_color_hint: "Save the form to apply the change."
+        rule_length: "Min. 8 characters"
+        rule_uppercase: "One uppercase letter (A–Z)"
+        rule_digit: "One digit (0–9)"
+        rule_special: "One special character (!@#…)"
+
     stats:
         member_since: "Member since"
         projects: "Projects created"
         last_login: "Last login"
         never: "Never"
+
+show_password: "Show password"

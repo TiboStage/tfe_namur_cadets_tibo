@@ -4,9 +4,9 @@
 {% block title %}{{ 'character.edit.title'|trans }} — {{ character.name }} — {{ project.title }}{% endblock %}
 
 {% block project_content %}
-<div class="workshop-container">
+<div class="dashboard-container">
 
-    {# ── En-tête page (accès direct uniquement) ────────────────────── #}
+    {# ── En-tête page (accès direct uniquement) ─────────────────────── #}
     <header class="page-header">
         <div>
             <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="link-back">
@@ -17,86 +17,68 @@
         </div>
     </header>
 
-    {# ── Contenu chargé dans le modal (turbo-frame) ────────────────── #}
     <turbo-frame id="modal-frame">
-        <div class="ws-modal-form-wrap">
+        <div class="ws-modal-form-wrap" data-controller="advanced-form">
 
-            <h2 class="ws-modal-form-title">{{ 'character.edit.title'|trans }} — {{ character.name }}</h2>
+            <h2 class="ws-modal-form-title">{{ 'character.edit.title'|trans }}</h2>
 
-            {{ form_start(form, {
-                'attr': {
-                    'novalidate': 'novalidate',
-                    'class': 'project-form',
-                    'data-controller': 'form-validation',
-                    'data-action': 'submit->form-validation#submit'
-                }
-            }) }}
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
 
-            <div class="character-form-grid">
+            <div class="form-section">
+                <div class="form-section-title">{{ 'character.form.section_identity'|trans }}</div>
 
-                {# ── Identité ────────────────────────────────────── #}
-                <div>
-                    <div class="form-section-title">{{ 'character.form.section_identity'|trans }}</div>
+                {{ form_row(form.name, {'label': 'character.form.name'|trans, 'attr': {'autofocus': true, 'placeholder': 'character.form.name_placeholder'|trans}}) }}
+                <div class="form-row-group">
+                    {{ form_row(form.firstName, {'label': 'character.form.firstname'|trans, 'attr': {'placeholder': 'character.form.firstname_placeholder'|trans}}) }}
+                    {{ form_row(form.lastName,  {'label': 'character.form.lastname'|trans,  'attr': {'placeholder': 'character.form.lastname_placeholder'|trans}}) }}
+                </div>
+                {{ form_row(form.nickname,    {'label': 'character.form.nickname'|trans,    'attr': {'placeholder': 'character.form.nickname_placeholder'|trans}}) }}
+                {{ form_row(form.role,        {'label': 'character.form.role'|trans}) }}
+                {{ form_row(form.description, {'label': 'character.form.description'|trans, 'attr': {'rows': 3, 'placeholder': 'character.form.description_placeholder'|trans}}) }}
+            </div>
 
-                    {{ form_row(form.name, {
-                        'label': 'character.form.name'|trans,
-                        'attr': {
-                            'minlength': 2,
-                            'data-form-validation-target': 'field',
-                            'data-action': 'blur->form-validation#validate',
-                            'data-error-required':  'character.name.required'|trans({}, 'validators'),
-                            'data-error-minlength': 'character.name.too_short'|trans({}, 'validators')
-                        }
-                    }) }}
+            <label class="advanced-toggle">
+                <input type="checkbox"
+                       class="advanced-toggle__checkbox"
+                       data-advanced-form-target="checkbox"
+                       data-action="change->advanced-form#toggle">
+                <span class="advanced-toggle__label">
+                    {{ ux_icon('lucide:settings-2', {style: 'width:13px;height:13px'}) }}
+                    {{ 'character.edit.advanced'|trans }}
+                </span>
+            </label>
 
-                    <div class="form-row-two">
-                        {{ form_row(form.firstName, {'label': 'character.form.firstname'|trans}) }}
-                        {{ form_row(form.lastName,  {'label': 'character.form.lastname'|trans}) }}
+            <div data-advanced-form-target="panel" hidden>
+                <div class="advanced-panel">
+                    <div class="advanced-panel__section">
+                        <div class="form-section-title">{{ 'character.form.section_psychology'|trans }}</div>
+                        {{ form_row(form.biography,    {'label': 'character.form.biography'|trans,   'attr': {'rows': 4, 'placeholder': 'character.form.biography_placeholder'|trans}}) }}
+                        {{ form_row(form.goals,        {'label': 'character.form.goals'|trans,       'attr': {'rows': 3, 'placeholder': 'character.form.goals_placeholder'|trans}}) }}
+                        {{ form_row(form.motivations,  {'label': 'character.form.motivations'|trans, 'attr': {'rows': 3, 'placeholder': 'character.form.motivations_placeholder'|trans}}) }}
+                        {{ form_row(form.characterArc, {'label': 'character.form.arc'|trans,         'attr': {'rows': 3, 'placeholder': 'character.form.arc_placeholder'|trans}}) }}
                     </div>
-
-                    {{ form_row(form.nickname,    {'label': 'character.form.nickname'|trans}) }}
-                    {{ form_row(form.role,        {'label': 'character.form.role'|trans}) }}
-                    {{ form_row(form.description, {'label': 'character.form.description'|trans, 'attr': {'rows': 3}}) }}
                 </div>
-
-                {# ── Psychologie ─────────────────────────────────── #}
-                <div>
-                    <div class="form-section-title">{{ 'character.form.section_psychology'|trans }}</div>
-
-                    {{ form_row(form.biography,    {'label': 'character.form.biography'|trans,   'attr': {'rows': 5}}) }}
-                    {{ form_row(form.goals,        {'label': 'character.form.goals'|trans,       'attr': {'rows': 3}}) }}
-                    {{ form_row(form.motivations,  {'label': 'character.form.motivations'|trans, 'attr': {'rows': 3}}) }}
-                    {{ form_row(form.characterArc, {'label': 'character.form.arc'|trans,         'attr': {'rows': 3}}) }}
-                </div>
-
             </div>
 
             <div class="form-actions">
-                <button type="button" class="btn-export" data-action="click->modal#close">
-                    {{ 'character.edit.cancel'|trans }}
-                </button>
-                <button type="submit" class="btn-creat">
-                    {{ 'character.edit.submit'|trans }}
-                </button>
+                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}" class="btn-export">
+                    {{ 'common.cancel'|trans }}
+                </a>
+                <button type="submit" class="btn-creat">{{ 'common.update'|trans }}</button>
             </div>
 
             {{ form_end(form) }}
 
-            {# ── Danger zone ─────────────────────────────────────── #}
             <div class="danger-zone">
                 <div class="danger-zone-header">
                     <h3>{{ 'character.edit.danger_zone'|trans }}</h3>
                     <p>{{ 'character.edit.danger_desc'|trans }}</p>
                 </div>
-                {# data-turbo-frame="_top" : navigue la page entière après suppression #}
                 <form method="post"
                       action="{{ path('app_character_delete', {project_slug: project.slug, id: character.id}) }}"
-                      data-turbo-confirm="{{ 'character.edit.delete_confirm'|trans }}"
-                      data-turbo-frame="_top">
+                      data-turbo-confirm="{{ 'character.edit.delete_confirm'|trans }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete_character_' ~ character.id) }}">
-                    <button type="submit" class="btn-danger">
-                        {{ 'character.edit.delete_btn'|trans }}
-                    </button>
+                    <button type="submit" class="btn-danger">{{ 'character.edit.delete_btn'|trans }}</button>
                 </form>
             </div>
 

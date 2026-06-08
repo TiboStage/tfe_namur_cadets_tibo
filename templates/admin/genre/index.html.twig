@@ -7,7 +7,7 @@
 
     <div class="admin-section-header">
         <div>
-            <h2>Genres narratifs</h2>
+            <h2>{{ 'genre.list.title'|trans({}, 'admin') }}</h2>
             <p class="text-muted">
                 Les genres apparaissent lors de la création et dans les paramètres de projet.
                 Chaque genre requiert une traduction en FR, NL et EN.
@@ -90,7 +90,7 @@
                           onsubmit="return confirm('Supprimer le genre « {{ genre.slug }} » ? Il disparaîtra des sélecteurs mais restera affiché sur les projets existants.')">
                         <input type="hidden" name="_token"
                                value="{{ csrf_token('genre_delete_' ~ genre.id) }}">
-                        <button type="submit" class="btn-action btn-action--delete">Supprimer</button>
+                        <button type="submit" class="btn-action btn-action--delete">{{ 'genre.btn.delete'|trans({}, 'admin') }}</button>
                     </form>
                 </td>
             </tr>

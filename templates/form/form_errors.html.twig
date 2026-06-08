@@ -1,0 +1,34 @@
+{# templates/form/form_errors.html.twig
+   Form theme global — applique les classes CSS du projet sur les erreurs Symfony.
+   Enregistré dans config/packages/twig.yaml (form_themes).
+
+   NOTE : pas d'extends ni de parent() — les form themes sont des fichiers standalone.
+   On override uniquement form_errors (le rendu des messages d'erreur).
+   La classe .is-invalid sur l'input est gérée via form_row.
+#}
+
+{# ── Bloc d'erreurs : ul li → .invalid-feedback ─────────────────────── #}
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <div class="invalid-feedback">
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{# ── Row complet : ajoute .is-invalid sur le widget si erreurs ───────── #}
+{% block form_row %}
+    {% set widget_attr = {} %}
+    {% if errors|length > 0 %}
+        {% set widget_attr = {class: (attr.class|default('') ~ ' is-invalid')|trim} %}
+    {% endif %}
+    {% if label is not same as(false) %}
+        {{ form_label(form) }}
+    {% endif %}
+    {{ form_widget(form, {attr: widget_attr}) }}
+    {{ form_errors(form) }}
+{% endblock %}

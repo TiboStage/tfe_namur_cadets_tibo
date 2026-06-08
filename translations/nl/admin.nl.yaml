@@ -1,0 +1,116 @@
+# ============================================================
+# SCÉNART - Admin Panel Vertalingen (NL)
+# ============================================================
+
+# ===== LAYOUT =====
+layout:
+    title: "Beheerderspaneel"
+    exit: "Beheer verlaten"
+    menu:
+        dashboard: "Overzicht"
+        users: "Gebruikers"
+        projects: "Projecten"
+        moderation: "Moderatie"
+        config: "Configuratie"
+        documentation: "Documentatie"
+        genres: "Genres"
+        moderator_panel: "Moderatorpaneel"
+
+# ===== GENRE =====
+genre:
+    list:
+        title: "Narratieve genres"
+    form:
+        new_title: "Nieuw genre"
+        edit_title: "Genre bewerken"
+        new_header: "Nieuw genre"
+        edit_header: "Bewerken '%name%'"
+        back: "← Terug naar genres"
+        slug_label: "Slug"
+        slug_hint: "Unieke technische sleutel, alleen lowercase + underscores"
+        slug_placeholder: "bijv. science_fiction"
+        slug_warning: "Wijzig de slug niet van een genre dat al door projecten wordt gebruikt — dit zou de koppeling verbreken."
+        translations_label: "Vertalingen"
+        translations_hint: "Alle 3 talen zijn verplicht"
+        lang_fr: "Frans"
+        lang_nl: "Nederlands"
+        lang_en: "Engels"
+        placeholder_fr: "Bijv.: Thriller"
+        placeholder_nl: "Bijv.: Thriller"
+        placeholder_en: "Bijv.: Thriller"
+        types_label: "Compatibele projecttypen"
+        types_hint: "Alles uitgeschakeld laten = compatibel met alle typen"
+        type_film: "🎬 Film"
+        type_serie: "📺 Serie"
+        type_jeu_video: "🎮 Videogame"
+        order_label: "Weergavevolgorde"
+        order_hint: "0 = eerst"
+        btn_save: "✓ Wijzigingen opslaan"
+        btn_create: "+ Genre aanmaken"
+        btn_cancel: "Annuleren"
+    btn:
+        delete: "Verwijderen"
+
+# ===== CONFIG =====
+config:
+    platform_info: "Platforminformatie"
+    field_name: "Naam"
+    field_version: "Versie"
+    field_framework: "Framework"
+    field_database: "Database"
+    field_environment: "Omgeving"
+    field_debug: "Debug"
+    debug_enabled: "Ingeschakeld"
+    debug_disabled: "Uitgeschakeld"
+    sessions: "Actieve sessies"
+    sessions_hint: "Informatie over de huidige sessie."
+    field_logged_as: "Ingelogd als"
+    field_email: "E-mail"
+    field_roles: "Rollen"
+    todo_section: "Te implementeren"
+    todo_description: "Deze sectie zal in een toekomstige versie bevatten: instellingen voor open/gesloten registratie, projectlimiet per gebruiker, ..."
+
+# ===== DOCUMENTATIE =====
+documentation:
+    title: "Documentatieartikelen"
+    btn_delete: "Verwijderen"
+
+# ===== GEBRUIKERS =====
+users:
+    show:
+        roles_title: "Rollen"
+        save_roles: "Rollen opslaan"
+        moderation_title: "Accountmoderatie"
+        projects_title: "Projecten van %username% (%count%)"
+    btn_search: "Zoeken"
+
+# ===== MODERATIE =====
+moderation:
+    empty: "Geen actieve meldingen"
+    action:
+        clear: "Opheffen"
+        warn: "Waarschuwen"
+        block: "Blokkeren"
+        approve: "Goedkeuren"
+
+# ===== MODO LAYOUT =====
+modo:
+    title: "Moderatorpaneel"
+    exit: "Afsluiten"
+    menu:
+        dashboard: "Overzicht"
+        flagged_projects: "Gemelde projecten"
+        reports: "Meldingen"
+        comments: "Reacties"
+        admin_panel: "Beheerpaneel"
+
+# ===== MELDINGEN =====
+reports:
+    empty: "Geen actieve meldingen"
+    btn:
+        clear_title: "Melding opheffen"
+        warning_title: "Waarschuwing"
+        block_title: "Project blokkeren"
+    detail:
+        title: "Meldingsdetails"
+        actions_title: "Acties"

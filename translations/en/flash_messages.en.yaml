@@ -6,17 +6,30 @@
 
 # ===== AUTHENTICATION =====
 auth:
-    welcome: "Welcome {firstName}!"
-    welcome_back: "Welcome back {firstName}!"
+    welcome: "Welcome %firstName%!"
+    welcome_back: "Welcome back %firstName%!"
     logout: "See you soon!"
     logout_success: "You are now logged out"
     register_success: "Account created successfully! Please sign in."
+
+# ===== PROFILE =====
+profile:
+    updated: "Profile updated successfully!"
+    username_locked: "You cannot change your username yet. Try again in %days% days."
 
 # ===== PROJECT =====
 project:
     created: "Project created successfully!"
     updated: "Project updated."
     deleted: "Project deleted."
+    set_public: "Your project is now visible in the Atlas!"
+    set_private: "Your project has been removed from the Atlas."
+    moderation_blocked: "This project has been blocked by moderation. Contact support for more information."
+    session_expired: "Session expired. Please start over."
+    settings_saved: "Settings saved."
+    settings_saved_slug: "Settings saved. The project URL has been updated."
+    structure_updated: "Structure updated."
+    visibility_invalid: "Invalid visibility."
 
 # ===== CHARACTER =====
 character:
@@ -61,3 +74,53 @@ info:
     loading: "Loading..."
     processing: "Processing..."
     saved_draft: "Draft saved automatically"
+
+# ===== ADMIN =====
+admin:
+    genre_created: "Genre created successfully."
+    genre_updated: "Genre updated."
+    genre_deleted: "Genre deleted."
+    documentation_created: "Article created successfully!"
+    documentation_updated: "Article updated."
+    documentation_deleted: "Article deleted."
+    user_roles_updated: "Roles of %username% updated."
+    project_status_updated: "Project '%title%' status updated: %status%."
+
+# ===== MODERATION =====
+moderation:
+    project_status_updated: "Project '%title%' status updated: %status%."
+    report_status_updated: "Report status updated."
+    comment_hidden: "Comment hidden."
+    comment_shown: "Comment restored."
+    comment_deleted: "Comment permanently deleted."
+    unknown_action: "Unknown action."
+
+# ===== COMMENTS =====
+comment:
+    published: "Comment published!"
+    deleted: "Comment deleted."
+    csrf_invalid: "Invalid security token."
+    length_invalid: "Comment must be between 2 and 2000 characters."
+    already_reported: "You have already reported this item."
+    reason_invalid: "Invalid report reason."
+    report_submitted: "Report submitted. Thank you!"
+
+# ===== MEMBERS =====
+member:
+    csrf_invalid: "Invalid CSRF token."
+    role_invalid: "Invalid role."
+    user_not_found: "User '%username%' not found."
+    already_owner: "You are already the owner of this project."
+    already_collaborator: "'%username%' is already a collaborator on this project."
+    added: "'%username%' has been added as %role%."
+    role_updated: "Role updated."
+    removed: "'%name%' has been removed from the project."
+
+# ===== SCENARIO =====
+scenario:
+    element_deleted: "Element deleted."
+
+# ===== CSRF =====
+csrf:
+    invalid: "Invalid security token."
+    token_invalid: "Invalid token."

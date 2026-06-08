@@ -63,10 +63,10 @@
     color: var(--text-dark);
     display: flex;
     align-items: center;
-    height: 50px;
-    padding: 0 20px 0 25px;
+    height: 36px;
+    padding: 0 16px 0 20px;
     font-weight: 800;
-    font-size: 14px;
+    font-size: 13px;
     text-decoration: none;
     gap: 5px;
     transition: opacity 0.2s ease;
@@ -211,20 +211,36 @@
 
 /* Créer / Action principale */
 .btn-creat {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 16px 0 12px;
     background: var(--color-primary);
     color: var(--text-dark);
     border: none;
-    padding: 0 25px 0 20px;
-    font-weight: 800;
-    height: 50px;
-    display: flex;
-    place-items: center;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
     transition: opacity 0.2s ease;
-    justify-content: center;
 }
 
 .btn-creat:hover {
     opacity: 0.9;
+}
+
+@media (max-width: 640px) {
+    .btn-creat {
+        height: 32px;
+        padding: 0 10px 0 8px;
+        font-size: 12px;
+    }
+
+    .view-actions .btn-group {
+        display: none;
+    }
 }
 
 /* Export / Action secondaire */

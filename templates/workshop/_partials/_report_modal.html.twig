@@ -11,20 +11,6 @@
 
 {% if viewer is not null %}
 
-{# ── Bouton flottant de signalement du projet ─────────────────────── #}
-<div class="pub-project__report-btn-wrap">
-    <button
-        class="btn-report"
-        data-action="click->report-modal#open"
-        data-report-modal-url-param="{{ path('app_report', {_locale: app.request.locale, type: 'project', id: project.id}) }}"
-        data-report-modal-token-param="{{ csrf_token('report_project_' ~ project.id) }}"
-        data-report-modal-label-param="ce projet"
-    >
-        {{ ux_icon('lucide:flag', {class: 'icon-3xs'}) }}
-        Signaler ce projet
-    </button>
-</div>
-
 {# ── Modal ─────────────────────────────────────────────────────────── #}
 <div
     class="report-modal-overlay"

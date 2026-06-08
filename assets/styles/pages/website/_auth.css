@@ -213,29 +213,49 @@
     border-bottom-color: var(--color-primary);
 }
 
-/* ── Panneaux de formulaire ───────────────────────────────── */
-.auth-form-panel {
+/* ── Wrapper des panneaux ─────────────────────────────────── */
+/*
+   Position relative indispensable : quand un panneau sort (.auth-panel--exit),
+   il passe en position:absolute ici.
+   Il quitte ainsi le flux normal instantanément → plus de layout-shift.
+   Le panneau entrant détermine seul la hauteur du wrapper dès le départ.
+*/
+.auth-panels-wrapper {
     position: relative;
 }
 
-/* Animations fade + translateY */
+/* ── Panneaux de formulaire ───────────────────────────────── */
+/* pas de position déclarée — le wrapper sert de référence */
+.auth-form-panel {}
+
+/* ── Animations ───────────────────────────────────────────── */
 @keyframes authPanelEnter {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes authPanelExit {
     from { opacity: 1; transform: translateY(0); }
-    to   { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 0; transform: translateY(-8px); }
 }
 
 .auth-panel--enter {
-    animation: authPanelEnter 0.25s ease forwards;
+    animation: authPanelEnter 0.22s ease forwards;
 }
 
+/*
+   SORTIE : position absolute → sort du flux immédiatement.
+   top/left/right:0 pour rester visuellement à sa place
+   au moment où l'animation commence.
+*/
 .auth-panel--exit {
-    animation: authPanelExit 0.2s ease forwards;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    animation: authPanelExit 0.18s ease forwards;
     pointer-events: none;
+    z-index: 1;
 }
 
 /* ── Titres & helper text ─────────────────────────────────── */
@@ -394,6 +414,16 @@
     flex: 1;
     height: 1px;
     background: var(--color-border);
+}
+
+/* ── Widget Turnstile ────────────────────────────────────── */
+.auth-captcha {
+    margin-bottom: 14px;
+}
+
+/* Aligne le widget sur toute la largeur du formulaire */
+.auth-captcha iframe {
+    width: 100% !important;
 }
 
 /* ── Alerte d'erreur ─────────────────────────────────────── */

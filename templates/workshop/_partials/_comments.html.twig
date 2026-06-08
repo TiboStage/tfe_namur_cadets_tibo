@@ -9,13 +9,14 @@
       - can_reply    : bool  — seul le propriétaire et les collaborateurs peuvent répondre
       - vote_data    : array<int, {up: int, down: int, user_vote: string|null}>
 #}
+{% trans_default_domain 'workshop' %}
 
 <section id="comments" class="comments-section">
 
     <div class="comments-section__header">
         <h2 class="comments-section__title">
             {{ ux_icon('lucide:message-square', {style: 'width:16px;height:16px'}) }}
-            Commentaires
+            {{ 'comment_section.title'|trans }}
             <span class="comments-section__count">{{ comment_count }}</span>
         </h2>
     </div>
@@ -31,15 +32,15 @@
                 <textarea
                     name="content"
                     class="comment-form__textarea"
-                    placeholder="Partagez votre avis sur ce projet…"
+                    placeholder="{{ 'comment_section.form.placeholder'|trans }}"
                     maxlength="2000"
                     required
                 ></textarea>
                 <div class="comment-form__footer">
-                    <span class="comment-form__hint">2 – 2000 caractères</span>
+                    <span class="comment-form__hint">{{ 'comment_section.form.hint'|trans }}</span>
                     <button type="submit" class="comment-form__submit">
                         {{ ux_icon('lucide:send', {style: 'width:13px;height:13px'}) }}
-                        Commenter
+                        {{ 'comment_section.form.submit'|trans }}
                     </button>
                 </div>
             </div>
@@ -49,8 +50,8 @@
         <div class="comment-login-prompt">
             {{ ux_icon('lucide:log-in', {class: 'icon-xs'}) }}
             <span>
-                <a href="{{ path('app_login', {_locale: app.request.locale}) }}">Connectez-vous</a>
-                pour laisser un commentaire.
+                <a href="{{ path('app_login', {_locale: app.request.locale}) }}">{{ 'comment_section.form.login'|trans }}</a>
+                {{ 'comment_section.form.login_suffix'|trans }}
             </span>
         </div>
     {% endif %}
@@ -59,7 +60,7 @@
     {% if comments is empty %}
         <div class="comments-empty">
             {{ ux_icon('lucide:message-circle', {style: 'width:32px;height:32px;opacity:.3'}) }}
-            <p>Aucun commentaire pour l'instant. Soyez le premier !</p>
+            <p>{{ 'comment_section.empty'|trans }}</p>
         </div>
     {% else %}
         <div class="comments-list">
@@ -73,6 +74,7 @@
 
 {# ── Macro récursive ────────────────────────────────────────────────── #}
 {% macro render_comment(comment, project, viewer, isReply, can_reply, vote_data) %}
+{% trans_default_domain 'workshop' %}
     {% set cv = vote_data[comment.id] is defined
         ? vote_data[comment.id]
         : {up: 0, down: 0, user_vote: null} %}
@@ -86,7 +88,7 @@
             <span class="comment-item__username">{{ comment.author.username }}</span>
             <span class="comment-item__date">{{ comment.createdAt|date('d/m/Y à H:i') }}</span>
             {% if not comment.isVisible() %}
-                <span class="comment-item__hidden-badge">masqué</span>
+                <span class="comment-item__hidden-badge">{{ 'comment_section.hidden_badge'|trans }}</span>
             {% endif %}
         </div>
 
@@ -104,9 +106,9 @@
                     data-action="click->comment-vote#vote"
                     data-vote-value="up"
                     data-comment-vote-target="upBtn"
-                    aria-label="Utile"
+                    aria-label="{{ 'comment.vote.helpful'|trans }}"
                     aria-pressed="{{ cv.user_vote == 'up' ? 'true' : 'false' }}"
-                    {% if viewer is null %}disabled title="Connectez-vous pour voter"{% endif %}>
+                    {% if viewer is null %}disabled title="{{ 'comment.vote.login_required'|trans }}"{% endif %}>
                 {{ ux_icon('lucide:thumbs-up', {style: 'width:13px;height:13px'}) }}
                 <span data-comment-vote-target="upCount">{{ cv.up }}</span>
             </button>
@@ -115,9 +117,9 @@
                     data-action="click->comment-vote#vote"
                     data-vote-value="down"
                     data-comment-vote-target="downBtn"
-                    aria-label="Pas utile"
+                    aria-label="{{ 'comment.vote.not_helpful'|trans }}"
                     aria-pressed="{{ cv.user_vote == 'down' ? 'true' : 'false' }}"
-                    {% if viewer is null %}disabled title="Connectez-vous pour voter"{% endif %}>
+                    {% if viewer is null %}disabled title="{{ 'comment.vote.login_required'|trans }}"{% endif %}>
                 {{ ux_icon('lucide:thumbs-down', {style: 'width:13px;height:13px'}) }}
                 <span data-comment-vote-target="downCount">{{ cv.down }}</span>
             </button>
@@ -131,12 +133,14 @@
                 <button
                     type="button"
                     class="comment-action-btn"
+                    data-label-reply="{{ 'comment_section.reply'|trans }}"
+                    data-label-cancel="{{ 'comment_section.cancel'|trans }}"
                     onclick="
                         const replyForm = document.getElementById('reply-form-{{ comment.id }}');
                         replyForm.hidden = !replyForm.hidden;
-                        this.textContent = replyForm.hidden ? '↩ Répondre' : '× Annuler';
+                        this.textContent = replyForm.hidden ? this.dataset.labelReply : this.dataset.labelCancel;
                     "
-                >↩ Répondre</button>
+                >{{ 'comment_section.reply'|trans }}</button>
             {% endif %}
 
             {# Signaler #}
@@ -146,10 +150,10 @@
                     data-action="click->report-modal#open"
                     data-report-modal-url-param="{{ path('app_report', {_locale: app.request.locale, type: 'comment', id: comment.id}) }}"
                     data-report-modal-token-param="{{ csrf_token('report_comment_' ~ comment.id) }}"
-                    data-report-modal-label-param="ce commentaire"
+                    data-report-modal-label-param="{{ 'comment_section.report'|trans }}"
                 >
                     {{ ux_icon('lucide:flag', {class: 'icon-3xs'}) }}
-                    Signaler
+                    {{ 'comment_section.report'|trans }}
                 </button>
             {% endif %}
 
@@ -159,12 +163,12 @@
                     action="{{ path('app_comment_delete', {_locale: app.request.locale, id: comment.id}) }}"
                     method="post"
                     class="d-inline"
-                    onsubmit="return confirm('Supprimer ce commentaire ?')"
+                    onsubmit="return confirm('{{ 'comment_section.delete_confirm'|trans|e('js') }}')"
                 >
                     <input type="hidden" name="_token" value="{{ csrf_token('comment_delete_' ~ comment.id) }}">
                     <button type="submit" class="comment-action-btn comment-action-btn--danger">
                         {{ ux_icon('lucide:trash-2', {class: 'icon-3xs'}) }}
-                        Supprimer
+                        {{ 'comment_section.delete'|trans }}
                     </button>
                 </form>
             {% endif %}
@@ -183,15 +187,15 @@
                         <textarea
                             name="content"
                             class="comment-form__textarea comment-form__textarea--reply"
-                            placeholder="Votre réponse…"
+                            placeholder="{{ 'comment_section.reply_placeholder'|trans }}"
                             maxlength="2000"
                             required
                         ></textarea>
                         <div class="comment-form__footer">
-                            <span class="comment-form__hint">Réponse à {{ comment.author.username }}</span>
+                            <span class="comment-form__hint">{{ 'comment_section.reply_hint'|trans({'%username%': comment.author.username}) }}</span>
                             <button type="submit" class="comment-form__submit">
                                 {{ ux_icon('lucide:corner-down-right', {class: 'icon-3xs'}) }}
-                                Répondre
+                                {{ 'comment_section.reply_submit'|trans }}
                             </button>
                         </div>
                     </div>

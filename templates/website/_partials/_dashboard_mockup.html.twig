@@ -1,0 +1,214 @@
+{# templates/website/_partials/_dashboard_mockup.html.twig #}
+{# Mockup statique du dashboard — affiché dans le hero de la homepage #}
+{% trans_default_domain 'website' %}
+
+{% set mockup_name = app.user ? (app.user.firstName|default('John')) : 'John' %}
+
+<div class="mockup-shell">
+
+    {# ── Chrome du navigateur ─────────────────────────────────────── #}
+    <div class="mockup-chrome">
+        <div class="mockup-chrome__dots">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="mockup-chrome__bar">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            app.scenart.io/workshop
+        </div>
+    </div>
+
+    {# ── Interface workshop ───────────────────────────────────────── #}
+    <div class="mockup-body">
+
+        {# Topbar #}
+        <div class="mockup-topbar">
+            <div class="mockup-topbar__brand">
+                <span class="mockup-brand-dot"></span>
+                <span class="mockup-brand-name">Scénart</span>
+            </div>
+            <nav class="mockup-topbar__nav">
+                <span class="mockup-nav-item mockup-nav-item--active">Dashboard</span>
+                <span class="mockup-nav-item">Projets</span>
+                <span class="mockup-nav-item">Explorer</span>
+            </nav>
+            <div class="mockup-topbar__user">
+                <div class="mockup-avatar">{{ mockup_name|first|upper }}</div>
+                <span class="mockup-username">{{ mockup_name }}</span>
+            </div>
+        </div>
+
+        {# Contenu principal #}
+        <div class="mockup-content">
+
+            {# ── Colonne principale ───────────────────── #}
+            <div class="mockup-main">
+
+                {# Header #}
+                <div class="mockup-header">
+                    <div>
+                        <div class="mockup-greeting">
+                            Bonjour, <span class="mockup-greeting__name">{{ mockup_name }}</span>
+                        </div>
+                        <div class="mockup-date">Mardi 03 juin 2026 — 3 projets au total</div>
+                    </div>
+                    <div class="mockup-header__badge">
+                        <span class="mockup-status-dot mockup-status-dot--green"></span>
+                        En ligne
+                    </div>
+                </div>
+
+                {# Stats #}
+                <div class="mockup-stats">
+                    <div class="mockup-stat mockup-stat--yellow">
+                        <div class="mockup-stat__icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                        </div>
+                        <div>
+                            <div class="mockup-stat__value">3</div>
+                            <div class="mockup-stat__label">Projets en cours</div>
+                        </div>
+                    </div>
+                    <div class="mockup-stat mockup-stat--blue">
+                        <div class="mockup-stat__icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <div>
+                            <div class="mockup-stat__value">12</div>
+                            <div class="mockup-stat__label">Personnages</div>
+                        </div>
+                    </div>
+                    <div class="mockup-stat">
+                        <div class="mockup-stat__icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <div>
+                            <div class="mockup-stat__value">7</div>
+                            <div class="mockup-stat__label">Lieux</div>
+                        </div>
+                    </div>
+                    <div class="mockup-stat">
+                        <div class="mockup-stat__icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                        </div>
+                        <div>
+                            <div class="mockup-stat__value">28</div>
+                            <div class="mockup-stat__label">Scènes</div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Grille basse #}
+                <div class="mockup-lower">
+
+                    {# Projets en cours #}
+                    <div class="mockup-panel">
+                        <div class="mockup-panel__head">
+                            <span class="mockup-panel__title">Projets en cours</span>
+                            <span class="mockup-link">Voir plus ↗</span>
+                        </div>
+                        <div class="mockup-project-list">
+                            <div class="mockup-project-item">
+                                <div class="mockup-thumb mockup-thumb--y">L</div>
+                                <div class="mockup-project-info">
+                                    <span class="mockup-project-name">Les Ombres de Bruxelles</span>
+                                    <span class="mockup-project-meta">Film — 02/06/2026</span>
+                                </div>
+                                <span class="mockup-badge mockup-badge--progress">En cours</span>
+                            </div>
+                            <div class="mockup-project-item">
+                                <div class="mockup-thumb mockup-thumb--b">C</div>
+                                <div class="mockup-project-info">
+                                    <span class="mockup-project-name">Chroniques d'Arathos</span>
+                                    <span class="mockup-project-meta">Série — 29/05/2026</span>
+                                </div>
+                                <span class="mockup-badge mockup-badge--draft">Brouillon</span>
+                            </div>
+                            <div class="mockup-project-item">
+                                <div class="mockup-thumb mockup-thumb--g">P</div>
+                                <div class="mockup-project-info">
+                                    <span class="mockup-project-name">Project Nexus</span>
+                                    <span class="mockup-project-meta">Jeu vidéo — 20/05/2026</span>
+                                </div>
+                                <span class="mockup-badge mockup-badge--progress">En cours</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Activité récente #}
+                    <div class="mockup-panel">
+                        <div class="mockup-panel__head">
+                            <span class="mockup-panel__title">Activité récente</span>
+                            <span class="mockup-link">Voir tout ↗</span>
+                        </div>
+                        <div class="mockup-activity">
+                            <div class="mockup-activity-item">
+                                <span class="mockup-activity-dot"></span>
+                                <div>
+                                    <div class="mockup-activity-title">Les Ombres de Bruxelles</div>
+                                    <div class="mockup-activity-meta">02/06/2026 à 18:42</div>
+                                </div>
+                                <span class="mockup-badge mockup-badge--progress">En cours</span>
+                            </div>
+                            <div class="mockup-activity-item">
+                                <span class="mockup-activity-dot"></span>
+                                <div>
+                                    <div class="mockup-activity-title">Chroniques d'Arathos</div>
+                                    <div class="mockup-activity-meta">29/05/2026 à 14:10</div>
+                                </div>
+                                <span class="mockup-badge mockup-badge--draft">Brouillon</span>
+                            </div>
+                            <div class="mockup-activity-item">
+                                <span class="mockup-activity-dot"></span>
+                                <div>
+                                    <div class="mockup-activity-title">Project Nexus</div>
+                                    <div class="mockup-activity-meta">20/05/2026 à 09:05</div>
+                                </div>
+                                <span class="mockup-badge mockup-badge--progress">En cours</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            {# ── Colonne droite (actions rapides) ─────── #}
+            <div class="mockup-sidebar">
+                <div class="mockup-panel">
+                    <div class="mockup-panel__head">
+                        <span class="mockup-panel__title">Raccourcis</span>
+                    </div>
+                    <div class="mockup-actions">
+                        <button class="mockup-btn mockup-btn--primary">+ Créer un projet</button>
+                        <button class="mockup-btn mockup-btn--ghost">↓ Exporter</button>
+                    </div>
+                </div>
+
+                {# Mini carte projet #}
+                <div class="mockup-mini-card">
+                    <div class="mockup-mini-card__header">
+                        <div class="mockup-thumb mockup-thumb--y" style="width:28px;height:28px;font-size:10px;">L</div>
+                        <div>
+                            <div class="mockup-project-name" style="font-size:10px;">Les Ombres de Bruxelles</div>
+                            <div class="mockup-project-meta">Film · En cours</div>
+                        </div>
+                    </div>
+                    <div class="mockup-mini-progress">
+                        <div class="mockup-mini-progress__bar" style="width: 64%"></div>
+                    </div>
+                    <div class="mockup-mini-stats">
+                        <span>🎭 4 perso.</span>
+                        <span>📍 3 lieux</span>
+                        <span>🎬 12 scènes</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    {# Dégradé de fondu en bas #}
+    <div class="mockup-fade"></div>
+
+</div>
