@@ -1,0 +1,93 @@
+/* ══════════════════════════════════════════════════════════════════
+   POLICES AUTO-HÉBERGÉES — ScénArt
+
+   sf-primary  → Inter          (var. --font-sans)
+                 Sidebar, nav, modales, formulaires, boutons
+
+   sf-body     → Inter          (var. --font-body)
+                 Texte de lecture, notes, descriptions, italic
+
+   sf-display  → Courier Prime  (var. --font-display + --font-mono)
+                 Éditeur Fountain, dialogues, export PDF
+   ══════════════════════════════════════════════════════════════════ */
+
+
+/* ── sf-primary — Inter — Interface ────────────────────────────── */
+
+@font-face {
+    font-family: 'sf-primary';
+    src: url('../../fonts/primary/Inter-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'sf-primary';
+    src: url('../../fonts/primary/Inter-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'sf-primary';
+    src: url('../../fonts/primary/Inter-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'sf-primary';
+    src: url('../../fonts/primary/Inter-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* ── sf-body — Inter — Lecture / Notes ─────────────────────────── */
+
+@font-face {
+    font-family: 'sf-body';
+    src: url('../../fonts/body/Inter-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'sf-body';
+    src: url('../../fonts/body/Inter-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'sf-body';
+    src: url('../../fonts/body/Inter-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* ── sf-display — Courier Prime — Éditeur / Export ─────────────── */
+
+@font-face {
+    font-family: 'sf-display';
+    src: url('../../fonts/display/CourierPrime-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'sf-display';
+    src: url('../../fonts/display/CourierPrime-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}

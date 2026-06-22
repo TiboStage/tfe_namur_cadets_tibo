@@ -304,6 +304,25 @@
     font-size: 11px;
 }
 
+.ps-member-row--pending {
+    opacity: 0.7;
+}
+
+.ps-member-pending-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-primary);
+    background: var(--color-primary-dim);
+    border-radius: var(--radius-sm);
+    padding: 2px 6px;
+    width: fit-content;
+}
+
 .ps-role-form { flex-shrink: 0; }
 
 .ps-select--small {
@@ -835,7 +854,7 @@
     border: 1px solid var(--color-border);
     font-size: 10px;
     color: var(--text-muted);
-    font-family: monospace;
+    font-family: var(--font-mono);
 }
 
 /* Stats */

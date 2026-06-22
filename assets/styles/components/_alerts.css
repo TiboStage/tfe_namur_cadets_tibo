@@ -53,15 +53,15 @@
     background: var(--color-bg-card);
     border: none;
     border-bottom: 1px solid var(--overlay-md);
-    border-radius: 0;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-modal);
     animation: slideInDown 0.4s ease-out;
 }
 
 /* ─── Variantes ──────────────────────────────────────────────────────────────── */
 
 .alert-success {
-    border-left: 5px solid var(--color-primary);
+    border-left: 5px solid var(--color-green);
 }
 
 .alert-danger {

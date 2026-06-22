@@ -72,6 +72,7 @@ export default class extends Controller {
         saveUrl:             String,
         elementId:           Number,
         elementTitle:        { type: String,  default: 'Script' },
+        readonly:            { type: Boolean, default: false },
         wordsPerPage:        { type: Number,  default: 170 },
         readingWpm:          { type: Number,  default: 200 },
         screenTimePerPage:   { type: Number,  default: 60 },
@@ -101,17 +102,30 @@ export default class extends Controller {
         this._mentionBlock    = null;
         this._mentionFocusIdx = 0;
 
+        // Mémorise le dernier bloc qui avait le focus (pour les clics toolbar)
+        this._lastFocusedBlock = null;
+        this._trackFocus = (e) => {
+            if (e.target.classList?.contains('block')) {
+                this._lastFocusedBlock = e.target;
+            }
+        };
+        this.element.addEventListener('focusin', this._trackFocus);
+
         this._buildMentionDropdown();
         this._initBlocks();
 
-        this.autoSaveTimer = setInterval(() => {
-            if (this.isDirty) this._doSave();
-        }, this.autoSaveIntervalValue);
+        if (this.readonlyValue) {
+            this._applyReadonlyMode();
+        } else {
+            this.autoSaveTimer = setInterval(() => {
+                if (this.isDirty) this._doSave();
+            }, this.autoSaveIntervalValue);
 
-        this._beforeUnloadHandler = (e) => {
-            if (this.isDirty) { e.preventDefault(); e.returnValue = ''; }
-        };
-        window.addEventListener('beforeunload', this._beforeUnloadHandler);
+            this._beforeUnloadHandler = (e) => {
+                if (this.isDirty) { e.preventDefault(); e.returnValue = ''; }
+            };
+            window.addEventListener('beforeunload', this._beforeUnloadHandler);
+        }
 
         this._outsideClick = (e) => {
             if (!this._mentionDropdown.contains(e.target)) this._closeMention();
@@ -121,12 +135,39 @@ export default class extends Controller {
         this._setIndicatorState('saved');
     }
 
+    _applyReadonlyMode() {
+        // Rendre tous les blocs non éditables
+        this.stageTarget.querySelectorAll('.block').forEach(b => {
+            b.contentEditable = 'false';
+            b.classList.add('block--readonly');
+        });
+
+        // Masquer la barre d'outils et le bouton de sauvegarde
+        const toolbar = this.element.querySelector('.editor-toolbar');
+        if (toolbar) toolbar.hidden = true;
+
+        if (this.hasSaveButtonTarget) this.saveButtonTarget.hidden = true;
+        if (this.hasSaveIndicatorTarget) this.saveIndicatorTarget.hidden = true;
+
+        // Bannière lecture seule
+        const topbar = this.element.querySelector('.editor-topbar-right');
+        if (topbar) {
+            const badge = document.createElement('span');
+            badge.className = 'editor-readonly-badge';
+            badge.textContent = 'Lecture seule';
+            topbar.prepend(badge);
+        }
+
+        this.element.classList.add('editor-shell--readonly');
+    }
+
     disconnect() {
         clearTimeout(this.debounceTimer);
         clearTimeout(this._pageBreakTimer);
         clearInterval(this.autoSaveTimer);
         window.removeEventListener('beforeunload', this._beforeUnloadHandler);
         document.removeEventListener('mousedown', this._outsideClick);
+        this.element.removeEventListener('focusin', this._trackFocus);
         this._mentionDropdown?.remove();
         document.body.classList.remove('sidebar-open');
     }
@@ -621,18 +662,27 @@ export default class extends Controller {
         }
     }
 
-    setBlockTypeTool({ params: { type, prefix } }) {
-        const focused = this.stageTarget.querySelector('.block:focus');
-        if (focused) {
-            this._setBlockType(focused, type);
-            if (prefix && !focused.textContent.trim()) {
-                focused.textContent = prefix;
-                this._moveCursorToEnd(focused);
+    setBlockTypeTool(event) {
+        // Empêche le bouton de prendre le focus (mousedown arrive avant click)
+        event.preventDefault?.();
+
+        const { type, prefix } = event.params ?? {};
+
+        // Priorité : bloc actuellement focalisé, sinon dernier bloc mémorisé
+        const target = this.stageTarget.querySelector('.block:focus')
+            ?? (this._lastFocusedBlock?.isConnected ? this._lastFocusedBlock : null);
+
+        if (target) {
+            this._setBlockType(target, type);
+            if (prefix && !target.textContent.trim()) {
+                target.textContent = prefix;
+                this._moveCursorToEnd(target);
             }
             this._updateTypePill(type);
-            focused.focus();
+            target.focus();
         } else {
-            const nb = this._createBlock(type, prefix ?? '');
+            // Aucun bloc connu → on crée un nouveau bloc après le dernier
+            const nb   = this._createBlock(type, prefix ?? '');
             const last = this.stageTarget.lastElementChild;
             last ? last.after(nb) : this.stageTarget.appendChild(nb);
             const newBlock = nb.querySelector('.block');
@@ -693,9 +743,12 @@ export default class extends Controller {
 
         const win = window.open('', '_blank');
         if (!win) { alert('Autorisez les popups pour exporter en PDF.'); return; }
+        const _origin = window.location.origin;
         win.document.write(`<!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8"><title>${this._esc(title)}</title>
 <style>
+@font-face{font-family:'Courier Prime';src:url('${_origin}/assets/fonts/display/CourierPrime-Regular.ttf');font-weight:400;font-style:normal}
+@font-face{font-family:'Courier Prime';src:url('${_origin}/assets/fonts/display/CourierPrime-Bold.ttf');font-weight:700;font-style:normal}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Courier Prime','Courier New',monospace;font-size:12pt;line-height:1.6;color:#000;background:#fff;padding:1.2in 1.5in 1in}
 @page{margin:1in}

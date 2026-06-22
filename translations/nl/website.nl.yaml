@@ -7,9 +7,14 @@
 # ===== META TAGS =====
 meta:
     home_title: "Scénart - Verbeeld, Structureer, Schrijf"
-    examples_title: "Scénart - Voorbeelden"
+    examples_title: "Scénart - Functies"
     pricing_title: "Scénart - Prijzen"
     contact_title: "Scénart - Contact"
+    default_description: "Scénart — Collaboratief narratief creatieplatform voor scenarioschrijvers, auteurs en game designers."
+    home_description: "ScénArt is het collaboratieve platform voor scenarioschrijvers, auteurs en game designers. Structureer uw narratieve projecten, werk samen met uw team en publiceer uw creaties."
+    examples_description: "Ontdek alle functies van ScénArt: Fountain-editor, personagefiches, teamsamenwerking en takenbeheer."
+    pricing_description: "Ontdek de ScénArt-abonnementen. Begin gratis en upgrade naar Pro naarmate uw projecten groeien."
+    contact_description: "Neem contact op met het ScénArt-team voor vragen, suggesties of meldingen. Antwoord binnen 48u."
 
 # ===== NAVBAR (PUBLIEK) =====
 navbar:
@@ -21,7 +26,7 @@ navbar:
 
     links:
         home: "Home"
-        examples: "Voorbeelden"
+        examples: "Functies"
         pricing: "Prijzen"
         contact: "Contact"
 
@@ -108,6 +113,7 @@ home:
         title: "Alles wat je nodig hebt om"
         title_highlight: "je universum te bouwen"
         desc: "Tools ontworpen voor serieuze makers.<br>Van ruw idee tot volledig wereld."
+        discover: "Alle functies verkennen"
         items:
             editor_title: "Scenario Editor"
             editor_desc: "Professioneel scenarioformaat. Sluglines, dialogen, automatische vertelling."
@@ -146,33 +152,118 @@ home:
         desc: "Sluit je aan bij honderden makers die hun universums lanceren op Scénart."
         actions:
             start: "Start gratis"
-            examples: "Bekijk voorbeelden ↗"
+            examples: "Functies verkennen ↗"
 
 # ===== VOORBEELDEN PAGINA =====
 examples:
     header:
-        tag: "Voorbeelden"
-        title: "Projecten gemaakt op"
-        title_highlight: "SCÉNART"
-        description: "Ontdek hoe andere makers hun universums structureren. Elk project is uniek en illustreert de oneindige mogelijkheden van de Werkplaats."
+        tag: "Functies"
+        title: "Alles wat u nodig heeft om te"
+        title_highlight: "creëren"
+        description: "Van het schrijven van scripts tot teambeheer, ScénArt bundelt alle tools voor uw narratief project op één plek."
 
-    filters:
-        all: "Alle"
-        cinema: "Cinema"
-        serie: "Serie"
-        video_game: "Videogame"
+    scenariste:
+        tag: "Scenarioschrijver"
+        title: "Scenario-editor"
+        desc: "Schrijf uw scripts in een speciale Fountain-editor met scènenavigatie, syntaxismarkering en realtime opslaan."
+        feat1_title: "Fountain-formaat"
+        feat1_desc: "Scènes, dialogen, actielijnen, haakjes"
+        feat2_title: "Acte-navigatie"
+        feat2_desc: "Gestructureerde zijbalk, directe toegang tot elke scène"
+        feat3_title: "PDF-export"
+        feat3_desc: "Professionele lay-out drukklaar"
 
-    grid:
-        empty_message: "Geen projecten komen overeen met deze categorie op dit moment."
-        view_project: "Project verkennen"
-        author: "Door"
+    exploration:
+        tag: "Verkenning"
+        title: "Uw projecten, uw fiches"
+        desc: "Elk project heeft personagefiches, locaties en scripts. Blader door communityprojecten of beheer uw eigen."
+        feat1_title: "Personagefiches"
+        feat1_desc: "Rol, achtergrond, eigenschappen en relaties"
+        feat2_title: "Locatiefiches"
+        feat2_desc: "Interieur, exterieur, fantasie, futuristisch"
+        feat3_title: "Lijst- of rasterweergave"
+        feat3_desc: "Filters, sortering en directe zoekfunctie"
 
-    empty:
-        notice: "Sectie wordt voorbereid — de eerste projecten komen binnenkort"
-        title: "De eerste projecten komen binnenkort"
-        desc: "Zodra makers hun universums publiceren, vind je ze hier, gesorteerd op type en filterbaar."
-        cta_create: "Mijn eerste project maken"
-        cta_pricing: "Prijzen bekijken"
+    collaboration:
+        tag: "Samenwerking"
+        title: "Nodig uw team uit"
+        desc: "Beheer de rechten van elke medewerker en werk samen aan hetzelfde project met duidelijke rollen."
+        feat1_title: "Uitnodiging per gebruikersnaam"
+        feat1_desc: "Zoek een lid op via hun gebruikersnaam"
+        feat2_title: "Gedetailleerde rollen"
+        feat2_desc: "Eigenaar · Moderator · Bijdrager · Lezer"
+        feat3_title: "Activiteitslogboek"
+        feat3_desc: "Volledige geschiedenis van alle teamacties"
+        modal_title: "Medewerker uitnodigen"
+        modal_username_label: "Gebruikersnaam"
+        modal_role_label: "Rol in het project"
+        modal_role_reader: "Lezer"
+        modal_role_contributor: "Bijdrager"
+        modal_role_moderator: "Moderator"
+        modal_cancel: "Annuleren"
+        modal_submit: "Uitnodiging versturen"
+
+    organisation:
+        tag: "Organisatie"
+        title: "Taken & notities"
+        desc: "Plan uw werk met een geïntegreerd takenbord en collaboratieve notities gekoppeld aan uw project."
+        feat1_title: "Takenbord"
+        feat1_desc: "Te doen · Bezig · Review · Klaar"
+        feat2_title: "Collaboratieve notities"
+        feat2_desc: "Verwijzingen, ideeën, scèneannotaties"
+        feat3_title: "Teamtoewijzing"
+        feat3_desc: "Elke taak toegewezen aan een teamlid"
+
+    demo:
+        saved: "Opgeslagen"
+        paper_url: "werkplaats / er-was-eens / akte-i / het-begin"
+        paper_title: "— er was eens op scénart —"
+        paper_scene1: "EXT. ROMMELIG BUREAU — NACHT"
+        paper_action1: "Een scenarioschrijver staart naar 47 Word-bestanden. Elk heet \"DEFINITIEF_ECHT_DEFINITIEF_v3_goed.docx\"."
+        paper_char1: "DE SCENARIOSCHRIJVER"
+        paper_paren1: "(wanhopig)"
+        paper_dial1: "Mijn Akte II... het was hier gisteren nog."
+        paper_scene2: "OP ZIJN SCHERM — ScénArt opent eindelijk."
+        paper_char2: "DE SCENARIOSCHRIJVER"
+        paper_paren2: "(tranen in de ogen)"
+        paper_dial2: "Er was eens... het einde van de chaos."
+        paper_scene3: "INT. SCÉNART — DOORLOPEND"
+        paper_action3: "Hij maakt zijn eerste project aan. Zijn scènes organiseren zich. Zijn personages komen tot leven. Ergens huilt een USB-stick."
+        paper_char3: "DE SCENARIOSCHRIJVER"
+        paper_paren3: "(eindelijk uitademend)"
+        paper_dial3: "En ze leefden nog lang en gelukkig, met vele scènes."
+        type_film: "Film"
+        type_serie: "Serie"
+        type_jv: "Videospel"
+        status_complete: "Voltooid"
+        status_ongoing: "Bezig"
+        card_follow: "Volgen →"
+        card_read: "Lezen →"
+        role_owner: "Eigenaar"
+        elements: "elementen"
+        visibility_public: "Openbaar"
+        visibility_private: "Privé"
+        tasks: "taken"
+        up_to_date: "Bijgewerkt"
+        cta_edit: "Bewerken →"
+        task_url: "werkplaats / snatch / taken"
+        stat_overdue: "Te laat"
+        stat_progress: "Bezig"
+        stat_done: "Klaar"
+        task_todo: "Te doen"
+        task_in_progress: "Bezig"
+        task_done: "Klaar"
+        priority_high: "Hoog"
+        priority_normal: "Normaal"
+        priority_low: "Laag"
+
+    cta:
+        title: "Klaar om te"
+        title_highlight: "creëren"
+        title_suffix: " ?"
+        desc: "Word gratis lid van ScénArt en begin vandaag nog met uw eerste narratief project."
+        btn_start: "Gratis starten"
+        btn_pricing: "Bekijk prijzen"
 
 # ===== PRIJZEN PAGINA =====
 pricing:
@@ -251,7 +342,7 @@ contact:
             response_desc: "Minder dan 24u op weekdagen."
             response_sub: "Prioritaire ondersteuning voor Pro & Studio abonnees."
             academic: "Academisch project"
-            academic_desc: "StoryForge — TFE 2024-2025"
+            academic_desc: "StoryForge — TFE 2025-2026"
             academic_location: "EAFC Namur-Cadets, België"
 
     form:

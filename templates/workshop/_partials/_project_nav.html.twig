@@ -194,7 +194,7 @@
             <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
                class="nav-item {{ app.request.attributes.get('_route') starts with 'app_note' ? 'active' : '' }}"
                title="{{ 'nav.notes'|trans }}">
-                {{ ux_icon('lucide:file-edit') }}
+                {{ ux_icon('lucide:notebook') }}
                 <span class="sidebar-text">{{ 'nav.notes'|trans }}</span>
                 <span class="nav-count">{{ project.notes|filter(n => n.status != 'archived')|length }}</span>
             </a>
@@ -221,12 +221,14 @@
                 {{ ux_icon('lucide:eye', {class: 'icon-xs'}) }}
                 <span class="sidebar-text">{{ 'nav.readonly_mode'|trans }}</span>
             </div>
+            {% if project.visibility == 'public' %}
             <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}"
                class="nav-item"
                title="{{ 'nav.public_page'|trans }}">
                 {{ ux_icon('lucide:external-link', {class: 'icon-xs'}) }}
                 <span class="sidebar-text">{{ 'nav.public_page'|trans }}</span>
             </a>
+            {% endif %}
         {% else %}
             {# ── Bouton Publication ── #}
             <button type="button"

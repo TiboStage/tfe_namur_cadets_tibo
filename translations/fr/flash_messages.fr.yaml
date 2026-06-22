@@ -113,6 +113,7 @@ member:
     already_owner: "Vous êtes déjà le propriétaire de ce projet."
     already_collaborator: "« %username% » est déjà collaborateur de ce projet."
     added: "« %username% » a été ajouté(e) comme %role%."
+    invited: "Invitation envoyée à « %username% » comme %role%. Il/elle doit l'accepter pour rejoindre le projet."
     role_updated: "Rôle mis à jour."
     removed: "« %name% » a été retiré(e) du projet."
 

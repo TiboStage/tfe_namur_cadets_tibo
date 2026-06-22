@@ -31,6 +31,9 @@ class Comment
     #[ORM\Column(length: 20)]
     public string $status = 'visible';
 
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    public ?string $moderationNote = null;
+
     // ── Relations ─────────────────────────────────────────────────────────────
 
     #[ORM\ManyToOne(targetEntity: User::class)]

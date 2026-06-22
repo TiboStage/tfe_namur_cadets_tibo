@@ -37,6 +37,7 @@
 
 <div class="editor-shell right-collapsed"
      data-controller="fountain-editor"
+     data-fountain-editor-readonly-value="{{ readonly ? 'true' : 'false' }}"
      data-fountain-editor-save-url-value="{{ path('app_manuscript_save', {project_slug: project.slug, id: element.id}) }}"
      data-fountain-editor-element-id-value="{{ element.id }}"
      data-fountain-editor-element-title-value="{{ element.title }}"
@@ -129,41 +130,72 @@
 
         {# ── Toolbar types de blocs ─────────────────────────────────────────── #}
         <div class="editor-toolbar">
+
+            {# ── Décors ──────────────────────────────────────────────────── #}
             <div class="editor-toolbar-group">
+                <span class="editor-toolbar-group-label">Décor</span>
                 <button class="editor-toolbar-btn editor-toolbar-btn--scene" type="button"
                         title="Décor intérieur (INT.)"
-                        data-action="fountain-editor#setBlockTypeTool"
+                        data-action="mousedown->fountain-editor#setBlockTypeTool"
                         data-fountain-editor-type-param="SCENE"
                         data-fountain-editor-prefix-param="INT. ">INT.</button>
                 <button class="editor-toolbar-btn editor-toolbar-btn--scene" type="button"
                         title="Décor extérieur (EXT.)"
-                        data-action="fountain-editor#setBlockTypeTool"
+                        data-action="mousedown->fountain-editor#setBlockTypeTool"
                         data-fountain-editor-type-param="SCENE"
                         data-fountain-editor-prefix-param="EXT. ">EXT.</button>
             </div>
-            <div class="editor-toolbar-sep"></div>
+
+            {# ── Narration ───────────────────────────────────────────────── #}
             <div class="editor-toolbar-group">
+                <span class="editor-toolbar-group-label">Action</span>
                 <button class="editor-toolbar-btn" type="button"
-                        title="Bloc Action"
-                        data-action="fountain-editor#setBlockTypeTool"
-                        data-fountain-editor-type-param="ACTION">Action</button>
+                        title="Bloc Action (description)"
+                        data-action="mousedown->fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="ACTION">
+                    {{ ux_icon('lucide:align-left', {class: 'icon-xs'}) }}
+                    Action
+                </button>
+            </div>
+
+            {# ── Dialogue ────────────────────────────────────────────────── #}
+            <div class="editor-toolbar-group">
+                <span class="editor-toolbar-group-label">Dialogue</span>
                 <button class="editor-toolbar-btn" type="button"
                         title="Nom de personnage"
-                        data-action="fountain-editor#setBlockTypeTool"
-                        data-fountain-editor-type-param="CHARACTER">Personnage</button>
+                        data-action="mousedown->fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="CHARACTER">
+                    {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
+                    Personnage
+                </button>
                 <button class="editor-toolbar-btn" type="button"
                         title="Réplique / dialogue"
-                        data-action="fountain-editor#setBlockTypeTool"
-                        data-fountain-editor-type-param="DIALOGUE">Dialogue</button>
+                        data-action="mousedown->fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="DIALOGUE">
+                    {{ ux_icon('lucide:message-square', {class: 'icon-xs'}) }}
+                    Dialogue
+                </button>
                 <button class="editor-toolbar-btn" type="button"
                         title="Didascalie / parenthétique"
-                        data-action="fountain-editor#setBlockTypeTool"
-                        data-fountain-editor-type-param="PARENTHETICAL">Didascalie</button>
+                        data-action="mousedown->fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="PARENTHETICAL">
+                    {{ ux_icon('lucide:parentheses', {class: 'icon-xs'}) }}
+                    Didascalie
+                </button>
+            </div>
+
+            {# ── Montage ─────────────────────────────────────────────────── #}
+            <div class="editor-toolbar-group">
+                <span class="editor-toolbar-group-label">Montage</span>
                 <button class="editor-toolbar-btn" type="button"
                         title="Transition (COUPE SUR…)"
-                        data-action="fountain-editor#setBlockTypeTool"
-                        data-fountain-editor-type-param="TRANSITION">Transition</button>
+                        data-action="mousedown->fountain-editor#setBlockTypeTool"
+                        data-fountain-editor-type-param="TRANSITION">
+                    {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
+                    Transition
+                </button>
             </div>
+
             <span class="editor-toolbar-hint">Tab = cycle · Shift+Tab = inverse</span>
         </div>
 
@@ -282,7 +314,7 @@
         {# ── Notes liées à CET élément ──────────────────────── #}
         <div class="epanel-section accordion--open" data-controller="accordion">
             <button class="epanel-header" type="button" data-action="accordion#toggle">
-                {{ ux_icon('lucide:sticky-note', {class: 'icon-xs'}) }}
+                {{ ux_icon('lucide:notebook', {class: 'icon-xs'}) }}
                 <span>{{ 'manuscript.show.inspector.element_notes'|trans }}</span>
                 {% if elementNotes|length > 0 %}
                     <span class="epanel-count epanel-count--warn">{{ elementNotes|length }}</span>
@@ -301,10 +333,12 @@
                     {% endfor %}
                 {% endif %}
                 <div class="epanel-actions">
+                    {% if not (readonly ?? false) %}
                     <a href="{{ path('app_note_new', {project_slug: project.slug, element_id: element.id}) }}"
                        class="epanel-add-link">
                         {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }} {{ 'manuscript.show.inspector.new_note'|trans }}
                     </a>
+                    {% endif %}
                     {% if elementNotes|length > 0 %}
                         <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
                            class="epanel-all-link">{{ 'manuscript.show.inspector.all_notes'|trans }}</a>
@@ -335,10 +369,12 @@
                     {% endfor %}
                 {% endif %}
                 <div class="epanel-actions">
+                    {% if not (readonly ?? false) %}
                     <a href="{{ path('app_task_new', {project_slug: project.slug, element_id: element.id}) }}"
                        class="epanel-add-link">
                         {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }} {{ 'manuscript.show.inspector.new_task'|trans }}
                     </a>
+                    {% endif %}
                     {% if elementTasks|length > 0 %}
                         <a href="{{ path('app_task_index', {project_slug: project.slug}) }}"
                            class="epanel-all-link">{{ 'manuscript.show.inspector.all_notes'|trans }}</a>

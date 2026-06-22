@@ -145,6 +145,7 @@ final class ExplorationController extends AbstractController
                 'project'       => $project,
                 'comment_count' => $commentCountsMap[$project->getId()] ?? 0,
                 'viewer_role'   => $viewerRolesMap[$project->getId()] ?? null,
+                'active_genre'  => $genre,
             ]);
         }
 

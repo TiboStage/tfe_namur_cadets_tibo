@@ -30,8 +30,8 @@ class TaskType extends AbstractType
         $builder
             // Titre de la tâche
             ->add('title', TextType::class, [
-                'label' => 'task.form.title',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'task.form.title.label',
+                'translation_domain' => 'workshop',
                 'attr' => [
                     'placeholder' => 'task.form.title.placeholder',
                     'class' => 'form-control',
@@ -53,8 +53,8 @@ class TaskType extends AbstractType
 
             // Description de la tâche
             ->add('description', TextareaType::class, [
-                'label' => 'task.form.description',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'task.form.description.label',
+                'translation_domain' => 'workshop',
                 'attr' => [
                     'placeholder' => 'task.form.description.placeholder',
                     'class' => 'form-control',
@@ -70,7 +70,7 @@ class TaskType extends AbstractType
             // Statut de la tâche
             ->add('status', ChoiceType::class, [
                 'label' => 'task.form.status',
-                'translation_domain' => 'workshop_interface',
+                'translation_domain' => 'workshop',
                 'choices' => [
                     'task.status.todo' => 'todo',
                     'task.status.in_progress' => 'in_progress',
@@ -86,7 +86,7 @@ class TaskType extends AbstractType
             // Priorité de la tâche
             ->add('priority', ChoiceType::class, [
                 'label' => 'task.form.priority',
-                'translation_domain' => 'workshop_interface',
+                'translation_domain' => 'workshop',
                 'choices' => [
                     'task.priority.low' => 'low',
                     'task.priority.normal' => 'normal',
@@ -100,8 +100,8 @@ class TaskType extends AbstractType
 
             // Assignation à un membre du projet
             ->add('assignedTo', EntityType::class, [
-                'label' => 'task.form.assigned_to',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'task.form.assigned_to.label',
+                'translation_domain' => 'workshop',
                 'class' => User::class,
                 'choice_label' => function(User $user) {
                     return $user->getUsername();
@@ -120,7 +120,7 @@ class TaskType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Task::class,
-            'translation_domain' => 'workshop_interface',
+            'translation_domain' => 'workshop',
             'csrf_protection' => true,
             'csrf_token_id' => 'task_form',
         ]);

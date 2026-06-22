@@ -89,7 +89,7 @@
     border: 1px solid var(--color-border);
     padding: 2px 8px;
     letter-spacing: .06em;
-    font-family: 'Courier New', monospace;
+    font-family: var(--font-mono);
 }
 
 .language-selector {

@@ -62,13 +62,34 @@ class ScenarioElementController extends AbstractController
             }
         }
 
+        // Feuilles sérialisées (pour l'export global côté client)
+        $leafScripts = [];
+        $collectLeaves = function (ScenarioElement $el) use (&$collectLeaves, &$leafScripts): void {
+            if ($el->isLeaf()) {
+                $leafScripts[] = [
+                    'id'      => $el->getId(),
+                    'title'   => $el->title,
+                    'content' => $el->getContent(),
+                ];
+            } else {
+                foreach ($el->getChildren() as $child) {
+                    $collectLeaves($child);
+                }
+            }
+        };
+        foreach ($rootElements as $root) {
+            $collectLeaves($root);
+        }
+
         return $this->render('workshop/projects/scenario/index.html.twig', [
             'project'        => $project,
+            'readonly'       => $this->isReadOnly($project),
             'rootElements'   => $rootElements,
             'notesByElement' => $notesByElement,
             'totalWordCount' => $totalWordCount,
             'configMap'      => $configMap,
             'maxDepth'       => $configMap ? max(array_keys($configMap)) : 3,
+            'leafScripts'    => $leafScripts,
         ]);
     }
 
@@ -78,7 +99,7 @@ class ScenarioElementController extends AbstractController
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         $depth     = max(1, (int) $request->query->get('depth', 1));
         $parentId  = $request->query->get('parent_id');
@@ -187,6 +208,7 @@ class ScenarioElementController extends AbstractController
 
         return $this->render('workshop/projects/scenario/show.html.twig', [
             'project'       => $project,
+            'readonly'      => $this->isReadOnly($project),
             'element'       => $element,
             'rootElements'  => $rootElements,
             'siblings'      => $this->scenarioRepo->findSiblings($element),
@@ -210,7 +232,7 @@ class ScenarioElementController extends AbstractController
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         #[MapEntity(id: 'id')] ScenarioElement $element
     ): JsonResponse {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         if ($element->getProject() !== $project) {
             return new JsonResponse(['error' => 'Not found'], 404);
@@ -244,7 +266,7 @@ class ScenarioElementController extends AbstractController
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         #[MapEntity(id: 'id')] ScenarioElement $element
     ): JsonResponse {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         if ($element->getProject() !== $project) {
             return new JsonResponse(['error' => 'Not found'], 404);
@@ -279,7 +301,7 @@ class ScenarioElementController extends AbstractController
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         #[MapEntity(id: 'id')] ScenarioElement $element
     ): JsonResponse {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         if ($element->getProject() !== $project) {
             return new JsonResponse(['error' => 'Not found'], 404);
@@ -304,7 +326,7 @@ class ScenarioElementController extends AbstractController
         Request $request,
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): JsonResponse {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         $data     = json_decode($request->getContent(), true);
         $ids      = (array) ($data['ids'] ?? []);
@@ -335,7 +357,7 @@ class ScenarioElementController extends AbstractController
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         #[MapEntity(id: 'id')] ScenarioElement $element
     ): Response {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         if ($element->getProject() !== $project) {
             throw $this->createNotFoundException();

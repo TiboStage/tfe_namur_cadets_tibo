@@ -11,13 +11,15 @@
 {% set _extra = class ?? '' %}
 {% set _link  = link  ?? false %}
 
+{% if user is not null %}
 {% set _avatar %}
 <span class="u-avatar u-avatar--{{ _size }} {{ _extra }}"
       {% if not user.avatarFilename %}style="background-color:{{ user.avatarColor }};"{% endif %}>
     {% if user.avatarFilename %}
         <img src="/uploads/avatars/{{ user.avatarFilename }}"
              alt="{{ user.username }}"
-             class="u-avatar__img">
+             class="u-avatar__img"
+             loading="lazy">
     {% else %}
         <span class="u-avatar__letter">{{ user.username|first|upper }}</span>
     {% endif %}
@@ -29,4 +31,9 @@
        class="u-avatar-link">{{ _avatar }}</a>
 {% else %}
     {{ _avatar }}
+{% endif %}
+{% else %}
+<span class="u-avatar u-avatar--{{ _size }} {{ _extra }}" style="background-color:#94a3b8;">
+    <span class="u-avatar__letter">?</span>
+</span>
 {% endif %}

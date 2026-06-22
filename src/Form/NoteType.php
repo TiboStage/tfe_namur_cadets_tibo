@@ -29,8 +29,8 @@ class NoteType extends AbstractType
         $builder
             // Titre de la note
             ->add('title', TextType::class, [
-                'label' => 'note.form.title',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'note.form.title.label',
+                'translation_domain' => 'workshop',
                 'attr' => [
                     'placeholder' => 'note.form.title.placeholder',
                     'class' => 'form-control',
@@ -52,8 +52,8 @@ class NoteType extends AbstractType
 
             // Contenu de la note
             ->add('content', TextareaType::class, [
-                'label' => 'note.form.content',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'note.form.content.label',
+                'translation_domain' => 'workshop',
                 'attr' => [
                     'placeholder' => 'note.form.content.placeholder',
                     'class' => 'form-control',
@@ -69,7 +69,7 @@ class NoteType extends AbstractType
             // Statut de la note
             ->add('status', ChoiceType::class, [
                 'label' => 'note.form.status',
-                'translation_domain' => 'workshop_interface',
+                'translation_domain' => 'workshop',
                 'choices' => [
                     'note.status.note' => 'note',
                     'note.status.todo' => 'todo',
@@ -84,7 +84,7 @@ class NoteType extends AbstractType
             // Priorité
             ->add('priority', ChoiceType::class, [
                 'label' => 'note.form.priority',
-                'translation_domain' => 'workshop_interface',
+                'translation_domain' => 'workshop',
                 'choices' => [
                     'note.priority.low' => 'low',
                     'note.priority.normal' => 'normal',
@@ -98,8 +98,8 @@ class NoteType extends AbstractType
 
             // Assignation (optionnel)
             ->add('assignedTo', EntityType::class, [
-                'label' => 'note.form.assigned_to',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'note.form.assigned_to.label',
+                'translation_domain' => 'workshop',
                 'class' => User::class,
                 'choice_label' => function(User $user) {
                     return $user->getUsername();
@@ -118,7 +118,7 @@ class NoteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Note::class,
-            'translation_domain' => 'workshop_interface',
+            'translation_domain' => 'workshop',
             'csrf_protection' => true,
             'csrf_token_id' => 'note_form',
         ]);
@@ -132,12 +132,23 @@ class NoteType extends AbstractType
      */
     private function getProjectMembers($project): array
     {
-        $members = [$project->getOwner()];
-        
-        foreach ($project->getProjectMembers() as $projectMember) {
-            $members[] = $projectMember->getUser();
+        $seen    = [];
+        $members = [];
+
+        $owner = $project->getOwner();
+        if ($owner !== null) {
+            $seen[$owner->getId()] = true;
+            $members[] = $owner;
         }
-        
-        return array_unique($members);
+
+        foreach ($project->getProjectMembers() as $projectMember) {
+            $user = $projectMember->getUser();
+            if ($user !== null && !isset($seen[$user->getId()])) {
+                $seen[$user->getId()] = true;
+                $members[] = $user;
+            }
+        }
+
+        return $members;
     }
 }

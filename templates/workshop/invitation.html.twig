@@ -1,0 +1,50 @@
+{# templates/workshop/invitation.html.twig #}
+{% extends 'workshop/layout.html.twig' %}
+
+{% block subnav %}{% endblock %}
+
+{% block title %}Invitation · {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="workshop-container">
+
+    <div class="invitation-card">
+
+        <div class="invitation-card__icon">
+            {{ ux_icon('lucide:user-plus', {style: 'width:32px;height:32px'}) }}
+        </div>
+
+        <h1 class="invitation-card__title">Vous avez été invité(e)</h1>
+
+        <p class="invitation-card__desc">
+            Vous avez reçu une invitation à rejoindre le projet
+            <strong>{{ project.title }}</strong>
+            en tant que <strong>{{ member.role }}</strong>.
+        </p>
+
+        <div class="invitation-card__meta text-muted">
+            Invité par <strong>{{ project.createdBy.username }}</strong>
+        </div>
+
+        <div class="invitation-card__actions">
+            <form action="{{ path('app_member_invitation_accept', {_locale: app.request.locale, slug: project.slug}) }}" method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token('invite_accept_' ~ project.id) }}">
+                <button type="submit" class="btn-creat">
+                    {{ ux_icon('lucide:check', {style: 'width:15px;height:15px'}) }}
+                    Accepter l'invitation
+                </button>
+            </form>
+
+            <form action="{{ path('app_member_invitation_decline', {_locale: app.request.locale, slug: project.slug}) }}" method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token('invite_decline_' ~ project.id) }}">
+                <button type="submit" class="btn--ghost"
+                    onclick="return confirm('Décliner cette invitation ?')">
+                    Décliner
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

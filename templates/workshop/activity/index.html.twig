@@ -1,10 +1,11 @@
 {% extends 'workshop/layout.html.twig' %}
 {% trans_default_domain 'workshop' %}
 
-{% block title %}Activité récente — Scénart{% endblock %}
+{% block title %}Activité — Scénart{% endblock %}
 
 {% block content %}
 
+{# ── Méta-données par action (icône + couleur + label) ───────────── #}
 {% set action_meta = {
     'project.create':     { icon: 'lucide:folder-plus',   color: 'green',  label: 'Projet créé' },
     'project.edit':       { icon: 'lucide:pencil',         color: 'blue',   label: 'Projet modifié' },
@@ -30,9 +31,18 @@
     'world_event.delete': { icon: 'lucide:calendar-x',     color: 'red',    label: 'Événement supprimé' },
 } %}
 
-<div class="workshop-container">
+{% set group_labels = {
+    'today':      'Aujourd\'hui',
+    'yesterday':  'Hier',
+    'this_week':  'Cette semaine',
+    'this_month': 'Ce mois-ci',
+    'older':      'Plus ancien',
+} %}
 
-    <header class="page-header">
+<div class="workspace-content">
+
+    {# ── En-tête ─────────────────────────────────────────────────── #}
+    <div class="act-header">
         <div>
             <a href="{{ path('app_workshop_dashboard', {_locale: app.request.locale}) }}" class="link-back">
                 {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }}
@@ -40,53 +50,112 @@
             </a>
             <h1>Activité récente</h1>
         </div>
-    </header>
+        <span class="act-header__count">{{ total_count }} action{{ total_count > 1 ? 's' : '' }}</span>
+    </div>
 
-    {% if activities is empty %}
-        <div class="page-empty">
-            {{ ux_icon('lucide:activity', {style: 'width:44px;height:44px'}) }}
-            <h3>Aucune activité pour le moment</h3>
-            <p>Vos actions sur vos projets apparaîtront ici.</p>
-        </div>
-    {% else %}
+    {# ── Layout 2 colonnes ───────────────────────────────────────── #}
+    <div class="act-layout">
 
-        {% set current_date = null %}
-        <div class="activity-log">
-            {% for log in activities %}
-                {% set log_date = log.createdAt|date('Y-m-d') %}
-                {% if log_date != current_date %}
-                    {% if current_date is not null %}</div>{% endif %}
-                    {% set current_date = log_date %}
-                    <div class="activity-log__group">
-                    <div class="activity-log__date">{{ log.createdAt|date('d F Y') }}</div>
-                {% endif %}
-
-                {% set meta = action_meta[log.action] ?? { icon: 'lucide:circle', color: 'muted', label: log.action } %}
-                <div class="activity-log__item dash-activity-item dash-activity-item--{{ meta.color }}">
-                    <span class="dash-activity-item__icon">
-                        {{ ux_icon(meta.icon, {class: 'icon-xs'}) }}
-                    </span>
-                    <div class="dash-activity-item__body">
-                        <span class="dash-activity-item__label">{{ meta.label }}</span>
-                        {% if log.description %}
-                            <span class="dash-activity-item__name">{{ log.description }}</span>
+        {# ── Sidebar catégories ──────────────────────────────────── #}
+        <aside class="act-sidebar">
+            <div class="act-sidebar__title">Catégories</div>
+            <nav class="act-cat-nav">
+                {% for key, cat in categories %}
+                    {% set count = key == '' ? total_count : (category_counts[key] ?? 0) %}
+                    {% if key == '' or count > 0 %}
+                    <a href="{{ path('app_activity_log', {_locale: app.request.locale, category: key}) }}"
+                       class="act-cat-item {{ category == key ? 'is-active' : '' }}">
+                        <span class="act-cat-item__icon">
+                            {{ ux_icon(cat.icon, {style: 'width:14px;height:14px'}) }}
+                        </span>
+                        <span class="act-cat-item__label">{{ cat.label }}</span>
+                        {% if count > 0 %}
+                        <span class="act-cat-item__count">{{ count }}</span>
                         {% endif %}
-                        {% if log.project %}
-                            <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: log.project.slug}) }}"
-                               class="dash-activity-item__project">
-                                {{ log.project.title }}
-                            </a>
-                        {% endif %}
-                    </div>
-                    <time class="dash-activity-item__time" datetime="{{ log.createdAt|date('c') }}">
-                        {{ log.createdAt|date('H:i') }}
-                    </time>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            </nav>
+        </aside>
+
+        {# ── Contenu principal ───────────────────────────────────── #}
+        <main class="act-main">
+
+            {% if activities is empty %}
+                <div class="page-empty">
+                    {{ ux_icon('lucide:activity', {style: 'width:44px;height:44px'}) }}
+                    <h3>Aucune activité</h3>
+                    <p>Aucune action trouvée pour cette catégorie.</p>
                 </div>
-            {% endfor %}
-            </div>{# ferme le dernier groupe #}
-        </div>
+            {% else %}
 
-    {% endif %}
+                {% for group_key, logs in grouped %}
+                <section class="act-group">
+                    <div class="act-group__header">
+                        <span class="act-group__label">{{ group_labels[group_key] ?? group_key }}</span>
+                        <span class="act-group__count">{{ logs|length }}</span>
+                    </div>
 
-</div>
+                    <div class="act-group__items">
+                        {% for log in logs %}
+                            {% set meta = action_meta[log.action] ?? { icon: 'lucide:circle', color: 'muted', label: log.action } %}
+                            {% set isSelf = log.user.id == app.user.id %}
+
+                            <div class="act-item act-item--{{ meta.color }}">
+
+                                {# Icône action #}
+                                <span class="act-item__icon">
+                                    {{ ux_icon(meta.icon, {style: 'width:15px;height:15px'}) }}
+                                </span>
+
+                                {# Corps #}
+                                <div class="act-item__body">
+                                    <div class="act-item__top">
+                                        <span class="act-item__label">{{ meta.label }}</span>
+                                        {% if log.description %}
+                                            <span class="act-item__name">— {{ log.description }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="act-item__meta">
+                                        {# Auteur de l'action #}
+                                        <span class="act-item__who">
+                                            {{ ux_icon('lucide:user', {style: 'width:11px;height:11px'}) }}
+                                            {% if isSelf %}
+                                                Moi
+                                            {% else %}
+                                                {{ log.user.username }}
+                                            {% endif %}
+                                        </span>
+                                        {# Projet lié #}
+                                        {% if log.project %}
+                                            <span class="act-item__sep">·</span>
+                                            <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: log.project.slug}) }}"
+                                               class="act-item__project">
+                                                {{ ux_icon('lucide:folder', {style: 'width:11px;height:11px'}) }}
+                                                {{ log.project.title }}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                {# Heure #}
+                                <time class="act-item__time" datetime="{{ log.createdAt|date('c') }}"
+                                      title="{{ log.createdAt|date('d/m/Y à H:i') }}">
+                                    {{ log.createdAt|date('H:i') }}
+                                </time>
+
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endfor %}
+
+            {% endif %}
+
+        </main>
+
+    </div>{# /.act-layout #}
+
+</div>{# /.workspace-content #}
+
 {% endblock %}

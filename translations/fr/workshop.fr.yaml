@@ -124,9 +124,11 @@ projects:
 
     roles:
         owner: "Propriétaire"
+        moderator: "Modérateur"
+        contributor: "Contributeur"
+        reader: "Lecteur"
         lead: "Co-responsable"
         editor: "Éditeur"
-        contributor: "Contributeur"
 
     visibility:
         public: "En ligne"
@@ -158,7 +160,7 @@ projects:
 
 #    new:
 #        title: "Nouveau projet"
-#        back: "← Mes projets"
+#        back: "Mes projets"
 #        label_title: "Titre du projet"
 #        label_type: "Type de projet"
 #        label_desc: "Description"
@@ -184,9 +186,9 @@ projects:
             username_label: "Nom d'utilisateur"
             username_ph: "ex : johndoe"
             role_label: "Rôle"
-            role_contributor: "Contributeur — lecture + suggestions"
-            role_editor: "Éditeur — peut modifier le contenu"
-            role_lead: "Co-responsable — accès complet"
+            role_reader: "Lecteur — lecture + notes uniquement"
+            role_contributor: "Contributeur — écriture du contenu"
+            role_moderator: "Modérateur — gestion du projet"
             invite_btn: "Inviter"
             empty: "Aucun collaborateur pour l'instant."
             since: "Depuis"
@@ -194,7 +196,7 @@ projects:
             remove_confirm: "Retirer %username% du projet ?"
 
     show:
-        back: "← Mes projets"
+        back: "Mes projets"
         btn_settings: "Paramètres"
         no_description: "Aucune description."
         section_structure: "Structure narrative"
@@ -309,7 +311,7 @@ project_new:
             genres_title: "GENRES (choix multiples)"
 
         # Boutons de navigation
-        button_back: "← Retour"
+        button_back: "Retour"
         button_next: "Suivant →"
         button_validate: "Valider →"
 
@@ -386,7 +388,7 @@ character:
 
     new:
         title: "Nouveau personnage"
-        back: "← Personnages"
+        back: "Personnages"
         submit: "Créer le personnage →"
         cancel: "Annuler"
         advanced: "Paramètres avancés"
@@ -402,7 +404,7 @@ character:
         delete_confirm: "Supprimer ce personnage ?"
 
     show:
-        back: "← Personnages"
+        back: "Personnages"
         edit_btn: "Modifier"
         no_description: "Aucune description pour ce personnage."
         description: "Description"
@@ -474,7 +476,7 @@ location:
 
     new:
         title: "Nouveau lieu"
-        back: "← Lieux"
+        back: "Lieux"
         submit: "Créer le lieu →"
         cancel: "Annuler"
         advanced: "Paramètres avancés"
@@ -490,7 +492,7 @@ location:
         delete_confirm: "Supprimer ce lieu ?"
 
     show:
-        back: "← Lieux"
+        back: "Lieux"
         edit_btn: "Modifier"
         no_description: "Aucune description pour ce lieu."
         children: "Sous-lieux"
@@ -556,6 +558,7 @@ explore:
         series: "Séries"
         games: "Jeux Vidéo"
         add_filters: "Ajouter des filtres"
+        genre: "Genre"
         genre_universal: "Universel"
         sort: "Trier par"
         sort_recent: "Plus récents"
@@ -607,7 +610,7 @@ note:
     edit:
         title: "Modifier la note"
 
-    back: "← Notes"
+    back: "Notes"
     confirm_delete: "Supprimer cette note définitivement ?"
 
     show:
@@ -629,17 +632,29 @@ note:
 
     priority:
         low: "Faible"
-        medium: "Normale"
+        normal: "Normale"
         high: "Haute"
         urgent: "Urgente"
+
+    flash:
+        created: "Note « %title% » créée avec succès."
+        updated: "Note « %title% » mise à jour."
+        deleted: "Note supprimée."
 
     form:
         section_main: "Contenu de la note"
         section_organization: "Organisation"
+        status: "Statut"
+        priority: "Priorité"
         title:
+            label: "Titre"
             placeholder: "Titre de la note..."
         content:
+            label: "Contenu"
             placeholder: "Rédigez votre note ici..."
+        assigned_to:
+            label: "Assigné à"
+            placeholder: "Non assigné"
 
 # ===== TÂCHES =====
 task:
@@ -675,7 +690,7 @@ task:
     edit:
         title: "Modifier la tâche"
 
-    back: "← Tâches"
+    back: "Tâches"
     confirm_delete: "Supprimer cette tâche définitivement ?"
     unassigned: "Non assigné"
 
@@ -692,17 +707,29 @@ task:
 
     priority:
         low: "Faible"
-        medium: "Normale"
+        normal: "Normale"
         high: "Haute"
         urgent: "Urgente"
+
+    flash:
+        created: "Tâche « %title% » créée avec succès."
+        updated: "Tâche « %title% » mise à jour."
+        deleted: "Tâche supprimée."
 
     form:
         section_main: "Informations principales"
         section_organization: "Organisation"
+        status: "Statut"
+        priority: "Priorité"
         title:
+            label: "Titre"
             placeholder: "Titre de la tâche..."
         description:
+            label: "Description"
             placeholder: "Description de la tâche..."
+        assigned_to:
+            label: "Assigné à"
+            placeholder: "Non assigné"
 
 # ===== CHRONOLOGIE =====
 world_event:
@@ -721,7 +748,7 @@ world_event:
     edit:
         title: "Modifier l'événement"
 
-    back: "← Chronologie"
+    back: "Chronologie"
     confirm_delete: "Supprimer cet événement définitivement ?"
     year: "An"
 
@@ -730,20 +757,33 @@ world_event:
         description: "Description"
         location: "Lieu"
 
+    flash:
+        created: "Événement « %title% » créé avec succès."
+        updated: "Événement « %title% » mis à jour."
+        deleted: "Événement « %title% » supprimé."
+
     form:
         section_main: "Informations"
         section_date: "Date narrative"
         section_location: "Lieu lié"
         date_help: "Utilisez les dates fictives de votre univers (ex : An 342, Mois 7, Jour 15)"
+        event_type: "Type d'événement"
+        linked_scene: "Scène liée"
+        location: "Lieu"
         title:
+            label: "Titre"
             placeholder: "Titre de l'événement..."
         description:
+            label: "Description"
             placeholder: "Décrivez cet événement..."
         year:
+            label: "Année"
             placeholder: "An (ex : 342)"
         month:
+            label: "Mois"
             placeholder: "Mois (1-12)"
         day:
+            label: "Jour"
             placeholder: "Jour (1-31)"
 
 # ===== MANUSCRIT =====
@@ -936,6 +976,7 @@ nav:
     production: "Production"
     tasks: "Tâches"
     notes: "Notes"
+    more: "Plus"
     collapse: "Réduire"
     readonly_mode: "Mode lecture"
     public_page: "Page publique"

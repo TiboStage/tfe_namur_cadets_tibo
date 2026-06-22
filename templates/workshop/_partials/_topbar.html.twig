@@ -52,6 +52,8 @@
         {# ── Droite : notifs + user ───────────────────────────────── #}
         <div class="nav-right">
 
+            {% if app.user %}
+
             <div class="notification-wrapper"
                  data-controller="notifications"
                  data-notifications-dropdown-url-value="{{ path('app_notifications_dropdown', {_locale: app.request.locale}) }}"
@@ -94,6 +96,12 @@
             </div>
 
             <twig:UserProfile />
+
+            {% else %}
+                <a href="{{ path('app_login', {_locale: app.request.locale}) }}" class="btn-atelier">
+                    {{ 'navbar.actions.login'|trans({}, 'website') }}
+                </a>
+            {% endif %}
 
         </div>
 

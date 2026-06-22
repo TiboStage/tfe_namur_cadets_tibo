@@ -2,6 +2,12 @@
 
 {% set route = app.request.attributes.get('_route') %}
 
+{# is_manager : propriétaire ou membre modérateur actif — seuls ceux-ci voient les paramètres #}
+{% set is_manager = app.user is not null and (
+    app.user.id == project.createdBy.id
+    or project.projectMembers|filter(m => m.user.id == app.user.id and m.role == 'moderator' and m.isActive)|length > 0
+) %}
+
 {# ── Pré-calcul des compteurs ─────────────────────────────── #}
 {% set se_count     = project.scenarioElements|length %}
 {% set we_count     = project.worldEvents|length %}
@@ -98,6 +104,37 @@
         {# ── Séparateur | entre primaires et secondaires ──── #}
         <span class="project-bar__nav-sep"></span>
 
+        {# ── Dropdown secondaire (visible entre 1250px et 1100px) ── #}
+        {% set secondary_active = route starts with 'app_world_event' or route starts with 'app_task' or route starts with 'app_note' %}
+        <div class="project-bar__nav-more project-bar__nav-more--secondary" data-controller="dropdown">
+            <button class="project-bar__tab project-bar__nav-more-btn {{ secondary_active ? 'active' : '' }}"
+                    data-action="click->dropdown#toggle"
+                    type="button"
+                    title="{{ 'nav.more'|trans }}">
+                {{ ux_icon('lucide:ellipsis', {class: 'icon-xs'}) }}
+            </button>
+            <div class="project-bar__nav-more-menu" data-dropdown-target="menu">
+                <a href="{{ path('app_world_event_index', {project_slug: project.slug}) }}"
+                   class="{{ route starts with 'app_world_event' ? 'active' : '' }}">
+                    {{ ux_icon('lucide:calendar-clock', {class: 'icon-xs'}) }}
+                    {{ 'nav.timeline'|trans }}
+                    {% if we_count > 0 %}<span class="project-bar__count">{{ we_count }}</span>{% endif %}
+                </a>
+                <a href="{{ path('app_task_index', {project_slug: project.slug}) }}"
+                   class="{{ route starts with 'app_task' ? 'active' : '' }}">
+                    {{ ux_icon('lucide:check-square', {class: 'icon-xs'}) }}
+                    {{ 'nav.tasks'|trans }}
+                    {% if open_tasks > 0 %}<span class="project-bar__count">{{ open_tasks }}</span>{% endif %}
+                </a>
+                <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
+                   class="{{ route starts with 'app_note' ? 'active' : '' }}">
+                    {{ ux_icon('lucide:notebook', {class: 'icon-xs'}) }}
+                    {{ 'nav.notes'|trans }}
+                    {% if active_notes > 0 %}<span class="project-bar__count">{{ active_notes }}</span>{% endif %}
+                </a>
+            </div>
+        </div>
+
         {# ── Onglets secondaires (desktop) ────────────────── #}
         <a href="{{ path('app_world_event_index', {project_slug: project.slug}) }}"
            class="project-bar__tab project-bar__tab--secondary {{ route starts with 'app_world_event' ? 'active' : '' }}">
@@ -115,7 +152,7 @@
 
         <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
            class="project-bar__tab project-bar__tab--secondary {{ route starts with 'app_note' ? 'active' : '' }}">
-            {{ ux_icon('lucide:file-edit', {class: 'icon-xs'}) }}
+            {{ ux_icon('lucide:notebook', {class: 'icon-xs'}) }}
             {{ 'nav.notes'|trans }}
             {% if active_notes > 0 %}<span class="project-bar__count">{{ active_notes }}</span>{% endif %}
         </a>
@@ -125,8 +162,7 @@
             <button class="project-bar__tab project-bar__nav-more-btn"
                     data-action="click->dropdown#toggle"
                     type="button">
-                {{ 'projects.index.tab_more'|trans }}
-                {{ ux_icon('lucide:chevron-down', {class: 'icon-xs'}) }}
+                {{ ux_icon('lucide:ellipsis', {class: 'icon-xs'}) }}
             </button>
             <div class="project-bar__nav-more-menu" data-dropdown-target="menu">
                 <a href="{{ path('app_project_show', {slug: project.slug}) }}"
@@ -166,19 +202,19 @@
                 </a>
                 <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
                    class="{{ route starts with 'app_note' ? 'active' : '' }}">
-                    {{ ux_icon('lucide:file-edit', {class: 'icon-xs'}) }}
+                    {{ ux_icon('lucide:notebook', {class: 'icon-xs'}) }}
                     {{ 'nav.notes'|trans }}
                     {% if active_notes > 0 %}<span class="project-bar__count">{{ active_notes }}</span>{% endif %}
                 </a>
                 {# ── Séparateur + Paramètres (visible uniquement sur petits écrans) ── #}
                 <span class="project-bar__nav-more-divider"></span>
-                {% if not (readonly ?? false) %}
+                {% if is_manager %}
                     <a href="{{ path('app_project_edit', {slug: project.slug}) }}"
                        class="project-bar__nav-more-settings {{ route starts with 'app_project_edit' ? 'active' : '' }}">
                         {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
                         {{ 'nav.settings'|trans }}
                     </a>
-                {% else %}
+                {% elseif project.visibility == 'public' %}
                     <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}"
                        class="project-bar__nav-more-settings" target="_blank" rel="noopener">
                         {{ ux_icon('lucide:external-link', {class: 'icon-xs'}) }}
@@ -191,8 +227,8 @@
         {# ── Spacer + Paramètres (extrémité droite, desktop) ─ #}
         <span class="project-bar__nav-spacer"></span>
 
-        {% if not (readonly ?? false) %}
-            {% if app.user == project.createdBy %}
+        {% if is_manager %}
+            {% if app.user.id == project.createdBy.id %}
                 <a href="{{ path('app_project_moderation', {_locale: app.request.locale, slug: project.slug}) }}"
                    class="project-bar__settings-btn {{ route == 'app_project_moderation' ? 'active' : '' }}"
                    title="Modération">
@@ -206,7 +242,7 @@
                 {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
                 <span class="project-bar__settings-label">{{ 'nav.settings'|trans }}</span>
             </a>
-        {% else %}
+        {% elseif project.visibility == 'public' %}
             <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}"
                class="project-bar__settings-btn" target="_blank" rel="noopener"
                title="{{ 'nav.public_page'|trans }}">

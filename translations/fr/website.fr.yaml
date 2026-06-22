@@ -10,6 +10,11 @@ meta:
     examples_title: "Exemples - Scénart"
     pricing_title: "Scénart - Tarifs"
     contact_title: "Contact - Scénart"
+    default_description: "Scénart — Plateforme collaborative de création narrative pour scénaristes, auteurs et game designers."
+    home_description: "ScénArt est la plateforme collaborative pour scénaristes, auteurs et game designers. Structurez vos projets narratifs, collaborez en équipe et publiez vos créations."
+    examples_description: "Découvrez toutes les fonctionnalités de ScénArt : éditeur Fountain, fiches personnages, collaboration en équipe et gestion des tâches."
+    pricing_description: "Découvrez les offres ScénArt. Commencez gratuitement et passez au plan Pro quand votre projet grandit."
+    contact_description: "Contactez l'équipe ScénArt pour toute question, suggestion ou signalement. Réponse sous 48h."
 
 # ===== NAVBAR (PUBLIC) =====
 navbar:
@@ -21,7 +26,7 @@ navbar:
 
     links:
         home: "Accueil"
-        examples: "Exemples"
+        examples: "Fonctionnalités"
         pricing: "Tarifs"
         contact: "Contact"
 
@@ -108,6 +113,7 @@ home:
         title: "Tout ce qu'il faut pour"
         title_highlight: "bâtir votre univers"
         desc: "Des outils pensés pour les créateurs sérieux.<br>De l'idée brute au monde complet."
+        discover: "Découvrir toutes les fonctionnalités"
         items:
             editor_title: "Éditeur de scénario"
             editor_desc: "Format scénaristique professionnel. Sluglines, dialogues, narration automatique."
@@ -146,33 +152,118 @@ home:
         desc: "Rejoignez des centaines de créateurs qui lancent leurs univers sur Scénart."
         actions:
             start: "Commencer gratuitement"
-            examples: "Voir des exemples ↗"
+            examples: "Voir les fonctionnalités ↗"
 
 # ===== PAGE EXEMPLES =====
 examples:
     header:
-        tag: "Exemples"
-        title: "Projets créés sur"
-        title_highlight: "SCÉNART"
-        description: "Découvrez comment d'autres créateurs structurent leurs univers. Chaque projet est unique et illustre les possibilités infinies de l'Atelier."
+        tag: "Fonctionnalités"
+        title: "Tout ce dont vous avez besoin pour"
+        title_highlight: "créer"
+        description: "De l'écriture du script à la gestion d'équipe, ScénArt centralise tous les outils de votre projet narratif."
 
-    filters:
-        all: "Tous"
-        cinema: "Cinéma"
-        serie: "Série"
-        video_game: "Jeu Vidéo"
+    scenariste:
+        tag: "Scénariste"
+        title: "Éditeur de scénario"
+        desc: "Rédigez vos scripts dans un éditeur dédié au format Fountain avec navigation par scènes, coloration syntaxique et sauvegarde en temps réel."
+        feat1_title: "Format Fountain"
+        feat1_desc: "Scènes, dialogues, didascalies, parenthèses"
+        feat2_title: "Navigation par actes"
+        feat2_desc: "Sidebar structurée, accès direct à chaque scène"
+        feat3_title: "Export PDF"
+        feat3_desc: "Mise en page professionnelle prête à l'impression"
 
-    grid:
-        empty_message: "Aucun projet ne correspond à cette catégorie pour le moment."
-        view_project: "Explorer le projet"
-        author: "Par"
+    exploration:
+        tag: "Exploration"
+        title: "Vos projets, vos fiches"
+        desc: "Chaque projet dispose de fiches personnages, lieux et scénarios. Parcourez les créations de la communauté ou gérez les vôtres."
+        feat1_title: "Fiches personnages"
+        feat1_desc: "Rôle, backstory, traits et relations"
+        feat2_title: "Fiches de lieux"
+        feat2_desc: "Intérieur, extérieur, fantastique, futuriste"
+        feat3_title: "Vue liste ou grille"
+        feat3_desc: "Filtres, tri et recherche instantanée"
 
-    empty:
-        notice: "Section en cours de préparation — les premiers projets arrivent bientôt"
-        title: "Les premiers projets arrivent bientôt"
-        desc: "Dès que des créateurs publieront leurs univers, vous les retrouverez ici, classés par type et filtrables."
-        cta_create: "Créer mon premier projet"
-        cta_pricing: "Voir les tarifs"
+    collaboration:
+        tag: "Collaboration"
+        title: "Invitez votre équipe"
+        desc: "Gérez les droits de chaque collaborateur et travaillez ensemble sur le même projet avec des rôles distincts."
+        feat1_title: "Invitation par pseudo"
+        feat1_desc: "Recherchez un membre par son nom d'utilisateur"
+        feat2_title: "Rôles granulaires"
+        feat2_desc: "Propriétaire · Modérateur · Contributeur · Lecteur"
+        feat3_title: "Journal d'activité"
+        feat3_desc: "Historique complet de toutes les actions d'équipe"
+        modal_title: "Inviter un collaborateur"
+        modal_username_label: "Nom d'utilisateur"
+        modal_role_label: "Rôle dans le projet"
+        modal_role_reader: "Lecteur"
+        modal_role_contributor: "Contributeur"
+        modal_role_moderator: "Modérateur"
+        modal_cancel: "Annuler"
+        modal_submit: "Envoyer l'invitation"
+
+    organisation:
+        tag: "Organisation"
+        title: "Tâches & notes"
+        desc: "Planifiez votre travail avec un tableau de tâches et des notes collaboratives liées à votre projet."
+        feat1_title: "Tableau de tâches"
+        feat1_desc: "À faire · En cours · Révision · Terminé"
+        feat2_title: "Notes collaboratives"
+        feat2_desc: "Références, idées, annotations de scènes"
+        feat3_title: "Assignation d'équipe"
+        feat3_desc: "Chaque tâche attribuée à un membre"
+
+    demo:
+        saved: "Sauvegardé"
+        paper_url: "atelier / il-etait-une-fois / acte-i / le-debut"
+        paper_title: "— il était une fois sur scénart —"
+        paper_scene1: "EXT. BUREAU ENCOMBRÉ — NUIT"
+        paper_action1: "Un scénariste contemple ses 47 fichiers Word. Chacun s'appelle « FINAL_VRAIMENT_FINAL_v3_bon.docx »."
+        paper_char1: "LE SCÉNARISTE"
+        paper_paren1: "(désespéré)"
+        paper_dial1: "Mon Acte II... il était là hier pourtant."
+        paper_scene2: "SUR SON ÉCRAN — ScénArt s'ouvre enfin."
+        paper_char2: "LE SCÉNARISTE"
+        paper_paren2: "(les larmes aux yeux)"
+        paper_dial2: "Il était une fois... la fin du chaos."
+        paper_scene3: "INT. SCÉNART — CONTINU"
+        paper_action3: "Il crée son premier projet. Ses scènes s'organisent. Ses personnages prennent vie. Quelque part, une clé USB pleure."
+        paper_char3: "LE SCÉNARISTE"
+        paper_paren3: "(soufflant enfin)"
+        paper_dial3: "Et ils vécurent heureux et eurent beaucoup de scènes."
+        type_film: "Film"
+        type_serie: "Série"
+        type_jv: "Jeu vidéo"
+        status_complete: "Terminé"
+        status_ongoing: "En cours"
+        card_follow: "Suivre →"
+        card_read: "Lire →"
+        role_owner: "Propriétaire"
+        elements: "éléments"
+        visibility_public: "Public"
+        visibility_private: "Privé"
+        tasks: "tâches"
+        up_to_date: "À jour"
+        cta_edit: "Éditer →"
+        task_url: "atelier / snatch / tâches"
+        stat_overdue: "En retard"
+        stat_progress: "En cours"
+        stat_done: "Terminées"
+        task_todo: "À faire"
+        task_in_progress: "En cours"
+        task_done: "Terminé"
+        priority_high: "Haute"
+        priority_normal: "Normale"
+        priority_low: "Basse"
+
+    cta:
+        title: "Prêt à"
+        title_highlight: "créer"
+        title_suffix: " ?"
+        desc: "Rejoignez ScénArt gratuitement et commencez votre premier projet narratif dès aujourd'hui."
+        btn_start: "Commencer gratuitement"
+        btn_pricing: "Voir les tarifs"
 
 # ===== PAGE TARIFS =====
 pricing:
@@ -251,7 +342,7 @@ contact:
             response_desc: "Moins de 24h en semaine."
             response_sub: "Support prioritaire pour les abonnés Pro & Studio."
             academic: "Projet académique"
-            academic_desc: "StoryForge — TFE 2024-2025"
+            academic_desc: "StoryForge — TFE 2025-2026"
             academic_location: "EAFC Namur-Cadets, Belgique"
 
     form:

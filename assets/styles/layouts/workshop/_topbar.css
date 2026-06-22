@@ -7,15 +7,15 @@
     justify-content: space-between;
     height: 52px;
     background: var(--color-bg-dark);
+    border-radius: var(--radius-lg);
     position: sticky;
-    top: 0;
+    top: 10px;
     z-index: 100;
-    border: 1px solid var(--color-border);
     justify-self: center;
     padding: 0 10px;
     width: calc(100% - 100px);
     max-width: 1700px;
-    margin-top: 10px;
+    margin: 10px auto auto auto;
 }
 
 /* ── Gauche ──────────────────────────────────────────────── */
@@ -117,37 +117,6 @@
     gap: 2px;
 }
 
-.user-role-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    padding: 1px 5px;
-    line-height: 1.4;
-    white-space: nowrap;
-}
-
-.user-role-badge--admin {
-    color: var(--color-primary);
-    background: var(--color-primary-glow);
-    border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
-}
-
-.user-role-badge--modo {
-    color: #06b6d4;
-    background: rgba(6, 182, 212, .1);
-    border: 1px solid rgba(6, 182, 212, .25);
-}
-
-.up-badge-icon {
-    width: 9px;
-    height: 9px;
-    flex-shrink: 0;
-}
-
 /* ============================================================
    TOP-NAV SLIM — contexte projet
    ============================================================ */
@@ -161,12 +130,12 @@
     align-items: center;
     height: 44px;
     background: var(--color-bg-dark);
-    border: 1px solid var(--color-border);
     border-top: none;
     padding: 0 20px;
     width: calc(100% - 100px);
     max-width: 1700px;
     justify-self: center;
+    margin: auto;
 }
 
 /* ── Left : breadcrumb + switcher ───────────────────────── */
@@ -245,6 +214,8 @@
     min-width: 260px;
     background: var(--color-bg-input);
     border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
     z-index: 200;
     opacity: 0;
@@ -518,6 +489,7 @@
     transition: border-color .15s, color .15s, background .15s;
     height: 100%;
     margin-bottom: 0;
+    border-radius: var(--radius-sm);
 }
 
 .project-bar__nav-more-btn:hover {
@@ -548,6 +520,7 @@
     left: 0;
     background: var(--color-bg-input);
     border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
     box-shadow: 0 12px 32px rgba(0,0,0,.6);
     z-index: 200;
     min-width: 210px;
@@ -564,7 +537,7 @@
     pointer-events: all;
 }
 
-.project-bar__nav-more-menu a {
+.project-bar__nav-more-menu a{
     display: flex;
     align-items: center;
     gap: 10px;
@@ -799,19 +772,19 @@
     .project-bar { justify-content: space-between; }
 }
 
-/* ── Palier intermédiaire : ≤ 1100px ──────────────────────────
-   Onglets primaires visibles, secondaires cachés → "Plus"
+/* ── Palier intermédiaire : ≤ 1250px ──────────────────────────
+   Onglets primaires visibles, secondaires → dropdown "..."
    Paramètres : icône seule (texte masqué)
    ─────────────────────────────────────────────────────────── */
-@media (max-width: 1100px) {
+@media (max-width: 1250px) {
     /* Cacher séparateur + onglets secondaires inline */
     .project-bar__nav-sep,
     .project-bar__tab--secondary {
         display: none;
     }
 
-    /* Afficher le bouton "Plus" */
-    .project-bar__nav-more {
+    /* Afficher le dropdown secondaire uniquement */
+    .project-bar__nav-more--secondary {
         display: flex;
     }
 
@@ -820,27 +793,23 @@
         display: none;
     }
 
-    /* Réduire le padding du bouton settings (icône seule) */
     .project-bar__settings-btn {
         padding: 0 10px;
     }
 
-    /* Le séparateur + Paramètres dans le dropdown "Plus" sont inutiles à ce palier
-       car Paramètres est déjà visible via settings-btn */
     .project-bar__nav-more-divider,
     .project-bar__nav-more-menu .project-bar__nav-more-settings {
         display: none;
     }
 
-    /* overflow visible pour que le dropdown ne soit pas clippé */
     .project-bar__nav {
         overflow: visible;
     }
 }
 
 /* ── Palier mobile : ≤ 768px ──────────────────────────────────
-   Tous les onglets inline cachés → uniquement "Actions"
-   Paramètres accessible depuis le dropdown Actions
+   Tous les onglets inline cachés → uniquement le "..." global
+   Paramètres accessible depuis le dropdown global
    ─────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
     /* Tous les onglets inline masqués (y compris l'onglet actif) */
@@ -853,6 +822,15 @@
     .project-bar__nav-spacer,
     .project-bar__settings-btn {
         display: none;
+    }
+
+    /* Dropdown secondaire cède la place au dropdown global */
+    .project-bar__nav-more--secondary {
+        display: none;
+    }
+
+    .project-bar__nav-more:not(.project-bar__nav-more--secondary) {
+        display: flex;
     }
 
     /* Le lien Paramètres + séparateur dans le dropdown redevient visible */

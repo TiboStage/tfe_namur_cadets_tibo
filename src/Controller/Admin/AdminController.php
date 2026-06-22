@@ -120,6 +120,13 @@ class AdminController extends AbstractController
             $allowed
         );
 
+        // Seul un SUPER_ADMIN peut attribuer ROLE_ADMIN ou ROLE_SUPER_ADMIN
+        $elevated = array_intersect($newRoles, ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']);
+        if (!empty($elevated) && !$this->isGranted('ROLE_SUPER_ADMIN')) {
+            $this->addFlash('danger', 'Seul un Super Admin peut attribuer ROLE_ADMIN ou ROLE_SUPER_ADMIN.');
+            return $this->redirectToRoute('admin_user_show', ['id' => $user->getId(), '_locale' => $request->getLocale()]);
+        }
+
         // ROLE_USER est toujours présent (géré par getRoles())
         $newRoles = array_values(array_diff($newRoles, ['ROLE_USER']));
         $user->setRoles($newRoles);

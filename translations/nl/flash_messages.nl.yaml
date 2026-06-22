@@ -113,6 +113,7 @@ member:
     already_owner: "Je bent al de eigenaar van dit project."
     already_collaborator: "'%username%' is al een medewerker van dit project."
     added: "'%username%' is toegevoegd als %role%."
+    invited: "Uitnodiging verstuurd naar '%username%' als %role%. Ze moeten deze accepteren om deel te nemen."
     role_updated: "Rol bijgewerkt."
     removed: "'%name%' is verwijderd uit het project."
 

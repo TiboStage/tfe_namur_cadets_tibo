@@ -21,6 +21,7 @@
     margin-left: auto;
     margin-right: auto;
     padding: 0 20px;
+    min-height: 85vh;
 }
 
 /* ── Masquer la navbar principale dans le workspace ──── */
@@ -61,4 +62,24 @@
         width: 100%;
         padding: 0 16px;
     }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ALIGNEMENT — tous les containers internes sur la référence aperçu
+   ═══════════════════════════════════════════════════════════════════════════
+   workspace-content gère déjà le centrage et le max-width (même valeurs que
+   top-nav / project-bar). Les containers internes (.dashboard-container,
+   .workshop-container) ne doivent donc pas réappliquer leur propre max-width
+   ni padding horizontal — sinon la page devient plus étroite que l'aperçu.
+*/
+
+.workspace-content .dashboard-container,
+.workspace-content .workshop-container,
+.workspace-content .chr-container {
+    max-width: none;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
 }

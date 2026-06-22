@@ -139,6 +139,17 @@ class ContactType extends AbstractType
                         message: 'contact.privacy.must_agree',
                     ),
                 ],
+            ])
+
+            // ── Honeypot anti-bot (champ piège, invisible pour les humains) ──
+            ->add('website', TextType::class, [
+                'label' => false,
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'autocomplete' => 'off',
+                    'tabindex' => '-1',
+                ],
             ]);
     }
 

@@ -33,7 +33,13 @@ security:
                 interval: '15 minutes'
 
     access_control:
-        # ── Couvre les 3 langues (fr/en/nl) + tous les noms de route ──
+        # ── Documentation — utilisateurs connectés uniquement ──
+        - { path: ^/(fr|en|nl)/(documentation|documentatie), roles: ROLE_USER }
+        # ── Pages publiques du workshop (accessibles aux visiteurs) ──
+        - { path: ^/(fr|en|nl)/(atelier|workshop|werkplaats)/(univers|universe|universum), roles: PUBLIC_ACCESS }
+        - { path: ^/(fr|en|nl)/(atelier|workshop|werkplaats)/(exploration|explore|verkennen), roles: PUBLIC_ACCESS }
+        - { path: ^/(fr|en|nl)/(atelier|workshop|werkplaats)/(createur|creator|maker), roles: PUBLIC_ACCESS }
+        # ── Reste du workshop — utilisateurs connectés uniquement ──
         - { path: ^/(fr|en|nl)/(atelier|workshop|werkplaats), roles: ROLE_USER }
 
 when@test:
@@ -49,4 +55,8 @@ when@prod:
     security:
         access_control:
             - { path: ^/, requires_channel: https }
+            - { path: ^/(fr|en|nl)/(documentation|documentatie), roles: ROLE_USER }
+            - { path: ^/(fr|en|nl)/(atelier|workshop|werkplaats)/(univers|universe|universum), roles: PUBLIC_ACCESS }
+            - { path: ^/(fr|en|nl)/(atelier|workshop|werkplaats)/(exploration|explore|verkennen), roles: PUBLIC_ACCESS }
+            - { path: ^/(fr|en|nl)/(atelier|workshop|werkplaats)/(createur|creator|maker), roles: PUBLIC_ACCESS }
             - { path: ^/(fr|en|nl)/(atelier|workshop|werkplaats), roles: ROLE_USER }

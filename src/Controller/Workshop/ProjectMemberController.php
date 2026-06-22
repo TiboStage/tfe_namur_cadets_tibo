@@ -7,6 +7,7 @@ namespace App\Controller\Workshop;
 use App\Entity\Project;
 use App\Entity\ProjectMember;
 use App\Entity\User;
+use App\Service\ProjectPermissionService;
 use App\Repository\UserRepository;
 use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +27,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[IsGranted('ROLE_USER')]
 final class ProjectMemberController extends AbstractController
 {
-    private const VALID_ROLES = ['contributor', 'editor', 'lead'];
+    private const VALID_ROLES = [ProjectMember::ROLE_READER, ProjectMember::ROLE_CONTRIBUTOR, ProjectMember::ROLE_MODERATOR];
 
     public function __construct(
         private readonly EntityManagerInterface $em,
@@ -80,14 +81,15 @@ final class ProjectMemberController extends AbstractController
             }
         }
 
-        // Créer le membre
+        // Créer le membre (en attente d'acceptation)
         $member = new ProjectMember();
         $member->setProject($project);
         $member->setUser($target);
-        $member->role = $role;
+        $member->role   = $role;
+        $member->status = ProjectMember::STATUS_PENDING;
         $this->em->persist($member);
 
-        // Notification à l'invité
+        // Notification à l'invité avec lien vers la page de réponse
         $roleLabel = $this->roleLabel($role);
         $this->notificationService->notify(
             user:    $target,
@@ -98,7 +100,7 @@ final class ProjectMemberController extends AbstractController
                 $project->title,
             ),
             type:    NotificationService::TYPE_INVITATION,
-            link:    $this->generateUrl('app_project_show', [
+            link:    $this->generateUrl('app_member_invitation_view', [
                 '_locale' => $request->getLocale(),
                 'slug'    => $project->getSlug(),
             ]),
@@ -107,8 +109,77 @@ final class ProjectMemberController extends AbstractController
 
         $this->em->flush();
 
-        $this->addFlash('success', $this->translator->trans('member.added', ['%username%' => $username, '%role%' => $roleLabel], 'flash_messages'));
+        $this->addFlash('success', $this->translator->trans('member.invited', ['%username%' => $username, '%role%' => $roleLabel], 'flash_messages'));
         return $this->redirectToSettings($request, $project);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // VOIR / ACCEPTER / DÉCLINER une invitation
+    // ═══════════════════════════════════════════════════════════════
+
+    public function invitationView(
+        #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
+    ): Response {
+        /** @var User $user */
+        $user   = $this->getUser();
+        $member = $this->findMember($project, $user->getId());
+
+        if ($member === null || !$member->isPending()) {
+            throw $this->createNotFoundException('Aucune invitation en attente pour ce projet.');
+        }
+
+        return $this->render('workshop/invitation.html.twig', [
+            'project' => $project,
+            'member'  => $member,
+        ]);
+    }
+
+    public function acceptInvitation(
+        Request $request,
+        #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
+    ): Response {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!$this->isCsrfTokenValid('invite_accept_' . $project->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', $this->translator->trans('member.csrf_invalid', [], 'flash_messages'));
+            return $this->redirectToRoute('app_member_invitation_view', ['_locale' => $request->getLocale(), 'slug' => $project->getSlug()]);
+        }
+
+        $member = $this->findMember($project, $user->getId());
+        if ($member === null || !$member->isPending()) {
+            throw $this->createNotFoundException('Aucune invitation en attente pour ce projet.');
+        }
+
+        $member->status = ProjectMember::STATUS_ACTIVE;
+        $this->em->flush();
+
+        $this->addFlash('success', sprintf('Vous avez rejoint le projet « %s ». Bienvenue !', $project->title));
+        return $this->redirectToRoute('app_project_show', ['_locale' => $request->getLocale(), 'slug' => $project->getSlug()]);
+    }
+
+    public function declineInvitation(
+        Request $request,
+        #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
+    ): Response {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!$this->isCsrfTokenValid('invite_decline_' . $project->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', $this->translator->trans('member.csrf_invalid', [], 'flash_messages'));
+            return $this->redirectToRoute('app_member_invitation_view', ['_locale' => $request->getLocale(), 'slug' => $project->getSlug()]);
+        }
+
+        $member = $this->findMember($project, $user->getId());
+        if ($member === null || !$member->isPending()) {
+            throw $this->createNotFoundException('Aucune invitation en attente pour ce projet.');
+        }
+
+        $this->em->remove($member);
+        $this->em->flush();
+
+        $this->addFlash('success', 'Invitation déclinée.');
+        return $this->redirectToRoute('app_workshop_dashboard', ['_locale' => $request->getLocale()]);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -211,6 +282,39 @@ final class ProjectMemberController extends AbstractController
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // QUITTER un projet (auto-retrait)
+    // ═══════════════════════════════════════════════════════════════
+
+    public function leave(
+        Request $request,
+        #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
+    ): Response {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($project->getCreatedBy()?->getId() === $user->getId()) {
+            $this->addFlash('error', 'Le propriétaire ne peut pas quitter son propre projet.');
+            return $this->redirectToRoute('app_project_show', ['_locale' => $request->getLocale(), 'slug' => $project->getSlug()]);
+        }
+
+        if (!$this->isCsrfTokenValid('member_leave_' . $project->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', $this->translator->trans('member.csrf_invalid', [], 'flash_messages'));
+            return $this->redirectToRoute('app_project_show', ['_locale' => $request->getLocale(), 'slug' => $project->getSlug()]);
+        }
+
+        $member = $this->findMember($project, $user->getId());
+        if ($member === null) {
+            throw $this->createNotFoundException('Vous n\'êtes pas membre de ce projet.');
+        }
+
+        $this->em->remove($member);
+        $this->em->flush();
+
+        $this->addFlash('success', sprintf('Vous avez quitté le projet « %s ».', $project->title));
+        return $this->redirectToRoute('app_project_index', ['_locale' => $request->getLocale()]);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // Helpers privés
     // ═══════════════════════════════════════════════════════════════
 
@@ -246,10 +350,10 @@ final class ProjectMemberController extends AbstractController
     private function roleLabel(string $role): string
     {
         return match ($role) {
-            'lead'        => 'co-responsable',
-            'editor'      => 'éditeur',
-            'contributor' => 'contributeur',
-            default       => $role,
+            ProjectMember::ROLE_MODERATOR   => 'modérateur',
+            ProjectMember::ROLE_CONTRIBUTOR => 'contributeur',
+            ProjectMember::ROLE_READER      => 'lecteur',
+            default                         => $role,
         };
     }
 }

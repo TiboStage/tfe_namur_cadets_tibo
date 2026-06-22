@@ -184,7 +184,7 @@ projects:
             remove_confirm: "%username% uit het project verwijderen?"
 
     show:
-        back: "← Mijn projecten"
+        back: "Mijn projecten"
         btn_settings: "Instellingen"
         no_description: "Geen beschrijving."
         section_structure: "Narratieve structuur"
@@ -296,7 +296,7 @@ project_new:
 
             genres_title: "GENRES (meerdere keuzes)"
 
-        button_back: "← Terug"
+        button_back: "Terug"
         button_next: "Volgende →"
         button_validate: "Bevestigen →"
 
@@ -371,7 +371,7 @@ character:
 
     new:
         title: "Nieuw personage"
-        back: "← Personages"
+        back: "Personages"
         submit: "Personage maken →"
         cancel: "Annuleren"
         advanced: "Geavanceerde instellingen"
@@ -387,7 +387,7 @@ character:
         delete_confirm: "Dit personage verwijderen?"
 
     show:
-        back: "← Personages"
+        back: "Personages"
         edit_btn: "Bewerken"
         no_description: "Geen beschrijving voor dit personage."
         description: "Beschrijving"
@@ -459,7 +459,7 @@ location:
 
     new:
         title: "Nieuwe locatie"
-        back: "← Locaties"
+        back: "Locaties"
         submit: "Locatie maken →"
         cancel: "Annuleren"
         advanced: "Geavanceerde instellingen"
@@ -475,7 +475,7 @@ location:
         delete_confirm: "Deze locatie verwijderen?"
 
     show:
-        back: "← Locaties"
+        back: "Locaties"
         edit_btn: "Bewerken"
         no_description: "Geen beschrijving voor deze locatie."
         children: "Sub-locaties"
@@ -541,6 +541,7 @@ explore:
         series: "Series"
         games: "Videogames"
         add_filters: "Filters toevoegen"
+        genre: "Genre"
         genre_universal: "Universeel"
         sort: "Sorteren op"
         sort_recent: "Meest recent"
@@ -592,7 +593,7 @@ note:
     edit:
         title: "Notitie bewerken"
 
-    back: "← Notities"
+    back: "Notities"
     confirm_delete: "Deze notitie definitief verwijderen?"
 
     show:
@@ -618,13 +619,25 @@ note:
         high: "Hoog"
         urgent: "Urgent"
 
+    flash:
+        created: 'Notitie "%title%" succesvol aangemaakt.'
+        updated: 'Notitie "%title%" bijgewerkt.'
+        deleted: 'Notitie verwijderd.'
+
     form:
         section_main: "Inhoud van de notitie"
         section_organization: "Organisatie"
+        status: "Status"
+        priority: "Prioriteit"
         title:
+            label: "Titel"
             placeholder: "Titel van de notitie..."
         content:
+            label: "Inhoud"
             placeholder: "Schrijf je notitie hier..."
+        assigned_to:
+            label: "Toegewezen aan"
+            placeholder: "Niet toegewezen"
 
 # ===== TAKEN =====
 task:
@@ -660,7 +673,7 @@ task:
     edit:
         title: "Taak bewerken"
 
-    back: "← Taken"
+    back: "Taken"
     confirm_delete: "Deze taak definitief verwijderen?"
     unassigned: "Niet toegewezen"
 
@@ -681,13 +694,25 @@ task:
         high: "Hoog"
         urgent: "Urgent"
 
+    flash:
+        created: 'Taak "%title%" succesvol aangemaakt.'
+        updated: 'Taak "%title%" bijgewerkt.'
+        deleted: 'Taak verwijderd.'
+
     form:
         section_main: "Hoofdinformatie"
         section_organization: "Organisatie"
+        status: "Status"
+        priority: "Prioriteit"
         title:
+            label: "Titel"
             placeholder: "Titel van de taak..."
         description:
+            label: "Beschrijving"
             placeholder: "Beschrijving van de taak..."
+        assigned_to:
+            label: "Toegewezen aan"
+            placeholder: "Niet toegewezen"
 
 # ===== TIJDLIJN =====
 world_event:
@@ -706,7 +731,7 @@ world_event:
     edit:
         title: "Gebeurtenis bewerken"
 
-    back: "← Tijdlijn"
+    back: "Tijdlijn"
     confirm_delete: "Deze gebeurtenis definitief verwijderen?"
     year: "Jaar"
 
@@ -715,20 +740,33 @@ world_event:
         description: "Beschrijving"
         location: "Locatie"
 
+    flash:
+        created: 'Gebeurtenis "%title%" succesvol aangemaakt.'
+        updated: 'Gebeurtenis "%title%" bijgewerkt.'
+        deleted: 'Gebeurtenis "%title%" verwijderd.'
+
     form:
         section_main: "Informatie"
         section_date: "Narratieve datum"
         section_location: "Gekoppelde locatie"
         date_help: "Gebruik de fictieve datums van je universum (bijv: Jaar 342, Maand 7, Dag 15)"
+        event_type: "Type gebeurtenis"
+        linked_scene: "Gekoppelde scène"
+        location: "Locatie"
         title:
+            label: "Titel"
             placeholder: "Titel van de gebeurtenis..."
         description:
+            label: "Beschrijving"
             placeholder: "Beschrijf deze gebeurtenis..."
         year:
+            label: "Jaar"
             placeholder: "Jaar (bijv: 342)"
         month:
+            label: "Maand"
             placeholder: "Maand (1-12)"
         day:
+            label: "Dag"
             placeholder: "Dag (1-31)"
 
 # ===== MANUSCRIPT =====
@@ -921,6 +959,7 @@ nav:
     production: "Productie"
     tasks: "Taken"
     notes: "Notities"
+    more: "Meer"
     collapse: "Inklappen"
     readonly_mode: "Leesmodus"
     public_page: "Openbare pagina"

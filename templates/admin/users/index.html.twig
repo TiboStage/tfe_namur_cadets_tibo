@@ -11,6 +11,7 @@
         <form method="get" class="admin-search-form">
             <input type="search" name="q" value="{{ q }}"
                    placeholder="Rechercher par email ou pseudo…"
+                   aria-label="Rechercher un utilisateur"
                    class="admin-search-input">
             <button type="submit" class="btn-table">{{ 'users.btn_search'|trans({}, 'admin') }}</button>
             {% if q %}

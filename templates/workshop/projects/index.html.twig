@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="workshop-container"
-     data-controller="per-page"
+     data-controller="per-page project-filter"
      data-per-page-target="root">
 
     {# ── En-tête ──────────────────────────────────────────────────── #}
@@ -91,26 +91,95 @@
 
         {# Pills de rôle (masquées si scope=mine) #}
         {% if scope != 'mine' and collab_count > 0 %}
-        <div class="project-filters__roles">
+        <div class="project-filters__row">
             <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: scope}) }}"
                class="role-pill {{ role_filter == '' ? 'is-active' : '' }}">
                 {{ 'projects.index.role_all'|trans }}
             </a>
-            <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: scope, role: 'lead'}) }}"
-               class="role-pill role-pill--lead {{ role_filter == 'lead' ? 'is-active' : '' }}">
+            <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: scope, role: 'moderator'}) }}"
+               class="role-pill role-pill--moderator {{ role_filter == 'moderator' ? 'is-active' : '' }}">
                 {{ ux_icon('lucide:shield', {style: 'width:10px;height:10px'}) }}
-                {{ 'projects.roles.lead'|trans }}
-            </a>
-            <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: scope, role: 'editor'}) }}"
-               class="role-pill role-pill--editor {{ role_filter == 'editor' ? 'is-active' : '' }}">
-                {{ ux_icon('lucide:pen', {style: 'width:10px;height:10px'}) }}
-                {{ 'projects.roles.editor'|trans }}
+                {{ 'projects.roles.moderator'|trans }}
             </a>
             <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: scope, role: 'contributor'}) }}"
                class="role-pill role-pill--contributor {{ role_filter == 'contributor' ? 'is-active' : '' }}">
-                {{ ux_icon('lucide:eye', {style: 'width:10px;height:10px'}) }}
+                {{ ux_icon('lucide:pen', {style: 'width:10px;height:10px'}) }}
                 {{ 'projects.roles.contributor'|trans }}
             </a>
+            <a href="{{ path('app_project_index', {_locale: app.request.locale, scope: scope, role: 'reader'}) }}"
+               class="role-pill role-pill--reader {{ role_filter == 'reader' ? 'is-active' : '' }}">
+                {{ ux_icon('lucide:eye', {style: 'width:10px;height:10px'}) }}
+                {{ 'projects.roles.reader'|trans }}
+            </a>
+        </div>
+        {% endif %}
+
+        {# ── Filtres statut + type (client-side, pas de rechargement) ── #}
+        {% set hasStatusFilter = status_counts is not empty and status_counts|length > 1 %}
+        {% set hasTypeFilter   = type_counts   is not empty and type_counts|length   > 1 %}
+
+        {% if hasStatusFilter or hasTypeFilter %}
+        <div class="project-filters__row project-filters__row--secondary">
+
+            {% if hasStatusFilter %}
+            <div class="pf-group">
+                <span class="pf-group__label">{{ ux_icon('lucide:activity', {style: 'width:11px;height:11px'}) }} Statut</span>
+                <button class="pf-pill is-active"
+                        data-filter-group="status"
+                        data-value=""
+                        data-action="click->project-filter#setStatus">
+                    Tous
+                </button>
+                {% for s in ['draft', 'in_progress', 'completed', 'archived'] %}
+                    {% if status_counts[s] is defined %}
+                    <button class="pf-pill pf-pill--{{ s }}"
+                            data-filter-group="status"
+                            data-value="{{ s }}"
+                            data-action="click->project-filter#setStatus">
+                        {{ ('projects.status.' ~ s)|trans }}
+                        <span class="pf-pill__count">{{ status_counts[s] }}</span>
+                    </button>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if hasTypeFilter %}
+            {% if hasStatusFilter %}<span class="pf-sep"></span>{% endif %}
+            <div class="pf-group">
+                <span class="pf-group__label">{{ ux_icon('lucide:layers', {style: 'width:11px;height:11px'}) }} Type</span>
+                <button class="pf-pill is-active"
+                        data-filter-group="type"
+                        data-value=""
+                        data-action="click->project-filter#setType">
+                    Tous
+                </button>
+                {% for t in ['film', 'serie', 'jeu_video', 'custom'] %}
+                    {% if type_counts[t] is defined %}
+                    <button class="pf-pill pf-pill--type"
+                            data-filter-group="type"
+                            data-value="{{ t }}"
+                            data-action="click->project-filter#setType">
+                        {% if t == 'film' %}{{ ux_icon('lucide:film', {style: 'width:10px;height:10px'}) }}
+                        {% elseif t == 'serie' %}{{ ux_icon('lucide:tv-2', {style: 'width:10px;height:10px'}) }}
+                        {% elseif t == 'jeu_video' %}{{ ux_icon('lucide:gamepad-2', {style: 'width:10px;height:10px'}) }}
+                        {% else %}{{ ux_icon('lucide:layers', {style: 'width:10px;height:10px'}) }}
+                        {% endif %}
+                        {{ ('project_type.' ~ t)|trans({}, 'messages') }}
+                        <span class="pf-pill__count">{{ type_counts[t] }}</span>
+                    </button>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {# Bouton reset (masqué par défaut, affiché par JS) #}
+            <button class="pf-reset"
+                    style="display:none"
+                    data-action="click->project-filter#reset">
+                {{ ux_icon('lucide:x', {style: 'width:10px;height:10px'}) }} Réinitialiser
+            </button>
+
         </div>
         {% endif %}
 
@@ -162,26 +231,31 @@
             {% set ctaKey    = role == 'owner' ? 'projects.index.btn_edit_arrow' : 'projects.index.btn_open_arrow' %}
 
             {# Vue grille #}
-            <div class="grid-only">
+            <div class="grid-only pf-item"
+                 data-status="{{ project.status }}"
+                 data-type="{{ project.projectType }}">
                 {{ include('workshop/_partials/_project_card_private.html.twig', {
-                    project: project,
-                    role:    role,
+                    project:   project,
+                    role:      role,
+                    genre_map: genre_map,
                 }) }}
             </div>
 
             {# Vue liste #}
-            <div class="project-list-row list-only">
+            <div class="project-list-row list-only pf-item"
+                 data-status="{{ project.status }}"
+                 data-type="{{ project.projectType }}">
                 <div class="col-main">
                     <div class="project-mini-thumb">
                         {% if project.coverFilename %}
                             <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
-                                 alt="" class="img-cover">
+                                 alt="" class="img-cover" loading="lazy">
                         {% else %}
                             {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'sm'} %}
                         {% endif %}
                     </div>
                     <div class="project-info">
-                        <span class="project-name">{{ project.title }}</span>
+                        <span class="project-name" title="{{ project.title }}">{{ project.title }}</span>
                         <span class="project-sub">
                             {{ ('project_type.' ~ project.projectType)|trans({}, 'messages') }}
                             &nbsp;·&nbsp;

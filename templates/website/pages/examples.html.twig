@@ -2,37 +2,375 @@
 {% trans_default_domain 'website' %}
 
 {% block title %}{{ 'meta.examples_title'|trans }}{% endblock %}
+{% block meta_description %}<meta name="description" content="{{ 'meta.examples_description'|trans({}, 'website') }}">{% endblock %}
 
 {% block content %}
-    <main class="container section-header">
+<main class="features-page">
 
-        {# En-tête de la page #}
-        <div class="examples-header">
-            <span class="section-tag">{{ 'examples.header.tag'|trans }}</span>
-            <h1 class="main-title">
-                {{ 'examples.header.title'|trans }} <br>
-                <span class="highlight">SCÉNART</span>
-            </h1>
-            <p class="section-desc">
-                {{ 'examples.header.description'|trans }}
-            </p>
-        </div>
+    {# ── En-tête ──────────────────────────────────────────────────────────── #}
+    <div class="container">
+        <span class="section-tag">{{ 'examples.header.tag'|trans }}</span>
+        <h1 class="main-title">
+            {{ 'examples.header.title'|trans }}
+            <span class="highlight">{{ 'examples.header.title_highlight'|trans }}</span>
+        </h1>
+        <p class="section-desc">{{ 'examples.header.description'|trans }}</p>
+    </div>
 
-        {# Filtres (Catégories) #}
-        <div class="filter-container">
-            <button class="filter-btn active" data-filter="all">{{ 'examples.filters.all'|trans }}</button>
-            <button class="filter-btn" data-filter="cinema">{{ 'examples.filters.cinema'|trans }}</button>
-            <button class="filter-btn" data-filter="serie">{{ 'examples.filters.serie'|trans }}</button>
-            <button class="filter-btn" data-filter="jeu-video">{{ 'examples.filters.video_game'|trans }}</button>
-        </div>
+    {# ══════════════════════════════════════════════════════════════════════ #}
+    {# BLOC 1 — Éditeur Fountain (feuille A4)                                #}
+    {# ══════════════════════════════════════════════════════════════════════ #}
+    <section class="feat-section">
+        <div class="container feat-block">
 
-        {# Grille de projets (Vide pour l'instant ou avec des placeholders) #}
-        <div class="projects-grid">
-            {# On peut boucler ici sur des exemples si tu en as en DB ou en dur #}
-            <div class="no-items">
-                <p>{{ 'examples.grid.empty_message'|trans }}</p>
+            <div class="feat-visual" aria-hidden="true">
+                <div class="demo-win">
+                    <div class="demo-win__bar">
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__url">{{ 'examples.demo.paper_url'|trans }}</span>
+                        <span class="demo-save">
+                            {{ ux_icon('lucide:check', {class: 'icon-xs'}) }}
+                            {{ 'examples.demo.saved'|trans }}
+                        </span>
+                    </div>
+                    <div class="feat-paper-area">
+                        <div class="feat-paper">
+                            <div class="feat-paper__title">{{ 'examples.demo.paper_title'|trans }}</div>
+                            <div class="feat-paper__gap"></div>
+                            <div class="feat-paper__scene">{{ 'examples.demo.paper_scene1'|trans }}</div>
+                            <div class="feat-paper__action">{{ 'examples.demo.paper_action1'|trans }}</div>
+                            <div class="feat-paper__gap"></div>
+                            <div class="feat-paper__char">{{ 'examples.demo.paper_char1'|trans }}</div>
+                            <div class="feat-paper__paren">{{ 'examples.demo.paper_paren1'|trans }}</div>
+                            <div class="feat-paper__dial">{{ 'examples.demo.paper_dial1'|trans }}</div>
+                            <div class="feat-paper__gap"></div>
+                            <div class="feat-paper__scene">{{ 'examples.demo.paper_scene2'|trans }}</div>
+                            <div class="feat-paper__char">{{ 'examples.demo.paper_char2'|trans }}</div>
+                            <div class="feat-paper__paren">{{ 'examples.demo.paper_paren2'|trans }}</div>
+                            <div class="feat-paper__dial">{{ 'examples.demo.paper_dial2'|trans }}<span class="demo-cursor">▌</span></div>
+                            <div class="feat-paper__gap"></div>
+                            <div class="feat-paper__scene">{{ 'examples.demo.paper_scene3'|trans }}</div>
+                            <div class="feat-paper__action">{{ 'examples.demo.paper_action3'|trans }}</div>
+                            <div class="feat-paper__gap"></div>
+                            <div class="feat-paper__char">{{ 'examples.demo.paper_char3'|trans }}</div>
+                            <div class="feat-paper__paren">{{ 'examples.demo.paper_paren3'|trans }}</div>
+                            <div class="feat-paper__dial">{{ 'examples.demo.paper_dial3'|trans }}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-    </main>
+            <div class="feat-content">
+                <span class="feat-tag">{{ 'examples.scenariste.tag'|trans }}</span>
+                <h2 class="feat-title">{{ 'examples.scenariste.title'|trans }}</h2>
+                <p class="section-desc">{{ 'examples.scenariste.desc'|trans }}</p>
+                <ul class="feat-list">
+                    <li>
+                        {{ ux_icon('lucide:file-text', {class: 'icon-sm'}) }}
+                        <div>
+                            <strong>{{ 'examples.scenariste.feat1_title'|trans }}</strong>
+                            <span>{{ 'examples.scenariste.feat1_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:layers', {class: 'icon-sm'}) }}
+                        <div>
+                            <strong>{{ 'examples.scenariste.feat2_title'|trans }}</strong>
+                            <span>{{ 'examples.scenariste.feat2_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:download', {class: 'icon-sm'}) }}
+                        <div>
+                            <strong>{{ 'examples.scenariste.feat3_title'|trans }}</strong>
+                            <span>{{ 'examples.scenariste.feat3_desc'|trans }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    {# ══════════════════════════════════════════════════════════════════════ #}
+    {# BLOC 2 — Carousel de projets                                           #}
+    {# ══════════════════════════════════════════════════════════════════════ #}
+    <section class="feat-section feat-section--alt">
+        <div class="container feat-block feat-block--reverse">
+
+            <div class="feat-visual" aria-hidden="true">
+                <article class="sc-card sc-card--private sc-card--owner">
+                    <div class="sc-card__header">
+                        <span class="sc-card__type">
+                            {{ ux_icon('lucide:tv-2', {class: 'icon-3xs'}) }}
+                            {{ 'examples.demo.type_serie'|trans }}
+                        </span>
+                        <span class="sc-card__role-badge sc-card__role-badge--owner">{{ 'examples.demo.role_owner'|trans }}</span>
+                    </div>
+                    <div class="sc-card__media sc-card__media--serie">
+                        <div class="sc-card__type-icon">
+                            <span class="proj-icon proj-icon--serie proj-icon--lg">
+                                {{ ux_icon('lucide:tv-2') }}
+                            </span>
+                        </div>
+                        <div class="sc-card__media-overlay"></div>
+                        <div class="sc-card__media-badges">
+                            <span class="sc-card__mbadge">
+                                {{ ux_icon('lucide:layers', {style: 'width:10px;height:10px'}) }}
+                                8 {{ 'examples.demo.elements'|trans }}
+                            </span>
+                            <span class="sc-card__mbadge">
+                                {{ ux_icon('lucide:globe', {style: 'width:10px;height:10px'}) }}
+                                {{ 'examples.demo.visibility_public'|trans }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="sc-card__body">
+                        <h3 class="sc-card__title">Breaking Bad : Origins</h3>
+                        <div class="sc-card__genres">
+                            <span class="sc-card__genre">Drame</span>
+                            <span class="sc-card__genre">Crime</span>
+                        </div>
+                        <div class="sc-card__counters">12 pers. · 3 lieux</div>
+                        <div class="sc-card__status-box">
+                            <div class="sc-card__status-meta">
+                                <span>{{ 'examples.demo.status_ongoing'|trans }}</span>
+                                <strong>6/8 {{ 'examples.demo.tasks'|trans }}</strong>
+                            </div>
+                            <div class="sc-card__progress-bg">
+                                <div class="sc-card__progress-fill" style="width:75%"></div>
+                            </div>
+                            <div class="sc-card__alert sc-card__alert--ok">
+                                {{ ux_icon('lucide:circle-check', {style: 'width:11px;height:11px'}) }}
+                                {{ 'examples.demo.up_to_date'|trans }}
+                            </div>
+                        </div>
+                        <div class="sc-card__divider"></div>
+                        <div class="sc-card__footer">
+                            <span class="sc-card__date">12/06/2026</span>
+                            <div class="sc-card__footer-actions">
+                                <span class="sc-card__cta">{{ 'examples.demo.cta_edit'|trans }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="feat-content">
+                <span class="feat-tag feat-tag--blue">{{ 'examples.exploration.tag'|trans }}</span>
+                <h2 class="feat-title">{{ 'examples.exploration.title'|trans }}</h2>
+                <p class="section-desc">{{ 'examples.exploration.desc'|trans }}</p>
+                <ul class="feat-list">
+                    <li>
+                        {{ ux_icon('lucide:user-round', {class: 'icon-sm blue'}) }}
+                        <div>
+                            <strong>{{ 'examples.exploration.feat1_title'|trans }}</strong>
+                            <span>{{ 'examples.exploration.feat1_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:map-pin', {class: 'icon-sm blue'}) }}
+                        <div>
+                            <strong>{{ 'examples.exploration.feat2_title'|trans }}</strong>
+                            <span>{{ 'examples.exploration.feat2_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:layout-grid', {class: 'icon-sm blue'}) }}
+                        <div>
+                            <strong>{{ 'examples.exploration.feat3_title'|trans }}</strong>
+                            <span>{{ 'examples.exploration.feat3_desc'|trans }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    {# ══════════════════════════════════════════════════════════════════════ #}
+    {# BLOC 3 — Modal Collaboration                                           #}
+    {# ══════════════════════════════════════════════════════════════════════ #}
+    <section class="feat-section">
+        <div class="container feat-block">
+
+            <div class="feat-visual" aria-hidden="true">
+                <div class="feat-modal-bg">
+                    <div class="feat-modal">
+                        <div class="feat-modal__head">
+                            {{ ux_icon('lucide:user-plus', {class: 'icon-sm'}) }}
+                            <span>{{ 'examples.collaboration.modal_title'|trans }}</span>
+                        </div>
+                        <div class="feat-modal__body">
+                            <div class="feat-modal__field">
+                                <label class="feat-modal__label">{{ 'examples.collaboration.modal_username_label'|trans }}</label>
+                                <div class="feat-modal__input">
+                                    {{ ux_icon('lucide:at-sign', {class: 'icon-xs'}) }}
+                                    <span>sarah_martin</span>
+                                </div>
+                            </div>
+                            <div class="feat-modal__field">
+                                <label class="feat-modal__label">{{ 'examples.collaboration.modal_role_label'|trans }}</label>
+                                <div class="feat-modal__roles">
+                                    <div class="feat-modal__role">{{ 'examples.collaboration.modal_role_reader'|trans }}</div>
+                                    <div class="feat-modal__role feat-modal__role--active">{{ 'examples.collaboration.modal_role_contributor'|trans }}</div>
+                                    <div class="feat-modal__role">{{ 'examples.collaboration.modal_role_moderator'|trans }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feat-modal__footer">
+                            <button class="feat-modal__btn feat-modal__btn--secondary" type="button">{{ 'examples.collaboration.modal_cancel'|trans }}</button>
+                            <button class="feat-modal__btn feat-modal__btn--primary" type="button">
+                                {{ ux_icon('lucide:send', {class: 'icon-xs'}) }}
+                                {{ 'examples.collaboration.modal_submit'|trans }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feat-content">
+                <span class="feat-tag feat-tag--purple">{{ 'examples.collaboration.tag'|trans }}</span>
+                <h2 class="feat-title">{{ 'examples.collaboration.title'|trans }}</h2>
+                <p class="section-desc">{{ 'examples.collaboration.desc'|trans }}</p>
+                <ul class="feat-list">
+                    <li>
+                        {{ ux_icon('lucide:at-sign', {class: 'icon-sm purple'}) }}
+                        <div>
+                            <strong>{{ 'examples.collaboration.feat1_title'|trans }}</strong>
+                            <span>{{ 'examples.collaboration.feat1_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:shield', {class: 'icon-sm purple'}) }}
+                        <div>
+                            <strong>{{ 'examples.collaboration.feat2_title'|trans }}</strong>
+                            <span>{{ 'examples.collaboration.feat2_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:activity', {class: 'icon-sm purple'}) }}
+                        <div>
+                            <strong>{{ 'examples.collaboration.feat3_title'|trans }}</strong>
+                            <span>{{ 'examples.collaboration.feat3_desc'|trans }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    {# ══════════════════════════════════════════════════════════════════════ #}
+    {# BLOC 4 — Tâches & Notes                                               #}
+    {# ══════════════════════════════════════════════════════════════════════ #}
+    <section class="feat-section feat-section--alt">
+        <div class="container feat-block feat-block--reverse">
+
+            <div class="feat-visual" aria-hidden="true">
+                <div class="demo-win">
+                    <div class="demo-win__bar">
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__url">{{ 'examples.demo.task_url'|trans }}</span>
+                    </div>
+                    <div class="feat-tasks-demo">
+                        <div class="feat-task-stats">
+                            <div class="feat-task-stat feat-task-stat--red">
+                                <span class="feat-task-stat__num">1</span>
+                                <span class="feat-task-stat__lbl">{{ 'examples.demo.stat_overdue'|trans }}</span>
+                            </div>
+                            <div class="feat-task-stat feat-task-stat--yellow">
+                                <span class="feat-task-stat__num">2</span>
+                                <span class="feat-task-stat__lbl">{{ 'examples.demo.stat_progress'|trans }}</span>
+                            </div>
+                            <div class="feat-task-stat feat-task-stat--green">
+                                <span class="feat-task-stat__num">4</span>
+                                <span class="feat-task-stat__lbl">{{ 'examples.demo.stat_done'|trans }}</span>
+                            </div>
+                        </div>
+                        <div class="feat-task-list">
+                            <div class="feat-task-row">
+                                <span class="feat-task-badge feat-task-badge--progress">{{ 'examples.demo.task_in_progress'|trans }}</span>
+                                <span class="feat-task-name">Écrire Sc. 12 — La fuite</span>
+                                <span class="feat-task-priority feat-task-priority--high">{{ 'examples.demo.priority_high'|trans }}</span>
+                                <span class="feat-task-user">@thibault</span>
+                            </div>
+                            <div class="feat-task-row">
+                                <span class="feat-task-badge feat-task-badge--todo">{{ 'examples.demo.task_todo'|trans }}</span>
+                                <span class="feat-task-name">Fiche lieu — Le chantier</span>
+                                <span class="feat-task-priority feat-task-priority--normal">{{ 'examples.demo.priority_normal'|trans }}</span>
+                                <span class="feat-task-user">@sarah</span>
+                            </div>
+                            <div class="feat-task-row feat-task-row--done">
+                                <span class="feat-task-badge feat-task-badge--done">{{ 'examples.demo.task_done'|trans }}</span>
+                                <span class="feat-task-name">Relecture Acte II</span>
+                                <span class="feat-task-priority feat-task-priority--low">{{ 'examples.demo.priority_low'|trans }}</span>
+                                <span class="feat-task-user">@thibault</span>
+                            </div>
+                            <div class="feat-task-row feat-task-row--done">
+                                <span class="feat-task-badge feat-task-badge--done">{{ 'examples.demo.task_done'|trans }}</span>
+                                <span class="feat-task-name">Synopsis général v2</span>
+                                <span class="feat-task-priority feat-task-priority--low">{{ 'examples.demo.priority_low'|trans }}</span>
+                                <span class="feat-task-user">@sarah</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feat-content">
+                <span class="feat-tag feat-tag--green">{{ 'examples.organisation.tag'|trans }}</span>
+                <h2 class="feat-title">{{ 'examples.organisation.title'|trans }}</h2>
+                <p class="section-desc">{{ 'examples.organisation.desc'|trans }}</p>
+                <ul class="feat-list">
+                    <li>
+                        {{ ux_icon('lucide:kanban', {class: 'icon-sm green'}) }}
+                        <div>
+                            <strong>{{ 'examples.organisation.feat1_title'|trans }}</strong>
+                            <span>{{ 'examples.organisation.feat1_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:notebook-pen', {class: 'icon-sm green'}) }}
+                        <div>
+                            <strong>{{ 'examples.organisation.feat2_title'|trans }}</strong>
+                            <span>{{ 'examples.organisation.feat2_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:user-check', {class: 'icon-sm green'}) }}
+                        <div>
+                            <strong>{{ 'examples.organisation.feat3_title'|trans }}</strong>
+                            <span>{{ 'examples.organisation.feat3_desc'|trans }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    {# ── CTA ──────────────────────────────────────────────────────────────── #}
+    <div class="container feat-cta">
+        <h2 class="feat-cta__title">
+            {{ 'examples.cta.title'|trans }}
+            <span class="highlight">{{ 'examples.cta.title_highlight'|trans }}</span>{{ 'examples.cta.title_suffix'|trans }}
+        </h2>
+        <p class="feat-cta__desc">{{ 'examples.cta.desc'|trans }}</p>
+        <div class="feat-cta__actions">
+            <a href="{{ path('app_register') }}" class="btn-primary">
+                {{ ux_icon('lucide:rocket', {class: 'icon-sm'}) }}
+                {{ 'examples.cta.btn_start'|trans }}
+            </a>
+            <a href="{{ path('app_pricing') }}" class="btn-outline">
+                {{ 'examples.cta.btn_pricing'|trans }}
+            </a>
+        </div>
+    </div>
+
+</main>
 {% endblock %}

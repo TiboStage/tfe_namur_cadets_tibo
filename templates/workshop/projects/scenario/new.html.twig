@@ -6,138 +6,92 @@
 {% block project_content %}
 
 {% set cfgIcon = config.hasContent ? 'lucide:file-text' : 'lucide:folder' %}
+{% set maxDepth = max(configMap|keys) %}
 
 <div class="workshop-container">
 
-    <header class="page-header">
-        <div>
-            <p class="nm-breadcrumb">
-                <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}">
-                    {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
-                    Manuscrit
-                </a>
-                {% if parent %}
-                    {% for ancestor in parent.getAncestors() %}
-                        <span class="nm-breadcrumb-sep">/</span>
-                        <span>{{ ancestor.title }}</span>
-                    {% endfor %}
-                    <span class="nm-breadcrumb-sep">/</span>
-                    <span>{{ parent.title }}</span>
-                {% endif %}
-            </p>
-            <h1>
-                {{ ux_icon(cfgIcon, {class: 'icon-sm', style: 'color:' ~ config.color}) }}
-                Nouveau {{ config.labelSingular|lower }}
-            </h1>
-        </div>
-        <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}" class="btn-export">
-            {{ ux_icon('lucide:x', {class: 'icon-xs'}) }}
-            Annuler
-        </a>
-    </header>
+    <div class="ms-empty-start">
 
-    <div class="new-manuscript-grid">
-
-        {# ── Formulaire principal ─────────────────────────────────────────── #}
-        <div class="profile-section">
-
-            <div class="profile-section-header nm-type-banner">
-                <span class="nm-type-icon">
-                    {{ ux_icon(cfgIcon, {class: 'icon-sm', style: 'color:' ~ config.color}) }}
-                </span>
-                <div class="nm-type-info">
-                    <span class="nm-type-label">Nouveau</span>
-                    <span class="nm-type-name" style="color: {{ config.color }}">{{ config.labelSingular }}</span>
-                </div>
-                {% if parent %}
-                    <span class="nm-context-badge">
-                        {{ ux_icon('lucide:corner-down-right', {class: 'icon-xs'}) }}
-                        Dans <strong>{{ parent.title }}</strong>
-                    </span>
-                {% else %}
-                    <span class="nm-context-badge">
-                        {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
-                        À la racine du manuscrit
-                    </span>
-                {% endif %}
-            </div>
-
-            <div class="nm-form-body">
-
-                {# Erreur #}
-                {% if error is defined and error %}
-                    <div class="nm-error">
-                        {{ ux_icon('lucide:alert-circle', {class: 'icon-xs'}) }}
-                        {{ error }}
-                    </div>
-                {% endif %}
-
-                <form method="post"
-                      action="{{ path('app_manuscript_new', {project_slug: project.slug, depth: depth, parent_id: parent ? parent.id : null}) }}">
-
-                    <div class="form-group">
-                        <label class="form-label" for="el-title">
-                            Titre du {{ config.labelSingular|lower }}
-                            <span class="required">*</span>
-                        </label>
-                        <input type="text"
-                               id="el-title"
-                               name="title"
-                               class="form-control nm-title-input"
-                               placeholder="{{ config.labelSingular }} 1…"
-                               autofocus
-                               required>
-                    </div>
-
-                    {% set maxDepth = max(configMap|keys) %}
-                    {% if depth < maxDepth %}
-                        <div class="nm-hint">
-                            {{ ux_icon('lucide:info', {class: 'icon-xs'}) }}
-                            <span>Après création, vous pourrez ajouter des <strong>{{ configMap[depth + 1].labelPlural|lower }}</strong> à l'intérieur.</span>
-                        </div>
-                    {% else %}
-                        <div class="nm-hint">
-                            {{ ux_icon('lucide:pencil', {class: 'icon-xs'}) }}
-                            <span>Ce niveau contient le <strong>contenu écrit</strong> — le script s'ouvre directement après création.</span>
-                        </div>
-                    {% endif %}
-
-                    <div class="nm-actions">
-                        <button type="submit" class="btn-creat nm-submit">
-                            {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
-                            Créer {{ config.labelSingular|lower }}
-                        </button>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-
-        {# ── Sidebar structure ────────────────────────────────────────────── #}
-        <aside class="profile-section">
-            <div class="profile-section-header">
-                <h2>Structure du projet</h2>
-            </div>
-            <div class="nm-levels">
+        {# ── Structure (gauche) ─────────────────────────────────────────── #}
+        <div class="ms-empty-structure">
+            <div class="ms-empty-structure-title">Structure de votre projet</div>
+            <div class="ms-empty-levels">
                 {% for d, lvl in configMap %}
                     {% set lvlIcon = lvl.hasContent ? 'lucide:file-text' : 'lucide:folder' %}
-                    <div class="nm-level {% if d == depth %}nm-level--active{% elseif d < depth %}nm-level--done{% endif %}">
-                        <span class="nm-level-icon">
-                            {{ ux_icon(lvlIcon, {class: 'icon-xs', style: 'color: ' ~ (d == depth ? lvl.color : (d < depth ? 'var(--text-muted-dark)' : 'var(--overlay-lg)'))}) }}
+                    <div class="ms-empty-level {% if d == 1 %}ms-empty-level--first{% endif %} {% if d == depth %}ms-empty-level--active{% endif %}"
+                         style="--lvl-color: {{ lvl.color }}">
+                        <span class="ms-empty-level-icon">
+                            {{ ux_icon(lvlIcon, {class: 'icon-xs', style: 'color: ' ~ lvl.color}) }}
                         </span>
-                        <span class="nm-level-name" style="{{ d == depth ? 'color: ' ~ lvl.color : '' }}">
-                            {{ lvl.labelSingular }}
-                        </span>
+                        <div class="ms-empty-level-text">
+                            <strong>{{ lvl.labelPlural }}</strong>
+                            <span>{{ lvl.hasContent ? 'contenu écrit' : 'structure' }}</span>
+                        </div>
                         {% if d == depth %}
-                            <span class="nm-level-badge">création</span>
+                            <span class="ms-empty-level-badge-active">création</span>
                         {% endif %}
                     </div>
                     {% if not loop.last %}
-                        <div class="nm-level-arrow">{{ ux_icon('lucide:chevron-right', {style: 'width:10px;height:10px;'}) }}</div>
+                        <div class="ms-empty-level-arrow">{{ ux_icon('lucide:arrow-down', {class: 'icon-xs'}) }}</div>
                     {% endif %}
                 {% endfor %}
             </div>
-        </aside>
+        </div>
+
+        {# ── Formulaire (droite) ────────────────────────────────────────── #}
+        <div class="ms-empty-form">
+
+            {% if parent %}
+                <p class="ms-new-context">
+                    {{ ux_icon('lucide:corner-down-right', {class: 'icon-xs'}) }}
+                    Dans <strong>{{ parent.title }}</strong>
+                </p>
+            {% endif %}
+
+            <h2 class="ms-empty-form-title">
+                Créez
+                {% if parent %}un{% else %}votre premier{% endif %}
+                <span style="color:{{ config.color }}">{{ config.labelSingular|lower }}</span>
+            </h2>
+
+            {% if error is defined and error %}
+                <div class="ms-new-error">
+                    {{ ux_icon('lucide:alert-circle', {class: 'icon-xs'}) }}
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form method="post"
+                  action="{{ path('app_manuscript_new', {project_slug: project.slug, depth: depth, parent_id: parent ? parent.id : null}) }}"
+                  class="ms-empty-form-inner">
+                <input type="text"
+                       name="title"
+                       class="ms-empty-input"
+                       placeholder="{{ config.labelSingular }} {{ depth == 1 ? '1' : '' }}…"
+                       autofocus
+                       required>
+                <button type="submit" class="ms-empty-submit">
+                    {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }} Créer
+                </button>
+            </form>
+
+            {% if depth < maxDepth %}
+                <p class="ms-empty-hint">
+                    Vous ajouterez ensuite des <strong>{{ configMap[depth + 1].labelPlural|lower }}</strong> à l'intérieur.
+                </p>
+            {% else %}
+                <p class="ms-empty-hint">
+                    Le script s'ouvre directement après création.
+                </p>
+            {% endif %}
+
+            <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}"
+               class="ms-new-cancel">
+                {{ ux_icon('lucide:x', {class: 'icon-xs'}) }}
+                Annuler
+            </a>
+
+        </div>
 
     </div>
 

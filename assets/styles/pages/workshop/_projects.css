@@ -116,6 +116,7 @@
     left: 0;
     background: var(--color-bg-input);
     border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
     box-shadow: 0 12px 32px rgba(0,0,0,.6);
     z-index: 50;
     min-width: 200px;
@@ -191,12 +192,141 @@
     }
 }
 
-/* Pills de rôle */
+/* Ligne de filtres générique (rôles, statut, type) */
+.project-filters__row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.project-filters__row--secondary {
+    padding: 8px 0 2px;
+    border-top: 1px solid var(--color-border);
+    gap: 8px;
+}
+
+/* Compat ancienne classe */
 .project-filters__roles {
     display: flex;
     align-items: center;
     gap: 6px;
     flex-wrap: wrap;
+}
+
+/* ── Groupe label + pills ──────────────────────────────── */
+.pf-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.pf-group__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--text-muted);
+    margin-right: 2px;
+    white-space: nowrap;
+}
+
+/* ── Item caché par le filtre client-side ─────────────── */
+.pf-hidden { display: none !important; }
+
+/* ── Pills filtre ─────────────────────────────────────── */
+.pf-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: none;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color .12s, border-color .12s, background .12s;
+}
+
+.pf-pill:hover {
+    color: var(--text-main);
+    border-color: var(--color-border-light);
+}
+
+.pf-pill.is-active {
+    color: var(--text-main);
+    background: var(--overlay-sm);
+    border-color: var(--color-border-light);
+}
+
+/* Variantes statut */
+.pf-pill--draft.is-active     { color: var(--text-muted); border-color: var(--color-border-light); }
+.pf-pill--in_progress.is-active { color: #60a5fa; border-color: rgba(96,165,250,.4); background: rgba(96,165,250,.07); }
+.pf-pill--completed.is-active  { color: #4ade80; border-color: rgba(74,222,128,.4); background: rgba(74,222,128,.07); }
+.pf-pill--archived.is-active   { color: var(--text-muted); border-color: var(--color-border-light); background: var(--overlay-xs); }
+
+/* Variante type */
+.pf-pill--type.is-active {
+    color: var(--color-primary);
+    border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+    background: var(--color-primary-glow);
+}
+
+/* Compteur dans la pill */
+.pf-pill__count {
+    font-size: 9px;
+    font-weight: 800;
+    padding: 0 4px;
+    background: var(--overlay-sm);
+    color: inherit;
+    line-height: 1.6;
+}
+
+.pf-pill.is-active .pf-pill__count {
+    background: rgba(255,255,255,.1);
+}
+
+/* Séparateur entre groupes */
+.pf-sep {
+    width: 1px;
+    height: 18px;
+    background: var(--color-border);
+    flex-shrink: 0;
+    align-self: center;
+}
+
+/* Bouton reset */
+.pf-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 3px 8px;
+    border: 1px solid var(--color-border);
+    background: none;
+    margin-left: auto;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color .12s, border-color .12s;
+}
+
+.pf-reset:hover {
+    color: var(--color-error);
+    border-color: color-mix(in srgb, var(--color-error) 40%, transparent);
 }
 
 .role-pill {
@@ -230,14 +360,18 @@
 .role-pill--owner       { color: var(--color-primary); }
 .role-pill--owner.is-active { border-color: var(--color-primary); background: var(--color-primary-glow); }
 
-.role-pill--lead        { color: var(--color-purple); }
-.role-pill--lead.is-active  { border-color: var(--color-purple); background: var(--color-purple-glow); }
+.role-pill--moderator        { color: var(--color-purple); }
+.role-pill--moderator.is-active  { border-color: var(--color-purple); background: var(--color-purple-glow); }
 
-.role-pill--editor      { color: var(--color-blue); }
-.role-pill--editor.is-active { border-color: var(--color-blue); background: var(--color-blue-glow); }
+.role-pill--contributor      { color: var(--color-blue); }
+.role-pill--contributor.is-active { border-color: var(--color-blue); background: var(--color-blue-glow); }
 
-.role-pill--contributor { color: var(--color-green); }
-.role-pill--contributor.is-active { border-color: var(--color-green); background: var(--color-green-glow); }
+.role-pill--reader { color: var(--color-green); }
+.role-pill--reader.is-active { border-color: var(--color-green); background: var(--color-green-glow); }
+
+/* Alias rétrocompatibilité (anciens rôles, si des données persistent) */
+.role-pill--lead   { color: var(--color-purple); }
+.role-pill--editor { color: var(--color-blue); }
 
 /* Badge de rôle en overlay sur les cartes de collaboration */
 .collab-grid-item {
@@ -291,6 +425,7 @@
 .projects-skeleton-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-auto-rows: 380px;
     gap: 24px;
 }
 
@@ -299,6 +434,8 @@
     flex-direction: column;
     background: var(--color-bg-input);
     border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
 }
 
 .projects-list .grid-only { display: none !important; }
@@ -310,9 +447,11 @@
     position: relative;
     background: var(--color-bg-inset);
     border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
     display: flex;
     flex-direction: column;
     min-height: 280px;
+    overflow: hidden;
     transition: all 0.3s ease;
 }
 
@@ -346,6 +485,7 @@
     text-transform: uppercase;
     color: var(--text-muted);
     border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
     padding: 4px 10px;
     display: flex;
     align-items: center;
@@ -417,11 +557,11 @@
     width: 40px;
     height: 40px;
     flex-shrink: 0;
-    border: 1px solid var(--color-border-light);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    border-radius: var(--radius-sm);
 }
 
 /* Quand c'est un proj-icon (pas de cover), il remplit le thumb */
@@ -435,11 +575,37 @@
     height: 18px;
 }
 
-.col-main { flex: 3; display: flex; align-items: center; gap: 15px; }
+.col-main { flex: 3; display: flex; align-items: center; gap: 15px; min-width: 0; }
 .col-status { flex: 1; }
 .col-progression { flex: 2; max-width: 200px; }
 .col-entities { flex: 1; text-align: center; }
 .col-date { flex: 1; color: var(--text-muted); font-size: 13px; text-align: right; }
+
+/* Nom du projet en vue liste — 1 ligne tronquée */
+.project-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.project-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.project-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 /* ── 4. UI ELEMENTS (PROGRESS & BADGES STATUS) ─────────── */
 .progress-bar-container {
@@ -454,7 +620,7 @@
 
 .badge-status {
     padding: 4px 12px;
-    border-radius: 100px;
+    border-radius: var(--radius-sm);
     font-size: 10px;
     font-weight: 700;
     border: 1px solid var(--color-border-light);
@@ -550,4 +716,64 @@
 .proj-page-info {
     font-size: 12px;
     color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/* PAGE INVITATION                                             */
+/* ═══════════════════════════════════════════════════════════ */
+
+.invitation-card {
+    max-width: 480px;
+    margin: 80px auto;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+}
+
+.invitation-card__icon {
+    width: 60px;
+    height: 60px;
+    background: var(--color-primary-dim);
+    color: var(--color-primary);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.invitation-card__title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.invitation-card__desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.invitation-card__meta {
+    font-size: 12px;
+    padding: 8px 14px;
+    background: var(--overlay-xs);
+    border-radius: var(--radius-sm);
+    width: 100%;
+}
+
+.invitation-card__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
 }

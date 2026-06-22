@@ -95,6 +95,13 @@ final class PagesController extends AbstractController
         // ── Vérifier si le formulaire est soumis et valide ─────────────
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // ── Honeypot : si le champ piège est rempli, c'est un bot ──
+            if ('' !== (string) $form->get('website')->getData()) {
+                // Simuler un succès pour ne pas révéler le piège
+                $this->addFlash('success', $this->translator->trans('contact.flash.success', [], 'validators'));
+                return $this->redirectToRoute('app_contact', ['_locale' => $request->getLocale()]);
+            }
+
             // ── Rate Limiting : Vérifier si l'utilisateur n'abuse pas ──
             $limiter = $contactLimiter->create($request->getClientIp());
 

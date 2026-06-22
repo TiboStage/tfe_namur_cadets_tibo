@@ -175,99 +175,10 @@
 .explore-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    grid-auto-rows: 360px;
     gap: 14px;
 }
 
-/* ── Carte projet ──────────────────────────────────────────── */
-.explore-card {
-    display: flex;
-    flex-direction: column;
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    text-decoration: none;
-    color: var(--text-main);
-    transition: border-color .2s, transform .15s;
-    overflow: hidden;
-}
-
-.explore-card:hover {
-    border-color: var(--color-primary);
-    transform: translateY(-2px);
-}
-
-.explore-card__type {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .07em;
-    padding: 6px 12px;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.explore-card__type--film     { color: var(--color-blue);   background: color-mix(in srgb, var(--color-blue)   5%, transparent); }
-.explore-card__type--serie    { color: var(--color-purple); background: color-mix(in srgb, var(--color-purple) 5%, transparent); }
-.explore-card__type--jeu_video{ color: var(--color-green);  background: color-mix(in srgb, var(--color-green)  5%, transparent); }
-.explore-card__type--custom   { color: var(--color-primary); background: rgba(255,184,0,.05); }
-
-.explore-card__body {
-    flex: 1;
-    padding: 12px 14px;
-}
-
-.explore-card__title {
-    font-size: 13px;
-    font-weight: 700;
-    margin: 0 0 6px;
-    line-height: 1.3;
-}
-
-.explore-card__desc {
-    font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin: 0;
-}
-
-.explore-card__footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 14px;
-    border-top: 1px solid var(--color-border);
-    font-size: 11px;
-    color: var(--text-muted);
-}
-
-.explore-card__author {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color .15s;
-}
-
-.explore-card__author:hover {
-    color: var(--color-primary);
-}
-
-.explore-card__avatar-xs {
-    width: 18px;
-    height: 18px;
-    background: rgba(255,184,0,.15);
-    border: 1px solid rgba(255,184,0,.3);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-    font-weight: 800;
-    color: var(--color-primary);
-    flex-shrink: 0;
-}
 
 /* ── Grille créateurs ──────────────────────────────────────── */
 .creators-grid {
@@ -648,11 +559,16 @@
     transition: border-color .15s, color .15s, background .15s;
 }
 
-.explore-quick-tag:hover,
-.explore-quick-tag--active {
-    border-color: var(--color-primary);
+.explore-quick-tag:hover {
+    border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
     color: var(--color-primary);
     background: var(--color-primary-glow);
+}
+.explore-quick-tag--active {
+    border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+    color: var(--color-primary);
+    background: var(--color-primary-glow);
+    font-weight: 700;
 }
 
 /* Message affiché si aucune carte ne correspond au filtre sélectionné */
@@ -734,7 +650,7 @@
 }
 
 .explore-genre-btn--active {
-    border-color: var(--color-primary);
+    border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
     color: var(--color-primary);
     background: var(--color-primary-glow);
 }
@@ -843,7 +759,7 @@
 
 .explore-search-bar__mode.active {
     color: var(--color-primary);
-    background: rgba(255,184,0,.06);
+    background: var(--color-primary-glow);
 }
 
 .explore-search-bar__mode:hover:not(.active) {
@@ -914,12 +830,11 @@
 /* Barre filtres type */
 .search-dropdown__type-bar {
     display: flex;
-    gap: 0;
+    gap: 4px;
     padding: 8px 10px;
     border-bottom: 1px solid var(--color-border);
     flex-shrink: 0;
     flex-wrap: wrap;
-    gap: 4px;
 }
 
 .search-dropdown__type-btn {
@@ -943,8 +858,8 @@
 
 .search-dropdown__type-btn.active {
     color: var(--color-primary);
-    border-color: rgba(255,184,0,.4);
-    background: rgba(255,184,0,.06);
+    border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+    background: var(--color-primary-glow);
 }
 
 /* Zone résultats (scrollable) */
@@ -1151,8 +1066,8 @@
 
 .explore-results__filter-btn.active {
     color: var(--color-primary);
-    border-color: rgba(255,184,0,.4);
-    background: rgba(255,184,0,.06);
+    border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+    background: var(--color-primary-glow);
 }
 
 /* Compteur résultats */
@@ -1528,7 +1443,9 @@
 /* ── Hero ─────────────────────────────────────────────────── */
 .pub-project__hero {
     position: relative;
-    margin-bottom: 40px;
+    width: calc(100% - 100px);
+    max-width: 1700px;
+    margin: 10px auto 40px;
 }
 
 .pub-project__cover {
@@ -2092,7 +2009,7 @@
 /* ── Format scénario Fountain ───────────────────────────────── */
 
 .screenplay {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: var(--font-mono);
     font-size: 14px;
     line-height: 1.9;
     color: var(--text-main);
@@ -2474,9 +2391,10 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+    align-items: center;
 }
 
-.pub-sidebar-member {
+.pub-sidebar-member--more {
     width: 32px;
     height: 32px;
     background: var(--color-bg-elevated);
@@ -2484,19 +2402,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 700;
     color: var(--text-muted);
 }
 
-.pub-sidebar-member--more {
-    font-size: 11px;
-    color: var(--text-muted);
-}
-
-/* ── Override workshop-container min-height sur la page projet public ── */
+/* ── Overrides workshop-container dans la page projet public ── */
 .pub-project .workshop-container {
     min-height: unset;
+}
+
+/* Le hero-content est positionné absolument dans le hero déjà contraint,
+   il doit occuper toute la largeur du hero sans ré-appliquer les marges */
+.pub-project__hero .workshop-container {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    background-color: transparent;
 }
 
 /* ── Retour ───────────────────────────────────────────────── */
@@ -2575,7 +2498,6 @@
 .xsearch__bar {
     display: flex;
     background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
     overflow: hidden;
     margin-bottom: 0;
 }
@@ -2583,7 +2505,6 @@
 .xsearch__toggle {
     display: flex;
     background: rgba(0,0,0,0.3);
-    border-right: 1px solid var(--color-border);
     padding: 6px;
     gap: 2px;
     flex-shrink: 0;
@@ -2594,7 +2515,6 @@
     align-items: center;
     gap: 6px;
     background: none;
-    border: none;
     color: var(--text-muted);
     padding: 8px 14px;
     font-size: 13px;
@@ -2709,8 +2629,8 @@
     justify-content: center;
 }
 
-.xfilter-mode-btn:hover        { border-color: var(--color-primary); color: var(--color-primary); }
-.xfilter-mode-btn.active       { background: var(--color-primary); border-color: var(--color-primary); color: var(--text-dark); }
+.xfilter-mode-btn:hover        { border-color: color-mix(in srgb, var(--color-primary) 45%, transparent); color: var(--color-primary); }
+.xfilter-mode-btn.active       { background: var(--color-primary-glow); border-color: color-mix(in srgb, var(--color-primary) 50%, transparent); color: var(--color-primary); }
 
 /* ── Input recherche ─────────────────────────────────────── */
 .xfilter-input-wrap {
@@ -2733,7 +2653,6 @@
     font-size: 13px;
     font-family: inherit;
     padding: 9px 0;
-    border: none;
 }
 .xfilter-input::placeholder { color: var(--text-muted-dark); }
 
@@ -2878,6 +2797,8 @@
     min-width: 100%;
     background: var(--color-bg-input);
     border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
     z-index: 150;
     box-shadow: 0 12px 32px rgba(0,0,0,0.6);
     display: flex;
@@ -3590,31 +3511,6 @@
     height: 0;
 }
 
-/* Genre buttons (sidebar) */
-.xp-genre-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.xp-genre-btn {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 5px 8px;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-size: 12px;
-    font-family: inherit;
-    cursor: pointer;
-    transition: color 0.15s, background 0.15s;
-    margin: 0 -8px;
-    width: calc(100% + 16px);
-}
-
-.xp-genre-btn:hover         { color: var(--text-main); background: rgba(255,255,255,0.03); }
-.xp-genre-btn--active       { color: var(--color-primary); background: var(--color-primary-dim); font-weight: 600; }
 
 /* ── Zone principale ─────────────────────────────────────── */
 .xp-main {

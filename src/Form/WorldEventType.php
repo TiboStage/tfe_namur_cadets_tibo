@@ -32,8 +32,8 @@ class WorldEventType extends AbstractType
         $builder
             // Titre de l'événement
             ->add('title', TextType::class, [
-                'label' => 'world_event.form.title',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'world_event.form.title.label',
+                'translation_domain' => 'workshop',
                 'attr' => [
                     'placeholder' => 'world_event.form.title.placeholder',
                     'class' => 'form-control',
@@ -55,8 +55,8 @@ class WorldEventType extends AbstractType
 
             // Description de l'événement
             ->add('description', TextareaType::class, [
-                'label' => 'world_event.form.description',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'world_event.form.description.label',
+                'translation_domain' => 'workshop',
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'world_event.form.description.placeholder',
@@ -67,8 +67,8 @@ class WorldEventType extends AbstractType
 
             // Année narrative (peut être négative pour avant "an 0")
             ->add('year', IntegerType::class, [
-                'label' => 'world_event.form.year',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'world_event.form.year.label',
+                'translation_domain' => 'workshop',
                 'attr' => [
                     'placeholder' => 'world_event.form.year.placeholder',
                     'class' => 'form-control',
@@ -89,8 +89,8 @@ class WorldEventType extends AbstractType
 
             // Mois (1-12, optionnel)
             ->add('month', IntegerType::class, [
-                'label' => 'world_event.form.month',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'world_event.form.month.label',
+                'translation_domain' => 'workshop',
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'world_event.form.month.placeholder',
@@ -109,8 +109,8 @@ class WorldEventType extends AbstractType
 
             // Jour (1-31, optionnel)
             ->add('day', IntegerType::class, [
-                'label' => 'world_event.form.day',
-                'translation_domain' => 'workshop_interface',
+                'label' => 'world_event.form.day.label',
+                'translation_domain' => 'workshop',
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'world_event.form.day.placeholder',
@@ -130,7 +130,7 @@ class WorldEventType extends AbstractType
             // Type d'événement
             ->add('eventType', ChoiceType::class, [
                 'label' => 'world_event.form.event_type',
-                'translation_domain' => 'workshop_interface',
+                'translation_domain' => 'workshop',
                 'required' => false,
                 'placeholder' => 'world_event.form.event_type.placeholder',
                 'choices' => [
@@ -146,7 +146,7 @@ class WorldEventType extends AbstractType
             // Scène liée du manuscrit (optionnel)
             ->add('linkedScene', EntityType::class, [
                 'label' => 'world_event.form.linked_scene',
-                'translation_domain' => 'workshop_interface',
+                'translation_domain' => 'workshop',
                 'class' => ScenarioElement::class,
                 'choice_label' => fn(ScenarioElement $el) => $el->getFullPath(),
                 'placeholder' => 'world_event.form.linked_scene.placeholder',
@@ -160,7 +160,7 @@ class WorldEventType extends AbstractType
             // Lieu lié (optionnel)
             ->add('location', EntityType::class, [
                 'label' => 'world_event.form.location',
-                'translation_domain' => 'workshop_interface',
+                'translation_domain' => 'workshop',
                 'class' => Location::class,
                 'choice_label' => 'name',
                 'placeholder' => 'world_event.form.location.placeholder',
@@ -177,7 +177,7 @@ class WorldEventType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => WorldEvent::class,
-            'translation_domain' => 'workshop_interface',
+            'translation_domain' => 'workshop',
             'csrf_protection' => true,
             'csrf_token_id' => 'world_event_form',
         ]);

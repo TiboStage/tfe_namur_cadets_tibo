@@ -262,7 +262,6 @@ export default class extends Controller {
         if (this.hasGenreSelectTarget) this.genreSelectTarget.value = '';
         if (this.hasTypeLabelTarget)   this.typeLabelTarget.textContent  = this._allTypesLabel();
         if (this.hasGenreLabelTarget)  this.genreLabelTarget.textContent = this._allLabel();
-        // Remettre l'option "Tous" active dans le panneau type
         this._resetTypeOptions();
         this._filterGenreOptions();
         this._fetch();

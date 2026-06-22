@@ -4,7 +4,7 @@
     Paramètres :
       - project       : App\Entity\Project
       - comment_count : int (optionnel, 0 par défaut)
-      - viewer_role   : null | 'owner' | 'lead' | 'editor' | 'contributor'
+      - viewer_role   : null | 'owner' | 'moderator' | 'contributor' | 'reader'
                         Si non null → affiche le bouton "Ouvrir dans l'atelier"
 
     Règles d'accès :
@@ -17,6 +17,8 @@
 
 {% set comment_count = comment_count|default(0) %}
 {% set viewer_role   = viewer_role|default(null) %}
+{% set active_genre  = active_genre|default(null) %}
+{% set genre_features = project.projectFeatures|filter(f => f.featureKey == 'genre') %}
 
 {# ── Labels traduits ──────────────────────────────────────────────────────── #}
 {% set type_label = ('project_public.type.' ~ project.projectType)|trans %}
@@ -58,7 +60,8 @@
         {% if project.coverFilename %}
             <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
                  alt="{{ project.title }}"
-                 class="sc-card__cover-img">
+                 class="sc-card__cover-img"
+                 loading="lazy">
         {% else %}
             <div class="sc-card__type-icon">
                 {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'lg'} %}
@@ -79,7 +82,7 @@
 
     {# ── Corps ───────────────────────────────────────────────────────────── #}
     <div class="sc-card__body">
-        <h3 class="sc-card__title">{{ project.title }}</h3>
+        <h3 class="sc-card__title" title="{{ project.title }}">{{ project.title }}</h3>
 
         {# Profil créateur #}
         <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: project.createdBy.username}) }}"
@@ -87,6 +90,18 @@
             {{ include('_partials/_user_avatar.html.twig', {user: project.createdBy, size: 'xs'}) }}
             <span class="sc-card__creator-name">{{ 'project_public.by'|trans }} @{{ project.createdBy.username }}</span>
         </a>
+
+        {# Genres #}
+        {% if genre_features is not empty %}
+        <div class="sc-card__genres">
+            {% for feature in genre_features %}
+            <span class="sc-card__genre {{ active_genre == feature.value ? 'sc-card__genre--active' : '' }}"
+                  data-genre="{{ feature.value }}">
+                {{ feature.value|replace({'_': ' '})|capitalize }}
+            </span>
+            {% endfor %}
+        </div>
+        {% endif %}
 
         {# Description #}
         {% if project.description %}

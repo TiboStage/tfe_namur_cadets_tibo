@@ -1,5 +1,29 @@
 :root {
     /* ═══════════════════════════════════════════════════════════ */
+    /* TYPOGRAPHIE                                                  */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --font-sans:    'sf-primary', system-ui, sans-serif;  /* Inter          — Sidebar, nav, modales, boutons   */
+    --font-body:    'sf-body', system-ui, sans-serif;     /* Inter          — Lecture, notes, descriptions     */
+    --font-display: 'sf-display', 'Courier New', monospace; /* Courier Prime  — Éditeur Fountain, export PDF     */
+    --font-mono:    'sf-display', 'Courier New', monospace; /* = sf-display   — Fountain editor (même police)    */
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* OMBRES                                                       */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --shadow-sm:    0 4px 16px rgba(0, 0, 0, 0.35);
+    --shadow-md:    0 12px 32px rgba(0, 0, 0, 0.55);
+    --shadow-lg:    0 24px 64px rgba(0, 0, 0, 0.65);
+    --shadow-xl:    0 32px 80px rgba(0, 0, 0, 0.70);
+    --shadow-modal: 0 15px 35px rgba(0, 0, 0, 0.80);
+
+    /* ─── Backdrop (overlays semi-opaques pour modales) ────────── */
+    --backdrop:        rgba(0, 0, 0, 0.60);
+    --backdrop-dark:   rgba(0, 0, 0, 0.70);
+    --backdrop-darker: rgba(0, 0, 0, 0.80);
+
+    /* ═══════════════════════════════════════════════════════════ */
     /* COULEUR PRINCIPALE                                           */
     /* ═══════════════════════════════════════════════════════════ */
 
@@ -37,8 +61,6 @@
     --project-serie-dim:   rgba(168, 85,  247, 0.18);
     --project-jv:          #2A9D8F;
     --project-jv-dim:      rgba( 42, 157, 143, 0.18);
-    --project-custom:      #8B7355;
-    --project-custom-dim:  rgba(139, 115,  85, 0.18);
 
     /* ═══════════════════════════════════════════════════════════ */
     /* BACKGROUNDS                                                  */
@@ -109,6 +131,14 @@
     /* ═══════════════════════════════════════════════════════════ */
 
     --transition-fast: all 0.2s ease;
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* ARRONDIS                                                     */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --radius-sm: 4px;
+    --radius:    6px;
+    --radius-lg: 8px;
 
     /* Breakpoints — non utilisables avec var() dans @media, hardcodés dans chaque fichier
        mobile: 640px  |  tablet: 768px  |  desktop: 1024px */

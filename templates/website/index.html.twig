@@ -5,6 +5,7 @@
 
 
 {% block title %}{{ 'meta.home_title'|trans }}{% endblock %}
+{% block meta_description %}<meta name="description" content="{{ 'meta.home_description'|trans({}, 'website') }}">{% endblock %}
 
 {% block content %}
 
@@ -92,6 +93,14 @@
                 </div>
 
             </div>
+
+            <div class="features-discover">
+                <a href="{{ path('app_examples', {_locale: app.request.locale}) }}" class="btn-outline">
+                    {{ ux_icon('lucide:arrow-right', {class: 'icon-sm'}) }}
+                    {{ 'home.features.discover'|trans }}
+                </a>
+            </div>
+
         </div>
     </section>
 

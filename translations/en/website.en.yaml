@@ -7,9 +7,14 @@
 # ===== META TAGS =====
 meta:
     home_title: "Scénart - Imagine, Structure, Write"
-    examples_title: "Examples - Scénart"
+    examples_title: "Features - Scénart"
     pricing_title: "Scénart - Pricing"
     contact_title: "Contact - Scénart"
+    default_description: "Scénart — Collaborative narrative creation platform for screenwriters, authors, and game designers."
+    home_description: "ScénArt is the collaborative platform for screenwriters, authors and game designers. Structure your narrative projects, collaborate with your team and publish your creations."
+    examples_description: "Explore all ScénArt features: Fountain editor, character sheets, team collaboration, and task management."
+    pricing_description: "Discover ScénArt plans. Start for free and upgrade to Pro as your projects grow."
+    contact_description: "Contact the ScénArt team for any question, suggestion, or report. Response within 48h."
 
 # ===== NAVBAR (PUBLIC) =====
 navbar:
@@ -21,7 +26,7 @@ navbar:
 
     links:
         home: "Home"
-        examples: "Examples"
+        examples: "Features"
         pricing: "Pricing"
         contact: "Contact"
 
@@ -108,6 +113,7 @@ home:
         title: "Everything you need to"
         title_highlight: "build your universe"
         desc: "Tools designed for serious creators.<br>From raw idea to complete world."
+        discover: "Explore all features"
         items:
             editor_title: "Script Editor"
             editor_desc: "Professional screenplay format. Sluglines, dialogue, auto narration."
@@ -146,33 +152,118 @@ home:
         desc: "Join hundreds of creators launching their universes on Scénart."
         actions:
             start: "Start for free"
-            examples: "View examples ↗"
+            examples: "Explore features ↗"
 
 # ===== EXAMPLES PAGE =====
 examples:
     header:
-        tag: "Examples"
-        title: "Projects created on"
-        title_highlight: "SCÉNART"
-        description: "Discover how other creators structure their universes. Each project is unique and illustrates the infinite possibilities of the Workshop."
+        tag: "Features"
+        title: "Everything you need to"
+        title_highlight: "create"
+        description: "From writing scripts to team management, ScénArt brings all your narrative project tools together in one place."
 
-    filters:
-        all: "All"
-        cinema: "Cinema"
-        serie: "Series"
-        video_game: "Video Game"
+    scenariste:
+        tag: "Screenwriter"
+        title: "Screenplay editor"
+        desc: "Write your scripts in a dedicated Fountain editor with scene navigation, syntax highlighting and real-time saving."
+        feat1_title: "Fountain format"
+        feat1_desc: "Scenes, dialogue, action lines, parentheticals"
+        feat2_title: "Act navigation"
+        feat2_desc: "Structured sidebar, direct access to each scene"
+        feat3_title: "PDF export"
+        feat3_desc: "Professional layout ready for printing"
 
-    grid:
-        empty_message: "No projects match this category at the moment."
-        view_project: "Explore project"
-        author: "By"
+    exploration:
+        tag: "Exploration"
+        title: "Your projects, your cards"
+        desc: "Each project has character sheets, locations and scripts. Browse community creations or manage your own."
+        feat1_title: "Character sheets"
+        feat1_desc: "Role, backstory, traits and relationships"
+        feat2_title: "Location sheets"
+        feat2_desc: "Interior, exterior, fantasy, futuristic"
+        feat3_title: "List or grid view"
+        feat3_desc: "Filters, sorting and instant search"
 
-    empty:
-        notice: "Section being prepared — the first projects are coming soon"
-        title: "The first projects are coming soon"
-        desc: "Once creators publish their universes, you'll find them here, sorted by type and filterable."
-        cta_create: "Create my first project"
-        cta_pricing: "See pricing"
+    collaboration:
+        tag: "Collaboration"
+        title: "Invite your team"
+        desc: "Manage each collaborator's permissions and work together on the same project with distinct roles."
+        feat1_title: "Invite by username"
+        feat1_desc: "Search for a member by their username"
+        feat2_title: "Granular roles"
+        feat2_desc: "Owner · Moderator · Contributor · Reader"
+        feat3_title: "Activity log"
+        feat3_desc: "Complete history of all team actions"
+        modal_title: "Invite a collaborator"
+        modal_username_label: "Username"
+        modal_role_label: "Role in project"
+        modal_role_reader: "Reader"
+        modal_role_contributor: "Contributor"
+        modal_role_moderator: "Moderator"
+        modal_cancel: "Cancel"
+        modal_submit: "Send invitation"
+
+    organisation:
+        tag: "Organisation"
+        title: "Tasks & notes"
+        desc: "Plan your work with an integrated task board and collaborative notes linked to your project."
+        feat1_title: "Task board"
+        feat1_desc: "To do · In progress · Review · Done"
+        feat2_title: "Collaborative notes"
+        feat2_desc: "References, ideas, scene annotations"
+        feat3_title: "Team assignment"
+        feat3_desc: "Each task assigned to a team member"
+
+    demo:
+        saved: "Saved"
+        paper_url: "workshop / once-upon-a-time / act-i / the-beginning"
+        paper_title: "— once upon a time on scénart —"
+        paper_scene1: "EXT. CLUTTERED OFFICE — NIGHT"
+        paper_action1: "A screenwriter stares at 47 Word files. Each one is called \"FINAL_TRULY_FINAL_v3_good.docx\"."
+        paper_char1: "THE SCREENWRITER"
+        paper_paren1: "(desperate)"
+        paper_dial1: "My Act II... it was here yesterday."
+        paper_scene2: "ON HIS SCREEN — ScénArt finally opens."
+        paper_char2: "THE SCREENWRITER"
+        paper_paren2: "(tears in eyes)"
+        paper_dial2: "Once upon a time... the end of chaos."
+        paper_scene3: "INT. SCÉNART — CONTINUOUS"
+        paper_action3: "He creates his first project. His scenes organise themselves. His characters come to life. Somewhere, a USB key weeps."
+        paper_char3: "THE SCREENWRITER"
+        paper_paren3: "(finally exhaling)"
+        paper_dial3: "And they lived happily ever after, with many scenes."
+        type_film: "Film"
+        type_serie: "Series"
+        type_jv: "Video game"
+        status_complete: "Finished"
+        status_ongoing: "In progress"
+        card_follow: "Follow →"
+        card_read: "Read →"
+        role_owner: "Owner"
+        elements: "elements"
+        visibility_public: "Public"
+        visibility_private: "Private"
+        tasks: "tasks"
+        up_to_date: "Up to date"
+        cta_edit: "Edit →"
+        task_url: "workshop / snatch / tasks"
+        stat_overdue: "Overdue"
+        stat_progress: "In progress"
+        stat_done: "Done"
+        task_todo: "To do"
+        task_in_progress: "In progress"
+        task_done: "Done"
+        priority_high: "High"
+        priority_normal: "Normal"
+        priority_low: "Low"
+
+    cta:
+        title: "Ready to"
+        title_highlight: "create"
+        title_suffix: " ?"
+        desc: "Join ScénArt for free and start your first narrative project today."
+        btn_start: "Get started for free"
+        btn_pricing: "See pricing"
 
 # ===== PRICING PAGE =====
 pricing:
@@ -251,7 +342,7 @@ contact:
             response_desc: "Less than 24h on weekdays."
             response_sub: "Priority support for Pro & Studio subscribers."
             academic: "Academic project"
-            academic_desc: "StoryForge — TFE 2024-2025"
+            academic_desc: "StoryForge — TFE 2025-2026"
             academic_location: "EAFC Namur-Cadets, Belgium"
 
     form:

@@ -2,6 +2,7 @@
 {% trans_default_domain 'website' %}
 
 {% block title %}{{ 'meta.pricing_title'|trans({}, 'website')}}{% endblock %}
+{% block meta_description %}<meta name="description" content="{{ 'meta.pricing_description'|trans({}, 'website') }}">{% endblock %}
 
 {% block content %}
     <main class="container pricing-page">

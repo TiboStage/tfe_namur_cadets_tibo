@@ -78,7 +78,7 @@ class WorldEventController extends AbstractController
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         $event = new WorldEvent();
         $event->setProject($project);
@@ -100,7 +100,7 @@ class WorldEventController extends AbstractController
             $this->addFlash('success', $this->translator->trans(
                 'world_event.flash.created',
                 ['%title%' => $event->getTitle()],
-                'workshop_interface'
+                'workshop'
             ));
 
             return $this->redirectToRoute('app_world_event_index', [
@@ -143,7 +143,7 @@ class WorldEventController extends AbstractController
         WorldEvent $event
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         if ($event->getProject() !== $project) {
             throw $this->createNotFoundException();
@@ -160,7 +160,7 @@ class WorldEventController extends AbstractController
             $this->addFlash('success', $this->translator->trans(
                 'world_event.flash.updated',
                 ['%title%' => $event->getTitle()],
-                'workshop_interface'
+                'workshop'
             ));
 
             return $this->redirectToRoute('app_world_event_show', [
@@ -185,7 +185,7 @@ class WorldEventController extends AbstractController
         WorldEvent $event
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         if ($event->getProject() !== $project) {
             throw $this->createNotFoundException();
@@ -199,7 +199,7 @@ class WorldEventController extends AbstractController
             $this->addFlash('success', $this->translator->trans(
                 'world_event.flash.deleted',
                 ['%title%' => $title],
-                'workshop_interface'
+                'workshop'
             ));
         }
 

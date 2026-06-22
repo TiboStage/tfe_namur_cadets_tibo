@@ -43,7 +43,8 @@
     max-width: calc(100vw - 16px);
     background: var(--color-bg-input);
     border: 1px solid var(--color-border-light);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
     z-index: 999;
     display: flex;
     flex-direction: column;
@@ -198,6 +199,25 @@ a.notif-item__content:hover {
     font-size: 10px;
     color: var(--text-muted);
 }
+
+.notif-item__link {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+.notif-item__link:hover { color: var(--text-main); }
+
+.notif-item__cta {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: opacity 0.15s;
+}
+.notif-item__cta:hover { opacity: 0.75; }
 
 /* ── Lien "Voir toutes" en bas ────────────────────────────── */
 .notification-dropdown__see-all {

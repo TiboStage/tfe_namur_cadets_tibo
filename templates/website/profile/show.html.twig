@@ -24,7 +24,7 @@
                       style="background-color:{{ user.avatarColor }};"
                       data-profile-color-target="avatarPreview">
                     {% if user.avatarFilename %}
-                        <img src="/uploads/avatars/{{ user.avatarFilename }}" alt="{{ user.username }}" class="img-cover">
+                        <img src="/uploads/avatars/{{ user.avatarFilename }}" alt="{{ user.username }}" class="img-cover" loading="lazy">
                     {% else %}
                         {{ user.username|first|upper }}
                     {% endif %}
@@ -149,18 +149,19 @@
                                 'attr': {
                                     'placeholder': 'profile.form.new_password'|trans,
                                     'data-password-field-target': 'input',
-                                    'data-action': 'input->password-field#checkStrength focus->password-field#openStrength blur->password-field#closeStrength'
+                                    'data-action': 'input->password-field#checkStrength focus->password-field#openStrength blur->password-field#closeStrength',
+                                    'aria-describedby': 'profile-pw-rules'
                                 }
                             }) }}
                             <button type="button" class="pw-toggle-btn"
                                     data-password-field-target="toggleBtn"
                                     data-action="click->password-field#toggleVisibility"
-                                    tabindex="-1" aria-label="{{ 'profile.form.password_show'|trans }}">
+                                    aria-label="{{ 'profile.form.password_show'|trans }}">
                                 <span class="pw-eye-show">{{ ux_icon('lucide:eye', {style: 'width:15px;height:15px'}) }}</span>
                                 <span class="pw-eye-hide" hidden>{{ ux_icon('lucide:eye-off', {style: 'width:15px;height:15px'}) }}</span>
                             </button>
                         </div>
-                        <div class="pw-strength" data-password-field-target="strength" aria-live="polite">
+                        <div class="pw-strength" id="profile-pw-rules" data-password-field-target="strength" aria-live="polite">
                             <div class="pw-rule" data-rule="length"    data-password-field-target="rule"><span class="pw-rule__dot"></span>{{ 'profile.form.rule_length'|trans }}</div>
                             <div class="pw-rule" data-rule="uppercase" data-password-field-target="rule"><span class="pw-rule__dot"></span>{{ 'profile.form.rule_uppercase'|trans }}</div>
                             <div class="pw-rule" data-rule="digit"     data-password-field-target="rule"><span class="pw-rule__dot"></span>{{ 'profile.form.rule_digit'|trans }}</div>
@@ -182,7 +183,7 @@
                             <button type="button" class="pw-toggle-btn"
                                     data-password-field-target="confirmToggleBtn"
                                     data-action="click->password-field#toggleConfirmVisibility"
-                                    tabindex="-1" aria-label="{{ 'profile.form.password_show_confirm'|trans }}">
+                                    aria-label="{{ 'profile.form.password_show_confirm'|trans }}">
                                 <span class="pw-eye-show">{{ ux_icon('lucide:eye', {style: 'width:15px;height:15px'}) }}</span>
                                 <span class="pw-eye-hide" hidden>{{ ux_icon('lucide:eye-off', {style: 'width:15px;height:15px'}) }}</span>
                             </button>
@@ -247,16 +248,6 @@
                 <div class="pf-stat">
                     <span class="text-muted">{{ 'profile.stats.projects'|trans }}</span>
                     <strong class="highlight">{{ projects_count }}</strong>
-                </div>
-                <div class="pf-stat">
-                    <span class="text-muted">{{ 'profile.stats.last_login'|trans }}</span>
-                    <span>
-                        {% if user.lastLoginAt %}
-                            {{ user.lastLoginAt|date('d/m/Y') }}
-                        {% else %}
-                            {{ 'profile.stats.never'|trans }}
-                        {% endif %}
-                    </span>
                 </div>
             </div>
 

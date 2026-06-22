@@ -160,9 +160,52 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 15px;
+    margin-bottom: 28px;
 }
 
+/* ── Grille 2 panels côte à côte ──────────────────────────── */
+.admin-panels-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+}
 
+@media (max-width: 1100px) {
+    .admin-panels-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Lien inline dans asc-sub ─────────────────────────────── */
+.asc-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 11px;
+    transition: opacity .15s;
+}
+.asc-link:hover { opacity: .75; }
+
+/* ── td-empty : cellule état vide ─────────────────────────── */
+.td-empty {
+    text-align: center;
+    padding: 28px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+/* ── dash-panel dans admin (header h2 style cohérent) ──────── */
+.admin-content-view .dash-panel__header h2 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
 
 .text-error { color: var(--color-error); }
 
@@ -174,7 +217,7 @@
 .db-code {
     background-color: var(--color-bg-dark);
     padding: 1px 4px;
-    font-family: monospace;
+    font-family: var(--font-mono);
 }
 
 /* PANELS & TABLES */
@@ -345,6 +388,31 @@
 .mod-inline-form { display: inline; }
 .mod-btn-group   { display: flex; gap: 6px; flex-wrap: wrap; }
 .mod-actions     { display: flex; flex-direction: column; gap: 10px; }
+
+.mod-note-input {
+    background: var(--color-bg-inset);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    font-size: 11px;
+    font-family: inherit;
+    padding: 4px 8px;
+    width: 140px;
+    transition: border-color 0.15s;
+}
+.mod-note-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+.mod-note-input::placeholder { color: var(--text-muted); opacity: 0.6; }
+
+.td-note { max-width: 160px; }
+.mod-note {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+    cursor: help;
+}
 
 /* ═══════════════════════════════════════════════════════════ */
 /* TOOLBAR & FILTER TABS — Listes admin                       */

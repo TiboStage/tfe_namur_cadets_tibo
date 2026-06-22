@@ -46,8 +46,9 @@ class ProjectController extends AbstractController
     public function index(Request $request): Response
     {
         $user  = $this->getUser();
-        $scope = $request->query->getString('scope', 'all'); // all | mine | other
-        $role  = $request->query->getString('role', '');     // '' | contributor | editor | lead
+        $scope  = $request->query->getString('scope',  'all'); // all | mine | other
+        $role   = $request->query->getString('role',   '');    // '' | contributor | editor | lead
+        // status et type sont gérés côté client (Stimulus) — pas de filtrage serveur
         $page    = max(1, $request->query->getInt('page', 1));
         $perPage = match($request->query->getInt('per_page', 0)) {
             4  => 4,
@@ -56,7 +57,7 @@ class ProjectController extends AbstractController
         };
 
         // Compteurs bruts (pour les badges des onglets, toujours non filtrés)
-        $ownedCount = $this->projectRepository->count(['createdBy' => $user]);
+        $ownedCount  = $this->projectRepository->count(['createdBy' => $user]);
         $collabCount = $this->projectMemberRepository->countByUser($user->getId());
 
         // Projets dont je suis propriétaire
@@ -82,20 +83,47 @@ class ProjectController extends AbstractController
             $allItems[] = ['project' => $member->getProject(), 'role' => $member->getRole()];
         }
 
+        // ── Compteurs disponibles pour les pills de filtre (toujours sur liste complète) ─
+        $statusCounts = [];
+        $typeCounts   = [];
+        foreach ($allItems as $item) {
+            $p = $item['project'];
+            $statusCounts[$p->getStatus()]      = ($statusCounts[$p->getStatus()] ?? 0) + 1;
+            $typeCounts[$p->getProjectType()]   = ($typeCounts[$p->getProjectType()] ?? 0) + 1;
+        }
+
+        // ── Genre map : slug → Genre (avec traductions) ───────────────────────
+        $allGenreSlugs = [];
+        foreach ($allItems as $item) {
+            foreach ($item['project']->getProjectFeatures() as $f) {
+                if ($f->getFeatureKey() === 'genre') {
+                    $allGenreSlugs[] = $f->getValue();
+                }
+            }
+        }
+        $genreMap = !empty($allGenreSlugs)
+            ? $this->genreRepository->findMapBySlugs(array_unique($allGenreSlugs))
+            : [];
+
         $totalItems = count($allItems);
         $totalPages = max(1, (int) ceil($totalItems / $perPage));
         $page       = min($page, $totalPages);
         $items      = array_slice($allItems, ($page - 1) * $perPage, $perPage);
 
         return $this->render('workshop/projects/index.html.twig', [
-            'items'       => $items,
-            'owned_count' => $ownedCount,
-            'collab_count' => $collabCount,
-            'scope'        => $scope,
-            'role_filter'  => $role,
-            'page'         => $page,
-            'total_pages'  => $totalPages,
-            'total_items'  => $totalItems,
+            'items'         => $items,
+            'owned_count'   => $ownedCount,
+            'collab_count'  => $collabCount,
+            'scope'         => $scope,
+            'role_filter'   => $role,
+            'status_filter' => '',   // filtrage côté client
+            'type_filter'   => '',   // filtrage côté client
+            'status_counts' => $statusCounts,
+            'type_counts'   => $typeCounts,
+            'genre_map'     => $genreMap,
+            'page'          => $page,
+            'total_pages'   => $totalPages,
+            'total_items'   => $totalItems,
         ]);
     }
 
@@ -324,7 +352,7 @@ class ProjectController extends AbstractController
         Request $request,
         #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
     ): Response {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'manage');
 
         $tab    = $request->query->getString('tab', 'general');
         $errors = [];
@@ -520,7 +548,7 @@ class ProjectController extends AbstractController
         Request $request,
         #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
     ): Response {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'delete');
 
         if ($this->isCsrfTokenValid('delete_project_' . $project->getId(), $request->getPayload()->get('_token'))) {
             $title = $project->title;
@@ -551,7 +579,7 @@ class ProjectController extends AbstractController
         Request $request,
         #[MapEntity(mapping: ['slug' => 'slug'])] Project $project
     ): Response {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'manage');
 
         // ── Traitement du formulaire (POST) ──────────────────────────────────
         if ($request->isMethod('POST')) {

@@ -113,6 +113,7 @@ member:
     already_owner: "You are already the owner of this project."
     already_collaborator: "'%username%' is already a collaborator on this project."
     added: "'%username%' has been added as %role%."
+    invited: "Invitation sent to '%username%' as %role%. They must accept it to join the project."
     role_updated: "Role updated."
     removed: "'%name%' has been removed from the project."
 

@@ -3,7 +3,7 @@
 
 {% block title %}{{ project.title }} — {{ 'manuscript.index.title'|trans }}{% endblock %}
 
-{% macro renderNode(element, project, notesByElement, configMap) %}
+{% macro renderNode(element, project, notesByElement, configMap, readonly) %}
     {% trans_default_domain 'workshop' %}
     {% import _self as ms %}
 
@@ -40,7 +40,7 @@
                         <span class="ms-script-empty">{{ 'manuscript.index.tree.empty_folder'|trans }}</span>
                     {% endif %}
                     {% if notes|length > 0 %}
-                        <span class="ms-note-chip">{{ ux_icon('lucide:sticky-note', {class: 'icon-xs'}) }}{{ notes|length }}</span>
+                        <span class="ms-note-chip">{{ ux_icon('lucide:notebook', {class: 'icon-xs'}) }}{{ notes|length }}</span>
                     {% endif %}
                 </span>
             </a>
@@ -103,7 +103,7 @@
                     {{ element.children|length }} {{ 'manuscript.index.stats.script'|trans({'%count%': element.children|length}) }}
                 </span>
 
-                {% if childConfig %}
+                {% if childConfig and not readonly %}
                     <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: childDepth, parent_id: element.id}) }}"
                        class="ms-folder-add" title="Ajouter {{ childConfig.labelSingular|lower }}">
                         {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
@@ -118,11 +118,11 @@
                      data-ms-reorder-url-value="{{ path('app_manuscript_reorder', {project_slug: project.slug}) }}"
                      data-sort-parent-id="{{ element.id }}">
                     {% for child in element.children %}
-                        {{ ms.renderNode(child, project, notesByElement, configMap) }}
+                        {{ ms.renderNode(child, project, notesByElement, configMap, readonly) }}
                     {% endfor %}
                 </div>
             {% else %}
-                {% if childConfig %}
+                {% if childConfig and not readonly %}
                 <div class="ms-folder-empty">
                     <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: childDepth, parent_id: element.id}) }}"
                        class="ms-folder-add-link">
@@ -143,7 +143,10 @@
 
 {% set rootConfig = configMap[1] is defined ? configMap[1] : null %}
 
-<div class="workshop-container">
+<div class="workshop-container"
+     data-controller="ms-export"
+     data-ms-export-scripts-value="{{ leafScripts|json_encode|e('html_attr') }}"
+     data-ms-export-project-title-value="{{ project.title|e('html_attr') }}">
 
     <header class="page-header">
         <div>
@@ -153,14 +156,89 @@
                 <span class="element-type-pill">{{ project.projectType|upper }}</span>
             </h1>
         </div>
-        {% if rootConfig and rootElements is not empty %}
-            <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}"
-               class="btn-export">
-                {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
-                Nouveau {{ rootConfig.labelSingular|lower }}
-            </a>
-        {% endif %}
+        <div class="page-header-actions">
+            {% if rootElements is not empty %}
+                <button type="button" class="btn-outline-sm"
+                        data-action="click->ms-export#togglePanel">
+                    {{ ux_icon('lucide:download', {class: 'icon-xs'}) }}
+                    Exporter
+                </button>
+            {% endif %}
+            {% if rootConfig and rootElements is not empty and not (readonly ?? false) %}
+                <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}"
+                   class="btn-export">
+                    {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}
+                    Nouveau {{ rootConfig.labelSingular|lower }}
+                </a>
+            {% endif %}
+        </div>
     </header>
+
+    {# ── Modal d'export global ──────────────────────────────────────── #}
+    <div class="msex-modal" data-ms-export-target="modal" hidden>
+
+        <div class="msex-modal__backdrop"
+             data-action="click->ms-export#closeModal"></div>
+
+        <div class="msex-modal__panel">
+
+            {# ── En-tête ────────────────────────────────────────── #}
+            <div class="msex-modal__header">
+                <h2 class="msex-modal__title">
+                    {{ ux_icon('lucide:download', {style: 'width:15px;height:15px'}) }}
+                    Exporter le manuscrit
+                </h2>
+                <button type="button" class="msex-modal__close"
+                        data-action="click->ms-export#closeModal"
+                        aria-label="Fermer">
+                    {{ ux_icon('lucide:x', {style: 'width:15px;height:15px'}) }}
+                </button>
+            </div>
+
+            {# ── Corps ──────────────────────────────────────────── #}
+            <div class="msex-modal__body">
+
+                <p class="msex-modal__hint">
+                    Sélectionnez les scripts à inclure et réordonnez-les avant d'exporter.
+                </p>
+
+                <div class="msex-modal__controls">
+                    <button type="button" class="publish-modal__ctrl-btn"
+                            data-action="click->ms-export#selectAll">Tout sélectionner</button>
+                    <span class="msex-ctrl-sep">·</span>
+                    <button type="button" class="publish-modal__ctrl-btn"
+                            data-action="click->ms-export#selectNone">Tout désélectionner</button>
+                    <span class="msex-count" data-ms-export-target="count"></span>
+                </div>
+
+                <div class="msex-list" data-ms-export-target="list">
+                    {# Rendu dynamique par le contrôleur JS #}
+                </div>
+
+            </div>
+
+            {# ── Pied ────────────────────────────────────────────── #}
+            <div class="msex-modal__footer">
+                <button type="button" class="publish-modal__btn-cancel"
+                        data-action="click->ms-export#closeModal">
+                    Annuler
+                </button>
+                <div class="msex-modal__footer-exports">
+                    <button type="button" class="publish-modal__btn-save msex-btn--secondary"
+                            data-action="click->ms-export#exportFountain">
+                        {{ ux_icon('lucide:file-code', {class: 'icon-xs'}) }}
+                        Fountain
+                    </button>
+                    <button type="button" class="publish-modal__btn-save"
+                            data-action="click->ms-export#exportPDF">
+                        {{ ux_icon('lucide:printer', {class: 'icon-xs'}) }}
+                        Imprimer / PDF
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     {% if rootElements is empty %}
 
@@ -185,7 +263,7 @@
                 </div>
             </div>
 
-            {% if rootConfig %}
+            {% if rootConfig and not (readonly ?? false) %}
             <div class="ms-empty-form">
                 <h2 class="ms-empty-form-title">
                     Créez votre premier
@@ -231,7 +309,7 @@
             </div>
             {% if totalNoteCount > 0 %}
             <div class="proj-stat">
-                {{ ux_icon('lucide:sticky-note', {class: 'icon-xs'}) }}
+                {{ ux_icon('lucide:notebook', {class: 'icon-xs'}) }}
                 <strong>{{ totalNoteCount }}</strong>
                 {{ 'manuscript.index.stats.note'|trans({'%count%': totalNoteCount}) }}
             </div>
@@ -244,10 +322,10 @@
              data-sort-parent-id="">
 
             {% for root in rootElements %}
-                {{ ms.renderNode(root, project, notesByElement, configMap) }}
+                {{ ms.renderNode(root, project, notesByElement, configMap, readonly) }}
             {% endfor %}
 
-            {% if rootConfig %}
+            {% if rootConfig and not (readonly ?? false) %}
             <div class="ms-tree-add-root">
                 <a href="{{ path('app_manuscript_new', {project_slug: project.slug, depth: 1}) }}" class="ms-tree-add-root-link">
                     {{ ux_icon('lucide:plus', {class: 'icon-xs'}) }}

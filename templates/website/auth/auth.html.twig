@@ -143,7 +143,6 @@
                                     class="pw-toggle-btn"
                                     data-password-field-target="toggleBtn"
                                     data-action="click->password-field#toggleVisibility"
-                                    tabindex="-1"
                                     aria-label="{{ 'show_password'|trans({}, 'auth') }}">
                                 <span class="pw-eye-show">{{ ux_icon('lucide:eye', {style: 'width:15px;height:15px'}) }}</span>
                                 <span class="pw-eye-hide" hidden>{{ ux_icon('lucide:eye-off', {style: 'width:15px;height:15px'}) }}</span>
@@ -253,20 +252,20 @@
                             'attr': {
                                 'placeholder': 'register.password'|trans,
                                 'data-password-field-target': 'input',
-                                'data-action': 'input->password-field#checkStrength focus->password-field#openStrength blur->password-field#closeStrength'
+                                'data-action': 'input->password-field#checkStrength focus->password-field#openStrength blur->password-field#closeStrength',
+                                'aria-describedby': 'register-pw-rules'
                             }
                         }) }}
                         <button type="button"
                                 class="pw-toggle-btn"
                                 data-password-field-target="toggleBtn"
                                 data-action="click->password-field#toggleVisibility"
-                                tabindex="-1"
                                 aria-label="Voir le mot de passe">
                             <span class="pw-eye-show">{{ ux_icon('lucide:eye', {style: 'width:15px;height:15px'}) }}</span>
                             <span class="pw-eye-hide" hidden>{{ ux_icon('lucide:eye-off', {style: 'width:15px;height:15px'}) }}</span>
                         </button>
                     </div>
-                    <div class="pw-strength" data-password-field-target="strength" aria-live="polite">
+                    <div class="pw-strength" id="register-pw-rules" data-password-field-target="strength" aria-live="polite">
                         <div class="pw-rule" data-rule="length"    data-password-field-target="rule"><span class="pw-rule__dot"></span>Min. 8 caractères</div>
                         <div class="pw-rule" data-rule="uppercase" data-password-field-target="rule"><span class="pw-rule__dot"></span>Une majuscule (A–Z)</div>
                         <div class="pw-rule" data-rule="digit"     data-password-field-target="rule"><span class="pw-rule__dot"></span>Un chiffre (0–9)</div>

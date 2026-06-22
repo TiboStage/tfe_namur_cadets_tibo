@@ -49,7 +49,7 @@
 
             <div class="page-empty">
                 {{ ux_icon('lucide:users', {style: 'width:44px;height:44px'}) }}
-                <h3>{{ 'character.index.empty'|trans }}</h3>
+                <h2>{{ 'character.index.empty'|trans }}</h2>
                 {% if not (readonly ?? false) %}
                 <a href="{{ path('app_character_new', {project_slug: project.slug}) }}" class="btn-creat">
                     {{ ux_icon('lucide:plus', {style: 'width:15px;height:15px'}) }}

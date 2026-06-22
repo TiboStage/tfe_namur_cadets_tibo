@@ -343,7 +343,7 @@
 }
 
 .consent-cookie-list code {
-    font-family: 'Courier New', monospace;
+    font-family: var(--font-mono);
     font-size: 11px;
     color: var(--color-primary);
     background: var(--color-primary-glow);

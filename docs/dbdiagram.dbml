@@ -1,0 +1,380 @@
+// ══════════════════════════════════════════════════════════════════
+// ScénArt — Schéma base de données
+// À coller sur https://dbdiagram.io
+// ══════════════════════════════════════════════════════════════════
+
+// ── GROUPE : Utilisateurs ─────────────────────────────────────────
+
+Table "user" {
+  id               integer       [pk, increment]
+  email            varchar(180)  [not null, unique]
+  username         varchar(255)  [not null, unique]
+  roles            json          [not null]
+  password         varchar(255)  [not null]
+  first_name       varchar(255)  [not null]
+  last_name        varchar(255)  [not null]
+  bio              text
+  avatar_filename  varchar(255)
+  avatar_color     varchar(7)    [not null]
+  is_banned        boolean       [not null, default: false]
+  locale           varchar(5)    [not null]
+  last_login_at    timestamp
+  username_changed_at timestamp
+  created_at       timestamp     [not null]
+  updated_at       timestamp     [not null]
+}
+
+Table user_likes {
+  liker_id  integer [not null, ref: > "user".id]
+  liked_id  integer [not null, ref: > "user".id]
+
+  indexes {
+    (liker_id, liked_id) [pk]
+  }
+}
+
+// ── GROUPE : Projet ───────────────────────────────────────────────
+
+Table project {
+  id                integer      [pk, increment]
+  title             varchar(255) [not null]
+  slug              varchar(255) [not null, unique]
+  description       text         [not null]
+  project_type      varchar(50)  [not null, note: 'film | serie | jeu_video | custom']
+  status            varchar(50)  [not null, note: 'draft | in_progress | completed | archived']
+  visibility        varchar(20)  [not null, note: 'unpublished | private | public']
+  moderation_status varchar(50)  [not null, note: 'clear | warning | blocked | approved']
+  report_count      integer      [not null, default: 0]
+  custom_structure  jsonb        [not null]
+  settings          jsonb        [not null]
+  cover_filename    varchar(255)
+  created_by_id     integer      [not null, ref: > "user".id]
+  created_at        timestamp    [not null]
+  updated_at        timestamp    [not null]
+}
+
+Table project_member {
+  project_id  integer      [not null, ref: > project.id]
+  user_id     integer      [not null, ref: > "user".id]
+  role        varchar(50)  [not null, note: 'reader | contributor | moderator']
+  status      varchar(20)  [not null, default: 'active', note: 'pending | active']
+  joined_at   timestamp    [not null]
+
+  indexes {
+    (project_id, user_id) [pk]
+  }
+}
+
+Table project_feature {
+  id           integer     [pk, increment]
+  project_id   integer     [not null, ref: > project.id]
+  feature_key  varchar(50) [not null]
+  value        text        [not null]
+}
+
+Table project_type_config {
+  id                       integer      [pk, increment]
+  project_id               integer      [not null, ref: > project.id]
+  project_type             varchar(50)  [not null]
+  depth                    integer      [not null]
+  element_type             varchar(50)  [not null]
+  label_singular           varchar(100) [not null]
+  label_plural             varchar(100) [not null]
+  has_content              boolean      [not null, default: false]
+  has_duration             boolean      [not null, default: false]
+  default_duration_seconds integer      [not null]
+  icon                     varchar(50)  [not null]
+  color                    varchar(7)   [not null]
+}
+
+Table feature_definition {
+  id            integer      [pk, increment]
+  project_type  varchar(50)  [not null]
+  feature_key   varchar(50)  [not null]
+  label         varchar(100) [not null]
+  description   text         [not null]
+  value_type    varchar(20)  [not null, note: 'text | select | boolean | number | date']
+  default_value varchar(255) [not null]
+  options       json         [not null]
+  is_required   boolean      [not null, default: false]
+  display_order integer      [not null]
+}
+
+// ── GROUPE : Contenu narratif ─────────────────────────────────────
+
+Table scenario_element {
+  id               integer      [pk, increment]
+  project_id       integer      [not null, ref: > project.id]
+  parent_id        integer      [ref: > scenario_element.id]
+  element_type     varchar(50)  [not null]
+  depth            integer      [not null]
+  title            varchar(255) [not null]
+  content          json         [not null]
+  summary          text         [not null]
+  order_index      integer      [not null]
+  duration_seconds integer      [not null]
+  metadata         json         [not null]
+  has_content      boolean      [not null, default: false]
+  is_public        boolean      [not null, default: false]
+  created_at       timestamp    [not null]
+  updated_at       timestamp    [not null]
+}
+
+Table "character" {
+  id               integer      [pk, increment]
+  project_id       integer      [not null, ref: > project.id]
+  name             varchar(255) [not null]
+  first_name       varchar(255) [not null]
+  last_name        varchar(255) [not null]
+  nickname         varchar(255) [not null]
+  description      text         [not null]
+  role             varchar(50)  [not null, note: 'protagonist | antagonist | secondary | figurant']
+  biography        text         [not null]
+  goals            text         [not null]
+  motivations      text         [not null]
+  character_arc    text         [not null]
+  aliases          json         [not null]
+  portrait_filename varchar(255)
+  created_at       timestamp    [not null]
+  updated_at       timestamp    [not null]
+}
+
+Table character_relation {
+  id               integer     [pk, increment]
+  character_a_id   integer     [not null, ref: > "character".id]
+  character_b_id   integer     [not null, ref: > "character".id]
+  relation_type    varchar(50) [not null, note: 'ally | enemy | family | love | rival | mentor | protege | unknown']
+  description      text        [not null]
+  is_bidirectional boolean     [not null, default: true]
+  created_at       timestamp   [not null]
+}
+
+Table location {
+  id              integer      [pk, increment]
+  project_id      integer      [not null, ref: > project.id]
+  parent_id       integer      [ref: > location.id]
+  name            varchar(255) [not null]
+  description     text         [not null]
+  type            varchar(50)  [not null, note: 'interior | exterior | fantasy | historical | futuristic']
+  aliases         json         [not null]
+  metadata        json         [not null]
+  image_filename  varchar(255)
+  created_at      timestamp    [not null]
+  updated_at      timestamp    [not null]
+}
+
+Table tag {
+  id          integer      [pk, increment]
+  project_id  integer      [not null, ref: > project.id]
+  name        varchar(100) [not null]
+  color       varchar(7)   [not null]
+  created_at  timestamp    [not null]
+}
+
+Table scenario_element_tag {
+  scenario_element_id  integer [not null, ref: > scenario_element.id]
+  tag_id               integer [not null, ref: > tag.id]
+
+  indexes {
+    (scenario_element_id, tag_id) [pk]
+  }
+}
+
+Table world_event {
+  id              integer     [pk, increment]
+  project_id      integer     [not null, ref: > project.id]
+  location_id     integer     [ref: > location.id]
+  linked_scene_id integer     [ref: > scenario_element.id]
+  title           varchar(255) [not null]
+  description     text
+  year            integer     [not null]
+  month           integer
+  day             integer
+  event_type      varchar(30) [note: 'plot | character | world | conflict | reveal']
+  created_at      timestamp   [not null]
+}
+
+// ── GROUPE : Organisation ─────────────────────────────────────────
+
+Table task {
+  id                  integer      [pk, increment]
+  project_id          integer      [not null, ref: > project.id]
+  created_by_id       integer      [not null, ref: > "user".id]
+  assigned_to_id      integer      [ref: > "user".id]
+  title               varchar(255) [not null]
+  description         text         [not null]
+  status              varchar(20)  [not null, note: 'todo | in_progress | review | done']
+  priority            varchar(20)  [not null, note: 'low | normal | high | urgent']
+  linked_entity_type  varchar(50)  [note: 'polymorphic: scenario_element | character | location…']
+  linked_entity_id    integer
+  due_date            date
+  created_at          timestamp    [not null]
+  updated_at          timestamp    [not null]
+}
+
+Table note {
+  id                  integer      [pk, increment]
+  project_id          integer      [not null, ref: > project.id]
+  author_id           integer      [not null, ref: > "user".id]
+  assigned_to_id      integer      [ref: > "user".id]
+  title               varchar(255) [not null]
+  content             text         [not null]
+  status              varchar(20)  [not null, note: 'note | todo | done | archived']
+  priority            varchar(20)  [not null, note: 'low | normal | high | urgent']
+  linked_entity_type  varchar(50)  [note: 'polymorphic: project | scenario_element | character | location']
+  linked_entity_id    integer
+  due_date            date
+  created_at          timestamp    [not null]
+  updated_at          timestamp    [not null]
+}
+
+Table activity_log {
+  id           integer      [pk, increment]
+  user_id      integer      [not null, ref: > "user".id]
+  project_id   integer      [ref: > project.id]
+  action       varchar(100) [not null, note: 'ex: character.create, project.publish']
+  description  text
+  created_at   timestamp    [not null]
+}
+
+Table notification {
+  id          integer      [pk, increment]
+  user_id     integer      [not null, ref: > "user".id]
+  type        varchar(30)  [not null, note: 'info | invitation | removed | role_changed | project_published']
+  content     text         [not null]
+  is_read     boolean      [not null, default: false]
+  link        varchar(255)
+  created_at  timestamp    [not null]
+}
+
+// ── GROUPE : Communauté ───────────────────────────────────────────
+
+Table comment {
+  id               integer     [pk, increment]
+  author_id        integer     [not null, ref: > "user".id]
+  project_id       integer     [not null, ref: > project.id]
+  parent_id        integer     [ref: > comment.id]
+  content          text        [not null]
+  status           varchar(20) [not null, note: 'visible | hidden']
+  moderation_note  varchar(500)
+  created_at       timestamp   [not null]
+}
+
+Table comment_vote {
+  id          integer    [pk, increment]
+  comment_id  integer    [not null, ref: > comment.id]
+  user_id     integer    [not null, ref: > "user".id]
+  value       varchar(4) [not null, note: 'up | down']
+  created_at  timestamp  [not null]
+
+  indexes {
+    (comment_id, user_id) [unique]
+  }
+}
+
+Table public_comment {
+  id           integer   [pk, increment]
+  project_id   integer   [not null, ref: > project.id]
+  user_id      integer   [not null, ref: > "user".id]
+  content      text      [not null]
+  is_approved  boolean   [not null, default: true]
+  is_spam      boolean   [not null, default: false]
+  created_at   timestamp [not null]
+  updated_at   timestamp [not null]
+}
+
+Table owner_response {
+  id          integer   [pk, increment]
+  comment_id  integer   [not null, unique, ref: - public_comment.id]
+  content     text      [not null]
+  created_at  timestamp [not null]
+}
+
+Table report {
+  id                 integer     [pk, increment]
+  reporter_id        integer     [not null, ref: > "user".id]
+  target_type        varchar(20) [not null, note: 'project | comment | user']
+  target_project_id  integer     [ref: > project.id]
+  target_comment_id  integer     [ref: > comment.id]
+  target_user_id     integer     [ref: > "user".id]
+  reviewed_by_id     integer     [ref: > "user".id]
+  reason             varchar(50) [not null, note: 'spam | inappropriate | harassment | copyright | other']
+  description        text
+  status             varchar(20) [not null, note: 'pending | reviewed | dismissed | actioned']
+  reviewed_at        timestamp
+  created_at         timestamp   [not null]
+}
+
+// ── GROUPE : i18n & Documentation ────────────────────────────────
+
+Table genre {
+  id            integer     [pk, increment]
+  slug          varchar(50) [not null, unique]
+  project_types json        [not null]
+  is_active     boolean     [not null, default: true]
+  order_index   integer     [not null, default: 0]
+}
+
+Table genre_translation {
+  id        integer      [pk, increment]
+  genre_id  integer      [not null, ref: > genre.id]
+  locale    varchar(5)   [not null, note: 'fr | nl | en']
+  label     varchar(100) [not null]
+
+  indexes {
+    (genre_id, locale) [unique]
+  }
+}
+
+Table documentation {
+  id           integer      [pk, increment]
+  slug         varchar(255) [not null, unique]
+  category     varchar(100) [not null]
+  order_index  integer      [not null]
+  is_published boolean      [not null, default: false]
+  created_at   timestamp    [not null]
+  updated_at   timestamp    [not null]
+}
+
+Table documentation_translation {
+  id               integer      [pk, increment]
+  documentation_id integer      [not null, ref: > documentation.id]
+  locale           varchar(5)   [not null, note: 'fr | nl | en']
+  title            varchar(255) [not null]
+  content          text         [not null]
+
+  indexes {
+    (documentation_id, locale) [unique]
+  }
+}
+
+// ── GROUPE : Mentions & Divers ────────────────────────────────────
+
+Table entity_mention {
+  id           integer     [pk, increment]
+  project_id   integer     [not null, ref: > project.id]
+  source_type  varchar(50) [not null, note: 'polymorphic: scenario_element | note | world_event']
+  source_id    integer     [not null]
+  target_type  varchar(50) [not null, note: 'polymorphic: character | location']
+  target_id    integer     [not null]
+}
+
+Table project_mention {
+  id                integer     [pk, increment]
+  project_id        integer     [not null, ref: > project.id]
+  entity_type       varchar(50) [not null, note: 'polymorphic: character | location']
+  entity_id         integer     [not null]
+  occurrence_count  integer     [not null]
+}
+
+Table contact {
+  id           integer      [pk, increment]
+  firstname    varchar(255)
+  lastname     varchar(255)
+  email        varchar(255)
+  subject      varchar(255)
+  message      text
+  is_read      boolean      [default: false]
+  is_archived  boolean      [default: false]
+  created_at   timestamp    [not null]
+}

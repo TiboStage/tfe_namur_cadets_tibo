@@ -177,7 +177,7 @@
     color: var(--text-dark);
     padding: 60px 80px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    font-family: 'Courier New', Courier, monospace;
+    font-family: var(--font-mono);
     font-size: 16px;
     line-height: 1.5;
     outline: none;

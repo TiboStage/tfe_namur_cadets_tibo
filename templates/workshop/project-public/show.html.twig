@@ -17,7 +17,8 @@
             {% if project.coverFilename %}
                 <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
                      alt="{{ project.title }}"
-                     class="pub-project__cover-img">
+                     class="pub-project__cover-img"
+                     loading="lazy">
             {% endif %}
             <div class="pub-project__cover-overlay"></div>
         </div>
@@ -210,15 +211,12 @@
                     Collaborateurs
                 </div>
                 <div class="pub-sidebar-members">
-                    {% for member in project.projectMembers|slice(0, 5) %}
-                    <div class="pub-sidebar-member" title="{{ member.user.username }}">
-                        {{ member.user.username|first|upper }}
-                    </div>
+                    {% set active_members = project.projectMembers|filter(m => m.isActive) %}
+                    {% for member in active_members|slice(0, 5) %}
+                        {{ include('_partials/_user_avatar.html.twig', {user: member.user, size: 'md', link: true}) }}
                     {% endfor %}
-                    {% if project.projectMembers|length > 5 %}
-                        <span class="pub-sidebar-member pub-sidebar-member--more">
-                            +{{ project.projectMembers|length - 5 }}
-                        </span>
+                    {% if active_members|length > 5 %}
+                        <span class="pub-sidebar-member--more">+{{ active_members|length - 5 }}</span>
                     {% endif %}
                 </div>
             </div>

@@ -91,9 +91,12 @@ export default class extends Controller {
                     ${this._typeIcon(item.type)}
                 </span>
                 <div class="notif-item__body">
-                    ${item.link
-                        ? `<a href="${item.link}" class="notif-item__content">${this._esc(item.content)}</a>`
-                        : `<span class="notif-item__content">${this._esc(item.content)}</span>`
+                    <span class="notif-item__content">${this._esc(item.content)}</span>
+                    ${item.type === 'invitation' && item.link
+                        ? `<a href="${item.link}" class="notif-item__cta">Répondre à l'invitation →</a>`
+                        : item.link
+                            ? `<a href="${item.link}" class="notif-item__link">Voir →</a>`
+                            : ''
                     }
                     <span class="notif-item__date">${item.createdAt}</span>
                 </div>

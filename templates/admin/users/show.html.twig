@@ -12,7 +12,7 @@
         <div class="aup-header">
             <div class="aup-avatar">
                 {% if user.avatarFilename %}
-                    <img src="{{ asset('uploads/avatars/' ~ user.avatarFilename) }}" alt="{{ user.username }}" width="64" height="64">
+                    <img src="{{ asset('uploads/avatars/' ~ user.avatarFilename) }}" alt="{{ user.username }}" width="64" height="64" loading="lazy">
                 {% else %}
                     <span class="aup-avatar-placeholder">{{ user.username|first|upper }}</span>
                 {% endif %}

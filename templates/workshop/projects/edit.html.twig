@@ -113,9 +113,9 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token('member_role_' ~ project.id ~ '_' ~ member.user.id) }}">
                                 <select name="role" class="member-row__role-select"
                                         onchange="this.closest('form').submit()">
+                                    <option value="reader"      {{ member.role == 'reader'      ? 'selected' : '' }}>{{ 'projects.roles.reader'|trans }}</option>
                                     <option value="contributor" {{ member.role == 'contributor' ? 'selected' : '' }}>{{ 'projects.roles.contributor'|trans }}</option>
-                                    <option value="editor"      {{ member.role == 'editor'      ? 'selected' : '' }}>{{ 'projects.roles.editor'|trans }}</option>
-                                    <option value="lead"        {{ member.role == 'lead'        ? 'selected' : '' }}>{{ 'projects.roles.lead'|trans }}</option>
+                                    <option value="moderator"   {{ member.role == 'moderator'   ? 'selected' : '' }}>{{ 'projects.roles.moderator'|trans }}</option>
                                 </select>
                             </form>
 

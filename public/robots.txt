@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin
+Disallow: /atelier
+Disallow: /api/
+
+Sitemap: https://scenart.be/sitemap.xml

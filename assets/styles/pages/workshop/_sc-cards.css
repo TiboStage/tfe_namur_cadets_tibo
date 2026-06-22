@@ -6,8 +6,9 @@
 /* ── Base commune ────────────────────────────────────────── */
 .sc-card {
     background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
     height: 100%;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -26,56 +27,67 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 14px;
-    background: var(--color-bg-input);
-    border-bottom: 1px solid var(--color-border);
+    padding: 10px 12px;
+    width: 100%;
     gap: 8px;
-    min-height:35px
+    min-height: 35px;
+    position: absolute;
+    z-index: 10;
 }
 
 .sc-card__type {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .06em;
     color: var(--text-muted);
+    background: rgba(0, 0, 0, .65);
+    padding: 4px 9px;
+    backdrop-filter: blur(3px);
+    border: 1px solid rgba(255,255,255,.07);
 }
 
 /* ── Badge rôle (privé) ──────────────────────────────────── */
 .sc-card__role-badge {
     font-size: 10px;
     font-weight: 800;
-    padding: 3px 8px;
+    padding: 4px 9px;
     text-transform: uppercase;
-    letter-spacing: .04em;
+    letter-spacing: .05em;
     flex-shrink: 0;
 }
 
 .sc-card__role-badge--owner {
-    border: 1px solid var(--color-primary);
-    color: var(--color-primary);
-    background: var(--color-primary-glow);
+    background: var(--color-primary);
+    color: var(--text-dark);
+}
+
+.sc-card__role-badge--moderator {
+    background: var(--color-purple);
+    color: #fff;
 }
 
 .sc-card__role-badge--lead {
-    border: 1px solid var(--color-purple);
-    color: var(--color-purple);
-    background: var(--color-purple-glow);
+    background: var(--color-purple);
+    color: #fff;
 }
 
 .sc-card__role-badge--editor {
-    border: 1px solid var(--color-blue);
-    color: var(--color-blue);
-    background: var(--color-blue-glow);
+    background: var(--color-blue);
+    color: #fff;
 }
 
 .sc-card__role-badge--contributor {
-    border: 1px solid var(--color-green);
-    color: var(--color-green);
-    background: var(--color-green-glow);
+    background: var(--color-green);
+    color: var(--text-dark);
+}
+
+.sc-card__role-badge--reader {
+    background: rgba(255,255,255,.12);
+    color: var(--text-muted);
 }
 
 /* ── Badge statut (public) ───────────────────────────────── */
@@ -83,6 +95,7 @@
     font-size: 10px;
     font-weight: 700;
     padding: 3px 8px;
+    border-radius: var(--radius-sm);
     flex-shrink: 0;
 }
 
@@ -101,7 +114,7 @@
 /* ── Zone image ──────────────────────────────────────────── */
 .sc-card__media {
     position: relative;
-    height: 130px;
+    height: 170px;
     overflow: hidden;
     background: linear-gradient(135deg, #1e1f24 0%, #111214 100%);
     border-bottom: 1px solid var(--color-border);
@@ -118,20 +131,20 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -60%);
+    transform: translate(-50%, -50%);
     z-index: 1;
     pointer-events: none;
 }
 
 .sc-card__type-icon .proj-icon {
-    width: 52px;
-    height: 52px;
-    opacity: 0.55;
+    width: 56px;
+    height: 56px;
+    opacity: 0.85;
 }
 
 .sc-card__type-icon .proj-icon svg {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
 }
 
 /* Variante carte créateur — plus haute pour l'avatar */
@@ -216,10 +229,37 @@
     color: var(--text-main);
     margin: 0 0 4px;
     line-height: 1.25;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Genres chips ────────────────────────────────────────── */
+.sc-card__genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
+}
+
+.sc-card__genre {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    padding: 2px 7px;
+    color: var(--text-muted);
+    background: var(--overlay-xs);
+    border: 1px solid var(--color-border);
+    white-space: nowrap;
+}
+
+.sc-card__genre--active {
+    color: var(--color-primary);
+    background: var(--color-primary-glow);
+    border-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
 }
 
 .sc-card__counters {
@@ -247,8 +287,8 @@
 }
 
 .sc-card__status-meta strong {
-    color: var(--text-main);
-    font-weight: 700;
+    color: var(--color-primary);
+    font-weight: 800;
 }
 
 .sc-card__progress-bg {
@@ -312,6 +352,8 @@
     margin-bottom: 10px;
     text-decoration: none;
     transition: opacity .15s;
+    position: relative;
+    z-index: 2;
 }
 
 .sc-card__creator:hover { opacity: .75; }
@@ -459,7 +501,7 @@
     gap: 8px;
 }
 
-/* ── CTA principal ───────────────────────────────────────── */
+/* ── CTA principal — stretched link (rend toute la carte cliquable) ── */
 .sc-card__cta {
     font-size: 12px;
     font-weight: 800;
@@ -467,6 +509,13 @@
     transition: opacity .15s;
     white-space: nowrap;
     color: var(--color-primary);
+}
+
+.sc-card__cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
 }
 
 .sc-card__cta--lead        { color: var(--color-purple); }
@@ -491,6 +540,8 @@
     text-decoration: none;
     transition: background .15s, border-color .15s;
     white-space: nowrap;
+    position: relative;
+    z-index: 2;
 }
 
 .sc-card__cta-workshop:hover {

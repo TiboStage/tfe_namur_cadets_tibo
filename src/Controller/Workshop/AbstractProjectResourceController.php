@@ -64,7 +64,7 @@ abstract class AbstractProjectResourceController extends AbstractController
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         $entity = $this->createEntity($project);
 
@@ -143,7 +143,7 @@ abstract class AbstractProjectResourceController extends AbstractController
         int $id
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         // Récupération manuelle de l'entité
         $entity = $this->em->getRepository($this->getEntityClass())->find($id);
@@ -198,7 +198,7 @@ abstract class AbstractProjectResourceController extends AbstractController
         int $id
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         // Récupération manuelle de l'entité
         $entity = $this->em->getRepository($this->getEntityClass())->find($id);

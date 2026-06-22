@@ -81,4 +81,36 @@ class ActivityLogRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Retourne toutes les activités pertinentes pour l'utilisateur :
+     *   - ses propres actions (sur n'importe quel projet)
+     *   - les actions des collaborateurs sur ses projets
+     *
+     * @param string|null $category  Filtre sur le préfixe de l'action (ex : 'project', 'character')
+     * @return ActivityLog[]
+     */
+    public function findActivityForUser(int $userId, ?string $category = null, int $limit = 200): array
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->leftJoin('a.project', 'p')
+            ->addSelect('p')
+            ->leftJoin('a.user', 'u')
+            ->addSelect('u')
+            ->where($this->getEntityManager()->createQueryBuilder()->expr()->orX(
+                'a.user = :userId',
+                'p.createdBy = :userId AND a.project IS NOT NULL'
+            ))
+            ->setParameter('userId', $userId);
+
+        if ($category !== null && $category !== '') {
+            $qb->andWhere('a.action LIKE :category')
+               ->setParameter('category', $category . '.%');
+        }
+
+        return $qb->orderBy('a.createdAt', 'DESC')
+                  ->setMaxResults($limit)
+                  ->getQuery()
+                  ->getResult();
+    }
 }

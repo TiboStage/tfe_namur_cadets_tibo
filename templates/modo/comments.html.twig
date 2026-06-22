@@ -28,6 +28,7 @@
                         <th>Projet</th>
                         <th>Date</th>
                         <th>Statut</th>
+                        <th>Note interne</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -63,6 +64,16 @@
                             {% endif %}
                         </td>
 
+                        <td class="td-note">
+                            {% if comment.moderationNote %}
+                                <span class="mod-note" title="{{ comment.moderationNote }}">
+                                    {{ comment.moderationNote|slice(0, 50) }}{{ comment.moderationNote|length > 50 ? '…' : '' }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+
                         <td>
                             <form
                                 action="{{ path('modo_comment_moderate', {id: comment.id, _locale: app.request.locale}) }}"
@@ -70,6 +81,13 @@
                                 class="mod-actions-cell"
                             >
                                 <input type="hidden" name="_token" value="{{ csrf_token('comment_moderate_' ~ comment.id) }}">
+                                <input
+                                    type="text"
+                                    name="moderation_note"
+                                    placeholder="Note interne…"
+                                    class="mod-note-input"
+                                    maxlength="500"
+                                >
 
                                 {% if comment.status == 'visible' %}
                                     <button type="submit" name="action" value="hide" class="btn-table text-xs">

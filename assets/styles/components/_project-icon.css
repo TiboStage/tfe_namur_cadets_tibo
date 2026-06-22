@@ -14,10 +14,23 @@
 
 /* ── Tailles ─────────────────────────────────────────────── */
 
-.proj-icon--xs { width: 20px; height: 20px; }
-.proj-icon--sm { width: 26px; height: 26px; }
-.proj-icon--md { width: 32px; height: 32px; }
-.proj-icon--lg { width: 48px; height: 48px; }
+.proj-icon--xs {
+    width: 20px; height: 20px;
+    border-radius: var(--radius-sm);
+}
+.proj-icon--sm {
+    width: 26px; height: 26px;
+    border-radius: var(--radius-sm);
+
+}
+.proj-icon--md {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+}
+.proj-icon--lg {
+    width: 48px; height: 48px;
+    border-radius: var(--radius-sm);
+}
 
 /* Taille du SVG interne */
 .proj-icon--xs svg { width: 10px; height: 10px; }
@@ -40,9 +53,4 @@
 .proj-icon--jeu_video {
     background: var(--project-jv-dim);
     color: var(--project-jv);
-}
-
-.proj-icon--custom {
-    background: var(--project-custom-dim);
-    color: var(--project-custom);
 }

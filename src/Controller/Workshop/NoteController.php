@@ -105,7 +105,7 @@ class NoteController extends AbstractController
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'annotate');
 
         $note = new Note();
         $note->setProject($project);
@@ -145,7 +145,7 @@ class NoteController extends AbstractController
             $this->addFlash('success', $this->translator->trans(
                 'note.flash.created',
                 ['%title%' => $note->getTitle()],
-                'workshop_interface'
+                'workshop'
             ));
 
             return $this->redirectToRoute('app_note_index', [
@@ -189,7 +189,7 @@ class NoteController extends AbstractController
         Note $note
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'annotate');
 
         if ($note->getProject() !== $project) {
             throw $this->createNotFoundException();
@@ -216,7 +216,7 @@ class NoteController extends AbstractController
             $this->addFlash('success', $this->translator->trans(
                 'note.flash.updated',
                 ['%title%' => $note->getTitle()],
-                'workshop_interface'
+                'workshop'
             ));
 
             return $this->redirectToRoute('app_note_show', [
@@ -239,7 +239,7 @@ class NoteController extends AbstractController
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         Note $note
     ): JsonResponse {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'annotate');
 
         if ($note->getProject() !== $project) {
             throw $this->createNotFoundException();
@@ -267,7 +267,7 @@ class NoteController extends AbstractController
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project,
         Note $note
     ): JsonResponse {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'annotate');
 
         if ($note->getProject() !== $project) {
             throw $this->createNotFoundException();
@@ -339,7 +339,7 @@ class NoteController extends AbstractController
         Note $note
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'annotate');
 
         if ($note->getProject() !== $project) {
             throw $this->createNotFoundException();
@@ -353,7 +353,7 @@ class NoteController extends AbstractController
             $this->addFlash('success', $this->translator->trans(
                 'note.flash.deleted',
                 ['%title%' => $title],
-                'workshop_interface'
+                'workshop'
             ));
         }
 

@@ -3,6 +3,12 @@
 
 {% block project_content %}
 
+{# is_manager : propriétaire ou modérateur actif — contrôle l'accès aux paramètres #}
+{% set is_manager = app.user is not null and (
+    app.user.id == project.createdBy.id
+    or project.projectMembers|filter(m => m.user.id == app.user.id and m.role == 'moderator' and m.isActive)|length > 0
+) %}
+
 {# ── Mapping actions pour l'activité ────────────────────────── #}
 {% set action_meta = {
     'project.create':     { icon: 'lucide:folder-plus',   color: 'green',  label: 'Projet créé' },
@@ -120,6 +126,9 @@
             <section class="proj-panel">
                 <div class="proj-panel__header">
                     <h2>{{ ux_icon('lucide:activity', {class: 'icon-xs'}) }} {{ 'projects.show.recent_activity'|trans }}</h2>
+                    <a href="{{ path('app_activity_log', {_locale: app.request.locale}) }}" class="link-more">
+                        {{ 'dashboard.projects.see_more'|trans }}
+                    </a>
                 </div>
 
                 {% if projectActivity is not empty %}
@@ -203,7 +212,7 @@
                     <div class="proj-activity-list">
                         {% for comment in recentComments %}
                             <div class="proj-comment-item">
-                                <span class="proj-comment-item__avatar">{{ comment.author.username|first|upper }}</span>
+                                {{ include('_partials/_user_avatar.html.twig', {user: comment.author, size: 'sm'}) }}
                                 <div class="proj-comment-item__body">
                                     <strong>{{ comment.author.username }}</strong>
                                     <p>{{ comment.content|length > 120 ? comment.content|slice(0,120) ~ '…' : comment.content }}</p>
@@ -277,7 +286,7 @@
             <section class="proj-panel">
                 <div class="proj-panel__header">
                     <h2>{{ ux_icon('lucide:info', {class: 'icon-xs'}) }} {{ 'projects.show.info_section'|trans }}</h2>
-                    {% if not (readonly ?? false) %}
+                    {% if is_manager ?? false %}
                     <a href="{{ path('app_project_edit', {slug: project.slug}) }}" class="link-more">
                         {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
                     </a>
@@ -309,7 +318,7 @@
             <section class="proj-panel">
                 <div class="proj-panel__header">
                     <h2>{{ ux_icon('lucide:users', {class: 'icon-xs'}) }} Équipe</h2>
-                    {% if not (readonly ?? false) %}
+                    {% if is_manager ?? false %}
                     <a href="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: 'members'}) }}"
                        class="link-more">
                         {{ ux_icon('lucide:settings', {class: 'icon-xs'}) }}
@@ -333,19 +342,35 @@
                         <div class="proj-team-info">
                             <span class="proj-team-name">{{ member.user.username }}</span>
                             <span class="proj-team-role proj-team-role--{{ member.role }}">
-                                {{ member.role == 'lead' ? 'Co-responsable' : (member.role == 'editor' ? 'Éditeur' : 'Contributeur') }}
+                                {{ member.role == 'moderator' ? 'Modérateur' : (member.role == 'contributor' ? 'Contributeur' : 'Lecteur') }}
                             </span>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
 
-                {% if not (readonly ?? false) %}
+                {% if is_manager ?? false %}
                 <a href="{{ path('app_project_edit', {_locale: app.request.locale, slug: project.slug, tab: 'members'}) }}"
                    class="proj-invite-btn">
                     {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }}
                     Inviter des collaborateurs
                 </a>
+                {% endif %}
+
+                {# Bouton quitter — visible pour les membres actifs non-propriétaires #}
+                {% if app.user and app.user.id != project.createdBy.id %}
+                    {% set my_membership = project.projectMembers|filter(m => m.user.id == app.user.id and m.isActive)|first %}
+                    {% if my_membership is not null %}
+                    <form method="post"
+                          action="{{ path('app_project_member_leave', {_locale: app.request.locale, slug: project.slug}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('member_leave_' ~ project.id) }}">
+                        <button type="submit" class="proj-leave-btn"
+                                onclick="return confirm('Quitter le projet « {{ project.title }} » ? Vous perdrez votre accès.')">
+                            {{ ux_icon('lucide:log-out', {style: 'width:12px;height:12px'}) }}
+                            Quitter le projet
+                        </button>
+                    </form>
+                    {% endif %}
                 {% endif %}
             </section>
 

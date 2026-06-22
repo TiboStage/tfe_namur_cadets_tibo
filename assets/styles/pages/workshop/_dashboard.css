@@ -49,8 +49,6 @@
     display: flex;
     align-items: center;
     gap: 0;
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
     width: fit-content;
     max-width: 100%;
     flex-wrap: nowrap;
@@ -61,7 +59,7 @@
     display: flex;
     align-items: center;
     gap: 7px;
-    padding: 10px 20px;
+    padding: 0 10px 10px 0;
     font-size: 13px;
     color: var(--text-muted);
 }
@@ -77,12 +75,6 @@
     opacity: .6;
 }
 
-.dash-stat-sep {
-    width: 1px;
-    height: 32px;
-    background: var(--color-border);
-    flex-shrink: 0;
-}
 
 /* ── Grille principale (projets | activité) ──────────────── */
 
@@ -97,9 +89,10 @@
 
 .dash-panel {
     background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .dash-panel__header {
@@ -281,6 +274,7 @@
 .status-badge {
     margin-left: auto;
     border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
     padding: 3px 10px;
     font-size: 10px;
     font-weight: 800;
@@ -323,6 +317,7 @@
     justify-content: center;
     flex-shrink: 0;
     margin-top: 1px;
+    border-radius: var(--radius-sm);
 }
 
 /* Couleurs par type */
@@ -384,7 +379,6 @@
 
 .recent-projects-full .dashboard-section-header {
     padding: 0 0 20px 0;
-    border-bottom: none;
 }
 
 .recent-projects-full .dashboard-section-header h2 {
@@ -403,7 +397,6 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 20px 25px 30px;
-    border-bottom: 1px solid var(--color-border);
 }
 
 .dashboard-section-header h2 {
@@ -412,15 +405,7 @@
     color: var(--text-main);
 }
 
-.link-more {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--color-primary);
-    text-decoration: none;
-}
+/* Déplacé dans _buttons.css — partagé dashboard/explore/projects */
 
 .highlight {
     color: var(--color-primary);
@@ -535,9 +520,6 @@
         width: 100%;
     }
 
-    .dash-stat-sep {
-        display: none;
-    }
 
     .dash-stat {
         flex: unset;

@@ -5,7 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Scénart{% endblock %}</title>
 
-    {# 1. Empêche Turbo d'afficher des "previews" (aperçus) buguées du Profiler #}
+    {# ── SEO ─────────────────────────────────────────────────────────────── #}
+
+    {# Meta description — chaque page peut surcharger ce bloc #}
+    {% block meta_description %}<meta name="description" content="{{ 'meta.default_description'|trans({}, 'website') }}">{% endblock %}
+
+    {# Canonical — URL canonique de la page courante #}
+    <link rel="canonical" href="{{ app.request.uri }}">
+
+    {# hreflang — uniquement sur les routes ayant un paramètre {_locale} #}
+    {% set _route  = app.request.attributes.get('_route') %}
+    {% set _params = app.request.attributes.get('_route_params') ?? {} %}
+    {% if _route and '_locale' in (_params|keys) %}
+        <link rel="alternate" hreflang="fr"        href="{{ url(_route, _params|merge({_locale: 'fr'})) }}">
+        <link rel="alternate" hreflang="en"        href="{{ url(_route, _params|merge({_locale: 'en'})) }}">
+        <link rel="alternate" hreflang="nl"        href="{{ url(_route, _params|merge({_locale: 'nl'})) }}">
+        <link rel="alternate" hreflang="x-default" href="{{ url(_route, _params|merge({_locale: 'fr'})) }}">
+    {% endif %}
+
+    {# Open Graph #}
+    <meta property="og:site_name"   content="Scénart">
+    <meta property="og:type"        content="website">
+    <meta property="og:title"       content="{{ block('title') }}">
+    <meta property="og:description" content="{% block og_description %}{{ 'meta.default_description'|trans({}, 'website') }}{% endblock %}">
+    <meta property="og:url"         content="{{ app.request.uri }}">
+    <meta property="og:locale"      content="{{ app.request.locale == 'fr' ? 'fr_FR' : (app.request.locale == 'en' ? 'en_US' : 'nl_NL') }}">
+    <meta property="og:image"       content="{{ absolute_url(asset('images/favicons/favicon.png')) }}">
+
+    {# ── Fin SEO ──────────────────────────────────────────────────────────── #}
+
+    {# Empêche Turbo d'afficher des "previews" buguées du Profiler #}
     <meta name="turbo-cache-control" content="no-cache">
 
     {% block favicon %}
@@ -17,13 +46,12 @@
     {% endblock %}
 
     {% block javascripts %}
-        {# 2. ON ACTIVE l'importmap pour charger assets/app.js #}
         {{ importmap('app') }}
     {% endblock %}
 </head>
 <body>
 
-<div id="toast-container" class="toast-container">
+<div id="toast-container" class="toast-container" aria-live="polite" role="status">
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <twig:Alert type="{{ label }}" message="{{ message }}" />

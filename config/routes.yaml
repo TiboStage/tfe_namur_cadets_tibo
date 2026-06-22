@@ -250,6 +250,49 @@ app_project_member_remove:
         userId: '\d+'
     methods: [POST]
 
+app_project_member_leave:
+    path:
+        fr: /{_locale}/atelier/projets/{slug}/quitter
+        en: /{_locale}/workshop/projects/{slug}/leave
+        nl: /{_locale}/werkplaats/projecten/{slug}/verlaten
+    controller: App\Controller\Workshop\ProjectMemberController::leave
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+    methods: [POST]
+
+app_member_invitation_view:
+    path:
+        fr: /{_locale}/atelier/invitation/{slug}
+        en: /{_locale}/workshop/invitation/{slug}
+        nl: /{_locale}/werkplaats/uitnodiging/{slug}
+    controller: App\Controller\Workshop\ProjectMemberController::invitationView
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+
+app_member_invitation_accept:
+    path:
+        fr: /{_locale}/atelier/invitation/{slug}/accepter
+        en: /{_locale}/workshop/invitation/{slug}/accept
+        nl: /{_locale}/werkplaats/uitnodiging/{slug}/aanvaarden
+    controller: App\Controller\Workshop\ProjectMemberController::acceptInvitation
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+    methods: [POST]
+
+app_member_invitation_decline:
+    path:
+        fr: /{_locale}/atelier/invitation/{slug}/decliner
+        en: /{_locale}/workshop/invitation/{slug}/decline
+        nl: /{_locale}/werkplaats/uitnodiging/{slug}/weigeren
+    controller: App\Controller\Workshop\ProjectMemberController::declineInvitation
+    requirements:
+        _locale: en|fr|nl
+        slug: '[a-z0-9-]+'
+    methods: [POST]
+
 # ── Notifications ───────────────────────────────────────────────────────────
 app_notifications:
     path:

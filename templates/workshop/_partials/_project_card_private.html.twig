@@ -3,12 +3,12 @@
 
     Paramètres :
       - project : App\Entity\Project
-      - role    : 'owner' | 'lead' | 'editor' | 'contributor'  (défaut : 'owner')
+      - role    : 'owner' | 'moderator' | 'contributor' | 'reader'  (défaut : 'owner')
 
     CTA varie selon le rôle :
       owner       → "Éditer le projet"
-      lead        → "Reprendre le travail"
-      editor/contributor → "Ouvrir l'atelier"
+      moderator   → "Reprendre le travail"
+      contributor/reader → "Ouvrir l'atelier"
 #}
 
 {% set role = role|default('owner') %}
@@ -17,7 +17,7 @@
 {% set role_label = ('projects.roles.' ~ role)|trans({}, 'workshop') %}
 {% set type_label = ('project_type.' ~ project.projectType)|trans({}, 'messages') %}
 {% set cta_label  = role == 'owner' ? 'projects.cta.owner'|trans({}, 'workshop')
-                  : (role == 'lead' ? 'projects.cta.lead'|trans({}, 'workshop') : 'projects.cta.collab'|trans({}, 'workshop')) %}
+                  : (role == 'moderator' ? 'projects.cta.lead'|trans({}, 'workshop') : 'projects.cta.collab'|trans({}, 'workshop')) %}
 {% set vis_label  = ('projects.visibility.' ~ project.visibility)|trans({}, 'workshop') %}
 {% set status_label = ('projects.status.' ~ (project.status == 'finished' ? 'finished' : (project.status == 'in_progress' ? 'in_progress' : 'draft')))|trans({}, 'workshop') %}
 
@@ -60,7 +60,8 @@
         {% if project.coverFilename %}
             <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
                  alt="{{ project.title }}"
-                 class="sc-card__cover-img">
+                 class="sc-card__cover-img"
+                 loading="lazy">
         {% else %}
             <div class="sc-card__type-icon">
                 {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'lg'} %}
@@ -87,7 +88,21 @@
 
     {# ── Corps ───────────────────────────────────────────────────────────── #}
     <div class="sc-card__body">
-        <h3 class="sc-card__title">{{ project.title }}</h3>
+        <h3 class="sc-card__title" title="{{ project.title }}">{{ project.title }}</h3>
+
+        {# ── Genres ──────────────────────────────────────────────────────── #}
+        {% set genre_features = project.projectFeatures|filter(f => f.featureKey == 'genre') %}
+        {% if genre_features is not empty %}
+        <div class="sc-card__genres">
+            {% for feature in genre_features %}
+                {% set genre_label = (genre_map is defined and genre_map[feature.value] is defined)
+                    ? genre_map[feature.value].getLabel('fr')
+                    : feature.value|replace({'_': ' '})|capitalize %}
+                <span class="sc-card__genre">{{ genre_label }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <div class="sc-card__counters">
             {{ nb_chars }} {{ 'projects.card.character'|trans({'%count%': nb_chars}, 'workshop') }}
             · {{ nb_locs }} {{ 'projects.card.location'|trans({'%count%': nb_locs}, 'workshop') }}
@@ -116,7 +131,7 @@
                 </div>
             {% elseif total_tasks > 0 %}
                 <div class="sc-card__alert sc-card__alert--ok">
-                    {{ ux_icon('lucide:check-circle', {style: 'width:11px;height:11px'}) }}
+                    {{ ux_icon('lucide:circle-check', {style: 'width:11px;height:11px'}) }}
                     {{ 'projects.card.all_up_to_date'|trans({}, 'workshop') }}
                 </div>
             {% endif %}

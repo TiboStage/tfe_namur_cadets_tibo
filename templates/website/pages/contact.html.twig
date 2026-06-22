@@ -2,6 +2,7 @@
 {% trans_default_domain 'website' %}
 
 {% block title %}{{ 'meta.contact_title'|trans }}{% endblock %}
+{% block meta_description %}<meta name="description" content="{{ 'meta.contact_description'|trans({}, 'website') }}">{% endblock %}
 
 {% block content %}
     <main class="container section-header">
@@ -84,7 +85,7 @@
 
                     {# ── Prénom & Nom ───────────────────────────── #}
                     {# minlength: 2 = identique à la contrainte Length(min: 2) dans ContactType #}
-                    <div class="form-row-two">
+                    <div class="form-group-full">
                         {{ form_row(form.firstname, {
                             'label': 'contact.form.labels.firstname'|trans,
                             'attr': {
@@ -140,15 +141,26 @@
                     </div>
 
                     {# ── Checkbox privacy ──────────────────────── #}
-                    {{ form_row(form.privacy, {
-                        'label_html': true,
-                        'label': 'contact.form.privacy'|trans ~ ' <a href="#">' ~ 'contact.form.privacy_link'|trans ~ '</a>.',
-                        'attr': {
-                            'data-form-validation-target': 'field',
-                            'data-action': 'change->form-validation#validate',
-                            'data-error-required': 'contact.privacy.must_agree'|trans({}, 'validators')
-                        }
-                    }) }}
+                    <div class="form-check">
+                        {{ form_widget(form.privacy, {
+                            'attr': {
+                                'class': 'form-check-input',
+                                'data-form-validation-target': 'field',
+                                'data-action': 'change->form-validation#validate',
+                                'data-error-required': 'contact.privacy.must_agree'|trans({}, 'validators')
+                            }
+                        }) }}
+                        <label class="form-check-label" for="{{ form.privacy.vars.id }}">
+                            {{ 'contact.form.privacy'|trans }}
+                            <a href="#">{{ 'contact.form.privacy_link'|trans }}</a>.
+                        </label>
+                        {{ form_errors(form.privacy) }}
+                    </div>
+
+                    {# ── Honeypot anti-bot (invisible pour les humains) ── #}
+                    <div class="hp-field" aria-hidden="true">
+                        {{ form_row(form.website) }}
+                    </div>
 
                     <button type="submit" class="btn-primary-pricing">
                         {{ 'contact.form.submit'|trans }}

@@ -126,6 +126,7 @@
 
                 {# Select caché — sync JS (quickSearch, clearType, etc.) #}
                 <select class="xfilter-select-hidden"
+                        aria-label="{{ 'explore.filter.project_types'|trans({}, 'workshop') }}"
                         data-exploration-search-target="typeSelect"
                         data-action="change->exploration-search#onTypeChange">
                     <option value="">{{ 'explore.filter.all_types'|trans }}</option>
@@ -180,6 +181,7 @@
 
                 {# Select caché — compat JS filterGenreOptions() #}
                 <select class="xfilter-select-hidden"
+                        aria-label="{{ 'explore.filter.genre'|trans({}, 'workshop') }}"
                         data-exploration-search-target="genreSelect"
                         data-action="change->exploration-search#onGenreChange">
                     <option value="">{{ 'explore.filter.all'|trans }}</option>
@@ -240,10 +242,11 @@
         <div class="xfilters-chips-row"
              data-exploration-search-target="activeFilters"></div>
 
+
     </div>
 
     {# ══════════════════════════════════════════════════════════════════════
-       SECTION RÉSULTATS (FutBin layout : sidebar filtres + grille)
+       SECTION RÉSULTATS (layout : sidebar filtres + grille)
        Masquée au chargement, visible dès qu'une recherche est active
        ══════════════════════════════════════════════════════════════════════ #}
     {# ══════════════════════════════════════════════════════════════════════

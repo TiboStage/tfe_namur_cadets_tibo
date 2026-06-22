@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScénArt — Charte Graphique</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    /* ── Reset doc ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Inter', system-ui, sans-serif;
+        background: #f5f5f0;
+        color: #1a1a1a;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* ── Page (A4-like) ── */
+    .page {
+        max-width: 960px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 72px 80px;
+        box-shadow: 0 2px 40px rgba(0,0,0,0.10);
+    }
+
+    /* ── Cover ── */
+    .cover {
+        border-bottom: 3px solid #FFB800;
+        padding-bottom: 48px;
+        margin-bottom: 64px;
+    }
+
+    .cover-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #FFB800;
+        margin-bottom: 16px;
+    }
+
+    .cover-title {
+        font-size: 42px;
+        font-weight: 800;
+        color: #0A0A0A;
+        line-height: 1.1;
+        margin-bottom: 8px;
+    }
+
+    .cover-sub {
+        font-size: 16px;
+        color: #666;
+        font-weight: 400;
+        margin-bottom: 32px;
+    }
+
+    .cover-meta {
+        display: flex;
+        gap: 40px;
+        font-size: 12px;
+        color: #999;
+    }
+
+    .cover-meta strong {
+        color: #333;
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 2px;
+    }
+
+    /* ── Sections ── */
+    .section {
+        margin-bottom: 64px;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: baseline;
+        gap: 16px;
+        margin-bottom: 32px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e8e8e8;
+    }
+
+    .section-num {
+        font-size: 11px;
+        font-weight: 800;
+        color: #FFB800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+    }
+
+    .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0A0A0A;
+    }
+
+    /* ── Sub-sections ── */
+    .sub-label {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #aaa;
+        margin-bottom: 14px;
+        margin-top: 28px;
+    }
+
+    /* ── Couleur swatches ── */
+    .color-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .swatch {
+        border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .swatch-color {
+        height: 64px;
+        width: 100%;
+    }
+
+    .swatch-info {
+        padding: 8px 10px;
+        background: #fafafa;
+    }
+
+    .swatch-name {
+        font-size: 11px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 2px;
+    }
+
+    .swatch-var {
+        font-size: 10px;
+        color: #999;
+        font-family: 'Courier New', monospace;
+    }
+
+    .swatch-hex {
+        font-size: 10px;
+        color: #666;
+        font-family: 'Courier New', monospace;
+        margin-top: 2px;
+    }
+
+    /* ── Dark swatches (pour montrer les fonds sombres) ── */
+    .swatch-dark .swatch-info {
+        background: #1a1a1a;
+    }
+    .swatch-dark .swatch-name { color: #ddd; }
+    .swatch-dark .swatch-var  { color: #666; }
+    .swatch-dark .swatch-hex  { color: #888; }
+
+    /* ── Typographie ── */
+    .type-samples { display: flex; flex-direction: column; gap: 24px; }
+
+    .type-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 24px;
+        align-items: start;
+        padding: 20px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .type-meta { padding-top: 4px; }
+
+    .type-role {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #FFB800;
+        margin-bottom: 4px;
+    }
+
+    .type-var {
+        font-size: 10px;
+        font-family: 'Courier New', monospace;
+        color: #999;
+        margin-bottom: 6px;
+    }
+
+    .type-usage {
+        font-size: 11px;
+        color: #777;
+        line-height: 1.5;
+    }
+
+    .type-sample-primary {
+        font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .type-sample-display {
+        font-family: 'Courier New', monospace;
+    }
+
+    .type-scale { display: flex; flex-direction: column; gap: 8px; }
+
+    .type-scale-row {
+        display: grid;
+        grid-template-columns: 100px 1fr 80px;
+        align-items: baseline;
+        gap: 12px;
+    }
+
+    .type-scale-label {
+        font-size: 10px;
+        color: #aaa;
+        font-family: 'Courier New', monospace;
+    }
+
+    .type-scale-size {
+        font-size: 10px;
+        color: #ccc;
+        font-family: 'Courier New', monospace;
+        text-align: right;
+    }
+
+    /* ── Boutons ── */
+    .btn-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .btn-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .btn-card {
+        border: 1px solid #eee;
+        padding: 20px;
+        background: #fafafa;
+    }
+
+    .btn-card-dark {
+        background: #0A0A0A;
+        border-color: #222;
+    }
+
+    .btn-card-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #aaa;
+        margin-bottom: 16px;
+    }
+
+    .btn-card-dark .btn-card-label { color: #555; }
+
+    /* Reproduction des boutons réels */
+    .ds-btn-primary {
+        background: #FFB800;
+        color: #000000;
+        padding: 14px 28px;
+        font-weight: 800;
+        font-size: 15px;
+        border: none;
+        font-family: 'Inter', sans-serif;
+        cursor: default;
+        display: inline-block;
+    }
+
+    .ds-btn-outline {
+        background: transparent;
+        color: #ece9e4;
+        border: 1px solid #2c2925;
+        padding: 14px 28px;
+        font-weight: 700;
+        font-size: 15px;
+        font-family: 'Inter', sans-serif;
+        cursor: default;
+        display: inline-block;
+    }
+
+    .ds-btn-creat {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 36px;
+        padding: 0 16px 0 12px;
+        background: #FFB800;
+        color: #000000;
+        border: none;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
+        cursor: default;
+    }
+
+    .ds-btn-export {
+        background: #0F0F0F;
+        color: #ece9e4;
+        border: 1px solid #2c2925;
+        padding: 8px 15px;
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        cursor: default;
+        display: inline-block;
+    }
+
+    .ds-btn-ghost {
+        background: transparent;
+        color: #9a9390;
+        border: 1px solid #2c2925;
+        padding: 10px 20px;
+        font-weight: 600;
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        cursor: default;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .ds-btn-admin {
+        background: transparent;
+        border: 1px solid #2c2925;
+        color: #9a9390;
+        font-size: 13px;
+        font-family: 'Inter', sans-serif;
+        cursor: default;
+        display: inline-flex;
+        gap: 5px;
+        padding: 10px 18px;
+        align-items: center;
+    }
+
+    .ds-btn-load {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        border: 1px solid #3a3733;
+        color: #9a9390;
+        padding: 12px 24px;
+        font-family: 'Inter', sans-serif;
+        font-size: 13px;
+        cursor: default;
+    }
+
+    .btn-spec {
+        font-size: 10px;
+        color: #aaa;
+        font-family: 'Courier New', monospace;
+        margin-top: 8px;
+    }
+
+    /* ── Rôles ── */
+    .role-grid {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .role-card {
+        border: 1px solid #eee;
+        padding: 16px 20px;
+        min-width: 180px;
+    }
+
+    .role-name {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .role-pill {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+    }
+
+    .role-list {
+        font-size: 11px;
+        color: #666;
+        line-height: 1.8;
+    }
+
+    /* ── Badge sémantiques ── */
+    .badge-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .ds-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        letter-spacing: 0.3px;
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* ── Layout tokens ── */
+    .token-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+
+    .token-table th {
+        text-align: left;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #aaa;
+        padding: 8px 12px;
+        border-bottom: 2px solid #eee;
+    }
+
+    .token-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #f5f5f5;
+        vertical-align: top;
+    }
+
+    .token-table tr:last-child td { border-bottom: none; }
+
+    .token-name {
+        font-family: 'Courier New', monospace;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .token-value {
+        font-family: 'Courier New', monospace;
+        color: #666;
+        font-size: 11px;
+    }
+
+    .token-desc {
+        color: #999;
+        font-size: 11px;
+    }
+
+    /* ── Types de projets ── */
+    .project-types {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .project-type-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 20px;
+        border: 1px solid #eee;
+        min-width: 160px;
+    }
+
+    .project-avatar {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 800;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .project-type-info .type-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 2px;
+    }
+
+    .project-type-info .type-hex {
+        font-size: 10px;
+        font-family: 'Courier New', monospace;
+        color: #aaa;
+    }
+
+    /* ── Formulaires ── */
+    .form-demo {
+        border: 1px solid #eee;
+        background: #0A0A0A;
+        padding: 24px;
+        max-width: 400px;
+    }
+
+    .ds-form-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #9a9390;
+        margin-bottom: 6px;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .ds-form-input {
+        width: 100%;
+        background: #131210;
+        border: 1px solid #2c2925;
+        color: #ece9e4;
+        padding: 14px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        margin-bottom: 16px;
+        outline: none;
+    }
+
+    .ds-form-input:focus {
+        border-color: #FFB800;
+    }
+
+    .ds-form-input::placeholder { color: #4a4643; }
+
+    /* ── Footnote ── */
+    .footnote {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid #e8e8e8;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: #aaa;
+    }
+
+    .footnote strong { color: #FFB800; }
+</style>
+</head>
+<body>
+<div class="page">
+
+    <!-- ══ COVER ══════════════════════════════════════════════════ -->
+    <div class="cover">
+        <div class="cover-label">Travail de Fin d'Études — EAFC Namur-Cadets</div>
+        <div class="cover-title">ScénArt</div>
+        <div class="cover-sub">Charte graphique & Design System</div>
+        <div class="cover-meta">
+            <div><strong>Auteur</strong>Thibault</div>
+            <div><strong>Stack</strong>Symfony 8 / PHP 8.4 / PostgreSQL</div>
+            <div><strong>Version</strong>1.0 — Juin 2026</div>
+            <div><strong>Domaine</strong>Plateforme narrative collaborative</div>
+        </div>
+    </div>
+
+
+    <!-- ══ 1. COULEURS ════════════════════════════════════════════ -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-num">01</span>
+            <span class="section-title">Couleurs</span>
+        </div>
+
+        <!-- Primaire -->
+        <div class="sub-label">Couleur principale</div>
+        <div class="color-grid">
+            <div class="swatch">
+                <div class="swatch-color" style="background:#FFB800;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">ScénArt Yellow</div>
+                    <div class="swatch-var">--color-primary</div>
+                    <div class="swatch-hex">#FFB800</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:rgba(255,184,0,0.08); border:1px dashed #ddd;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Primary Glow</div>
+                    <div class="swatch-var">--color-primary-glow</div>
+                    <div class="swatch-hex">rgba(255,184,0,0.08)</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:rgba(255,184,0,0.25); border:1px dashed #ddd;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Primary Border</div>
+                    <div class="swatch-var">--color-primary-border</div>
+                    <div class="swatch-hex">rgba(255,184,0,0.25)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sémantiques -->
+        <div class="sub-label">Couleurs sémantiques</div>
+        <div class="color-grid">
+            <div class="swatch">
+                <div class="swatch-color" style="background:#f87171;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Danger / Urgent</div>
+                    <div class="swatch-var">--color-red</div>
+                    <div class="swatch-hex">#f87171</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#fb923c;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Avertissement</div>
+                    <div class="swatch-var">--color-orange</div>
+                    <div class="swatch-hex">#fb923c</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#4ade80;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Succès / Terminé</div>
+                    <div class="swatch-var">--color-green</div>
+                    <div class="swatch-hex">#4ade80</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#facc15;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">En cours</div>
+                    <div class="swatch-var">--color-yellow</div>
+                    <div class="swatch-hex">#facc15</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#60a5fa;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Info / Invitation</div>
+                    <div class="swatch-var">--color-blue</div>
+                    <div class="swatch-hex">#60a5fa</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#a78bfa;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Spécial / Note</div>
+                    <div class="swatch-var">--color-purple</div>
+                    <div class="swatch-hex">#a78bfa</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fonds -->
+        <div class="sub-label">Backgrounds</div>
+        <div class="color-grid">
+            <div class="swatch swatch-dark">
+                <div class="swatch-color" style="background:#0A0A0A;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Page</div>
+                    <div class="swatch-var">--color-bg-dark</div>
+                    <div class="swatch-hex">#0A0A0A</div>
+                </div>
+            </div>
+            <div class="swatch swatch-dark">
+                <div class="swatch-color" style="background:#0F0F0F; border-bottom:1px solid #222;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Cartes</div>
+                    <div class="swatch-var">--color-bg-card</div>
+                    <div class="swatch-hex">#0F0F0F</div>
+                </div>
+            </div>
+            <div class="swatch swatch-dark">
+                <div class="swatch-color" style="background:#262320; border-bottom:1px solid #333;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Modales</div>
+                    <div class="swatch-var">--color-bg-elevated</div>
+                    <div class="swatch-hex">#262320</div>
+                </div>
+            </div>
+            <div class="swatch swatch-dark">
+                <div class="swatch-color" style="background:#131210; border-bottom:1px solid #222;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Inputs</div>
+                    <div class="swatch-var">--color-bg-input</div>
+                    <div class="swatch-hex">#131210</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Texte -->
+        <div class="sub-label">Texte</div>
+        <div class="color-grid">
+            <div class="swatch">
+                <div class="swatch-color" style="background:#ece9e4;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Principal</div>
+                    <div class="swatch-var">--text-main</div>
+                    <div class="swatch-hex">#ece9e4</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#9a9390;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Secondaire</div>
+                    <div class="swatch-var">--text-muted</div>
+                    <div class="swatch-hex">#9a9390</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#706b67;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Légendes</div>
+                    <div class="swatch-var">--text-muted-light</div>
+                    <div class="swatch-hex">#706b67</div>
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="swatch-color" style="background:#4a4643;"></div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Désactivé</div>
+                    <div class="swatch-var">--text-muted-dark</div>
+                    <div class="swatch-hex">#4a4643</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Types de projets -->
+        <div class="sub-label">Types de projets</div>
+        <div class="project-types">
+            <div class="project-type-card">
+                <div class="project-avatar" style="background:#E63946;">F</div>
+                <div class="project-type-info">
+                    <div class="type-name">Film</div>
+                    <div class="type-hex">--project-film · #E63946</div>
+                </div>
+            </div>
+            <div class="project-type-card">
+                <div class="project-avatar" style="background:#A855F7;">S</div>
+                <div class="project-type-info">
+                    <div class="type-name">Série</div>
+                    <div class="type-hex">--project-serie · #A855F7</div>
+                </div>
+            </div>
+            <div class="project-type-card">
+                <div class="project-avatar" style="background:#2A9D8F;">J</div>
+                <div class="project-type-info">
+                    <div class="type-name">Jeu vidéo</div>
+                    <div class="type-hex">--project-jv · #2A9D8F</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ══ 2. TYPOGRAPHIE ════════════════════════════════════════ -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-num">02</span>
+            <span class="section-title">Typographie</span>
+        </div>
+
+        <div class="type-samples">
+
+            <div class="type-row">
+                <div class="type-meta">
+                    <div class="type-role">Interface</div>
+                    <div class="type-var">--font-sans (sf-primary)</div>
+                    <div class="type-usage">Inter · Sidebar, navigation, onglets, modales, formulaires, boutons</div>
+                </div>
+                <div>
+                    <div class="type-sample-primary" style="font-size:28px; font-weight:800; color:#111; line-height:1.2; margin-bottom:4px;">ScénArt</div>
+                    <div class="type-sample-primary" style="font-size:16px; font-weight:600; color:#333; margin-bottom:4px;">Plateforme narrative collaborative</div>
+                    <div class="type-sample-primary" style="font-size:13px; font-weight:400; color:#666;">Navigation · Labels · Boutons · Paramètres</div>
+                </div>
+            </div>
+
+            <div class="type-row">
+                <div class="type-meta">
+                    <div class="type-role">Lecture</div>
+                    <div class="type-var">--font-body (sf-body)</div>
+                    <div class="type-usage">Inter · Notes, descriptions, annotations, formulaires de saisie</div>
+                </div>
+                <div>
+                    <div class="type-sample-primary" style="font-size:15px; font-weight:400; color:#333; line-height:1.7; margin-bottom:4px;">
+                        INT. BUREAU DE PRODUCTION — JOUR<br>
+                        <em>La pièce est silencieuse. Des manuscrits s'empilent sur le bureau.</em>
+                    </div>
+                    <div class="type-sample-primary" style="font-size:13px; font-weight:500; color:#666;">Notes d'auteur · Descriptions · Annotations</div>
+                </div>
+            </div>
+
+            <div class="type-row">
+                <div class="type-meta">
+                    <div class="type-role">Éditeur</div>
+                    <div class="type-var">--font-display / --font-mono (sf-display)</div>
+                    <div class="type-usage">Courier Prime · Éditeur Fountain, dialogues, export PDF</div>
+                </div>
+                <div>
+                    <div class="type-sample-display" style="font-size:14px; color:#222; line-height:2; background:#fafafa; padding:16px; border-left:3px solid #FFB800;">
+                        INT. APPARTEMENT — NUIT<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ALICE<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(murmure)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On n'a plus le choix.<br><br>
+                        Elle prend le manuscrit et sort.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="sub-label" style="margin-top:32px;">Échelle typographique (Inter — interface)</div>
+        <table class="token-table">
+            <thead>
+                <tr>
+                    <th>Usage</th>
+                    <th>Taille</th>
+                    <th>Poids</th>
+                    <th>Contexte</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="token-name">Section tag</td>
+                    <td class="token-value">13px</td>
+                    <td class="token-value">800 · uppercase</td>
+                    <td class="token-desc">Labels de section, uppercase + tracking 1px</td>
+                </tr>
+                <tr>
+                    <td class="token-name">Form label</td>
+                    <td class="token-value">11px</td>
+                    <td class="token-value">700 · uppercase</td>
+                    <td class="token-desc">Labels des champs de formulaire</td>
+                </tr>
+                <tr>
+                    <td class="token-name">Body</td>
+                    <td class="token-value">14px</td>
+                    <td class="token-value">400</td>
+                    <td class="token-desc">Texte courant, descriptions</td>
+                </tr>
+                <tr>
+                    <td class="token-name">Nav item</td>
+                    <td class="token-value">13px</td>
+                    <td class="token-value">500</td>
+                    <td class="token-desc">Liens de navigation sidebar</td>
+                </tr>
+                <tr>
+                    <td class="token-name">Btn primary</td>
+                    <td class="token-value">15px</td>
+                    <td class="token-value">800</td>
+                    <td class="token-desc">CTA principaux</td>
+                </tr>
+                <tr>
+                    <td class="token-name">Btn workshop</td>
+                    <td class="token-value">13px</td>
+                    <td class="token-value">700</td>
+                    <td class="token-desc">Actions dans l'atelier</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- ══ 3. BOUTONS ══════════════════════════════════════════════ -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-num">03</span>
+            <span class="section-title">Boutons</span>
+        </div>
+
+        <!-- Vitrine (fond clair) -->
+        <div class="sub-label">Vitrine — fond clair</div>
+        <div class="btn-card" style="background:#fff;">
+            <div class="btn-grid">
+                <div>
+                    <div class="ds-btn-primary">Commencer</div>
+                    <div class="btn-spec">.btn-primary · bg #FFB800 · fw 800</div>
+                </div>
+                <div>
+                    <div class="ds-btn-outline">En savoir plus</div>
+                    <div class="btn-spec">.btn-outline · border #2c2925 · fw 700</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workshop (fond sombre) -->
+        <div class="sub-label">Atelier (Workshop) — fond sombre</div>
+        <div class="btn-card btn-card-dark">
+            <div class="btn-card-label">Actions principales</div>
+            <div class="btn-grid" style="margin-bottom:20px;">
+                <div>
+                    <div class="ds-btn-creat">+ Nouveau projet</div>
+                    <div class="btn-spec" style="color:#555;">.btn-creat · h 36px · bg #FFB800</div>
+                </div>
+                <div>
+                    <div class="ds-btn-ghost">✕ Annuler</div>
+                    <div class="btn-spec" style="color:#555;">.btn--ghost · border #2c2925</div>
+                </div>
+            </div>
+            <div class="btn-card-label">Actions secondaires</div>
+            <div class="btn-grid">
+                <div>
+                    <div class="ds-btn-export">Exporter</div>
+                    <div class="btn-spec" style="color:#555;">.btn-export · bg #0F0F0F</div>
+                </div>
+                <div>
+                    <div class="ds-btn-admin">⚠ Admin</div>
+                    <div class="btn-spec" style="color:#555;">.btn-admin · hover rouge</div>
+                </div>
+                <div>
+                    <div class="ds-btn-load">Charger plus</div>
+                    <div class="btn-spec" style="color:#555;">.btn-load-more</div>
+                </div>
+            </div>
+        </div>
+
+        <p style="font-size:11px; color:#aaa; margin-top:12px;">⚠ Aucun border-radius sur les boutons — style angulaire systématique.</p>
+    </div>
+
+
+    <!-- ══ 4. FORMULAIRES ════════════════════════════════════════ -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-num">04</span>
+            <span class="section-title">Formulaires</span>
+        </div>
+
+        <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start;">
+            <div class="form-demo">
+                <label class="ds-form-label">Titre du projet <span style="color:#FFB800;">*</span></label>
+                <input class="ds-form-input" type="text" placeholder="Mon scénario…" readonly>
+
+                <label class="ds-form-label">Type</label>
+                <input class="ds-form-input" type="text" placeholder="Film · Série · Jeu vidéo" readonly>
+
+                <div class="ds-btn-creat" style="width:100%; justify-content:center;">+ Créer le projet</div>
+            </div>
+
+            <div style="flex:1; min-width:200px;">
+                <table class="token-table">
+                    <thead>
+                        <tr><th>Propriété</th><th>Valeur</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="token-name">Input bg</td>
+                            <td class="token-value">--color-bg-input · #131210</td>
+                        </tr>
+                        <tr>
+                            <td class="token-name">Border</td>
+                            <td class="token-value">--color-border · #2c2925</td>
+                        </tr>
+                        <tr>
+                            <td class="token-name">Border focus</td>
+                            <td class="token-value">--color-primary · #FFB800</td>
+                        </tr>
+                        <tr>
+                            <td class="token-name">Padding</td>
+                            <td class="token-value">14px</td>
+                        </tr>
+                        <tr>
+                            <td class="token-name">Label size</td>
+                            <td class="token-value">11px · 700 · uppercase</td>
+                        </tr>
+                        <tr>
+                            <td class="token-name">Placeholder</td>
+                            <td class="token-value">--text-muted-dark · #4a4643</td>
+                        </tr>
+                        <tr>
+                            <td class="token-name">Border-radius</td>
+                            <td class="token-value">0 — style angulaire</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ══ 5. SYSTÈME DE RÔLES ════════════════════════════════════ -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-num">05</span>
+            <span class="section-title">Rôles membres</span>
+        </div>
+
+        <div class="role-grid">
+            <div class="role-card">
+                <div class="role-name">Lecteur</div>
+                <div class="role-pill" style="background:rgba(156,163,175,0.12); color:#9ca3af;">reader</div>
+                <div class="role-list">
+                    Lecture du contenu<br>
+                    Ajout de notes<br>
+                    ✗ Création de contenu<br>
+                    ✗ Gestion du projet
+                </div>
+            </div>
+            <div class="role-card">
+                <div class="role-name">Contributeur</div>
+                <div class="role-pill" style="background:rgba(74,222,128,0.12); color:#4ade80;">contributor</div>
+                <div class="role-list">
+                    Lecture + notes<br>
+                    Création de contenu<br>
+                    Manuscrit, persos, lieux<br>
+                    ✗ Gestion du projet
+                </div>
+            </div>
+            <div class="role-card">
+                <div class="role-name">Modérateur</div>
+                <div class="role-pill" style="background:rgba(96,165,250,0.12); color:#60a5fa;">moderator</div>
+                <div class="role-list">
+                    Lecture + notes<br>
+                    Création de contenu<br>
+                    Visibilité du projet<br>
+                    Paramètres & membres
+                </div>
+            </div>
+        </div>
+
+        <!-- Badges statuts -->
+        <div class="sub-label">Badges de statut</div>
+        <div class="badge-row">
+            <span class="ds-badge" style="background:rgba(248,113,113,0.08); color:#f87171;">Urgent</span>
+            <span class="ds-badge" style="background:rgba(251,146,60,0.08); color:#fb923c;">Haute priorité</span>
+            <span class="ds-badge" style="background:rgba(250,204,21,0.1); color:#facc15;">En cours</span>
+            <span class="ds-badge" style="background:rgba(74,222,128,0.08); color:#4ade80;">Terminé</span>
+            <span class="ds-badge" style="background:rgba(96,165,250,0.08); color:#60a5fa;">Info</span>
+            <span class="ds-badge" style="background:rgba(167,139,250,0.08); color:#a78bfa;">Note</span>
+        </div>
+    </div>
+
+
+    <!-- ══ 6. TOKENS LAYOUT ════════════════════════════════════════ -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-num">06</span>
+            <span class="section-title">Tokens Layout & Transitions</span>
+        </div>
+
+        <table class="token-table">
+            <thead>
+                <tr><th>Variable</th><th>Valeur</th><th>Usage</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="token-name">--container-width</td>
+                    <td class="token-value">1400px</td>
+                    <td class="token-desc">Largeur maximale des conteneurs</td>
+                </tr>
+                <tr>
+                    <td class="token-name">--container-padding</td>
+                    <td class="token-value">50px</td>
+                    <td class="token-desc">Padding latéral des pages</td>
+                </tr>
+                <tr>
+                    <td class="token-name">--topbar-h</td>
+                    <td class="token-value">52px</td>
+                    <td class="token-desc">Hauteur de la barre de navigation</td>
+                </tr>
+                <tr>
+                    <td class="token-name">--project-bar-h</td>
+                    <td class="token-value">44px</td>
+                    <td class="token-desc">Hauteur de la barre projet</td>
+                </tr>
+                <tr>
+                    <td class="token-name">--workspace-offset</td>
+                    <td class="token-value">106px</td>
+                    <td class="token-desc">Offset total (topbar + project bar)</td>
+                </tr>
+                <tr>
+                    <td class="token-name">--transition-fast</td>
+                    <td class="token-value">all 0.2s ease</td>
+                    <td class="token-desc">Transition standard sur tous les éléments interactifs</td>
+                </tr>
+                <tr>
+                    <td class="token-name">--shadow-sm</td>
+                    <td class="token-value">0 4px 16px rgba(0,0,0,0.35)</td>
+                    <td class="token-desc">Cartes, éléments flottants légers</td>
+                </tr>
+                <tr>
+                    <td class="token-name">--shadow-modal</td>
+                    <td class="token-value">0 15px 35px rgba(0,0,0,0.80)</td>
+                    <td class="token-desc">Modales et overlays</td>
+                </tr>
+                <tr>
+                    <td class="token-name">Breakpoint mobile</td>
+                    <td class="token-value">640px</td>
+                    <td class="token-desc">Hardcodé dans chaque fichier CSS</td>
+                </tr>
+                <tr>
+                    <td class="token-name">Breakpoint tablet</td>
+                    <td class="token-value">768px</td>
+                    <td class="token-desc">Hardcodé dans chaque fichier CSS</td>
+                </tr>
+                <tr>
+                    <td class="token-name">Breakpoint desktop</td>
+                    <td class="token-value">1024px</td>
+                    <td class="token-desc">Hardcodé dans chaque fichier CSS</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- ══ FOOTNOTE ══════════════════════════════════════════════ -->
+    <div class="footnote">
+        <span><strong>ScénArt</strong> — Charte Graphique v1.0 — TFE EAFC Namur-Cadets 2026</span>
+        <span>Symfony 8 · PHP 8.4 · PostgreSQL · AssetMapper</span>
+    </div>
+
+</div>
+</body>
+</html>

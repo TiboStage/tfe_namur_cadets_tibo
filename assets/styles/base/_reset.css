@@ -12,7 +12,7 @@
 html, body {
     background-color: var(--color-bg-dark);
     color: var(--text-main);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-sans);
     width: 100%;
     margin: 0;
     /* L'astuce magique : overlay pour que la barre flotte sans pousser le contenu */
@@ -79,6 +79,12 @@ html, body {
     background-color: var(--color-primary);
 }
 .hidden { display: none !important; }
+
+/* ─── Focus visible global (WCAG 2.1 AA) ────────────────────────── */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
 
 /* ─── Utilitaires globaux de texte ──────────────────────────────── */
 .text-xs   { font-size: 10px; }

@@ -141,6 +141,37 @@
     max-width: 170px;
 }
 
+.up-identity__role {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    padding: 1px 5px;
+    margin-top: 3px;
+    width: fit-content;
+}
+
+.up-identity__role--admin {
+    color: var(--color-primary);
+    background: var(--color-primary-glow);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.up-identity__role--modo {
+    color: #06b6d4;
+    background: rgba(6, 182, 212, .1);
+    border: 1px solid rgba(6, 182, 212, .25);
+}
+
+.up-identity__role-icon {
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+}
+
 /* ── Badge compteur dans les liens du dropdown ───────────────── */
 .up-count {
     margin-left: auto;
@@ -167,6 +198,8 @@
     right: 0;
     background: var(--color-bg-input);
     border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
     min-width: 180px;
     list-style: none;
     padding: 6px 0;
@@ -227,42 +260,6 @@
     margin: 4px 0;
 }
 
-/* ── Sélecteur de langue (compact, en ligne) ─────────────── */
-
-.up-lang-row {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    padding: 6px 10px;
-}
-
-.up-lang {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px 6px !important;
-    font-size: 11px !important;
-    font-weight: 600;
-    color: var(--text-muted-dark) !important;
-    border: 1px solid transparent;
-    text-decoration: none;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
-    gap: 3px !important;
-    white-space: nowrap;
-}
-
-.up-lang:hover {
-    color: var(--text-main) !important;
-    background: var(--overlay-sm) !important;
-    border-color: var(--overlay-md) !important;
-}
-
-.up-lang--active {
-    color: var(--color-primary) !important;
-    border-color: var(--color-primary-border) !important;
-    background: var(--color-primary-glow) !important;
-}
 
 .logout-link:hover {
     color: var(--color-red) !important;

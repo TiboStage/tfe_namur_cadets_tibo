@@ -72,21 +72,21 @@ final class ProjectPermissionService
     // ─── Permissions par défaut ────────────────────────────────────────────────
 
     public const DEFAULTS = [
-        'contributor' => [
+        'reader' => [
             'manuscript.view',
             'characters.view',
             'locations.view',
-            'notes.view',
+            'notes.view', 'notes.edit',
             'tasks.view',
         ],
-        'editor' => [
+        'contributor' => [
             'manuscript.view', 'manuscript.edit',
             'characters.view', 'characters.edit',
             'locations.view',  'locations.edit',
             'notes.view',      'notes.edit',
             'tasks.view',      'tasks.complete', 'tasks.edit',
         ],
-        'lead' => [
+        'moderator' => [
             'manuscript.view', 'manuscript.edit', 'manuscript.delete',
             'characters.view', 'characters.edit',
             'locations.view',  'locations.edit',
@@ -96,18 +96,18 @@ final class ProjectPermissionService
         ],
     ];
 
-    public const ROLES = ['contributor', 'editor', 'lead'];
+    public const ROLES = ['reader', 'contributor', 'moderator'];
 
     public const ROLE_LABELS = [
+        'reader'      => 'Lecteur',
         'contributor' => 'Contributeur',
-        'editor'      => 'Éditeur',
-        'lead'        => 'Co-responsable',
+        'moderator'   => 'Modérateur',
     ];
 
     public const ROLE_COLORS = [
-        'contributor' => 'muted',
-        'editor'      => 'green',
-        'lead'        => 'blue',
+        'reader'      => 'muted',
+        'contributor' => 'green',
+        'moderator'   => 'blue',
     ];
 
     // ─── Lecture ──────────────────────────────────────────────────────────────

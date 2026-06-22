@@ -165,15 +165,22 @@ class ModoController extends AbstractController
         }
 
         $action = $request->request->getString('action'); // hide | show | delete
+        $note   = trim($request->request->getString('moderation_note'));
 
         match ($action) {
-            'hide'   => (function () use ($comment) {
+            'hide'   => (function () use ($comment, $note) {
                 $comment->status = 'hidden';
+                if ($note !== '') {
+                    $comment->moderationNote = $note;
+                }
                 $this->em->flush();
                 $this->addFlash('success', $this->translator->trans('moderation.comment_hidden', [], 'flash_messages'));
             })(),
-            'show'   => (function () use ($comment) {
+            'show'   => (function () use ($comment, $note) {
                 $comment->status = 'visible';
+                if ($note !== '') {
+                    $comment->moderationNote = $note;
+                }
                 $this->em->flush();
                 $this->addFlash('success', $this->translator->trans('moderation.comment_shown', [], 'flash_messages'));
             })(),

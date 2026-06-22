@@ -1,5 +1,8 @@
 /* assets/styles/app.css */
 
+/* --- 0. POLICES (Avant tout le reste) --- */
+@import "base/_fonts.css";
+
 /* --- 1. BASE (Toujours en premier) --- */
 @import "base/_variables.css";
 @import "base/_reset.css";
@@ -79,6 +82,9 @@
 
 /* Notes */
 @import "pages/workshop/_notes.css";
+
+/* Activité */
+@import "pages/workshop/_activity.css";
 
 /* --- 5. EXCEPTIONS & ERREURS --- */
 @import "components/_error-pages.css";

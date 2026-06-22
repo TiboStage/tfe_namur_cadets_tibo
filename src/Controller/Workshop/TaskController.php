@@ -122,7 +122,7 @@ class TaskController extends AbstractController
         #[MapEntity(mapping: ['project_slug' => 'slug'])] Project $project
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         $task = new Task();
         $task->setProject($project);
@@ -161,7 +161,7 @@ class TaskController extends AbstractController
             $this->addFlash('success', $this->translator->trans(
                 'task.flash.created',
                 ['%title%' => $task->getTitle()],
-                'workshop_interface'
+                'workshop'
             ));
 
             return $this->redirectToRoute('app_task_index', [
@@ -205,7 +205,7 @@ class TaskController extends AbstractController
         Task $task
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         if ($task->getProject() !== $project) {
             throw $this->createNotFoundException();
@@ -231,7 +231,7 @@ class TaskController extends AbstractController
             $this->addFlash('success', $this->translator->trans(
                 'task.flash.updated',
                 ['%title%' => $task->getTitle()],
-                'workshop_interface'
+                'workshop'
             ));
 
             return $this->redirectToRoute('app_task_show', [
@@ -256,7 +256,7 @@ class TaskController extends AbstractController
         Task $task
     ): Response
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         if ($task->getProject() !== $project) {
             throw $this->createNotFoundException();
@@ -275,7 +275,7 @@ class TaskController extends AbstractController
             $this->addFlash('success', $this->translator->trans(
                 'task.flash.deleted',
                 ['%title%' => $title],
-                'workshop_interface'
+                'workshop'
             ));
         }
 
@@ -316,7 +316,7 @@ class TaskController extends AbstractController
         Task $task
     ): JsonResponse
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         if ($task->getProject() !== $project) {
             throw $this->createNotFoundException();
@@ -342,7 +342,7 @@ class TaskController extends AbstractController
         Task $task
     ): JsonResponse
     {
-        $this->checkProjectAccess($project, 'edit');
+        $this->checkProjectAccess($project, 'contribute');
 
         if ($task->getProject() !== $project) {
             throw $this->createNotFoundException();
