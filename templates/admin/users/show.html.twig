@@ -40,30 +40,35 @@
                       action="{{ path('admin_user_roles', {id: user.id, _locale: app.request.locale}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('admin_roles_' ~ user.id) }}">
 
-                    {% set available_roles = ['ROLE_MODO', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] %}
-                    {% set user_roles = user.roles %}
+                    {# Rôle courant (le plus élevé) — un seul rôle, en cascade #}
+                    {% set current_role = 'default' %}
+                    {% if 'ROLE_SUPER_ADMIN' in user.roles %}{% set current_role = 'ROLE_SUPER_ADMIN' %}
+                    {% elseif 'ROLE_ADMIN' in user.roles %}{% set current_role = 'ROLE_ADMIN' %}
+                    {% elseif 'ROLE_MODO' in user.roles %}{% set current_role = 'ROLE_MODO' %}
+                    {% endif %}
+
+                    {% set role_options = [
+                        {value: 'default',          label: 'users.show.role_default'},
+                        {value: 'ROLE_MODO',        label: 'users.show.role_modo'},
+                        {value: 'ROLE_ADMIN',       label: 'users.show.role_admin'},
+                        {value: 'ROLE_SUPER_ADMIN', label: 'users.show.role_super'},
+                    ] %}
 
                     <div class="roles-list">
-                        <div class="role-item role-item--fixed">
-                            <input type="checkbox" checked disabled>
-                            <span>ROLE_USER</span>
-                            <span class="role-hint">Automatique</span>
-                        </div>
-                        {% for role in available_roles %}
-                            <div class="role-item">
-                                <input type="checkbox" name="roles[]" value="{{ role }}"
-                                       id="role_{{ role }}"
-                                       {{ role in user_roles ? 'checked' : '' }}
+                        {% for opt in role_options %}
+                            <label class="role-item {{ current_role == opt.value ? 'role-item--selected' : '' }}">
+                                <input type="radio" name="role" value="{{ opt.value }}"
+                                       {{ current_role == opt.value ? 'checked' : '' }}
                                        {{ user == app.user ? 'disabled' : '' }}>
-                                <label for="role_{{ role }}">{{ role|replace({'ROLE_': ''}) }}</label>
-                            </div>
+                                <span>{{ opt.label|trans({}, 'admin') }}</span>
+                            </label>
                         {% endfor %}
                     </div>
 
                     {% if user != app.user %}
                         <button type="submit" class="btn-table mt-4">{{ 'users.show.save_roles'|trans({}, 'admin') }}</button>
                     {% else %}
-                        <p class="text-muted text-sm mt-2">Vous ne pouvez pas modifier vos propres rôles.</p>
+                        <p class="text-muted text-sm mt-2">{{ 'users.show.own_roles_locked'|trans({}, 'admin') }}</p>
                     {% endif %}
                 </form>
             </div>

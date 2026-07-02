@@ -4,7 +4,8 @@
 {% block content %}
 <div class="workshop-container"
      data-controller="per-page project-filter"
-     data-per-page-target="root">
+     data-per-page-target="root"
+     data-per-page-total-value="{{ total_items }}">
 
     {# ── En-tête ──────────────────────────────────────────────────── #}
     <div class="title-projects">
@@ -154,7 +155,7 @@
                         data-action="click->project-filter#setType">
                     Tous
                 </button>
-                {% for t in ['film', 'serie', 'jeu_video', 'custom'] %}
+                {% for t in ['film', 'serie', 'jeu_video'] %}
                     {% if type_counts[t] is defined %}
                     <button class="pf-pill pf-pill--type"
                             data-filter-group="type"
@@ -185,12 +186,17 @@
 
     </div>
 
-    {# ── Skeleton — affiché pendant le redirect per_page ────────── #}
+    {# ── Skeleton — affiché pendant le redirect per_page ──────────
+       On n'en rend jamais plus que le nombre réel de projets (plafonné à 10,
+       le max d'une page). Le contrôleur per_page en affichera min(per_page, total). #}
+    {% set skeleton_count = min(total_items, 10) %}
+    {% if skeleton_count > 0 %}
     <div class="projects-skeleton-grid" data-per-page-target="skeleton" hidden aria-hidden="true">
-        {% for i in 1..10 %}
+        {% for i in 1..skeleton_count %}
             {{ include('workshop/_partials/_project_card_skeleton.html.twig') }}
         {% endfor %}
     </div>
+    {% endif %}
 
     {# ── Contenu réel ─────────────────────────────────────────────── #}
     <div data-per-page-target="content">

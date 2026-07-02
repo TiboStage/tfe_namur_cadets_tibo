@@ -81,8 +81,8 @@
 .proj-stat {
     display: flex;
     align-items: center;
-    gap: 7px;
-    padding: 10px 20px;
+    gap: 3px;
+    padding: 5px 10px;
     font-size: 12px;
     color: var(--text-muted);
     text-decoration: none;
@@ -561,7 +561,7 @@ a.proj-activity-item:hover { background: rgba(255,255,255,.03); }
 
 /* ── Responsive ──────────────────────────────────────────── */
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .proj-show__grid {
         grid-template-columns: 1fr;
     }

@@ -553,7 +553,7 @@
 
 /* ── Responsive ──────────────────────────────────────────────── */
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .tl-header,
     .tl-row {
         grid-template-columns: 1fr 140px 100px 60px;
@@ -565,7 +565,7 @@
     .tl-cell--assignee { display: none; }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .tl-header,
     .tl-row { grid-template-columns: 1fr 140px 60px; }
     .tl-cell--priority,

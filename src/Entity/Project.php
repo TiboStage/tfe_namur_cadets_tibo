@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Project
 {
-    private const VALID_TYPES       = ['film', 'serie', 'jeu_video', 'custom'];
+    private const VALID_TYPES       = ['film', 'serie', 'jeu_video'];
     private const VALID_STATUSES    = ['draft', 'in_progress', 'completed', 'archived'];
     private const VALID_MODERATION  = ['clear', 'warning', 'blocked', 'approved'];
     private const VALID_VISIBILITY  = ['unpublished', 'private', 'public'];
@@ -76,10 +76,10 @@ class Project
 
     #[ORM\Column(length: 50)]
     #[Assert\Choice(
-        choices: ['film', 'serie', 'jeu_video', 'custom'],
+        choices: ['film', 'serie', 'jeu_video'],
         message: 'project.type.invalid',
     )]
-    public string $projectType = 'custom' {
+    public string $projectType = 'film' {
         set {
             if (!in_array($value, self::VALID_TYPES, true)) {
                 throw new \InvalidArgumentException("Type invalide : $value");

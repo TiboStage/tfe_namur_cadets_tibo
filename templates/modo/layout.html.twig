@@ -4,23 +4,24 @@
 {% set current_route = app.request.attributes.get('_route') %}
 
 {% block body %}
-    <div class="admin-layout admin-layout--modo">
+    <div class="modo-layout modo-layout--modo">
 
-        {# SIDEBAR ──────────────────────────────────────────────────── #}
-        <aside class="admin-sidebar">
-            <div class="sidebar-brand">
+        {# ── SIDEBAR (structure calquée sur .project-bar) ──────────── #}
+        <aside class="modo-sidebar">
+
+            <div class="modo-sidebar__header">
                 <span class="brand-dot brand-dot--modo"></span>
-                <span>Scénart <span class="brand-badge brand-badge--modo">Modo</span></span>
+                <span class="modo-sidebar__brand">Scénart <span class="brand-badge brand-badge--modo">Modo</span></span>
             </div>
 
-            <nav class="sidebar-menu">
+            <nav class="modo-nav">
                 <a href="{{ path('modo_dashboard', {_locale: app.request.locale}) }}"
-                   class="menu-item {{ current_route == 'modo_dashboard' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route == 'modo_dashboard' ? 'active' : '' }}">
                     {{ ux_icon('lucide:layout-dashboard', {class: 'icon-sm'}) }}
                     <span>{{ 'modo.menu.dashboard'|trans({}, 'admin') }}</span>
                 </a>
                 <a href="{{ path('modo_reports', {_locale: app.request.locale}) }}"
-                   class="menu-item {{ current_route == 'modo_reports' or current_route == 'modo_project_show' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route == 'modo_reports' or current_route == 'modo_project_show' ? 'active' : '' }}">
                     {{ ux_icon('lucide:folder-search', {class: 'icon-sm'}) }}
                     <span>{{ 'modo.menu.flagged_projects'|trans({}, 'admin') }}</span>
                     {% if count_flagged is defined and count_flagged > 0 %}
@@ -28,7 +29,7 @@
                     {% endif %}
                 </a>
                 <a href="{{ path('modo_report_list', {_locale: app.request.locale}) }}"
-                   class="menu-item alert-item {{ current_route starts with 'modo_report' and current_route != 'modo_reports' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route starts with 'modo_report' and current_route != 'modo_reports' ? 'active' : '' }}">
                     {{ ux_icon('lucide:triangle-alert', {class: 'icon-sm'}) }}
                     <span>{{ 'modo.menu.reports'|trans({}, 'admin') }}</span>
                     {% if count_pending_reports is defined and count_pending_reports > 0 %}
@@ -36,41 +37,37 @@
                     {% endif %}
                 </a>
                 <a href="{{ path('modo_comments', {_locale: app.request.locale}) }}"
-                   class="menu-item {{ current_route starts with 'modo_comment' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route starts with 'modo_comment' ? 'active' : '' }}">
                     {{ ux_icon('lucide:message-square', {class: 'icon-sm'}) }}
                     <span>{{ 'modo.menu.comments'|trans({}, 'admin') }}</span>
                 </a>
             </nav>
 
-            {% if is_granted('ROLE_ADMIN') %}
-                <div class="sidebar-footer">
+            <footer class="modo-sidebar__footer">
+                {% if is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('admin_dashboard', {_locale: app.request.locale}) }}" class="sidebar-modo-link">
                         {{ ux_icon('lucide:shield', {class: 'icon-xs'}) }}
-                        {{ 'modo.menu.admin_panel'|trans({}, 'admin') }}
+                        <span>{{ 'modo.menu.admin_panel'|trans({}, 'admin') }}</span>
                     </a>
-                </div>
-            {% endif %}
+                {% endif %}
+                <span class="admin-user-pill admin-user-pill--modo">
+                    {{ ux_icon('lucide:shield-check', {class: 'icon-xs'}) }}
+                    {{ app.user.username ?? 'Modo' }}
+                </span>
+                <a href="{{ path('app_workshop_dashboard') }}" class="btn-exit-admin" data-turbo="false">
+                    {{ ux_icon('lucide:log-out', {class: 'icon-xs'}) }}
+                    {{ 'modo.exit'|trans({}, 'admin') }}
+                </a>
+            </footer>
         </aside>
 
-        {# CONTENU ───────────────────────────────────────────────────── #}
-        <div class="admin-main">
-            <header class="admin-navbar">
-                <div class="navbar-left">
-                    <h2>{% block modo_title %}{{ 'modo.title'|trans({}, 'admin') }}{% endblock %}</h2>
-                </div>
-                <div class="navbar-right">
-                    <span class="admin-user-pill admin-user-pill--modo">
-                        {{ ux_icon('lucide:shield-check', {class: 'icon-xs'}) }}
-                        {{ app.user.username ?? 'Modo' }}
-                    </span>
-                    <a href="{{ path('app_workshop_dashboard') }}" class="btn-exit-admin" data-turbo="false">
-                        {{ ux_icon('lucide:log-out', {class: 'icon-xs'}) }}
-                        {{ 'modo.exit'|trans({}, 'admin') }}
-                    </a>
-                </div>
-            </header>
+        {# ── CONTENU ───────────────────────────────────────────────── #}
+        <main class="modo-main">
+            <div class="modo-content">
+                <header class="modo-page-header">
+                    <h1>{% block modo_title %}{{ 'modo.title'|trans({}, 'admin') }}{% endblock %}</h1>
+                </header>
 
-            <main class="admin-content-view">
                 {% for flash_type, messages in app.flashes %}
                     {% for message in messages %}
                         <div class="admin-flash admin-flash--{{ flash_type }}">{{ message }}</div>
@@ -78,8 +75,7 @@
                 {% endfor %}
 
                 {% block modo_content %}{% endblock %}
-            </main>
-        </div>
-
+            </div>
+        </main>
     </div>
 {% endblock %}

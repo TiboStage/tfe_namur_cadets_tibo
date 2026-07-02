@@ -10,11 +10,10 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    /* Aligne sur le top-nav : même largeur, même centrage */
-    width: calc(100% - 100px);
-    max-width: 1700px;
-    margin-left: auto;
-    margin-right: auto;
+    /* Remplit l'espace à droite de la sidebar projet */
+    width: auto;
+    max-width: none;
+    height: 100%;
 }
 
 .workspace-main--editor .editor-shell,
@@ -936,7 +935,7 @@
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .editor-shell {
         grid-template-columns: 0 1fr 0;
     }

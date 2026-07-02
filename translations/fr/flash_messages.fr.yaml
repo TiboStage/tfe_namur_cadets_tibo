@@ -31,18 +31,6 @@ project:
     structure_updated: "Structure mise à jour."
     visibility_invalid: "Visibilité invalide."
 
-# ===== PERSONNAGE =====
-character:
-    created: "Personnage créé avec succès !"
-    updated: "Personnage mis à jour."
-    deleted: "Personnage supprimé."
-
-# ===== LIEU =====
-location:
-    created: "Lieu créé avec succès !"
-    updated: "Lieu mis à jour."
-    deleted: "Lieu supprimé."
-
 # ===== VALIDATION FORMULAIRE =====
 validation:
     error: "Veuillez corriger les erreurs avant de soumettre"

@@ -114,11 +114,11 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_user_show', ['id' => $user->getId(), '_locale' => $request->getLocale()]);
         }
 
-        $allowed = ['ROLE_USER', 'ROLE_MODO', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'];
-        $newRoles = array_intersect(
-            $request->request->all('roles') ?: [],
-            $allowed
-        );
+        // Un seul rôle (le plus élevé) — la hiérarchie de sécurité fait la cascade.
+        // 'default' (ou toute valeur inconnue) = rôle utilisateur de base → aucun rôle stocké.
+        $role    = $request->request->getString('role');
+        $allowed = ['ROLE_MODO', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'];
+        $newRoles = in_array($role, $allowed, true) ? [$role] : [];
 
         // Seul un SUPER_ADMIN peut attribuer ROLE_ADMIN ou ROLE_SUPER_ADMIN
         $elevated = array_intersect($newRoles, ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']);
@@ -127,8 +127,7 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_user_show', ['id' => $user->getId(), '_locale' => $request->getLocale()]);
         }
 
-        // ROLE_USER est toujours présent (géré par getRoles())
-        $newRoles = array_values(array_diff($newRoles, ['ROLE_USER']));
+        // ROLE_USER est toujours ajouté par getRoles() → [] = rôle par défaut
         $user->setRoles($newRoles);
         $this->em->flush();
 

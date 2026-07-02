@@ -129,7 +129,7 @@ class WorldEventType extends AbstractType
 
             // Type d'événement
             ->add('eventType', ChoiceType::class, [
-                'label' => 'world_event.form.event_type',
+                'label' => 'world_event.form.event_type.label',
                 'translation_domain' => 'workshop',
                 'required' => false,
                 'placeholder' => 'world_event.form.event_type.placeholder',
@@ -145,7 +145,7 @@ class WorldEventType extends AbstractType
 
             // Scène liée du manuscrit (optionnel)
             ->add('linkedScene', EntityType::class, [
-                'label' => 'world_event.form.linked_scene',
+                'label' => 'world_event.form.linked_scene.label',
                 'translation_domain' => 'workshop',
                 'class' => ScenarioElement::class,
                 'choice_label' => fn(ScenarioElement $el) => $el->getFullPath(),
@@ -159,7 +159,7 @@ class WorldEventType extends AbstractType
 
             // Lieu lié (optionnel)
             ->add('location', EntityType::class, [
-                'label' => 'world_event.form.location',
+                'label' => 'world_event.form.location.label',
                 'translation_domain' => 'workshop',
                 'class' => Location::class,
                 'choice_label' => 'name',

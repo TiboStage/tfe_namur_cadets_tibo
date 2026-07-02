@@ -428,7 +428,7 @@
 }
 
 /* ── Responsive ────────────────────────────────────────────── */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .explore-layout {
         grid-template-columns: 1fr;
     }
@@ -454,7 +454,7 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .explore-grid,
     .creators-grid {
         grid-template-columns: 1fr;
@@ -481,7 +481,7 @@
 }
 
 .explore-intro__title {
-    font-size: clamp(22px, 2.5vw, 32px);
+    font-size: var(--fs-2xl);   /* fluide 24→36px, centralisé (remplace le clamp ad-hoc) */
     font-weight: 900;
     margin: 8px 0 10px;
     line-height: 1.1;
@@ -1383,7 +1383,7 @@
 }
 
 /* ── Responsive ───────────────────────────────────────────── */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .explore-intro {
         grid-template-columns: 1fr;
     }
@@ -1401,11 +1401,8 @@
     }
 }
 
-@media (max-width: 600px) {
-    .explore-intro__title {
-        font-size: 22px;
-    }
-
+@media (max-width: 640px) {
+    /* .explore-intro__title : plus besoin de forcer 22px, --fs-2xl est déjà fluide */
     .explore-search-wrap {
         max-width: 100%;
     }
@@ -1452,11 +1449,36 @@
     height: 280px;
     position: relative;
     overflow: hidden;
+    border-radius: var(--radius-lg);
 }
 
-.pub-project__cover--film     { background: linear-gradient(135deg, #0a0e18 0%, #111826 50%, #0a1020 100%); }
-.pub-project__cover--serie    { background: linear-gradient(135deg, #0f0a18 0%, #1a1028 50%, #0f0a1a 100%); }
-.pub-project__cover--jeu_video{ background: linear-gradient(135deg, #0a120a 0%, #101c10 50%, #0a120a 100%); }
+.pub-project__cover--film      { --banner-color: var(--project-film); }
+.pub-project__cover--serie     { --banner-color: var(--project-serie); }
+.pub-project__cover--jeu_video { --banner-color: var(--project-jv); }
+
+/* Même recette de dégradé que la bannière profil (.pf-card__banner),
+   partant de la couleur du type de projet vers le bleu sombre du thème. */
+.pub-project__cover--film,
+.pub-project__cover--serie,
+.pub-project__cover--jeu_video {
+    background: linear-gradient(135deg,
+        var(--banner-color) 0%,
+        color-mix(in srgb, var(--banner-color) 40%, #0d0d18) 35%,
+        #0f0f1c 70%,
+        #131320 100%);
+}
+
+.pub-project__cover-glow {
+    position: absolute;
+    top: -150px;
+    left: -150px;
+    width: 640px;
+    height: 640px;
+    background: radial-gradient(circle,
+        color-mix(in srgb, var(--banner-color) 45%, transparent) 0%,
+        transparent 70%);
+    pointer-events: none;
+}
 
 .pub-project__cover-img {
     width: 100%;
@@ -1495,11 +1517,12 @@
     padding: 3px 10px;
     margin-bottom: 10px;
     border: 1px solid currentColor;
+    border-radius: var(--radius-sm);
 }
 
-.pub-project__type-badge--film     { color: var(--color-blue);   background: var(--color-blue-glow); }
-.pub-project__type-badge--serie    { color: var(--color-purple); background: var(--color-purple-glow); }
-.pub-project__type-badge--jeu_video{ color: var(--color-green);  background: var(--color-green-glow); }
+.pub-project__type-badge--film     { color: var(--project-film);  background: var(--project-film-dim); }
+.pub-project__type-badge--serie    { color: var(--project-serie); background: var(--project-serie-dim); }
+.pub-project__type-badge--jeu_video{ color: var(--project-jv);    background: var(--project-jv-dim); }
 
 .pub-project__title {
     font-size: clamp(24px, 4vw, 40px);
@@ -1562,6 +1585,7 @@
     font-size: 12px;
     font-weight: 800;
     text-decoration: none;
+    border-radius: var(--radius);
     transition: opacity .15s;
 }
 
@@ -1616,6 +1640,8 @@
     display: flex;
     flex-direction: column;
     gap: 1px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
 }
 
 .pub-element {
@@ -1690,6 +1716,7 @@
     padding: 2px 8px;
     border: 1px solid rgba(255, 179, 0, .25);
     background: rgba(255, 179, 0, .06);
+    border-radius: var(--radius-sm);
     transition: background .15s, border-color .15s;
     white-space: nowrap;
 }
@@ -1991,7 +2018,7 @@
 }
 
 .pub-reader__title {
-    font-size: 30px;
+    font-size: var(--fs-2xl);
     font-weight: 900;
     color: var(--text-main);
     line-height: 1.15;
@@ -2252,7 +2279,7 @@
 
 /* ── Responsive ────────────────────────────────────────────── */
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .pub-reader__layout {
         grid-template-columns: 1fr;
         padding: 0 24px 60px;
@@ -2268,7 +2295,7 @@
     .pub-reader__main {
         padding: 28px 0 0;
     }
-    .pub-reader__title { font-size: 24px; }
+    /* .pub-reader__title : font-size fluide via --fs-2xl */
 }
 
 @media (max-width: 640px) {
@@ -2308,6 +2335,7 @@
 .pub-sidebar-widget {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
     padding: 16px;
 }
 
@@ -2444,7 +2472,7 @@
 }
 
 /* ── Responsive ───────────────────────────────────────────── */
-@media (max-width: 860px) {
+@media (max-width: 768px) {
     .pub-project__body {
         grid-template-columns: 1fr;
     }
@@ -2461,14 +2489,11 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .pub-project__cover {
         height: 200px;
     }
-
-    .pub-project__title {
-        font-size: 22px;
-    }
+    /* .pub-project__title : déjà en clamp(24px, 4vw, 40px), pas d'override */
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -2477,6 +2502,93 @@
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Wrapper ─────────────────────────────────────────────── */
+/* ── Accueil exploration : hero ────────────────────────────── */
+.explore-hero {
+    text-align: center;
+    padding: 40px 0 32px;
+    margin-bottom: 8px;
+}
+
+.explore-hero__title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 8px;
+}
+
+.explore-hero__subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0 0 24px;
+}
+
+.explore-hero__search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 5px 7px 5px 16px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.explore-hero__search-icon { color: var(--text-muted); flex-shrink: 0; }
+
+.explore-hero__search-input {
+    flex: 1;
+    background: none;
+    border: none;!important;
+    outline: none;
+    color: var(--text-main);
+    font-size: 14px;
+    padding: 12px 0;
+    font-family: inherit;
+}
+
+.explore-hero__search-input::placeholder { color: var(--text-muted); }
+
+.explore-hero__search-btn {
+    background: var(--color-primary);
+    color: var(--text-dark);
+    border: none;
+    border-radius: var(--radius);
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.explore-hero__advanced {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.explore-hero__advanced:hover { color: var(--color-primary); }
+
+/* ── En-tête de la page recherche ──────────────────────────── */
+.xsearch-head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.xsearch-head__title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0;
+}
+
 .xsearch {
     display: flex;
     flex-direction: column;
@@ -2573,25 +2685,24 @@
 
 .xfilters-bar {
     display: flex;
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    border-top: none;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    background: none;
+    border: none;
 }
 
-/* Chaque colonne */
+/* Chaque colonne = un groupe label + contrôle (pill) */
 .xfilter-col {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    padding: 14px 16px;
+    padding: 0;
     flex: 1;
     min-width: 0;
     position: relative;
-    border-right: 1px solid var(--color-border);
-    border-top: 1px solid var(--color-border);
+    border: none;
 }
-
-.xfilter-col:last-child { border-right: none; }
 
 .xfilter-col--mode   { flex: 0 0 auto; min-width: 140px; }
 .xfilter-col--search { flex: 2; }
@@ -2627,6 +2738,7 @@
     transition: all 0.15s;
     flex: 1;
     justify-content: center;
+    border-radius: var(--radius);
 }
 
 .xfilter-mode-btn:hover        { border-color: color-mix(in srgb, var(--color-primary) 45%, transparent); color: var(--color-primary); }
@@ -2639,15 +2751,19 @@
     gap: 8px;
     background: var(--color-bg-input);
     border: 1px solid var(--color-border);
-    padding: 0 10px;
+    border-radius: var(--radius);
+    padding: 0 12px;
     transition: border-color 0.15s;
 }
 .xfilter-input-wrap:focus-within { border-color: var(--color-primary); }
 
-.xfilter-input {
+/* Sélecteur renforcé (.wrap .input) pour battre le global input[type=text]
+   qui impose sinon une bordure + fond → la fameuse bordure interne. */
+.xfilter-input-wrap .xfilter-input {
     flex: 1;
     background: none;
     border: none;
+    box-shadow: none;
     outline: none;
     color: var(--text-main);
     font-size: 13px;
@@ -2776,6 +2892,7 @@
     cursor: pointer;
     transition: border-color 0.15s;
     text-align: left;
+    border-radius: var(--radius);
 }
 
 .xfilter-btn:hover,
@@ -2864,6 +2981,7 @@
     flex-wrap: wrap;
     gap: 8px;
     min-height: 0;
+    margin-top: 16px;
 }
 
 .xfilters-chips-label {
@@ -2885,11 +3003,12 @@
     font-weight: 600;
     cursor: pointer;
     font-family: inherit;
+    border-radius: 999px;
     transition: background 0.15s, border-color 0.15s;
 }
 
 .xfilter-chip:hover             { background: rgba(255,68,68,0.1); border-color: var(--color-red); color: var(--color-red); }
-.xfilter-chip--genre            { background: var(--color-primary-dim); border-color: var(--color-primary-border); color: var(--color-primary); }
+.xfilter-chip--genre            { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); color: var(--text-main); }
 .xfilter-chip--genre:hover      { background: rgba(255,68,68,0.1); border-color: var(--color-red); color: var(--color-red); }
 
 .xfilter-chip__x {
@@ -2898,11 +3017,11 @@
     opacity: 0.7;
 }
 
-/* Chip mode — toujours en doré */
+/* Chip mode — uniformisé en gris comme les autres */
 .xfilter-chip--mode {
-    background: var(--color-primary-dim);
-    border-color: var(--color-primary-border);
-    color: var(--color-primary);
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.12);
+    color: var(--text-main);
 }
 .xfilter-chip--mode:hover {
     background: rgba(255,68,68,0.1);
@@ -2916,9 +3035,6 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 10px 16px;
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
     border-top: none;
     min-height: 0;
 }
@@ -2933,14 +3049,14 @@
 }
 
 /* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 960px) {
+@media (max-width: 1024px) {
     .xfilters-bar    { flex-wrap: wrap; }
-    .xfilter-col     { flex: 1 1 45%; border-bottom: 1px solid var(--color-border); }
+    .xfilter-col     { flex: 1 1 45%; }
     .xfilter-col--mode   { flex: 1 1 100%; }
     .xfilter-col--search { flex: 1 1 100%; }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .xfilter-col { flex: 1 1 100%; }
 }
 
@@ -3138,7 +3254,7 @@
 .efs-page-info { font-size: 12px; color: var(--text-muted); }
 
 /* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 680px) {
+@media (max-width: 640px) {
     .xsearch__bar       { flex-direction: column; }
     .xsearch__toggle    { border-right: none; border-bottom: 1px solid var(--color-border); }
     .xsearch__dropdowns { flex-direction: column; }
@@ -3274,6 +3390,40 @@
     min-height: 300px;
 }
 
+/* ── Grille d'exploration : nombre de colonnes FIXE par breakpoint ──
+   On force le compte de colonnes (au lieu de auto-fill) pour garder les
+   cartes sur une seule ligne : PC 4 · Tablette 3 · Mobile 2 (2x2).
+   minmax(0, 1fr) évite tout débordement si un titre est long.
+   Scopé à .explore-page → n'affecte ni le dashboard ni le profil. */
+.explore-page .sc-cards-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 1024px) {
+    .explore-page .sc-cards-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .explore-page .sc-cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ── Sections découverte : UNE seule rangée ────────────────────────
+   Les sections "Les derniers films / séries / …" sont des aperçus
+   (avec un lien "Voir tous"). On masque les cartes en surplus pour
+   coller au nombre de colonnes du breakpoint :
+     PC 4 (4×1) · Tablette 3 (3×1) · Mobile 4 (2×2).
+   PC et mobile veulent 4 → même règle ; seule la tablette descend à 3.
+   Scopé à .explore-section → n'affecte PAS la grille de résultats. */
+.explore-section .sc-cards-grid > *:nth-child(n+5) { display: none; }   /* PC & mobile : max 4 */
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .explore-section .sc-cards-grid > *:nth-child(n+4) { display: none; } /* Tablette : max 3 */
+}
+
 /* ── État chargement / vide ──────────────────────────────── */
 .efs-loading {
     grid-column: 1 / -1;
@@ -3364,11 +3514,11 @@
 .explore-searchbar-wrap { flex-shrink: 0; }
 
 /* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 960px) {
+@media (max-width: 1024px) {
     .explore-results-layout { grid-template-columns: 180px 1fr; gap: 16px; }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 640px) {
     .explore-results-layout { grid-template-columns: 1fr; }
     .efs-sidebar { position: static; }
 }
@@ -3742,7 +3892,7 @@
 }
 
 /* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .xp-body { grid-template-columns: 180px 1fr; gap: 20px; }
     .xp-grid { grid-template-columns: repeat(2, 1fr); }
 }

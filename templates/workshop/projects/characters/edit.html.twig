@@ -17,12 +17,9 @@
         </div>
     </header>
 
-    <turbo-frame id="modal-frame">
-        <div class="ws-modal-form-wrap" data-controller="advanced-form">
+    <div class="form-page-wrapper" data-controller="advanced-form">
 
-            <h2 class="ws-modal-form-title">{{ 'character.edit.title'|trans }}</h2>
-
-            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
 
             <div class="form-section">
                 <div class="form-section-title">{{ 'character.form.section_identity'|trans }}</div>
@@ -76,14 +73,14 @@
                 </div>
                 <form method="post"
                       action="{{ path('app_character_delete', {project_slug: project.slug, id: character.id}) }}"
-                      data-turbo-confirm="{{ 'character.edit.delete_confirm'|trans }}">
+                      data-action="submit->confirm-modal#intercept"
+                      data-confirm-message="{{ 'character.edit.delete_confirm'|trans }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete_character_' ~ character.id) }}">
                     <button type="submit" class="btn-danger">{{ 'character.edit.delete_btn'|trans }}</button>
                 </form>
             </div>
 
-        </div>
-    </turbo-frame>
+    </div>
 
 </div>
 {% endblock %}

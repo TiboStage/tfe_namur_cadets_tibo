@@ -48,6 +48,7 @@ class RegistrationController extends AbstractController
             $user->setPassword(
                 $hasher->hashPassword($user, $form->get('plainPassword')->getData())
             );
+            $user->setRoles(['ROLE_USER']);
 
             // Couleur d'avatar : valeur soumise depuis le form ou générée depuis le username
             $submittedColor = $form->get('avatarColor')->getData();

@@ -17,12 +17,9 @@
         </div>
     </header>
 
-    <turbo-frame id="modal-frame">
-        <div class="ws-modal-form-wrap" data-controller="advanced-form">
+    <div class="form-page-wrapper" data-controller="advanced-form">
 
-            <h2 class="ws-modal-form-title">{{ 'character.new.title'|trans }}</h2>
-
-            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
 
             <div class="form-section">
                 <div class="form-section-title">{{ 'character.form.section_identity'|trans }}</div>
@@ -61,18 +58,17 @@
             </div>
 
             <div class="form-actions">
-                <button type="button" class="btn-export" data-action="click->modal#close">
+                <a href="{{ path('app_character_index', {project_slug: project.slug}) }}" class="btn-export">
                     {{ 'common.cancel'|trans }}
-                </button>
+                </a>
                 <button type="submit" class="btn-creat">
                     {{ 'common.create'|trans }}
                 </button>
             </div>
 
-            {{ form_end(form) }}
+        {{ form_end(form) }}
 
-        </div>
-    </turbo-frame>
+    </div>
 
 </div>
 {% endblock %}

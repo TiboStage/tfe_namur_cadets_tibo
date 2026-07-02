@@ -108,7 +108,16 @@
                     <div></div>
                 </div>
 
+                {% set role_icons = {
+                    protagonist: 'lucide:user-round-check',
+                    antagonist:  'lucide:swords',
+                    secondary:   'lucide:users-round',
+                    figurant:    'lucide:user'
+                } %}
+
                 {% for character in characters %}
+                    {% set role_class = character.role ? 'character-role-' ~ character.role : '' %}
+                    {% set role_icon  = role_icons[character.role] ?? 'lucide:user' %}
 
                     {# ── VUE GRILLE ── #}
                     <div class="grid-only"
@@ -116,43 +125,63 @@
                          data-id="{{ character.id }}"
                          data-sort-name="{{ character.name|lower }}"
                          data-sort-date="{{ character.createdAt|date('Y-m-d') }}">
-                        <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}"
-                           class="character-card">
+                        <article class="character-card {{ role_class }}">
 
-                            <div class="character-card-header">
-                                <div class="character-card-avatar">
-                                    {{ character.name|first|upper }}
-                                </div>
-                                <div class="character-card-identity">
-                                    <span class="character-card-name">{{ character.name }}</span>
-                                    {% if character.nickname %}
-                                        <span class="character-card-nickname">« {{ character.nickname }} »</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <div class="character-card-body">
+                            <div class="character-card-top">
                                 {% if character.role %}
-                                    <span class="character-card-role-badge character-role-{{ character.role }}">
-                                        {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
+                                    <span class="character-card-role-badge {{ role_class }}">
                                         {{ ('character.role.' ~ character.role)|trans }}
                                     </span>
+                                {% else %}
+                                    <span class="character-card-role-badge">—</span>
                                 {% endif %}
+                                <span class="character-card-icon">
+                                    {{ ux_icon(role_icon, {class: 'icon-sm'}) }}
+                                </span>
+                            </div>
+
+                            <div class="character-card-main">
+                                <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}"
+                                   class="character-card-name-link">
+                                    <span class="character-card-name">{{ character.name }}</span>
+                                </a>
+                                <span class="character-card-nickname">{{ character.nickname ?? '' }}</span>
                                 {% if character.description %}
                                     <p class="character-card-excerpt">{{ character.description }}</p>
+                                {% else %}
+                                    <p class="character-card-excerpt character-card-excerpt--empty">{{ 'character.show.no_description'|trans }}</p>
                                 {% endif %}
                             </div>
 
                             <div class="character-card-footer">
-                                <span class="character-card-meta">
-                                    {{ character.createdAt|date('d/m/Y') }}
-                                </span>
-                                <span class="character-card-arrow">
-                                    {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
-                                </span>
+                                {% if not (readonly ?? false) %}
+                                    <form method="post"
+                                          action="{{ path('app_character_delete', {project_slug: project.slug, id: character.id}) }}"
+                                          data-action="submit->confirm-modal#intercept"
+                                          data-confirm-message="{{ 'character.edit.delete_confirm'|trans }}"
+                                          class="resource-card-delete-form">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_character_' ~ character.id) }}">
+                                        <button type="submit" class="resource-card-delete"
+                                                aria-label="{{ 'character.edit.delete_btn'|trans }}">
+                                            {{ ux_icon('lucide:trash-2', {class: 'icon-xs'}) }}
+                                        </button>
+                                    </form>
+                                    <a href="{{ path('app_character_edit', {project_slug: project.slug, id: character.id}) }}"
+                                       class="resource-card-edit">
+                                        {{ 'character.show.edit_btn'|trans }}
+                                        {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
+                                    </a>
+                                {% else %}
+                                    <span class="character-card-meta">{{ character.createdAt|date('d/m/Y') }}</span>
+                                    <a href="{{ path('app_character_show', {project_slug: project.slug, id: character.id}) }}"
+                                       class="resource-card-edit">
+                                        {{ 'character.index.title'|trans }}
+                                        {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
+                                    </a>
+                                {% endif %}
                             </div>
 
-                        </a>
+                        </article>
                     </div>
 
                     {# ── VUE LISTE ── #}
@@ -164,8 +193,8 @@
                        data-sort-date="{{ character.createdAt|date('Y-m-d') }}">
 
                         <div class="character-list-main">
-                            <div class="character-list-avatar">
-                                {{ character.name|first|upper }}
+                            <div class="character-list-avatar {{ role_class }}">
+                                {{ ux_icon(role_icon, {class: 'icon-xs'}) }}
                             </div>
                             <div>
                                 <div class="character-list-name">{{ character.name }}</div>
@@ -177,7 +206,7 @@
 
                         <div class="character-list-role">
                             {% if character.role %}
-                                <span class="character-card-role-badge character-role-{{ character.role }}">
+                                <span class="character-card-role-badge {{ role_class }}">
                                     {{ ('character.role.' ~ character.role)|trans }}
                                 </span>
                             {% else %}

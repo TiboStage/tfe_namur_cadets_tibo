@@ -13,7 +13,8 @@
        ════════════════════════════════════════════════════════════════════ #}
     <div class="pub-project__hero">
         {# Fond : image de couverture ou dégradé selon le type #}
-        <div class="pub-project__cover pub-project__cover--{{ project.projectType != 'custom' ? project.projectType : 'film' }}">
+        <div class="pub-project__cover pub-project__cover--{{ project.projectType }}">
+            <div class="pub-project__cover-glow"></div>
             {% if project.coverFilename %}
                 <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}"
                      alt="{{ project.title }}"
@@ -23,9 +24,11 @@
             <div class="pub-project__cover-overlay"></div>
         </div>
 
+
+
         {# Badge type #}
         <div class="pub-project__hero-content workshop-container">
-            <div class="pub-project__type-badge pub-project__type-badge--{{ project.projectType != 'custom' ? project.projectType : 'film' }}">
+            <div class="pub-project__type-badge pub-project__type-badge--{{ project.projectType }}">
                 {% if project.projectType == 'serie' %}
                     {{ ux_icon('lucide:tv-2', {class: 'icon-3xs'}) }}
                 {% elseif project.projectType == 'jeu_video' %}
@@ -65,6 +68,8 @@
             {% endif %}
         </div>
     </div>
+
+
 
     {# ════════════════════════════════════════════════════════════════════
        CORPS
@@ -173,6 +178,8 @@
                 </div>
             </div>
 
+
+
             {# Auteur #}
             <div class="pub-sidebar-widget">
                 <div class="pub-sidebar-widget__title">
@@ -202,6 +209,8 @@
                     </button>
                 {% endif %}
             </div>
+
+
 
             {# Membres collaborateurs #}
             {% if project.projectMembers|length > 0 %}
@@ -239,15 +248,6 @@
             {% endif %}
 
         </aside>
-    </div>
-
-    {# Retour à l'exploration #}
-    <div class="workshop-container pub-project__back">
-        <a href="{{ path('app_workshop_explore', {_locale: app.request.locale}) }}"
-           class="pub-project__back-link">
-            {{ ux_icon('lucide:arrow-left', {style: 'width:13px;height:13px'}) }}
-            Retour à l'exploration
-        </a>
     </div>
 
     {# ── Modal de signalement (singleton) ──────────────────────────── #}

@@ -61,7 +61,8 @@
             </div>
             <form method="post"
                   action="{{ path('app_location_delete', {project_slug: project.slug, id: location.id}) }}"
-                  data-turbo-confirm="{{ 'location.edit.delete_confirm'|trans }}">
+                  data-action="submit->confirm-modal#intercept"
+                  data-confirm-message="{{ 'location.edit.delete_confirm'|trans }}">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete_location_' ~ location.id) }}">
                 <button type="submit" class="btn-danger">{{ 'location.edit.delete_btn'|trans }}</button>
             </form>

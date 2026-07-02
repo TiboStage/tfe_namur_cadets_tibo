@@ -522,7 +522,7 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 860px) {
+@media (max-width: 768px) {
     .fn-topbar           { padding: 0 20px; }
     .fn-main             { padding: 32px 16px 60px; }
     .fn-type-grid        { grid-template-columns: 1fr; }

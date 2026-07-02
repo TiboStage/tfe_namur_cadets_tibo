@@ -504,7 +504,7 @@
 }
 
 /* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 700px) {
+@media (max-width: 640px) {
     .ps-wrapper { padding: 24px 16px 60px; }
     .ps-row { grid-template-columns: 1fr; }
     .ps-row--3cols { grid-template-columns: 1fr; }
@@ -961,7 +961,7 @@
 }
 
 /* Responsive modération */
-@media (max-width: 700px) {
+@media (max-width: 640px) {
     .mod-member-head { flex-wrap: wrap; }
     .mod-member-actions { width: 100%; justify-content: flex-end; }
     .mod-member-stats { flex-wrap: wrap; gap: 12px; }

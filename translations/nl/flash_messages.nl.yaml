@@ -31,18 +31,6 @@ project:
     structure_updated: "Structuur bijgewerkt."
     visibility_invalid: "Ongeldige zichtbaarheid."
 
-# ===== PERSONAGE =====
-character:
-    created: "Personage succesvol aangemaakt!"
-    updated: "Personage bijgewerkt."
-    deleted: "Personage verwijderd."
-
-# ===== LOCATIE =====
-location:
-    created: "Locatie succesvol aangemaakt!"
-    updated: "Locatie bijgewerkt."
-    deleted: "Locatie verwijderd."
-
 # ===== FORMULIERVALIDATIE =====
 validation:
     error: "Corrigeer de fouten voordat je verzendt"

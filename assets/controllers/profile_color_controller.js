@@ -18,13 +18,14 @@ const PALETTE = [
 
 export default class extends Controller {
 
-    static targets = ['avatarPreview', 'colorInput', 'swatchContainer'];
+    static targets = ['avatarPreview', 'colorInput', 'swatchContainer', 'banner'];
     static values  = { initial: String };
 
     connect() {
         this._current = this.initialValue || PALETTE[0];
         this._buildSwatches();
         this._highlight(this._current);
+        this._applyBanner(this._current);
     }
 
     _buildSwatches() {
@@ -57,7 +58,16 @@ export default class extends Controller {
             this.avatarPreviewTarget.style.backgroundColor = color;
         }
 
+        // Mettre à jour la bannière (dégradé depuis la couleur d'avatar)
+        this._applyBanner(color);
+
         this._highlight(color);
+    }
+
+    _applyBanner(color) {
+        if (this.hasBannerTarget) {
+            this.bannerTarget.style.setProperty('--banner-color', color);
+        }
     }
 
     _highlight(color) {

@@ -464,6 +464,11 @@ character:
         secondary: "Secondaire"
         figurant: "Figurant"
 
+    flash:
+        created: "Personnage créé avec succès !"
+        updated: "Personnage mis à jour."
+        deleted: "Personnage supprimé."
+
 
 # ===== LIEUX =====
 location:
@@ -535,12 +540,26 @@ location:
         historical: "Historique"
         futuristic: "Futuriste"
 
+    flash:
+        created: "Lieu créé avec succès !"
+        updated: "Lieu mis à jour."
+        deleted: "Lieu supprimé."
+
 # ===== EXPLORATION =====
 explore:
     tag: "Exploration"
     title: "Projets publics"
     projects_count: "projet(s) disponible(s)"
     search_placeholder: "Rechercher un projet, un auteur..."
+    home:
+        title: "Exploration"
+        subtitle: "Découvrez les univers narratifs publiés par la communauté."
+        search_placeholder: "Rechercher un projet, un auteur..."
+        search_btn: "Rechercher"
+        advanced: "Recherche avancée"
+    search:
+        title: "Recherche"
+        back: "Retour à l'exploration"
     filter:
         all: "Tous"
         film: "Film"
@@ -762,14 +781,29 @@ world_event:
         updated: "Événement « %title% » mis à jour."
         deleted: "Événement « %title% » supprimé."
 
+    type:
+        plot: "Intrigue"
+        character: "Personnage"
+        world: "Monde"
+        conflict: "Conflit"
+        reveal: "Révélation"
+        other: "Autres"
+
     form:
         section_main: "Informations"
         section_date: "Date narrative"
+        section_category: "Catégorie & liens"
         section_location: "Lieu lié"
         date_help: "Utilisez les dates fictives de votre univers (ex : An 342, Mois 7, Jour 15)"
-        event_type: "Type d'événement"
-        linked_scene: "Scène liée"
-        location: "Lieu"
+        event_type:
+            label: "Type d'événement"
+            placeholder: "Sélectionnez un type…"
+        linked_scene:
+            label: "Scène liée"
+            placeholder: "Aucune scène liée"
+        location:
+            label: "Lieu"
+            placeholder: "Aucun lieu lié"
         title:
             label: "Titre"
             placeholder: "Titre de l'événement..."
@@ -977,6 +1011,7 @@ nav:
     tasks: "Tâches"
     notes: "Notes"
     more: "Plus"
+    toggle_labels: "Réduire / étendre les libellés"
     collapse: "Réduire"
     readonly_mode: "Mode lecture"
     public_page: "Page publique"
@@ -1072,8 +1107,6 @@ comment_section:
         placeholder: "Partagez votre avis sur ce projet…"
         hint: "2 – 2000 caractères"
         submit: "Commenter"
-        login: "Connectez-vous"
-        login_suffix: "pour laisser un commentaire."
     empty: "Aucun commentaire pour l'instant. Soyez le premier !"
     reply: "↩ Répondre"
     cancel: "× Annuler"
@@ -1094,6 +1127,25 @@ creator:
         support_singular: "soutien"
         support_plural: "soutiens"
         see_profile: "Voir le profil"
+    edit_btn: "Modifier"
+    bio_placeholder_empty: "Ajoutez une courte description…"
+    member_since: "Membre depuis"
+    public_projects: "%count% projet public|%count% projets publics"
+    edit:
+        firstname: "Prénom"
+        lastname: "Nom"
+        bio: "Biographie"
+        bio_limit: "(500 caractères max)"
+        bio_placeholder: "Décrivez-vous en quelques mots, votre style, vos projets…"
+        save: "Sauvegarder"
+        cancel: "Annuler"
+    projects:
+        mine: "Mes projets"
+        of: "Projets de %name%"
+        create: "+ Créer"
+        empty_own: "Vous n'avez pas encore de projets. Créez-en un !"
+        empty_other: "Ce créateur n'a pas encore publié de projets."
+    back: "Retour à l'exploration"
 
 # ===== CARTE PROJET PUBLIC =====
 project_public:
@@ -1125,4 +1177,41 @@ project_show_public:
     workshop_btn_owner: "Gérer dans l'atelier"
     workshop_btn_collab: "Ouvrir l'atelier"
     about_title: "À propos"
+
+# ════════════ MODÉRATION ════════════
+moderation:
+    title: "Modération"
+    title_full: "Modération du projet"
+    manage_permissions: "Gérer les permissions"
+    owner_section: "Propriétaire du projet"
+    owner_badge: "Propriétaire"
+    collaborators: "Collaborateurs"
+    empty: "Aucun collaborateur sur ce projet."
+    invite_collaborators: "Inviter des collaborateurs"
+    invite: "Inviter"
+    member_since: "Membre depuis"
+    remove: "Retirer"
+    remove_title: "Retirer %name% du projet"
+    remove_confirm: "Retirer %name% du projet ?"
+    active_permissions: "Permissions actives"
+    customized: "personnalisées"
+    default: "par défaut"
+    stat_actions: "actions"
+    stat_creations: "créations"
+    stat_edits: "modifications"
+    recent_activity: "Activité récente"
+    no_activity: "Aucune activité enregistrée pour ce membre."
+    actions:
+        project_create: "Projet créé"
+        project_edit: "Projet modifié"
+        manuscript_create: "Scène créée"
+        manuscript_edit: "Scène modifiée"
+        manuscript_delete: "Scène supprimée"
+        character_create: "Personnage créé"
+        character_edit: "Personnage modifié"
+        location_create: "Lieu créé"
+        location_edit: "Lieu modifié"
+        note_create: "Note créée"
+        task_create: "Tâche créée"
+        task_complete: "Tâche terminée"
 

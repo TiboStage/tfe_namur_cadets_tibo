@@ -48,7 +48,9 @@
      data-fountain-editor-words-per-page-value="{{ project.settings.ms_words_per_page ?? 170 }}"
      data-fountain-editor-reading-wpm-value="{{ project.settings.ms_reading_wpm ?? 200 }}"
      data-fountain-editor-screen-time-per-page-value="{{ project.settings.ms_screen_time_per_page ?? 60 }}"
-     data-fountain-editor-i18n-value="{{ _editorI18n|json_encode|e('html_attr') }}">
+     data-fountain-editor-i18n-value="{{ _editorI18n|json_encode|e('html_attr') }}"
+     data-fountain-editor-font-regular-url-value="{{ asset('fonts/display/CourierPrime-Regular.ttf') }}"
+     data-fountain-editor-font-bold-url-value="{{ asset('fonts/display/CourierPrime-Bold.ttf') }}">
 
     {# ══════════════════════════════════════════════════════════
        ZONE CENTRALE

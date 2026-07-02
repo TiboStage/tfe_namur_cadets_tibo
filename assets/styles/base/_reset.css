@@ -134,20 +134,5 @@ html, body {
      toutes les classes .container, pub-reader, explore, etc.
    ═══════════════════════════════════════════════════════════════════ */
 
-@media (max-width: 1024px) {
-    :root {
-        --container-padding: 32px;
-    }
-}
-
-@media (max-width: 768px) {
-    :root {
-        --container-padding: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    :root {
-        --container-padding: 16px;
-    }
-}
+/* --container-padding est désormais fluide (clamp) dans _variables.css :
+   plus besoin de ces 3 media queries — la gouttière s'ajuste en continu. */

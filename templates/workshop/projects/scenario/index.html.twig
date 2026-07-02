@@ -146,7 +146,9 @@
 <div class="workshop-container"
      data-controller="ms-export"
      data-ms-export-scripts-value="{{ leafScripts|json_encode|e('html_attr') }}"
-     data-ms-export-project-title-value="{{ project.title|e('html_attr') }}">
+     data-ms-export-project-title-value="{{ project.title|e('html_attr') }}"
+     data-ms-export-font-regular-url-value="{{ asset('fonts/display/CourierPrime-Regular.ttf') }}"
+     data-ms-export-font-bold-url-value="{{ asset('fonts/display/CourierPrime-Bold.ttf') }}">
 
     <header class="page-header">
         <div>

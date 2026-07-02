@@ -13,6 +13,7 @@ import { Controller } from '@hotwired/stimulus';
  */
 export default class extends Controller {
     static targets = ['skeleton', 'content'];
+    static values  = { total: Number };
 
     connect() {
         this._currentBreakpoint = this._breakpoint();
@@ -59,9 +60,14 @@ export default class extends Controller {
         const grid  = this.skeletonTarget;
         const cards = grid.querySelectorAll('.sc-card--skeleton');
 
-        // 2. Affiche seulement N cartes skeleton selon le breakpoint cible
+        // 2. N'affiche jamais plus de cartes qu'il n'y a de projets :
+        //    min(per_page cible, total réel de projets)
+        const visible = this.hasTotalValue
+            ? Math.min(targetCount, this.totalValue)
+            : targetCount;
+
         cards.forEach((card, i) => {
-            card.hidden = i >= targetCount;
+            card.hidden = i >= visible;
         });
 
         // 3. Affiche la grille skeleton avec un léger fade-in

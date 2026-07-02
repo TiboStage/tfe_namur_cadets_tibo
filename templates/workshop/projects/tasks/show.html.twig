@@ -27,7 +27,8 @@
 
                 <form method="post"
                       action="{{ path('app_task_delete', {project_slug: project.slug, id: task.id}) }}"
-                      data-turbo-confirm="{{ 'task.confirm_delete'|trans }}"
+                      data-action="submit->confirm-modal#intercept"
+                      data-confirm-message="{{ 'task.confirm_delete'|trans }}"
                       class="d-inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
                     <button type="submit" class="btn-delete">
@@ -41,10 +42,10 @@
         {# Contenu principal #}
         <div class="content-wrapper">
 
-            <div class="info-card">
+            <div class="detail-card">
 
                 {# Statut et priorité #}
-                <div class="info-card-section">
+                <div class="detail-card__section">
                     <div class="task-badges">
                         <span class="badge-status badge-status-{{ task.status }}">
                             {{ ('task.status.' ~ task.status)|trans }}
@@ -56,8 +57,8 @@
                 </div>
 
                 {# Description #}
-                <div class="info-card-section">
-                    <h3 class="info-card-title">
+                <div class="detail-card__section">
+                    <h3 class="detail-card__title">
                         {{ ux_icon('lucide:file-text', {class: 'icon-sm'}) }}
                         {{ 'task.show.description'|trans }}
                     </h3>
@@ -67,16 +68,14 @@
                 </div>
 
                 {# Assignation #}
-                <div class="info-card-section">
-                    <h3 class="info-card-title">
+                <div class="detail-card__section">
+                    <h3 class="detail-card__title">
                         {{ ux_icon('lucide:user', {class: 'icon-sm'}) }}
                         {{ 'task.show.assigned_to'|trans }}
                     </h3>
                     {% if task.assignedTo %}
                         <div class="task-assignee-display">
-                            <div class="assignee-avatar-large">
-                                {{ task.assignedTo.username|first|upper }}
-                            </div>
+                            {{ include('_partials/_user_avatar.html.twig', {user: task.assignedTo, size: 'lg', link: true}) }}
                             <div>
                                 <div class="assignee-name">{{ task.assignedTo.username }}</div>
                                 {% if task.assignedTo.email %}
@@ -90,12 +89,13 @@
                 </div>
 
                 {# Créateur #}
-                <div class="info-card-section">
-                    <h3 class="info-card-title">
+                <div class="detail-card__section">
+                    <h3 class="detail-card__title">
                         {{ ux_icon('lucide:user-check', {class: 'icon-sm'}) }}
                         {{ 'task.show.created_by'|trans }}
                     </h3>
                     <div class="task-creator">
+                        {{ include('_partials/_user_avatar.html.twig', {user: task.createdBy, size: 'sm', link: true}) }}
                         <span class="creator-name">{{ task.createdBy.username }}</span>
                         <span class="creator-date">{{ task.createdAt|date('d/m/Y H:i') }}</span>
                     </div>

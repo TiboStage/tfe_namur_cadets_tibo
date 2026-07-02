@@ -242,16 +242,12 @@
                         {{ 'projects.show.create_scene'|trans }}
                     </a>
                     <a href="{{ path('app_character_new', {project_slug: project.slug}) }}"
-                       class="proj-quick-btn"
-                       data-turbo-frame="modal-frame"
-                       data-action="click->modal#open">
+                       class="proj-quick-btn">
                         {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }}
                         {{ 'projects.show.new_character'|trans }}
                     </a>
                     <a href="{{ path('app_location_new', {project_slug: project.slug}) }}"
-                       class="proj-quick-btn"
-                       data-turbo-frame="modal-frame"
-                       data-action="click->modal#open">
+                       class="proj-quick-btn">
                         {{ ux_icon('lucide:map-pin-plus', {class: 'icon-xs'}) }}
                         {{ 'projects.show.new_location'|trans }}
                     </a>

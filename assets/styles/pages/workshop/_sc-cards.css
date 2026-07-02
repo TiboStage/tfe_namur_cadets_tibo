@@ -556,7 +556,7 @@
     gap: 16px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .sc-cards-grid {
         grid-template-columns: 1fr;
     }

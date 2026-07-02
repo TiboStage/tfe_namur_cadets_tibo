@@ -20,6 +20,7 @@
 
 ###> Context Pack Claude (ne pas commit - pour le TFE) ###
 docs/claude/
+.claude/
 ###< Context Pack Claude ###
 
 ###> IDE ###

@@ -89,9 +89,8 @@ abstract class AbstractProjectResourceController extends AbstractController
 
             $this->flashSuccess($this->getTranslationKey() . '.flash.created');
 
-            return $this->redirectToRoute($this->getRoutePrefix() . '_show', [
+            return $this->redirectToRoute($this->getRoutePrefix() . '_index', [
                 'project_slug' => $project->getSlug(),
-                'id'           => $entity->getId(),
             ]);
         }
 
@@ -265,7 +264,7 @@ abstract class AbstractProjectResourceController extends AbstractController
     {
         $this->addFlash(
             'success',
-            $this->translator->trans($key, $params, 'validators')
+            $this->translator->trans($key, $params, 'workshop')
         );
     }
 }

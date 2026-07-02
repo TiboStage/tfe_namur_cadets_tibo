@@ -4,33 +4,34 @@
 {% set current_route = app.request.attributes.get('_route') %}
 
 {% block body %}
-    <div class="admin-layout">
+    <div class="modo-layout">
 
-        {# 1. SIDEBAR ─────────────────────────────────────────────── #}
-        <aside class="admin-sidebar">
-            <div class="sidebar-brand">
+        {# ── SIDEBAR (même structure que le panneau modo) ───────────── #}
+        <aside class="modo-sidebar">
+
+            <div class="modo-sidebar__header">
                 <span class="brand-dot"></span>
-                <span>Scénart <span class="brand-badge">Admin</span></span>
+                <span class="modo-sidebar__brand">Scénart <span class="brand-badge">Admin</span></span>
             </div>
 
-            <nav class="sidebar-menu">
+            <nav class="modo-nav">
                 <a href="{{ path('admin_dashboard', {_locale: app.request.locale}) }}"
-                   class="menu-item {{ current_route == 'admin_dashboard' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route == 'admin_dashboard' ? 'active' : '' }}">
                     {{ ux_icon('lucide:layout-dashboard', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.dashboard'|trans({}, 'admin') }}</span>
                 </a>
                 <a href="{{ path('admin_users', {_locale: app.request.locale}) }}"
-                   class="menu-item {{ current_route starts with 'admin_user' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route starts with 'admin_user' ? 'active' : '' }}">
                     {{ ux_icon('lucide:users', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.users'|trans({}, 'admin') }}</span>
                 </a>
                 <a href="{{ path('admin_projects', {_locale: app.request.locale}) }}"
-                   class="menu-item {{ current_route starts with 'admin_project' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route starts with 'admin_project' ? 'active' : '' }}">
                     {{ ux_icon('lucide:folder', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.projects'|trans({}, 'admin') }}</span>
                 </a>
                 <a href="{{ path('admin_moderation', {_locale: app.request.locale}) }}"
-                   class="menu-item alert-item {{ current_route starts with 'admin_moderation' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route starts with 'admin_moderation' ? 'active' : '' }}">
                     {{ ux_icon('lucide:triangle-alert', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.moderation'|trans({}, 'admin') }}</span>
                     {% set flagged_count = flagged_count ?? 0 %}
@@ -39,49 +40,45 @@
                     {% endif %}
                 </a>
                 <a href="{{ path('admin_config', {_locale: app.request.locale}) }}"
-                   class="menu-item {{ current_route == 'admin_config' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route == 'admin_config' ? 'active' : '' }}">
                     {{ ux_icon('lucide:settings-2', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.config'|trans({}, 'admin') }}</span>
                 </a>
                 <a href="{{ path('admin_doc_index', {_locale: app.request.locale}) }}"
-                   class="menu-item {{ current_route starts with 'admin_doc_' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route starts with 'admin_doc_' ? 'active' : '' }}">
                     {{ ux_icon('lucide:book-open', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.documentation'|trans({}, 'admin') }}</span>
                 </a>
                 <a href="{{ path('admin_genre_index', {_locale: app.request.locale}) }}"
-                   class="menu-item {{ current_route starts with 'admin_genre' ? 'active' : '' }}">
+                   class="modo-nav__item {{ current_route starts with 'admin_genre' ? 'active' : '' }}">
                     {{ ux_icon('lucide:tag', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.genres'|trans({}, 'admin') }}</span>
                 </a>
             </nav>
 
-            <div class="sidebar-footer">
+            <footer class="modo-sidebar__footer">
                 <a href="{{ path('modo_dashboard', {_locale: app.request.locale}) }}" class="sidebar-modo-link">
                     {{ ux_icon('lucide:shield-check', {class: 'icon-xs'}) }}
-                    {{ 'layout.menu.moderator_panel'|trans({}, 'admin') }}
+                    <span>{{ 'layout.menu.moderator_panel'|trans({}, 'admin') }}</span>
                 </a>
-            </div>
+                <span class="admin-user-pill">
+                    {{ ux_icon('lucide:shield', {class: 'icon-xs'}) }}
+                    {{ app.user.username ?? 'Admin' }}
+                </span>
+                <a href="{{ path('app_workshop_dashboard') }}" class="btn-exit-admin" data-turbo="false">
+                    {{ ux_icon('lucide:log-out', {class: 'icon-xs'}) }}
+                    {{ 'layout.exit'|trans({}, 'admin') }}
+                </a>
+            </footer>
         </aside>
 
-        {# 2. CONTENU PRINCIPAL ────────────────────────────────────── #}
-        <div class="admin-main">
-            <header class="admin-navbar">
-                <div class="navbar-left">
-                    <h2>{% block admin_title %}{{ 'layout.title'|trans({}, 'admin') }}{% endblock %}</h2>
-                </div>
-                <div class="navbar-right">
-                    <span class="admin-user-pill">
-                        {{ ux_icon('lucide:shield', {class: 'icon-xs'}) }}
-                        {{ app.user.username ?? 'Admin' }}
-                    </span>
-                    <a href="{{ path('app_workshop_dashboard') }}" class="btn-exit-admin" data-turbo="false">
-                        {{ ux_icon('lucide:log-out', {class: 'icon-xs'}) }}
-                        {{ 'layout.exit'|trans({}, 'admin') }}
-                    </a>
-                </div>
-            </header>
+        {# ── CONTENU ───────────────────────────────────────────────── #}
+        <main class="modo-main">
+            <div class="modo-content">
+                <header class="modo-page-header">
+                    <h1>{% block admin_title %}{{ 'layout.title'|trans({}, 'admin') }}{% endblock %}</h1>
+                </header>
 
-            <main class="admin-content-view">
                 {% for flash_type, messages in app.flashes %}
                     {% for message in messages %}
                         <div class="admin-flash admin-flash--{{ flash_type }}">{{ message }}</div>
@@ -89,7 +86,7 @@
                 {% endfor %}
 
                 {% block admin_content %}{% endblock %}
-            </main>
-        </div>
+            </div>
+        </main>
     </div>
 {% endblock %}

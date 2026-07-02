@@ -66,9 +66,9 @@
     align-items: center;
     gap: 8px;
     height: 36px;
-    min-width: 150px;
     padding: 0 10px 0 12px;
     border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
     background: none;
     cursor: pointer;
     font-family: inherit;

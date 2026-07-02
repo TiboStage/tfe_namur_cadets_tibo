@@ -68,13 +68,20 @@
 .pf-card {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
     margin-bottom: 36px;
     overflow: hidden;
 }
 
+/* Dégradé partant de la couleur d'avatar (--banner-color, injectée en inline
+   et mise à jour en live par le color picker) vers le bleu sombre du thème. */
 .pf-card__banner {
     height: 110px;
-    background: linear-gradient(135deg, #0d0d18 0%, #0f0f1c 50%, #131320 100%);
+    background: linear-gradient(135deg,
+        var(--banner-color, #0d0d18) 0%,
+        color-mix(in srgb, var(--banner-color, #131320) 40%, #0d0d18) 35%,
+        #0f0f1c 70%,
+        #131320 100%);
     position: relative;
     overflow: hidden;
 }
@@ -85,7 +92,9 @@
     left: -60px;
     width: 280px;
     height: 280px;
-    background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);
+    background: radial-gradient(circle,
+        color-mix(in srgb, var(--banner-color, var(--color-primary)) 45%, transparent) 0%,
+        transparent 70%);
     pointer-events: none;
 }
 
@@ -103,6 +112,7 @@
     height: 88px;
     margin-top: -44px;
     border: 3px solid var(--color-bg-card);
+    border-radius: 11px;     /* respecte le radius de l'avatar + la bordure 3px */
     overflow: hidden;
     flex-shrink: 0;
     position: relative;
@@ -117,7 +127,7 @@
 }
 
 .pf-card__username {
-    font-size: 22px;
+    font-size: var(--fs-lg);
     font-weight: 900;
     color: var(--text-main);
     letter-spacing: -0.5px;
@@ -285,7 +295,7 @@
 .pf-stat:last-child { border-bottom: none; }
 
 /* ── Responsive ───────────────────────────────────────────── */
-@media (max-width: 860px) {
+@media (max-width: 768px) {
     .profile-body  { padding: 32px 20px 60px; }
     .profile-topbar { padding: 0 20px; }
 
@@ -299,5 +309,5 @@
 
     .pf-card__header { padding: 0 20px 20px; }
     .pf-card__avatar { width: 72px; height: 72px; margin-top: -36px; }
-    .pf-card__username { font-size: 18px; }
+    /* .pf-card__username : font-size fluide via --fs-lg */
 }

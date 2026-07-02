@@ -16,10 +16,20 @@
 {% set open_tasks   = project.tasks|filter(t => t.status != 'done')|length %}
 {% set active_notes = project.notes|filter(n => n.status != 'archived')|length %}
 
-<div class="project-bar">
+<div class="project-bar" data-controller="project-bar">
 
     {# ── Project switcher ─────────────────────────────────── #}
     <div class="project-bar__left">
+
+        {# Bascule mode étendu (icône + texte) / compact (picto seul) #}
+        <button class="project-bar__mode-toggle"
+                type="button"
+                data-action="click->project-bar#toggle"
+                title="{{ 'nav.toggle_labels'|trans }}"
+                aria-label="{{ 'nav.toggle_labels'|trans }}">
+            {{ ux_icon('lucide:panel-left-close', {class: 'icon-xs project-bar__mode-icon project-bar__mode-icon--collapse'}) }}
+            {{ ux_icon('lucide:panel-left-open', {class: 'icon-xs project-bar__mode-icon project-bar__mode-icon--expand'}) }}
+        </button>
 
         <div class="project-bar__switcher" data-controller="dropdown">
 
@@ -77,27 +87,27 @@
         <a href="{{ path('app_project_show', {slug: project.slug}) }}"
            class="project-bar__tab {{ route == 'app_project_show' ? 'active' : '' }}">
             {{ ux_icon('lucide:layout-grid', {class: 'icon-xs'}) }}
-            {{ 'nav.overview'|trans }}
+            <span class="project-bar__tab-label">{{ 'nav.overview'|trans }}</span>
         </a>
 
         <a href="{{ path('app_manuscript_index', {project_slug: project.slug}) }}"
            class="project-bar__tab {{ route starts with 'app_manuscript' ? 'active' : '' }}">
             {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }}
-            {{ 'nav.manuscript'|trans }}
+            <span class="project-bar__tab-label">{{ 'nav.manuscript'|trans }}</span>
             {% if se_count > 0 %}<span class="project-bar__count">{{ se_count }}</span>{% endif %}
         </a>
 
         <a href="{{ path('app_character_index', {project_slug: project.slug}) }}"
            class="project-bar__tab {{ route starts with 'app_character' ? 'active' : '' }}">
             {{ ux_icon('lucide:user', {class: 'icon-xs'}) }}
-            {{ 'nav.characters'|trans }}
+            <span class="project-bar__tab-label">{{ 'nav.characters'|trans }}</span>
             {% if char_count > 0 %}<span class="project-bar__count">{{ char_count }}</span>{% endif %}
         </a>
 
         <a href="{{ path('app_location_index', {project_slug: project.slug}) }}"
            class="project-bar__tab {{ route starts with 'app_location' ? 'active' : '' }}">
             {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }}
-            {{ 'nav.locations'|trans }}
+            <span class="project-bar__tab-label">{{ 'nav.locations'|trans }}</span>
             {% if loc_count > 0 %}<span class="project-bar__count">{{ loc_count }}</span>{% endif %}
         </a>
 
@@ -139,21 +149,21 @@
         <a href="{{ path('app_world_event_index', {project_slug: project.slug}) }}"
            class="project-bar__tab project-bar__tab--secondary {{ route starts with 'app_world_event' ? 'active' : '' }}">
             {{ ux_icon('lucide:calendar-clock', {class: 'icon-xs'}) }}
-            {{ 'nav.timeline'|trans }}
+            <span class="project-bar__tab-label">{{ 'nav.timeline'|trans }}</span>
             {% if we_count > 0 %}<span class="project-bar__count">{{ we_count }}</span>{% endif %}
         </a>
 
         <a href="{{ path('app_task_index', {project_slug: project.slug}) }}"
            class="project-bar__tab project-bar__tab--secondary {{ route starts with 'app_task' ? 'active' : '' }}">
             {{ ux_icon('lucide:check-square', {class: 'icon-xs'}) }}
-            {{ 'nav.tasks'|trans }}
+            <span class="project-bar__tab-label">{{ 'nav.tasks'|trans }}</span>
             {% if open_tasks > 0 %}<span class="project-bar__count">{{ open_tasks }}</span>{% endif %}
         </a>
 
         <a href="{{ path('app_note_index', {project_slug: project.slug}) }}"
            class="project-bar__tab project-bar__tab--secondary {{ route starts with 'app_note' ? 'active' : '' }}">
             {{ ux_icon('lucide:notebook', {class: 'icon-xs'}) }}
-            {{ 'nav.notes'|trans }}
+            <span class="project-bar__tab-label">{{ 'nav.notes'|trans }}</span>
             {% if active_notes > 0 %}<span class="project-bar__count">{{ active_notes }}</span>{% endif %}
         </a>
 
@@ -231,9 +241,9 @@
             {% if app.user.id == project.createdBy.id %}
                 <a href="{{ path('app_project_moderation', {_locale: app.request.locale, slug: project.slug}) }}"
                    class="project-bar__settings-btn {{ route == 'app_project_moderation' ? 'active' : '' }}"
-                   title="Modération">
+                   title="{{ 'moderation.title'|trans }}">
                     {{ ux_icon('lucide:shield', {class: 'icon-xs'}) }}
-                    <span class="project-bar__settings-label">Modération</span>
+                    <span class="project-bar__settings-label">{{ 'moderation.title'|trans }}</span>
                 </a>
             {% endif %}
             <a href="{{ path('app_project_edit', {slug: project.slug}) }}"

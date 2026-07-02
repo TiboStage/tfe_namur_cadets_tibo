@@ -7,8 +7,7 @@
 {% set type_labels = {
     film:      'settings.types.film'|trans({}, 'workshop'),
     serie:     'settings.types.serie'|trans({}, 'workshop'),
-    jeu_video: 'settings.types.jeu_video'|trans({}, 'workshop'),
-    custom:    'settings.types.custom'|trans({}, 'workshop')
+    jeu_video: 'settings.types.jeu_video'|trans({}, 'workshop')
 } %}
 {% set status_labels = {
     draft:      'settings.statuses.draft'|trans({}, 'workshop'),
@@ -169,22 +168,39 @@
 
                 <script>
                 (function () {
-                    const chips     = document.querySelectorAll('.ps-genre-chip');
+                    const grid      = document.getElementById('ps-genre-grid');
                     const search    = document.getElementById('ps-genre-search');
                     const noResults = document.getElementById('ps-genre-no-results');
-                    if (!search) return;
-                    search.addEventListener('input', function () {
-                        const q = this.value.toLowerCase().trim();
-                        let visible = 0;
-                        chips.forEach(chip => {
-                            const label     = chip.dataset.label || '';
-                            const isChecked = chip.querySelector('.ps-genre-checkbox').checked;
-                            const show      = !q || isChecked || label.includes(q);
-                            chip.style.display = show ? '' : 'none';
-                            if (show) visible++;
+                    if (!grid) return;
+
+                    const MAX        = 3;
+                    const chips      = grid.querySelectorAll('.ps-genre-chip');
+                    const checkboxes = grid.querySelectorAll('.ps-genre-checkbox');
+
+                    // ── Limite à 3 genres : grise les non cochés quand la limite est atteinte ──
+                    // (le visuel coché / grisé est géré en CSS via :has(:checked) / :has(:disabled))
+                    function syncLimit() {
+                        const atMax = grid.querySelectorAll('.ps-genre-checkbox:checked').length >= MAX;
+                        checkboxes.forEach(cb => { cb.disabled = atMax && !cb.checked; });
+                    }
+                    checkboxes.forEach(cb => cb.addEventListener('change', syncLimit));
+                    syncLimit(); // reflète les genres déjà enregistrés au chargement
+
+                    // ── Recherche ──
+                    if (search) {
+                        search.addEventListener('input', function () {
+                            const q = this.value.toLowerCase().trim();
+                            let visible = 0;
+                            chips.forEach(chip => {
+                                const label     = chip.dataset.label || '';
+                                const isChecked = chip.querySelector('.ps-genre-checkbox').checked;
+                                const show      = !q || isChecked || label.includes(q);
+                                chip.style.display = show ? '' : 'none';
+                                if (show) visible++;
+                            });
+                            if (noResults) noResults.style.display = (visible === 0) ? '' : 'none';
                         });
-                        if (noResults) noResults.style.display = (visible === 0) ? '' : 'none';
-                    });
+                    }
                 })();
                 </script>
 

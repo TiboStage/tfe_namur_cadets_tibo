@@ -19,16 +19,19 @@
    pour que les data-action="click->modal#open" des triggers
    puissent remonter jusqu'à lui via la chaîne d'ancêtres.
    ══════════════════════════════════════════════════════════ #}
-<div data-controller="modal">
+<div data-controller="modal confirm-modal">
 
     {% include 'workshop/_partials/_topbar.html.twig' %}
-    {% include 'workshop/_partials/_project_bar.html.twig' %}
 
-    <main class="workspace-main">
-        <div class="workspace-content">
-            {% block project_content %}{% endblock %}
-        </div>
-    </main>
+    <div class="workspace-body">
+        {% include 'workshop/_partials/_project_bar.html.twig' %}
+
+        <main class="workspace-main">
+            <div class="workspace-content">
+                {% block project_content %}{% endblock %}
+            </div>
+        </main>
+    </div>
 
     {# ══════════════════════════════════════════════════════════
        MODAL GLOBAL — overlay cible du controller
@@ -50,6 +53,31 @@
                     <span class="ws-modal-spinner"></span>
                 </div>
             </turbo-frame>
+        </div>
+    </div>
+
+    {# ══════════════════════════════════════════════════════════
+       POPUP DE CONFIRMATION GLOBAL — remplace window.confirm()
+       ══════════════════════════════════════════════════════════ #}
+    <div class="confirm-modal"
+         data-confirm-modal-target="overlay"
+         data-action="click->confirm-modal#backdropClick">
+        <div class="confirm-modal-box">
+            <div class="confirm-modal-icon">
+                {{ ux_icon('lucide:triangle-alert', {class: 'icon-md'}) }}
+            </div>
+            <p class="confirm-modal-message" data-confirm-modal-target="message"></p>
+            <div class="confirm-modal-actions">
+                <button type="button" class="btn-export" data-action="click->confirm-modal#cancel">
+                    {{ 'common.cancel'|trans({}, 'workshop') }}
+                </button>
+                <button type="button"
+                        class="btn-danger"
+                        data-confirm-modal-target="confirmBtn"
+                        data-action="click->confirm-modal#confirm">
+                    {{ 'common.delete'|trans({}, 'workshop') }}
+                </button>
+            </div>
         </div>
     </div>
 

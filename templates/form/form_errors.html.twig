@@ -20,6 +20,29 @@
     {% endif %}
 {% endblock %}
 
+{# ── Label : ajoute un astérisque visuel sur les champs obligatoires ─── #}
+{% block form_label %}
+    {% if label is not same as(false) %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {% if label is empty %}
+            {% if label_format is not empty %}
+                {% set label = label_format|replace({
+                    '%name%': name,
+                    '%id%': id,
+                }) %}
+            {% else %}
+                {% set label = name|humanize %}
+            {% endif %}
+        {% endif %}
+        <label{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>{{ translation_domain is same as(false) ? label : label|trans(label_translation_parameters, translation_domain) }}{% if required %} <span class="required">*</span>{% endif %}</label>
+    {% endif %}
+{% endblock %}
+
 {# ── Row complet : ajoute .is-invalid sur le widget si erreurs ───────── #}
 {% block form_row %}
     {% set widget_attr = {} %}

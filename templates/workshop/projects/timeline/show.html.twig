@@ -25,7 +25,8 @@
 
                 <form method="post"
                       action="{{ path('app_world_event_delete', {project_slug: project.slug, id: event.id}) }}"
-                      data-turbo-confirm="{{ 'world_event.confirm_delete'|trans }}"
+                      data-action="submit->confirm-modal#intercept"
+                      data-confirm-message="{{ 'world_event.confirm_delete'|trans }}"
                       class="d-inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
                     <button type="submit" class="btn-delete">
@@ -40,11 +41,11 @@
         <div class="content-wrapper">
 
             {# Card avec les informations #}
-            <div class="info-card">
+            <div class="detail-card">
 
                 {# Date narrative #}
-                <div class="info-card-section">
-                    <h3 class="info-card-title">
+                <div class="detail-card__section">
+                    <h3 class="detail-card__title">
                         {{ ux_icon('lucide:calendar', {class: 'icon-sm'}) }}
                         {{ 'world_event.show.date'|trans }}
                     </h3>
@@ -61,8 +62,8 @@
 
                 {# Description #}
                 {% if event.description %}
-                    <div class="info-card-section">
-                        <h3 class="info-card-title">
+                    <div class="detail-card__section">
+                        <h3 class="detail-card__title">
                             {{ ux_icon('lucide:file-text', {class: 'icon-sm'}) }}
                             {{ 'world_event.show.description'|trans }}
                         </h3>
@@ -74,8 +75,8 @@
 
                 {# Lieu lié #}
                 {% if event.location %}
-                    <div class="info-card-section">
-                        <h3 class="info-card-title">
+                    <div class="detail-card__section">
+                        <h3 class="detail-card__title">
                             {{ ux_icon('lucide:map-pin', {class: 'icon-sm'}) }}
                             {{ 'world_event.show.location'|trans }}
                         </h3>
@@ -87,7 +88,7 @@
                                 </div>
                                 <div class="entity-info">
                                     <span class="entity-name">{{ event.location.name }}</span>
-                                    <span class="entity-type">{{ 'location.type.' ~ event.location.type|trans }}</span>
+                                    <span class="entity-type">{{ ('location.type.' ~ event.location.type)|trans }}</span>
                                 </div>
                             </a>
                         </div>
@@ -95,7 +96,7 @@
                 {% endif %}
 
                 {# Métadonnées #}
-                <div class="info-card-section">
+                <div class="detail-card__section">
                     <div class="metadata">
                         <div class="metadata-item">
                             <span class="metadata-label">{{ 'common.created_at'|trans }}</span>

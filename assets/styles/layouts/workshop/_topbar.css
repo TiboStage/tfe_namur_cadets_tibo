@@ -12,8 +12,8 @@
     top: 10px;
     z-index: 100;
     justify-self: center;
-    padding: 0 10px;
-    width: calc(100% - 100px);
+    padding: 0 20px;
+    width: 100%;
     max-width: 1700px;
     margin: 10px auto auto auto;
 }
@@ -88,6 +88,7 @@
     color: var(--text-muted);
     width: 36px;
     height: 36px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -101,13 +102,13 @@
 }
 
 
-/* ── user-trigger dans la workshop top-nav ───────────────── */
-.top-nav .user-trigger {
-    height: 36px;
-    min-width: 130px;
-    padding: 0 8px 0 10px;
-    gap: 7px;
-}
+/*!* ── user-trigger dans la workshop top-nav ───────────────── *!*/
+/*.top-nav .user-trigger {*/
+/*    height: 36px;*/
+/*    min-width: 130px;*/
+/*    padding: 0 8px 0 10px;*/
+/*    gap: 7px;*/
+/*}*/
 
 /* ── Badges de rôle (Admin / Modo) ───────────────────────── */
 .user-info {
@@ -132,7 +133,7 @@
     background: var(--color-bg-dark);
     border-top: none;
     padding: 0 20px;
-    width: calc(100% - 100px);
+    width: 100%;            /* même largeur que .top-nav → switcher aligné sous le logo */
     max-width: 1700px;
     justify-self: center;
     margin: auto;
@@ -413,6 +414,45 @@
     color: var(--color-primary);
 }
 
+/* ── Bascule mode étendu / compact (picto seul) ──────────── */
+
+.project-bar__mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.project-bar__mode-toggle:hover {
+    color: var(--text-main);
+    background: var(--overlay-sm);
+}
+
+/* L'icône affichée dépend du mode courant */
+.project-bar__mode-icon--expand   { display: none; }
+.project-bar__mode-icon--collapse { display: inline-flex; }
+.project-bar--compact .project-bar__mode-icon--collapse { display: none; }
+.project-bar--compact .project-bar__mode-icon--expand   { display: inline-flex; }
+
+/* Mode compact : libellés masqués → icônes seules */
+.project-bar--compact .project-bar__tab-label,
+.project-bar--compact .project-bar__settings-label {
+    display: none;
+}
+
+.project-bar--compact .project-bar__tab {
+    padding: 0 11px;
+    gap: 4px;   /* petit espace conservé si un compteur accompagne l'icône */
+}
+
 /* ── Séparateur | entre primaires et secondaires ────────── */
 
 .project-bar__nav-sep {
@@ -636,9 +676,9 @@
         align-items: center;
     }
 
-    .top-nav .user-trigger {
-        height: 36px;
-    }
+    /*.top-nav .user-trigger {*/
+    /*    height: 36px;*/
+    /*}*/
 
     /* Burger visible */
     .topbar-burger { display: flex; }
@@ -776,7 +816,7 @@
    Onglets primaires visibles, secondaires → dropdown "..."
    Paramètres : icône seule (texte masqué)
    ─────────────────────────────────────────────────────────── */
-@media (max-width: 1250px) {
+@media (max-width: 1024px) {
     /* Cacher séparateur + onglets secondaires inline */
     .project-bar__nav-sep,
     .project-bar__tab--secondary {
@@ -855,4 +895,124 @@
     font-weight: 900;
     font-size: 11px;
     flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PROJECT-BAR EN SIDEBAR VERTICALE (desktop ≥ 769px)
+   La barre horizontale devient une colonne à gauche du contenu.
+   Deux largeurs : étendue (icône + texte) / compacte (picto seul).
+   Bloc placé en fin de fichier → gagne sur les règles horizontales.
+   ═══════════════════════════════════════════════════════════════ */
+@media (min-width: 769px) {
+
+    .project-bar {
+        flex-direction: column;
+        align-items: stretch;
+        width: 230px;
+        max-width: none;
+        height: 100%;
+        margin: 0;
+        padding: 12px 10px;
+        gap: 4px;
+        flex-shrink: 0;
+        border-right: 1px solid var(--color-border);
+        overflow: visible;   /* surtout pas auto → sinon le dropdown du switcher est rogné */
+        transition: width 0.18s ease;
+    }
+
+    /* ── En-tête : bascule + switcher ── */
+    .project-bar__left {
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+        height: auto;
+        padding: 0 2px 10px 2px;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+        margin-bottom: 6px;
+    }
+    .project-bar__switcher { flex: 1; min-width: 0; }
+    .project-bar__project-btn {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .project-bar__project-name {
+        flex: 1;
+        min-width: 0;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* ── Navigation verticale ── */
+    /* Le scroll vit ici (et non sur .project-bar) : le header/switcher reste
+       hors zone scrollable, donc son dropdown peut déborder librement. */
+    .project-bar__nav {
+        flex-direction: column;
+        align-items: stretch;
+        flex: 1;
+        min-height: 0;
+        height: auto;
+        padding: 0;
+        gap: 2px;
+        overflow-y: auto;
+    }
+
+    /* Onglets = lignes pleine largeur, indicateur actif à gauche */
+    .project-bar__tab {
+        justify-content: flex-start;
+        height: 38px;
+        min-width: 38px;
+        width: 100%;
+        padding: 0 12px;
+        border-bottom: none;
+        border-left: 2px solid transparent;
+        border-radius: var(--radius-sm);
+        margin-bottom: 0;
+    }
+    .project-bar__tab.active {
+        border-left-color: var(--color-primary);
+        background: var(--overlay-sm);
+    }
+    .project-bar__count { margin-left: auto; }
+
+    /* En sidebar : tous les onglets visibles, pas de dropdowns "..." */
+    .project-bar__tab--secondary { display: inline-flex; }
+    .project-bar__nav-sep,
+    .project-bar__nav-more,
+    .project-bar__nav-more--secondary { display: none; }
+
+    /* Spacer pousse les paramètres en bas */
+    .project-bar__nav-spacer { flex: 1; min-height: 8px; }
+
+    /* Paramètres / modération : lignes pleine largeur en bas */
+    .project-bar__settings-btn {
+        width: 100%;
+        justify-content: flex-start;
+        height: 38px;
+        padding: 0 12px;
+        border-radius: var(--radius-sm);
+    }
+
+    /* ── Mode compact : rail étroit, picto seul ── */
+    .project-bar.project-bar--compact {
+        width: 60px;
+        padding: 12px 8px;
+        align-items: center;
+    }
+    .project-bar--compact .project-bar__left {
+        flex-direction: column;
+        gap: 8px;
+        padding-bottom: 8px;
+    }
+    .project-bar--compact .project-bar__project-btn { justify-content: center; }
+    .project-bar--compact .project-bar__project-name,
+    .project-bar--compact .project-bar__chevron { display: none; }
+    .project-bar--compact .project-bar__tab,
+    .project-bar--compact .project-bar__settings-btn {
+        justify-content: center;
+        padding: 0;
+    }
+    .project-bar--compact .project-bar__count { display: none; }
 }

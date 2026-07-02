@@ -21,7 +21,9 @@
         </h2>
     </div>
 
-    {# ── Formulaire de nouveau commentaire ──────────────────────────── #}
+    {# ── Formulaire de nouveau commentaire ──────────────────────────────
+       La page est réservée aux utilisateurs connectés (access_control),
+       donc viewer est toujours défini. Le garde reste par sécurité. #}
     {% if viewer is not null %}
         <form
             action="{{ path('app_comment_new', {_locale: app.request.locale, slug: project.slug}) }}"
@@ -46,14 +48,6 @@
             </div>
             <input type="hidden" name="_token" value="{{ csrf_token('comment_new_' ~ project.id) }}">
         </form>
-    {% else %}
-        <div class="comment-login-prompt">
-            {{ ux_icon('lucide:log-in', {class: 'icon-xs'}) }}
-            <span>
-                <a href="{{ path('app_login', {_locale: app.request.locale}) }}">{{ 'comment_section.form.login'|trans }}</a>
-                {{ 'comment_section.form.login_suffix'|trans }}
-            </span>
-        </div>
     {% endif %}
 
     {# ── Liste des commentaires ──────────────────────────────────────── #}

@@ -421,6 +421,16 @@ app_workshop_explore_search:
         _locale: en|fr|nl
     methods: [GET]
 
+app_workshop_search:
+    path:
+        fr: /{_locale}/atelier/exploration/rechercher
+        en: /{_locale}/workshop/explore/results
+        nl: /{_locale}/werkplaats/verkennen/resultaten
+    controller: App\Controller\Workshop\ExplorationController::searchPage
+    requirements:
+        _locale: en|fr|nl
+    methods: [GET]
+
 app_workshop_creator_show:
     path:
         fr: /{_locale}/atelier/createur/{username}

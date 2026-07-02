@@ -506,21 +506,21 @@
 .nl-filter-select:focus { border-color: var(--color-primary); }
 
 /* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
     .nl-header,
     .nl-row { grid-template-columns: 1fr 120px 90px 100px 60px; }
     .nl-cell--link,
     .nl-header-link { display: none; }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 640px) {
     .nl-header,
     .nl-row { grid-template-columns: 1fr 120px 90px 60px; }
     .nl-cell--author,
     .nl-cell--date { display: none; }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 640px) {
     .nl-header { display: none; }
     .nl-row { grid-template-columns: 1fr 120px 60px; }
     .nl-cell--priority { display: none; }

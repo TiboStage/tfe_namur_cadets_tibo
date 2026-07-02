@@ -4,23 +4,31 @@
 
 /* ── Main content area ────────────────────────────────── */
 
+/* ── Corps du workspace : sidebar (gauche) + contenu (droite) ── */
+.workspace-body {
+    display: flex;
+    align-items: stretch;
+    height: calc(100vh - var(--topbar-total));
+}
+
 .workspace-main {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: calc(100vh - var(--workspace-offset));
+    flex: 1;
+    min-width: 0;
+    height: 100%;
     overflow-y: auto;
     background: var(--color-bg-dark);
 }
 
-/* ── Wrapper contenu aligné sur la project-bar ────────── */
+/* ── Wrapper contenu ──────────────────────────────────── */
 
 .workspace-content {
-    width: calc(100% - 100px);
+    width: 100%;
     max-width: 1700px;
     margin-left: auto;
     margin-right: auto;
-    padding: 0 20px;
+    padding: 0 24px;
     min-height: 85vh;
 }
 
@@ -50,14 +58,18 @@
    ========================================================= */
 
 @media (max-width: 768px) {
-    /* La sidebar est gérée en position:fixed dans _project-sidebar.css.
-       Le workspace-main prend donc toute la largeur automatiquement. */
+    /* Mobile : on empile (barre horizontale en haut, contenu dessous) */
+    .workspace-body {
+        flex-direction: column;
+        height: auto;
+    }
+
     .workspace-main {
         width: 100%;
         min-width: 0;
+        height: calc(100vh - var(--workspace-offset));
     }
 
-    /* Aligne sur la nav qui passe à width: 100% sur mobile */
     .workspace-content {
         width: 100%;
         padding: 0 16px;

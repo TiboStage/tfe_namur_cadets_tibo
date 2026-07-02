@@ -1,37 +1,20 @@
 /* ═══════════════════════════════════════════════════════════ */
-/* LAYOUT STRUCTURE ADMIN                                      */
+/* LAYOUT STRUCTURE ADMIN — voir plus bas : Admin et Modo        */
+/* partagent désormais le même bloc .modo-* (sidebar unifiée)   */
 /* ═══════════════════════════════════════════════════════════ */
 
-.admin-layout {
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
-    background-color: var(--color-bg-dark);
-}
-
-/* SIDEBAR LEFT */
-.admin-sidebar {
-    width: 260px;
-    background-color: var(--color-bg-card);
-    border-right: 1px solid var(--color-border);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-}
-
-.sidebar-brand {
-    padding: 24px;
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    display: flex;
+.admin-user-pill {
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    border-bottom: 1px solid var(--color-border);
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--overlay-sm);
+    border-radius: var(--radius);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .brand-dot {
@@ -48,81 +31,13 @@
     font-weight: 400;
 }
 
-.sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 20px 12px;
-}
-
-.menu-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    color: var(--text-muted);
-    font-size: 14px;
-    font-weight: 500;
-    transition: var(--transition-fast);
-}
-
-.menu-item svg {
-    color: var(--text-muted-light);
-    transition: var(--transition-fast);
-}
-
-.menu-item:hover, .menu-item.active {
-    color: var(--text-main);
-    background-color: rgba(255, 255, 255, 0.03);
-}
-
-.menu-item.active {
-    background-color: rgba(255, 184, 0, 0.08);
-    color: var(--color-primary);
-}
-
-.menu-item.active svg {
-    color: var(--color-primary);
-}
-
-.alert-item {
-    justify-content: space-between;
-}
-
 .badge-count {
     background-color: var(--color-error);
-    color: var(--text-main);
-    font-size: 11px;
+    color: #fff;
+    font-size: 10px;
     font-weight: 700;
-    padding: 2px 8px;
-}
-
-/* MAIN CONTENT BLOCK RIGHT */
-.admin-main {
-    flex: 1;
-    margin-left: 260px; /* Laisse la place pour la barre latérale fixe */
-    display: flex;
-    flex-direction: column;
-}
-
-/* NAVBAR TOP */
-.admin-navbar {
-    height: 70px;
-    background-color: var(--color-bg-card);
-    border-bottom: 1px solid var(--color-border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
-    position: sticky;
-    top: 0;
-    z-index: 90;
-}
-
-.admin-navbar h2 {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text-main);
+    padding: 1px 6px;
+    border-radius: 999px;
 }
 
 .btn-exit-admin {
@@ -145,13 +60,6 @@
     color: var(--color-error);
 }
 
-/* VIEW WINDOW */
-.admin-content-view {
-    padding: 40px;
-    max-width: var(--container-width);
-    width: 100%;
-}
-
 /* ═══════════════════════════════════════════════════════════ */
 /* DASHBOARD DYNAMICS & CARDS                                  */
 /* ═══════════════════════════════════════════════════════════ */
@@ -171,7 +79,7 @@
     align-items: start;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1024px) {
     .admin-panels-grid { grid-template-columns: 1fr; }
 }
 
@@ -195,8 +103,8 @@
     font-size: 13px;
 }
 
-/* ── dash-panel dans admin (header h2 style cohérent) ──────── */
-.admin-content-view .dash-panel__header h2 {
+/* ── dash-panel dans admin/modo (header h2 style cohérent) ─── */
+.modo-content .dash-panel__header h2 {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -278,14 +186,6 @@
 .btn-table:hover {
     border-color: var(--color-primary);
     color: var(--color-primary);
-}
-
-/* RESPONSIVE SUBTILE */
-@media (max-width: 1024px) {
-    .admin-sidebar { width: 70px; }
-    .admin-sidebar .menu-item { justify-content: center; padding: 12px; }
-    .admin-sidebar .menu-item span, .sidebar-brand span { display: none; }
-    .admin-main { margin-left: 70px; }
 }
 
 /* ═══════════════════════════════════════════════════════════ */
@@ -535,7 +435,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 24px;
 }
-@media (max-width: 900px) { .aup-grid { grid-template-columns: 1fr; } }
+@media (max-width: 1024px) { .aup-grid { grid-template-columns: 1fr; } }
 
 /* ═══════════════════════════════════════════════════════════ */
 /* DETAIL PAGE HEADER                                          */
@@ -593,6 +493,7 @@
     padding: 12px 16px;
     background: var(--color-bg-input);
     border: 1px solid var(--color-border);
+    border-radius: var(--radius);
     cursor: pointer;
     transition: var(--transition-fast);
     user-select: none;
@@ -600,8 +501,13 @@
 
 .role-item:hover { border-color: var(--color-border-light); }
 .role-item--fixed { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+.role-item--selected {
+    border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+    background: var(--color-primary-glow);
+}
 
-.role-item input[type="checkbox"] {
+.role-item input[type="checkbox"],
+.role-item input[type="radio"] {
     accent-color: var(--color-primary);
     width: 15px;
     height: 15px;
@@ -806,18 +712,20 @@
 }
 
 .sidebar-modo-link {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: var(--radius);
     color: var(--color-orange);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
+    white-space: nowrap;
     transition: var(--transition-fast);
     text-decoration: none;
 }
 
-.sidebar-modo-link:hover { background: rgba(251,146,60,0.06); }
+.sidebar-modo-link:hover { background: rgba(251,146,60,0.10); }
 
 /* ═══════════════════════════════════════════════════════════ */
 /* MODO VARIANT — Sidebar & badges                            */
@@ -830,12 +738,15 @@
     color: var(--color-orange);
 }
 
-.admin-layout--modo .menu-item.active {
+/* Accent orange du panneau Modo (vs doré pour Admin) — différenciation
+   visuelle sur les mêmes classes .modo-nav__item, via le wrapper modo-only. */
+.modo-layout--modo .modo-nav__item.active {
     background-color: rgba(251,146,60,0.08);
+    border-left-color: var(--color-orange);
     color: var(--color-orange);
 }
 
-.admin-layout--modo .menu-item.active svg { color: var(--color-orange); }
+.modo-layout--modo .modo-nav__item.active svg { color: var(--color-orange); }
 
 /* ═══════════════════════════════════════════════════════════ */
 /* DOCUMENTATION ADMIN — Composants supplémentaires           */
@@ -1019,3 +930,112 @@
     color: var(--color-error);
 }
 .btn-admin--danger:hover { background: var(--color-error-bg); border-color: var(--color-error); }
+
+/* ═══════════════════════════════════════════════════════════ */
+/* PANNEAU MODÉRATEUR — sidebar verticale (structure project-bar) */
+/* ═══════════════════════════════════════════════════════════ */
+
+.modo-layout {
+    display: flex;
+    align-items: stretch;
+    min-height: 100vh;
+    background: var(--color-bg-dark);
+}
+
+/* ── Sidebar ── */
+.modo-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-card);
+    border-right: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 14px 10px;
+}
+
+.modo-sidebar__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px 14px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.modo-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.modo-nav__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    border-left: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color .15s, background .15s, border-color .15s;
+}
+.modo-nav__item svg { color: var(--text-muted-light); flex-shrink: 0; }
+.modo-nav__item:hover { color: var(--text-main); background: var(--overlay-sm); }
+.modo-nav__item.active {
+    color: var(--color-primary);
+    background: var(--overlay-sm);
+    border-left-color: var(--color-primary);
+}
+.modo-nav__item.active svg { color: var(--color-primary); }
+.modo-nav__item .badge-count { margin-left: auto; }
+
+.modo-sidebar__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border);
+}
+
+/* ── Contenu ── */
+.modo-main {
+    flex: 1;
+    min-width: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--color-bg-dark);
+}
+
+.modo-content {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 24px 60px;
+}
+
+.modo-page-header { margin-bottom: 20px; }
+.modo-page-header h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0;
+}
+
+/* Sur mobile : la sidebar passe au-dessus, en pleine largeur */
+@media (max-width: 768px) {
+    .modo-layout { flex-direction: column; }
+    .modo-sidebar { width: 100%; height: auto; position: static; }
+    .modo-nav { flex-direction: row; flex-wrap: wrap; }
+    .modo-main { height: auto; }
+}

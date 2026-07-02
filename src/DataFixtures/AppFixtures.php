@@ -374,7 +374,7 @@ class AppFixtures extends Fixture
         );
 
         $this->makeMember($manager, $film, $demo,  'contributor');
-        $this->makeMember($manager, $film, $alice, 'editor');
+        $this->makeMember($manager, $film, $alice, 'moderator');
 
         // ══════════════════════════════════════════════════════════════════════
         // 3. PROJET JEU VIDÉO — Fragments d'Éternité (thibault, privé, draft)
@@ -905,7 +905,7 @@ class AppFixtures extends Fixture
                  'Revoir la scène de la frontière','Éviter le mélodrame. Garder la retenue.','high',
                  'Ton','Pas de méchants caricaturaux. Tout le monde a ses raisons. Inspiration Beasts of No Nation + 4 Months.'],
 
-                ['Contes d\'Après',        'custom',    'draft',       'unpublished',
+                ['Contes d\'Après',        'jeu_video', 'draft',       'unpublished',
                  'Recueil de nouvelles interactives : des histoires courtes dans un monde post-effondrement, racontées par ceux qui restent.',
                  [['Nouvelle','#D946EF'],['Post-apo','#78716C']],
                  [['La Ferme','Dernier îlot de vie organisée.','exterior',null],
@@ -1094,7 +1094,7 @@ class AppFixtures extends Fixture
                  'Finir l\'acte III','La révélation doit être ambiguë. Pas de réponse définitive.','high',
                  'Note finale','Le film ne révèle pas si Nora est vraiment sa fille. Le doute est la résolution.'],
 
-                ['Le Testament',           'custom',    'draft',       'unpublished',
+                ['Le Testament',           'jeu_video', 'draft',       'unpublished',
                  'Expérience narrative interactive : un lecteur découvre le journal intime d\'une personne décédée et doit reconstituer sa vie.',
                  [['Interactif','#D946EF'],['Journal','#78716C']],
                  [['L\'Appartement','Appartement vide. Boîtes à trier.','interior',null],
@@ -1283,7 +1283,7 @@ class AppFixtures extends Fixture
                  'Définir comment filmer la surdité de Clara','Point de vue subjectif. Vibrations visuelles.','urgent',
                  'Référence','Sound of Metal pour la représentation du son et du silence.'],
 
-                ['Sanctuaire',             'custom',    'in_progress', 'public',
+                ['Sanctuaire',             'jeu_video', 'in_progress', 'public',
                  'Fiction écologique interactive : construisez et défendez un sanctuaire naturel contre des menaces réelles et humaines.',
                  [['Écologie','#10B981'],['Interactif','#D946EF']],
                  [['La Forêt Primaire','Cœur du sanctuaire. Inviolé.','exterior',null],

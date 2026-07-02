@@ -5,17 +5,17 @@
 
 {# ── Macro : chip de type avec icône ───────────────────────────────────── #}
 {% macro typeChip(type) %}
-    {% set cfg = {
-        plot:      {label: 'Intrigue',    icon: 'lucide:git-branch'},
-        character: {label: 'Personnage',  icon: 'lucide:user'},
-        world:     {label: 'Monde',       icon: 'lucide:globe'},
-        conflict:  {label: 'Conflit',     icon: 'lucide:swords'},
-        reveal:    {label: 'Révélation',  icon: 'lucide:sparkles'},
+    {% set icons = {
+        plot:      'lucide:git-branch',
+        character: 'lucide:user',
+        world:     'lucide:globe',
+        conflict:  'lucide:swords',
+        reveal:    'lucide:sparkles',
     } %}
-    {% if type and cfg[type] is defined %}
+    {% if type and icons[type] is defined %}
         <span class="chr-type-chip chr-type-chip--{{ type }}">
-            {{ ux_icon(cfg[type].icon, {style: 'width:10px;height:10px'}) }}
-            {{ cfg[type].label }}
+            {{ ux_icon(icons[type], {style: 'width:10px;height:10px'}) }}
+            {{ ('world_event.type.' ~ type)|trans({}, 'workshop') }}
         </span>
     {% endif %}
 {% endmacro %}
@@ -79,20 +79,20 @@
            ════════════════════════════════════════════════════════ #}
         {% if typeCounts is not empty %}
         <div class="chr-stats">
-            {% set allTypes = {
-                plot:      {label: 'Intrigues',    icon: 'lucide:git-branch'},
-                character: {label: 'Personnages',  icon: 'lucide:user'},
-                world:     {label: 'Monde',        icon: 'lucide:globe'},
-                conflict:  {label: 'Conflits',     icon: 'lucide:swords'},
-                reveal:    {label: 'Révélations',  icon: 'lucide:sparkles'},
-                other:     {label: 'Autres',       icon: 'lucide:circle-dot'},
+            {% set statIcons = {
+                plot:      'lucide:git-branch',
+                character: 'lucide:user',
+                world:     'lucide:globe',
+                conflict:  'lucide:swords',
+                reveal:    'lucide:sparkles',
+                other:     'lucide:circle-dot',
             } %}
             {% for typeKey, count in typeCounts %}
-                {% if allTypes[typeKey] is defined %}
+                {% if statIcons[typeKey] is defined %}
                 <div class="chr-stat chr-stat--{{ typeKey }}">
-                    {{ ux_icon(allTypes[typeKey].icon, {style: 'width:14px;height:14px'}) }}
+                    {{ ux_icon(statIcons[typeKey], {style: 'width:14px;height:14px'}) }}
                     <span class="chr-stat__count">{{ count }}</span>
-                    <span class="chr-stat__label">{{ allTypes[typeKey].label }}</span>
+                    <span class="chr-stat__label">{{ ('world_event.type.' ~ typeKey)|trans({}, 'workshop') }}</span>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -112,13 +112,13 @@
             </button>
             {% for typeKey in ['plot', 'character', 'world', 'conflict', 'reveal'] %}
                 {% if typeCounts[typeKey] is defined %}
-                    {% set labels = {plot: 'Intrigue', character: 'Personnage', world: 'Monde', conflict: 'Conflit', reveal: 'Révélation'} %}
+                    {% set typeLabel = ('world_event.type.' ~ typeKey)|trans({}, 'workshop') %}
                     <button type="button"
                             class="chr-filter-btn chr-filter-btn--{{ typeKey }}"
                             data-action="click->chr-filter#filter"
                             data-type="{{ typeKey }}"
-                            aria-label="Filtrer {{ labels[typeKey] }}">
-                        {{ labels[typeKey] }}
+                            aria-label="Filtrer {{ typeLabel }}">
+                        {{ typeLabel }}
                     </button>
                 {% endif %}
             {% endfor %}
@@ -190,7 +190,8 @@
                                     </a>
                                     <form method="post"
                                           action="{{ path('app_world_event_delete', {_locale: app.request.locale, project_slug: project.slug, id: event.id}) }}"
-                                          onsubmit="return confirm('Supprimer « {{ event.title|e('js') }} » ?')">
+                                          data-action="submit->confirm-modal#intercept"
+                                          data-confirm-message="{{ 'world_event.confirm_delete'|trans }}">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
                                         <button type="submit" class="tl-btn-icon tl-btn-icon--danger" title="Supprimer">
                                             {{ ux_icon('lucide:trash-2', {style: 'width:12px;height:12px'}) }}

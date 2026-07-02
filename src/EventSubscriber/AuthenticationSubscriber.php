@@ -3,6 +3,7 @@
 namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Http\Authenticator\RememberMeAuthenticator;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -25,6 +26,14 @@ class AuthenticationSubscriber implements EventSubscriberInterface
 
     public function onLoginSuccess(LoginSuccessEvent $event): void
     {
+        // LoginSuccessEvent est aussi déclenché à chaque ré-authentification
+        // via le cookie "remember me" (pas seulement au login interactif).
+        // Sans ce garde-fou, le toast de bienvenue réapparaît à chaque
+        // requête où la session est ré-hydratée depuis le cookie.
+        if ($event->getAuthenticator() instanceof RememberMeAuthenticator) {
+            return;
+        }
+
         $user = $event->getUser();
 
         $firstName = method_exists($user, 'getFirstName')

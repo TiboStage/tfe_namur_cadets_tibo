@@ -462,6 +462,11 @@ character:
         secondary: "Secondary"
         figurant: "Extra"
 
+    flash:
+        created: "Character created successfully!"
+        updated: "Character updated."
+        deleted: "Character deleted."
+
 
 # ===== LOCATIONS =====
 location:
@@ -533,12 +538,26 @@ location:
         historical: "Historical"
         futuristic: "Futuristic"
 
+    flash:
+        created: "Location created successfully!"
+        updated: "Location updated."
+        deleted: "Location deleted."
+
 # ===== EXPLORATION =====
 explore:
     tag: "Exploration"
     title: "Public projects"
     projects_count: "project(s) available"
     search_placeholder: "Search for a project, an author..."
+    home:
+        title: "Explore"
+        subtitle: "Discover the narrative universes published by the community."
+        search_placeholder: "Search for a project, an author..."
+        search_btn: "Search"
+        advanced: "Advanced search"
+    search:
+        title: "Search"
+        back: "Back to explore"
     filter:
         all: "All"
         film: "Film"
@@ -760,14 +779,29 @@ world_event:
         updated: 'Event "%title%" updated.'
         deleted: 'Event "%title%" deleted.'
 
+    type:
+        plot: "Plot"
+        character: "Character"
+        world: "World"
+        conflict: "Conflict"
+        reveal: "Reveal"
+        other: "Other"
+
     form:
         section_main: "Information"
         section_date: "Narrative date"
+        section_category: "Category & links"
         section_location: "Linked location"
         date_help: "Use your universe's fictional dates (e.g. Year 342, Month 7, Day 15)"
-        event_type: "Event type"
-        linked_scene: "Linked scene"
-        location: "Location"
+        event_type:
+            label: "Event type"
+            placeholder: "Select a type…"
+        linked_scene:
+            label: "Linked scene"
+            placeholder: "No linked scene"
+        location:
+            label: "Location"
+            placeholder: "No linked location"
         title:
             label: "Title"
             placeholder: "Event title..."
@@ -975,6 +1009,7 @@ nav:
     tasks: "Tasks"
     notes: "Notes"
     more: "More"
+    toggle_labels: "Collapse / expand labels"
     collapse: "Collapse"
     readonly_mode: "Read mode"
     public_page: "Public page"
@@ -1070,8 +1105,6 @@ comment_section:
         placeholder: "Share your thoughts on this project…"
         hint: "2 – 2000 characters"
         submit: "Comment"
-        login: "Log in"
-        login_suffix: "to leave a comment."
     empty: "No comments yet. Be the first!"
     reply: "↩ Reply"
     cancel: "× Cancel"
@@ -1092,6 +1125,25 @@ creator:
         support_singular: "support"
         support_plural: "supports"
         see_profile: "View profile"
+    edit_btn: "Edit"
+    bio_placeholder_empty: "Add a short description…"
+    member_since: "Member since"
+    public_projects: "%count% public project|%count% public projects"
+    edit:
+        firstname: "First name"
+        lastname: "Last name"
+        bio: "Biography"
+        bio_limit: "(500 characters max)"
+        bio_placeholder: "Describe yourself in a few words, your style, your projects…"
+        save: "Save"
+        cancel: "Cancel"
+    projects:
+        mine: "My projects"
+        of: "%name%'s projects"
+        create: "+ Create"
+        empty_own: "You don't have any projects yet. Create one!"
+        empty_other: "This creator hasn't published any projects yet."
+    back: "Back to explore"
 
 # ===== PUBLIC PROJECT CARD =====
 project_public:
@@ -1123,4 +1175,41 @@ project_show_public:
     workshop_btn_owner: "Manage in workshop"
     workshop_btn_collab: "Open workshop"
     about_title: "About"
+
+# ════════════ MODERATION ════════════
+moderation:
+    title: "Moderation"
+    title_full: "Project moderation"
+    manage_permissions: "Manage permissions"
+    owner_section: "Project owner"
+    owner_badge: "Owner"
+    collaborators: "Collaborators"
+    empty: "No collaborators on this project."
+    invite_collaborators: "Invite collaborators"
+    invite: "Invite"
+    member_since: "Member since"
+    remove: "Remove"
+    remove_title: "Remove %name% from the project"
+    remove_confirm: "Remove %name% from the project?"
+    active_permissions: "Active permissions"
+    customized: "customized"
+    default: "default"
+    stat_actions: "actions"
+    stat_creations: "creations"
+    stat_edits: "edits"
+    recent_activity: "Recent activity"
+    no_activity: "No activity recorded for this member."
+    actions:
+        project_create: "Project created"
+        project_edit: "Project edited"
+        manuscript_create: "Scene created"
+        manuscript_edit: "Scene edited"
+        manuscript_delete: "Scene deleted"
+        character_create: "Character created"
+        character_edit: "Character edited"
+        location_create: "Location created"
+        location_edit: "Location edited"
+        note_create: "Note created"
+        task_create: "Task created"
+        task_complete: "Task completed"
 

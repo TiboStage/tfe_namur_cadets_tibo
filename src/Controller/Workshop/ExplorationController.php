@@ -24,7 +24,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class ExplorationController extends AbstractController
 {
-    private const PAGE_SIZE = 5;
+    // 8 = 2 rangées de 4 sur PC (et 4 rangées de 2 sur mobile)
+    private const PAGE_SIZE = 8;
 
     public function __construct(
         private readonly ProjectRepository       $projectRepository,
@@ -75,6 +76,40 @@ final class ExplorationController extends AbstractController
             'initial_genre'     => $request->query->get('genre', ''),
             'initial_sort'      => $request->query->get('sort',  'recent'),
             'genres_json'       => $genresJson,
+        ]);
+    }
+
+    // ── Page de recherche approfondie (HTML) ─────────────────────────────────
+
+    /**
+     * Page de recherche dédiée : barre de filtres + résultats (chargés en AJAX).
+     * Les paramètres d'URL (q/type/genre/sort/mode) pré-remplissent les filtres.
+     */
+    public function searchPage(Request $request): Response
+    {
+        $locale     = $request->getLocale();
+        $allGenres  = $this->genreRepository->findAllForAdmin();
+        $genresJson = array_values(array_filter(array_map(
+            fn($g) => $g->isActive ? [
+                'slug'  => $g->slug,
+                'label' => $g->getLabel($locale),
+                'types' => $g->projectTypes,
+            ] : null,
+            $allGenres
+        )));
+
+        $mode = $request->query->get('mode', 'projet');
+        if (!in_array($mode, ['projet', 'auteur'], true)) {
+            $mode = 'projet';
+        }
+
+        return $this->render('workshop/explore/search.html.twig', [
+            'genres_json'   => $genresJson,
+            'initial_query' => $request->query->get('q',    ''),
+            'initial_type'  => $request->query->get('type', ''),
+            'initial_genre' => $request->query->get('genre',''),
+            'initial_sort'  => $request->query->get('sort', $mode === 'auteur' ? 'az' : 'recent'),
+            'initial_mode'  => $mode,
         ]);
     }
 

@@ -18,11 +18,14 @@
 <div data-controller="modal">
 
     {% include 'workshop/_partials/_topbar.html.twig' %}
-    {% include 'workshop/_partials/_project_bar.html.twig' %}
 
-    <main class="workspace-main workspace-main--editor">
-        {% block editor_shell %}{% endblock %}
-    </main>
+    <div class="workspace-body">
+        {% include 'workshop/_partials/_project_bar.html.twig' %}
+
+        <main class="workspace-main workspace-main--editor">
+            {% block editor_shell %}{% endblock %}
+        </main>
+    </div>
 
     {# ══════════════════════════════════════════════════════════
        MODAL GLOBAL — overlay cible du controller

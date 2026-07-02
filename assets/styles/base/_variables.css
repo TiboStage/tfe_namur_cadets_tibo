@@ -117,7 +117,9 @@
     /* ═══════════════════════════════════════════════════════════ */
 
     --container-width:   1400px;
-    --container-padding: 50px;
+    /* Gouttière fluide : 16px (mobile) → 50px (grand desktop), sans coupure.
+       Remplace les 3 media queries qui étaient dans _reset.css. */
+    --container-padding: clamp(16px, 3.2vw, 50px);
 
     /* ── Hauteurs de layout workshop ───────────────────────── */
     --topbar-h:      52px;   /* .top-nav height */
@@ -140,6 +142,49 @@
     --radius:    6px;
     --radius-lg: 8px;
 
-    /* Breakpoints — non utilisables avec var() dans @media, hardcodés dans chaque fichier
-       mobile: 640px  |  tablet: 768px  |  desktop: 1024px */
+    /* ═══════════════════════════════════════════════════════════ */
+    /* BREAKPOINTS — seuils standard du projet                      */
+    /* Non utilisables avec var() dans @media (limitation CSS) :    */
+    /* toujours écrire la valeur en dur, mais UNIQUEMENT l'une de   */
+    /* ces trois. N'en invente pas une quatrième dans un fichier.   */
+    /*   mobile : max-width: 640px                                  */
+    /*   tablet : max-width: 768px                                  */
+    /*   desktop: max-width: 1024px                                 */
+    /*   (4ᵉ palier optionnel, petits téléphones uniquement,        */
+    /*    imbriqué sous mobile : max-width: 480px)                  */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* ÉCHELLE TYPOGRAPHIQUE FLUIDE (clamp)                         */
+    /* Remplace les media queries qui ne faisaient QUE changer une  */
+    /* font-size par palier. Le texte s'ajuste en continu entre les */
+    /* bornes mobile (360px) et desktop (1440px).                   */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --fs-3xs: clamp(10px, 0.62rem + 0.05vw, 11px);
+    --fs-2xs: clamp(11px, 0.68rem + 0.10vw, 12px);
+    --fs-xs:  clamp(12px, 0.74rem + 0.15vw, 13px);
+    --fs-sm:  clamp(13px, 0.80rem + 0.20vw, 14px);
+    --fs-base:clamp(14px, 0.86rem + 0.25vw, 16px);
+    --fs-md:  clamp(16px, 0.92rem + 0.40vw, 18px);
+    --fs-lg:  clamp(18px, 1.00rem + 0.60vw, 22px);
+    --fs-xl:  clamp(20px, 1.05rem + 0.90vw, 28px);
+    --fs-2xl: clamp(24px, 1.20rem + 1.40vw, 36px);
+    --fs-3xl:  clamp(28px, 1.30rem + 2.00vw, 48px);
+    --fs-hero: clamp(34px, 1.50rem + 3.60vw, 72px);   /* gros titres héros marketing */
+
+    /* ═══════════════════════════════════════════════════════════ */
+    /* ESPACEMENTS FLUIDES (clamp)                                  */
+    /* Remplace les media queries qui ne faisaient QUE réduire un   */
+    /* padding/gap sur petit écran.                                 */
+    /* ═══════════════════════════════════════════════════════════ */
+
+    --space-3xs: clamp(4px,  0.30vw + 3px,  6px);
+    --space-2xs: clamp(6px,  0.40vw + 5px,  8px);
+    --space-xs:  clamp(8px,  0.60vw + 6px,  12px);
+    --space-sm:  clamp(12px, 0.80vw + 9px,  16px);
+    --space-md:  clamp(16px, 1.20vw + 12px, 24px);
+    --space-lg:  clamp(20px, 2.00vw + 14px, 32px);
+    --space-xl:  clamp(28px, 3.00vw + 18px, 48px);
+    --space-2xl: clamp(36px, 4.00vw + 22px, 64px);
 }

@@ -6,7 +6,7 @@
 .legal-page {
     min-height: 100vh;
     background: var(--color-bg-dark);
-    padding: 80px 20px;
+    padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 20px);
 }
 
 .legal-container {
@@ -32,7 +32,7 @@
 }
 
 .legal-header h1 {
-    font-size: 36px;
+    font-size: var(--fs-2xl);
     font-weight: 800;
     color: var(--text-main);
     margin-bottom: 12px;
@@ -49,7 +49,7 @@
 .legal-toc {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
-    padding: 24px 28px;
+    padding: var(--space-md) var(--space-lg);
     margin-bottom: 48px;
 }
 
@@ -102,7 +102,7 @@
 }
 
 .legal-body h2 {
-    font-size: 20px;
+    font-size: var(--fs-lg);
     font-weight: 700;
     color: var(--text-main);
     margin-bottom: 20px;
@@ -262,11 +262,6 @@
     font-size: 12px;
 }
 
-/* ── Responsive ───────────────────────────────────────────── */
-
-@media (max-width: 640px) {
-    .legal-page { padding: 40px 16px; }
-    .legal-header h1 { font-size: 26px; }
-    .legal-body h2 { font-size: 18px; }
-    .legal-toc { padding: 18px 20px; }
-}
+/* ── Responsive ───────────────────────────────────────────────
+   Plus de media query : tailles et paddings sont fluides (clamp/tokens),
+   ils s'ajustent en continu du mobile au desktop. */

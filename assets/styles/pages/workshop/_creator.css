@@ -10,15 +10,22 @@
 .creator-profile {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
     margin-bottom: 40px;
     overflow: hidden;
     position: relative;
 }
 
 /* ── Bannière de fond ──────────────────────────────────────── */
+/* Dégradé partant de la couleur d'avatar du créateur (--banner-color,
+   injectée en inline) vers le bleu sombre du thème. */
 .creator-profile__banner {
     height: 120px;
-    background: linear-gradient(135deg, #0d0d18 0%, #0f0f1c 50%, #131320 100%);
+    background: linear-gradient(135deg,
+        var(--banner-color, #0d0d18) 0%,
+        color-mix(in srgb, var(--banner-color, #131320) 40%, #0d0d18) 35%,
+        #0f0f1c 70%,
+        #131320 100%);
     position: relative;
     overflow: hidden;
 }
@@ -29,7 +36,9 @@
     left: -60px;
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle, var(--color-primary-medium) 0%, transparent 70%);
+    background: radial-gradient(circle,
+        color-mix(in srgb, var(--banner-color, var(--color-primary)) 45%, transparent) 0%,
+        transparent 70%);
     pointer-events: none;
 }
 
@@ -49,6 +58,7 @@
     margin-top: -44px;
     background: var(--color-bg-elevated);
     border: 3px solid var(--color-bg-card);
+    border-radius: 11px;     /* respecte le radius 8px de .u-avatar--2xl + la bordure 3px */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -103,7 +113,7 @@
 }
 
 .creator-profile__username {
-    font-size: 22px;
+    font-size: var(--fs-lg);
     font-weight: 900;
     margin: 0;
     line-height: 1;
@@ -412,7 +422,7 @@
 }
 
 /* ── Responsive ────────────────────────────────────────────── */
-@media (max-width: 760px) {
+@media (max-width: 768px) {
     .creator-profile__header {
         flex-wrap: wrap;
         padding: 0 16px 20px;
@@ -425,9 +435,7 @@
     .creator-profile__avatar-letter {
         font-size: 26px;
     }
-    .creator-profile__username {
-        font-size: 18px;
-    }
+    /* .creator-profile__username : font-size fluide via --fs-lg */
     .creator-edit__row {
         grid-template-columns: 1fr;
     }

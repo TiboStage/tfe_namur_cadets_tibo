@@ -459,7 +459,7 @@
 }
 
 /* ── Responsive ────────────────────────────────────────────── */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .doc-page {
         grid-template-columns: 1fr;
         padding: 0 20px;

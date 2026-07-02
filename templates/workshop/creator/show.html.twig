@@ -21,8 +21,8 @@
     <div class="creator-profile">
     {% endif %}
 
-        {# ── Bannière de fond ──────────────────────────────────────────────── #}
-        <div class="creator-profile__banner">
+        {# ── Bannière de fond (dégradé depuis la couleur d'avatar du créateur) ── #}
+        <div class="creator-profile__banner" style="--banner-color: {{ creator.avatarColor ?? '#6366f1' }};">
             <div class="creator-profile__banner-glow"></div>
         </div>
 
@@ -45,7 +45,7 @@
                                 type="button"
                                 data-action="profile-editor#edit">
                             {{ ux_icon('lucide:pencil', {style: 'width:13px;height:13px'}) }}
-                            Modifier
+                            {{ 'creator.edit_btn'|trans }}
                         </button>
                     {% endif %}
                 </div>
@@ -57,17 +57,17 @@
 
                 <p class="creator-profile__bio {% if not creator.getBio() %}creator-profile__bio--empty{% endif %}"
                    {% if is_own_profile %}data-profile-editor-target="bioDisplay"{% endif %}>
-                    {{ creator.getBio() ?? (is_own_profile ? 'Ajoutez une courte description…' : '') }}
+                    {{ creator.getBio() ?? (is_own_profile ? 'creator.bio_placeholder_empty'|trans : '') }}
                 </p>
 
                 <div class="creator-profile__meta">
                     <span>
                         {{ ux_icon('lucide:calendar', {class: 'icon-3xs'}) }}
-                        Membre depuis {{ creator.createdAt|date('F Y') }}
+                        {{ 'creator.member_since'|trans }} {{ creator.createdAt|date('F Y') }}
                     </span>
                     <span>
                         {{ ux_icon('lucide:folder-open', {class: 'icon-3xs'}) }}
-                        {{ public_count }} projet{{ public_count > 1 ? 's' : '' }} public{{ public_count > 1 ? 's' : '' }}
+                        {{ 'creator.public_projects'|trans({'%count%': public_count}) }}
                     </span>
                 </div>
             </div>
@@ -81,26 +81,26 @@
                 <div class="creator-edit__fields">
                     <div class="creator-edit__row">
                         <div class="creator-edit__field">
-                            <label>Prénom</label>
+                            <label>{{ 'creator.edit.firstname'|trans }}</label>
                             <input type="text"
                                    data-profile-editor-target="firstName"
                                    value="{{ creator.getFirstName() }}"
-                                   placeholder="Prénom">
+                                   placeholder="{{ 'creator.edit.firstname'|trans }}">
                         </div>
                         <div class="creator-edit__field">
-                            <label>Nom</label>
+                            <label>{{ 'creator.edit.lastname'|trans }}</label>
                             <input type="text"
                                    data-profile-editor-target="lastName"
                                    value="{{ creator.getLastName() }}"
-                                   placeholder="Nom">
+                                   placeholder="{{ 'creator.edit.lastname'|trans }}">
                         </div>
                     </div>
                     <div class="creator-edit__field">
-                        <label>Biographie <span class="creator-edit__limit">(500 caractères max)</span></label>
+                        <label>{{ 'creator.edit.bio'|trans }} <span class="creator-edit__limit">{{ 'creator.edit.bio_limit'|trans }}</span></label>
                         <textarea data-profile-editor-target="bio"
                                   maxlength="500"
                                   rows="3"
-                                  placeholder="Décrivez-vous en quelques mots, votre style, vos projets…">{{ creator.getBio() ?? '' }}</textarea>
+                                  placeholder="{{ 'creator.edit.bio_placeholder'|trans }}">{{ creator.getBio() ?? '' }}</textarea>
                     </div>
                 </div>
 
@@ -110,12 +110,12 @@
                             data-profile-editor-target="saveBtn"
                             data-action="profile-editor#save">
                         {{ ux_icon('lucide:check', {class: 'icon-xs'}) }}
-                        Sauvegarder
+                        {{ 'creator.edit.save'|trans }}
                     </button>
                     <button type="button"
                             class="creator-edit__cancel"
                             data-action="profile-editor#cancel">
-                        Annuler
+                        {{ 'creator.edit.cancel'|trans }}
                     </button>
                 </div>
             </div>
@@ -133,14 +133,14 @@
         <div class="creator-projects__header">
             <h2>
                 {% if is_own_profile %}
-                    Mes projets
+                    {{ 'creator.projects.mine'|trans }}
                 {% else %}
-                    Projets de {{ creator.username }}
+                    {{ 'creator.projects.of'|trans({'%name%': creator.username}) }}
                 {% endif %}
             </h2>
             {% if is_own_profile %}
                 <a href="{{ path('app_project_new_step1', {_locale: app.request.locale}) }}"
-                   class="btn-creat">+ Créer</a>
+                   class="btn-creat">{{ 'creator.projects.create'|trans }}</a>
             {% endif %}
         </div>
 
@@ -149,9 +149,9 @@
                 {{ ux_icon('lucide:folder-open', {style: 'width:32px;height:32px;opacity:.25'}) }}
                 <p>
                     {% if is_own_profile %}
-                        Vous n'avez pas encore de projets. Créez-en un !
+                        {{ 'creator.projects.empty_own'|trans }}
                     {% else %}
-                        Ce créateur n'a pas encore publié de projets.
+                        {{ 'creator.projects.empty_other'|trans }}
                     {% endif %}
                 </p>
             </div>
@@ -186,7 +186,7 @@
         <a href="{{ path('app_workshop_explore', {_locale: app.request.locale, search_type: 'auteur'}) }}"
            class="creator-back__link">
             {{ ux_icon('lucide:arrow-left', {class: 'icon-xs'}) }}
-            Retour à l'exploration
+            {{ 'creator.back'|trans }}
         </a>
     </div>
 

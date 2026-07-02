@@ -80,6 +80,11 @@ users:
     show:
         roles_title: "Rôles"
         save_roles: "Enregistrer les rôles"
+        role_default: "Rôle par défaut (utilisateur)"
+        role_modo: "Modérateur"
+        role_admin: "Administrateur"
+        role_super: "Super Admin"
+        own_roles_locked: "Vous ne pouvez pas modifier vos propres rôles."
         moderation_title: "Modération du compte"
         projects_title: "Projets de %username% (%count%)"
     btn_search: "Rechercher"

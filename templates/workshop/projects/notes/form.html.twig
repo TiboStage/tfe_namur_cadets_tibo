@@ -26,7 +26,7 @@
                     {% if note.id %}{{ 'note.edit.title'|trans }}{% else %}{{ 'note.new.title'|trans }}{% endif %}
                 </h2>
 
-                {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'project-form'}}) }}
+                {{ form_start(form, {'attr': {'class': 'project-form'}}) }}
 
                 <div class="form-section">
                     <div class="form-section-title">{{ 'note.form.section_main'|trans }}</div>

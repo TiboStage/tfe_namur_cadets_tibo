@@ -447,6 +447,11 @@ character:
         secondary: "Secundair"
         figurant: "Figurant"
 
+    flash:
+        created: "Personage succesvol aangemaakt!"
+        updated: "Personage bijgewerkt."
+        deleted: "Personage verwijderd."
+
 
 # ===== LOCATIES =====
 location:
@@ -518,12 +523,26 @@ location:
         historical: "Historisch"
         futuristic: "Futuristisch"
 
+    flash:
+        created: "Locatie succesvol aangemaakt!"
+        updated: "Locatie bijgewerkt."
+        deleted: "Locatie verwijderd."
+
 # ===== VERKENNING =====
 explore:
     tag: "Verkenning"
     title: "Publieke projecten"
     projects_count: "project(en) beschikbaar"
     search_placeholder: "Zoek naar een project, een auteur..."
+    home:
+        title: "Verkenning"
+        subtitle: "Ontdek de narratieve werelden gepubliceerd door de community."
+        search_placeholder: "Zoek naar een project, een auteur..."
+        search_btn: "Zoeken"
+        advanced: "Geavanceerd zoeken"
+    search:
+        title: "Zoeken"
+        back: "Terug naar verkenning"
     filter:
         all: "Alle"
         film: "Film"
@@ -745,14 +764,29 @@ world_event:
         updated: 'Gebeurtenis "%title%" bijgewerkt.'
         deleted: 'Gebeurtenis "%title%" verwijderd.'
 
+    type:
+        plot: "Intrige"
+        character: "Personage"
+        world: "Wereld"
+        conflict: "Conflict"
+        reveal: "Onthulling"
+        other: "Overige"
+
     form:
         section_main: "Informatie"
         section_date: "Narratieve datum"
+        section_category: "Categorie & koppelingen"
         section_location: "Gekoppelde locatie"
         date_help: "Gebruik de fictieve datums van je universum (bijv: Jaar 342, Maand 7, Dag 15)"
-        event_type: "Type gebeurtenis"
-        linked_scene: "Gekoppelde scène"
-        location: "Locatie"
+        event_type:
+            label: "Type gebeurtenis"
+            placeholder: "Selecteer een type…"
+        linked_scene:
+            label: "Gekoppelde scène"
+            placeholder: "Geen gekoppelde scène"
+        location:
+            label: "Locatie"
+            placeholder: "Geen gekoppelde locatie"
         title:
             label: "Titel"
             placeholder: "Titel van de gebeurtenis..."
@@ -960,6 +994,7 @@ nav:
     tasks: "Taken"
     notes: "Notities"
     more: "Meer"
+    toggle_labels: "Labels in-/uitklappen"
     collapse: "Inklappen"
     readonly_mode: "Leesmodus"
     public_page: "Openbare pagina"
@@ -1055,8 +1090,6 @@ comment_section:
         placeholder: "Deel je mening over dit project…"
         hint: "2 – 2000 tekens"
         submit: "Reageren"
-        login: "Log in"
-        login_suffix: "om een reactie achter te laten."
     empty: "Nog geen reacties. Wees de eerste!"
     reply: "↩ Antwoorden"
     cancel: "× Annuleren"
@@ -1077,6 +1110,25 @@ creator:
         support_singular: "steun"
         support_plural: "steunbetuigingen"
         see_profile: "Profiel bekijken"
+    edit_btn: "Bewerken"
+    bio_placeholder_empty: "Voeg een korte beschrijving toe…"
+    member_since: "Lid sinds"
+    public_projects: "%count% openbaar project|%count% openbare projecten"
+    edit:
+        firstname: "Voornaam"
+        lastname: "Achternaam"
+        bio: "Biografie"
+        bio_limit: "(max. 500 tekens)"
+        bio_placeholder: "Beschrijf jezelf in een paar woorden, je stijl, je projecten…"
+        save: "Opslaan"
+        cancel: "Annuleren"
+    projects:
+        mine: "Mijn projecten"
+        of: "Projecten van %name%"
+        create: "+ Aanmaken"
+        empty_own: "Je hebt nog geen projecten. Maak er een aan!"
+        empty_other: "Deze maker heeft nog geen projecten gepubliceerd."
+    back: "Terug naar verkenning"
 
 # ===== PUBLIEKE PROJECTKAART =====
 project_public:
@@ -1108,4 +1160,41 @@ project_show_public:
     workshop_btn_owner: "Beheren in werkplaats"
     workshop_btn_collab: "Werkplaats openen"
     about_title: "Over"
+
+# ════════════ MODERATIE ════════════
+moderation:
+    title: "Moderatie"
+    title_full: "Projectmoderatie"
+    manage_permissions: "Rechten beheren"
+    owner_section: "Projecteigenaar"
+    owner_badge: "Eigenaar"
+    collaborators: "Medewerkers"
+    empty: "Geen medewerkers op dit project."
+    invite_collaborators: "Medewerkers uitnodigen"
+    invite: "Uitnodigen"
+    member_since: "Lid sinds"
+    remove: "Verwijderen"
+    remove_title: "%name% uit het project verwijderen"
+    remove_confirm: "%name% uit het project verwijderen?"
+    active_permissions: "Actieve rechten"
+    customized: "aangepast"
+    default: "standaard"
+    stat_actions: "acties"
+    stat_creations: "creaties"
+    stat_edits: "bewerkingen"
+    recent_activity: "Recente activiteit"
+    no_activity: "Geen activiteit geregistreerd voor dit lid."
+    actions:
+        project_create: "Project aangemaakt"
+        project_edit: "Project bewerkt"
+        manuscript_create: "Scène aangemaakt"
+        manuscript_edit: "Scène bewerkt"
+        manuscript_delete: "Scène verwijderd"
+        character_create: "Personage aangemaakt"
+        character_edit: "Personage bewerkt"
+        location_create: "Locatie aangemaakt"
+        location_edit: "Locatie bewerkt"
+        note_create: "Notitie aangemaakt"
+        task_create: "Taak aangemaakt"
+        task_complete: "Taak voltooid"
 

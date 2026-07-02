@@ -80,6 +80,11 @@ users:
     show:
         roles_title: "Rollen"
         save_roles: "Rollen opslaan"
+        role_default: "Standaardrol (gebruiker)"
+        role_modo: "Moderator"
+        role_admin: "Beheerder"
+        role_super: "Super Admin"
+        own_roles_locked: "Je kunt je eigen rollen niet wijzigen."
         moderation_title: "Accountmoderatie"
         projects_title: "Projecten van %username% (%count%)"
     btn_search: "Zoeken"

@@ -4,6 +4,24 @@ import { Controller } from '@hotwired/stimulus';
 
 const BLOCK_TYPES = ['ACTION', 'SCENE', 'CHARACTER', 'DIALOGUE', 'PARENTHETICAL', 'TRANSITION'];
 
+// Certains scripts ont été enregistrés avec d'anciens codes de type (courts
+// et/ou en minuscules : "slug", "char", "diag"…). On les normalise vers les
+// codes longs utilisés par l'éditeur, pour que la mise en forme (gras,
+// majuscules, indentation) s'applique correctement quelle que soit
+// l'ancienneté du script.
+const LEGACY_TYPE_MAP = {
+    SLUG: 'SCENE', SCENE: 'SCENE',
+    ACTION: 'ACTION',
+    CHAR: 'CHARACTER', CHARACTER: 'CHARACTER',
+    DIAG: 'DIALOGUE', DIALOGUE: 'DIALOGUE',
+    PAREN: 'PARENTHETICAL', PARENTHETICAL: 'PARENTHETICAL',
+    TRANS: 'TRANSITION', TRANSITION: 'TRANSITION',
+};
+
+function normalizeBlockType(type) {
+    return LEGACY_TYPE_MAP[(type ?? 'ACTION').toUpperCase()] ?? 'ACTION';
+}
+
 const NEXT_TYPE_MAP = {
     ACTION:        'ACTION',
     SCENE:         'ACTION',
@@ -49,6 +67,44 @@ const PREVIEW_CSS = {
 // On garde 44px de marge de sécurité pour éviter les blocs à cheval
 const PAGE_CONTENT_HEIGHT = 928;
 
+/**
+ * Feuille de style de l'export PDF — réplique EXACTEMENT les dimensions et
+ * la typographie de .editor-paper / .block[data-type] (_scenario.css), pour
+ * que la pagination imprimée soit fidèle à celle affichée à l'écran.
+ *
+ * Le padding de .editor-paper (64/72/64/80) est reproduit via la marge de
+ * @page — appliquée automatiquement à CHAQUE page physique générée, y
+ * compris celles créées par un débordement naturel (export manuscrit, où le
+ * contenu n'est pas pré-découpé page par page). Un padding posé sur un div
+ * ne s'appliquerait qu'une fois à ses propres bords, pas à chaque saut de
+ * page — d'où le choix de @page ici.
+ *
+ * Page imprimée 700×1100px = taille exacte de .editor-paper : tout ce que
+ * l'éditeur place sur une page tient donc garanti sur la page imprimée
+ * correspondante.
+ *
+ * Utilisée à l'identique par ms_export_controller.js pour que l'export d'un
+ * script seul et l'export manuscrit produisent un rendu strictement identique.
+ */
+function PDF_STYLESHEET(fontRegularUrl, fontBoldUrl) {
+    return `
+@font-face{font-family:'Courier Prime';src:url('${fontRegularUrl}');font-weight:400;font-style:normal}
+@font-face{font-family:'Courier Prime';src:url('${fontBoldUrl}');font-weight:700;font-style:normal}
+*{box-sizing:border-box;margin:0;padding:0}
+@page{size:700px 1100px;margin:64px 72px 64px 80px}
+body{font-family:'Courier Prime','Courier New',monospace;color:#000;background:#fff}
+.fp-title-page{display:flex;align-items:center;justify-content:center;min-height:972px;page-break-after:always;break-after:page}
+h1.pdf-title{font-size:24px;text-align:center;text-transform:uppercase}
+.fp-page:first-of-type .fp-slug:first-child{margin-top:0}
+.fp-slug{font-size:12px;line-height:1.8;text-transform:uppercase;font-weight:700;margin-top:32px;padding:3px 0 3px 10px;page-break-after:avoid;break-after:avoid-page}
+.fp-char{font-size:13px;line-height:1.8;text-transform:uppercase;font-weight:700;text-align:center;margin-top:28px;padding:3px 0;page-break-after:avoid;break-after:avoid-page}
+.fp-diag{font-size:14px;line-height:1.8;padding:3px 90px;page-break-inside:avoid;break-inside:avoid}
+.fp-paren{font-size:13px;line-height:1.8;font-style:italic;padding:3px 130px;page-break-after:avoid;break-after:avoid-page}
+.fp-transition{font-size:12px;line-height:1.8;text-transform:uppercase;font-weight:600;text-align:right;margin-top:24px;padding:3px 10px 3px 0;page-break-after:avoid;break-after:avoid-page}
+.fp-action{font-size:14px;line-height:1.8;padding:3px 0 3px 10px;page-break-inside:avoid;break-inside:avoid}
+.fp-blank{height:1.6em}`;
+}
+
 // ── Constantes mentions ─────────────────────────────────────────────────────
 
 const MENTION_TRIGGERS = {
@@ -83,6 +139,8 @@ export default class extends Controller {
         locations:           { type: Array,   default: [] },
         noteNewUrl:          { type: String,  default: '' },
         i18n:                { type: Object,  default: {} },
+        fontRegularUrl:      { type: String,  default: '' },
+        fontBoldUrl:         { type: String,  default: '' },
     };
 
     // ── Lifecycle ────────────────────────────────────────────────────────────
@@ -197,7 +255,7 @@ export default class extends Controller {
         stage.appendChild(firstPage);
 
         for (const b of blocks) {
-            firstPaper.appendChild(this._createBlock(b.type ?? 'ACTION', b.content ?? ''));
+            firstPaper.appendChild(this._createBlock(normalizeBlockType(b.type), b.content ?? ''));
         }
 
         this.updateStats();
@@ -722,51 +780,63 @@ export default class extends Controller {
     exportPDF() {
         const title = this.elementTitleValue || 'Script';
 
-        // Récupérer les blocs par page (ordre exact = fidèle à l'éditeur)
+        // Récupérer les blocs par page (ordre exact = fidèle à l'éditeur) :
+        // chaque page imprimée reçoit exactement les blocs de la page
+        // correspondante à l'écran, donc aucune pagination n'est recalculée
+        // indépendamment (voir PDF_STYLESHEET pour le détail du calibrage).
         const pages = [...this.stageTarget.querySelectorAll('.editor-page')];
-        let html = '';
+        const cssMap = {
+            SCENE:'fp-slug', CHARACTER:'fp-char', DIALOGUE:'fp-diag',
+            PARENTHETICAL:'fp-paren', TRANSITION:'fp-transition', ACTION:'fp-action',
+        };
+
+        let html = `<div class="fp-title-page"><h1 class="pdf-title">${this._esc(title)}</h1></div>`;
 
         pages.forEach((page, pageIdx) => {
-            if (pageIdx > 0) html += `<div style="page-break-before:always"></div>`;
             const blocksOnPage = [...page.querySelectorAll('.block-wrapper .block')];
+            let pageHtml = '';
             for (const el of blocksOnPage) {
                 const b = { type: el.dataset.type ?? 'ACTION', content: el.textContent.trim() };
                 const c = b.content;
-                if (!c) { html += '<div class="fp-blank"></div>'; continue; }
-                const cssMap = {
-                    SCENE:'fp-slug', CHARACTER:'fp-char', DIALOGUE:'fp-diag',
-                    PARENTHETICAL:'fp-paren', TRANSITION:'fp-transition', ACTION:'fp-action',
-                };
-                html += `<div class="${cssMap[b.type] ?? 'fp-action'}">${this._esc(c)}</div>`;
+                if (!c) { pageHtml += '<div class="fp-blank"></div>'; continue; }
+                let text = this._esc(c);
+                if (b.type === 'PARENTHETICAL' && !/^\(.*\)$/.test(c)) text = `(${text})`;
+                pageHtml += `<div class="${cssMap[b.type] ?? 'fp-action'}">${text}</div>`;
             }
+            const style = pageIdx > 0 ? ' style="page-break-before:always"' : '';
+            html += `<div class="fp-page"${style}>${pageHtml}</div>`;
         });
 
         const win = window.open('', '_blank');
         if (!win) { alert('Autorisez les popups pour exporter en PDF.'); return; }
         const _origin = window.location.origin;
+        const fontRegularUrl = _origin + this.fontRegularUrlValue;
+        const fontBoldUrl    = _origin + this.fontBoldUrlValue;
         win.document.write(`<!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8"><title>${this._esc(title)}</title>
 <style>
-@font-face{font-family:'Courier Prime';src:url('${_origin}/assets/fonts/display/CourierPrime-Regular.ttf');font-weight:400;font-style:normal}
-@font-face{font-family:'Courier Prime';src:url('${_origin}/assets/fonts/display/CourierPrime-Bold.ttf');font-weight:700;font-style:normal}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Courier Prime','Courier New',monospace;font-size:12pt;line-height:1.6;color:#000;background:#fff;padding:1.2in 1.5in 1in}
-@page{margin:1in}
-h1.pdf-title{font-size:18pt;text-align:center;margin-bottom:3em;text-transform:uppercase}
-.fp-slug{text-transform:uppercase;font-weight:700;margin:1.5em 0 .5em}
-.fp-char{text-transform:uppercase;margin:1em 0 0;margin-left:40%}
-.fp-diag{margin:.1em 0 .8em;margin-left:25%;margin-right:15%}
-.fp-paren{margin-left:30%;margin-right:20%;font-style:italic}
-.fp-transition{text-transform:uppercase;text-align:right;margin:1em 0}
-.fp-action{margin:.75em 0}
-.fp-blank{height:.6em}
+${PDF_STYLESHEET(fontRegularUrl, fontBoldUrl)}
 </style></head>
 <body>
-<h1 class="pdf-title">${this._esc(title)}</h1>
 ${html}
 </body></html>`);
         win.document.close();
-        setTimeout(() => { win.focus(); win.print(); }, 400);
+        this._printWhenFontsReady(win);
+    }
+
+    /**
+     * Attend que les polices (Courier Prime) soient effectivement chargées
+     * avant d'imprimer — sinon le navigateur peut laisser le texte invisible
+     * (flash of invisible text) le temps que la police charge, ce qui donne
+     * une page imprimée/PDF sans aucun texte.
+     */
+    _printWhenFontsReady(win) {
+        const doPrint = () => { win.focus(); win.print(); };
+        if (win.document.fonts?.ready) {
+            win.document.fonts.ready.then(doPrint).catch(doPrint);
+        } else {
+            setTimeout(doPrint, 400);
+        }
     }
 
     saveParams() {

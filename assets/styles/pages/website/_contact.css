@@ -23,7 +23,7 @@
 
 /* ── Colonne gauche ────────────────────────────────────────────── */
 .contact-info .main-title {
-    font-size: 56px;
+    font-size: var(--fs-3xl);
     line-height: 1.1;
     margin-bottom: 25px;
 }
@@ -288,12 +288,12 @@
 /* RESPONSIVE                                                       */
 /* ═══════════════════════════════════════════════════════════════ */
 
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
     .contact-grid { grid-template-columns: 1fr; gap: 50px; }
 }
 
 @media (max-width: 768px) {
     .contact-form .form-check .invalid-feedback { margin-left: 0; margin-top: 8px; }
     .form-card { padding: 30px; }
-    .contact-info .main-title { font-size: 42px; }
+    /* .contact-info .main-title : font-size fluide via --fs-3xl */
 }

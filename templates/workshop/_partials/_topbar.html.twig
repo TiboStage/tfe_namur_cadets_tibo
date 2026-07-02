@@ -27,6 +27,7 @@
 
                 <a href="{{ path('app_workshop_explore', {_locale: app.request.locale}) }}"
                    class="{{ app.request.attributes.get('_route') starts with 'app_workshop_explore'
+                             or app.request.attributes.get('_route') starts with 'app_workshop_search'
                              or app.request.attributes.get('_route') starts with 'app_project_public'
                              or app.request.attributes.get('_route') starts with 'app_workshop_creator'
                              or app.request.attributes.get('_route') starts with 'app_element_reader'
@@ -142,6 +143,7 @@
             </a>
             <a href="{{ path('app_workshop_explore', {_locale: app.request.locale}) }}"
                class="{{ app.request.attributes.get('_route') starts with 'app_workshop_explore'
+                         or app.request.attributes.get('_route') starts with 'app_workshop_search'
                          or app.request.attributes.get('_route') starts with 'app_project_public'
                          or app.request.attributes.get('_route') starts with 'app_workshop_creator'
                          or app.request.attributes.get('_route') starts with 'app_element_reader'

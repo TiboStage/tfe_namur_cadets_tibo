@@ -438,7 +438,7 @@
 }
 
 /* ── Responsive ───────────────────────────────────────────── */
-@media (max-width: 860px) {
+@media (max-width: 768px) {
     .auth-fullpage {
         grid-template-columns: 1fr;
     }

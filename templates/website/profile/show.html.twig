@@ -13,7 +13,9 @@
        ══════════════════════════════════════════════════════ #}
     <div class="pf-card">
 
-        <div class="pf-card__banner">
+        <div class="pf-card__banner"
+             style="--banner-color: {{ user.avatarColor ?? '#6366f1' }};"
+             data-profile-color-target="banner">
             <div class="pf-card__banner-glow"></div>
         </div>
 

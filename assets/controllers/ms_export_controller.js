@@ -1,11 +1,28 @@
 import { Controller } from '@hotwired/stimulus';
 
+// Certains scripts ont été enregistrés avec d'anciens codes de type (courts
+// et/ou en minuscules : "slug", "char", "diag"…). On les normalise vers les
+// codes longs utilisés par fountain_editor_controller.js, pour que l'export
+// applique la bonne mise en forme quelle que soit l'ancienneté du script.
+const LEGACY_TYPE_MAP = {
+    SLUG: 'SCENE', SCENE: 'SCENE',
+    ACTION: 'ACTION',
+    CHAR: 'CHARACTER', CHARACTER: 'CHARACTER',
+    DIAG: 'DIALOGUE', DIALOGUE: 'DIALOGUE',
+    PAREN: 'PARENTHETICAL', PARENTHETICAL: 'PARENTHETICAL',
+    TRANS: 'TRANSITION', TRANSITION: 'TRANSITION',
+};
+
+function normalizeBlockType(type) {
+    return LEGACY_TYPE_MAP[(type ?? 'ACTION').toUpperCase()] ?? 'ACTION';
+}
+
 // ── Helpers Fountain ─────────────────────────────────────────────────────────
 
 function blockToFountain(b) {
     const c = (b.content ?? '').trim();
     if (!c) return '';
-    switch ((b.type ?? '').toUpperCase()) {
+    switch (normalizeBlockType(b.type)) {
         case 'SCENE':         return c.toUpperCase() + '\n\n';
         case 'CHARACTER':     return c.toUpperCase() + '\n';
         case 'DIALOGUE':      return c + '\n\n';
@@ -24,35 +41,64 @@ function scriptToFountain(script) {
 }
 
 // ── Helpers PDF ──────────────────────────────────────────────────────────────
+// Classes fp-* et PDF_STYLESHEET identiques à fountain_editor_controller.js
+// — garantit un rendu strictement identique entre l'export d'un seul script
+// et l'export manuscrit multi-scripts.
+//
+// Contrairement à l'export d'un script seul, on n'a pas ici la pagination
+// déjà calculée par l'éditeur (les autres scripts ne sont pas ouverts) : le
+// contenu de chaque script s'écoule donc naturellement sur autant de pages
+// que nécessaire, avec les mêmes règles anti-orphelin (voir PDF_STYLESHEET).
 
-const BLOCK_CSS = {
-    SCENE:         'font-weight:700;text-transform:uppercase;font-size:13px;margin-top:24px;padding-top:16px;border-top:1px solid #ccc;letter-spacing:.5px;',
-    ACTION:        'font-size:13px;margin:6px 0;line-height:1.75;',
-    CHARACTER:     'font-weight:700;text-transform:uppercase;font-size:13px;text-align:center;margin-top:16px;padding-left:20%;',
-    DIALOGUE:      'font-size:13px;padding:0 15% 0 10%;margin:2px 0;line-height:1.75;',
-    PARENTHETICAL: 'font-size:13px;font-style:italic;padding:0 20% 0 14%;margin:2px 0;color:#555;',
-    TRANSITION:    'font-weight:700;text-transform:uppercase;font-size:13px;text-align:right;margin-top:16px;',
+const PDF_CSS_CLASS = {
+    SCENE: 'fp-slug', CHARACTER: 'fp-char', DIALOGUE: 'fp-diag',
+    PARENTHETICAL: 'fp-paren', TRANSITION: 'fp-transition', ACTION: 'fp-action',
 };
 
 function blockToHtml(b) {
     const c = (b.content ?? '').trim();
-    if (!c) return '';
-    const type  = (b.type ?? 'ACTION').toUpperCase();
-    const style = BLOCK_CSS[type] ?? BLOCK_CSS.ACTION;
-    const text  = c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    let content = text;
-    if (type === 'PARENTHETICAL') content = `(${text})`;
-    return `<div style="${style}">${content}</div>`;
+    if (!c) return '<div class="fp-blank"></div>';
+    const type = normalizeBlockType(b.type);
+    const cls  = PDF_CSS_CLASS[type] ?? 'fp-action';
+    let text   = c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    if (type === 'PARENTHETICAL' && !/^\(.*\)$/.test(c)) text = `(${text})`;
+    return `<div class="${cls}">${text}</div>`;
 }
 
-function scriptToHtml(script) {
-    let html = `<div style="font-weight:700;font-size:18px;margin:32px 0 20px;border-bottom:2px solid #000;padding-bottom:8px;">${
-        script.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    }</div>`;
+function scriptToHtml(script, isFirst) {
+    const title = script.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const style = isFirst ? '' : ' style="page-break-before:always"';
+    let html = `<div class="fp-title-page"${style}><h1 class="pdf-title">${title}</h1></div>`;
+    let body = '';
     for (const b of (script.content ?? [])) {
-        html += blockToHtml(b);
+        body += blockToHtml(b);
     }
+    html += `<div class="fp-page">${body}</div>`;
     return html;
+}
+
+/**
+ * Feuille de style de l'export PDF — copie exacte de
+ * fountain_editor_controller.js#PDF_STYLESHEET (voir ce fichier pour le
+ * détail du calibrage : dimensions et marges reprennent .editor-paper).
+ */
+function PDF_STYLESHEET(fontRegularUrl, fontBoldUrl) {
+    return `
+@font-face{font-family:'Courier Prime';src:url('${fontRegularUrl}');font-weight:400;font-style:normal}
+@font-face{font-family:'Courier Prime';src:url('${fontBoldUrl}');font-weight:700;font-style:normal}
+*{box-sizing:border-box;margin:0;padding:0}
+@page{size:700px 1100px;margin:64px 72px 64px 80px}
+body{font-family:'Courier Prime','Courier New',monospace;color:#000;background:#fff}
+.fp-title-page{display:flex;align-items:center;justify-content:center;min-height:972px;page-break-after:always;break-after:page}
+h1.pdf-title{font-size:24px;text-align:center;text-transform:uppercase}
+.fp-page:first-of-type .fp-slug:first-child{margin-top:0}
+.fp-slug{font-size:12px;line-height:1.8;text-transform:uppercase;font-weight:700;margin-top:32px;padding:3px 0 3px 10px;page-break-after:avoid;break-after:avoid-page}
+.fp-char{font-size:13px;line-height:1.8;text-transform:uppercase;font-weight:700;text-align:center;margin-top:28px;padding:3px 0;page-break-after:avoid;break-after:avoid-page}
+.fp-diag{font-size:14px;line-height:1.8;padding:3px 90px;page-break-inside:avoid;break-inside:avoid}
+.fp-paren{font-size:13px;line-height:1.8;font-style:italic;padding:3px 130px;page-break-after:avoid;break-after:avoid-page}
+.fp-transition{font-size:12px;line-height:1.8;text-transform:uppercase;font-weight:600;text-align:right;margin-top:24px;padding:3px 10px 3px 0;page-break-after:avoid;break-after:avoid-page}
+.fp-action{font-size:14px;line-height:1.8;padding:3px 0 3px 10px;page-break-inside:avoid;break-inside:avoid}
+.fp-blank{height:1.6em}`;
 }
 
 // ── Controller ───────────────────────────────────────────────────────────────
@@ -62,8 +108,10 @@ export default class extends Controller {
     static targets = ['modal', 'list', 'count'];
 
     static values = {
-        scripts:      { type: Array,  default: [] },
-        projectTitle: { type: String, default: '' },
+        scripts:       { type: Array,  default: [] },
+        projectTitle:  { type: String, default: '' },
+        fontRegularUrl: { type: String, default: '' },
+        fontBoldUrl:    { type: String, default: '' },
     };
 
     connect() {
@@ -199,40 +247,45 @@ export default class extends Controller {
         if (!selected.length) { alert('Aucun script sélectionné.'); return; }
 
         const title = this.projectTitleValue || 'Manuscrit';
-        const date  = new Date().toLocaleDateString('fr-BE');
 
         let body = '';
         selected.forEach((script, idx) => {
-            const pageBreak = idx > 0 ? 'page-break-before:always;' : '';
-            body += `<div style="${pageBreak}padding:64px 72px 64px 80px;font-family:'Courier Prime','Courier New',monospace;max-width:816px;margin:0 auto;">`;
-            body += scriptToHtml(script);
-            body += `</div>`;
+            body += scriptToHtml(script, idx === 0);
         });
 
         const _origin = window.location.origin;
-        const html = `<!DOCTYPE html><html><head>
-            <meta charset="UTF-8">
-            <title>${this._esc(title)}</title>
-            <style>
-                @font-face{font-family:'Courier Prime';src:url('${_origin}/assets/fonts/display/CourierPrime-Regular.ttf');font-weight:400;font-style:normal}
-                @font-face{font-family:'Courier Prime';src:url('${_origin}/assets/fonts/display/CourierPrime-Bold.ttf');font-weight:700;font-style:normal}
-                * { box-sizing: border-box; margin: 0; padding: 0; }
-                body { background: #fff; color: #000; }
-                @media print {
-                    @page { margin: 0; size: A4; }
-                    body { -webkit-print-color-adjust: exact; }
-                }
-            </style>
-        </head><body>${body}</body></html>`;
+        const fontRegularUrl = _origin + this.fontRegularUrlValue;
+        const fontBoldUrl    = _origin + this.fontBoldUrlValue;
+        const html = `<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><title>${this._esc(title)}</title>
+<style>
+${PDF_STYLESHEET(fontRegularUrl, fontBoldUrl)}
+</style>
+</head><body>${body}</body></html>`;
 
         const win = window.open('', '_blank', 'width=900,height=700');
         if (!win) { alert('Autoriser les popups pour générer le PDF.'); return; }
         win.document.write(html);
         win.document.close();
-        win.addEventListener('load', () => { win.focus(); win.print(); });
+        this._printWhenFontsReady(win);
     }
 
     // ── Utilitaires ───────────────────────────────────────────────────────────
+
+    /**
+     * Attend que les polices (Courier Prime) soient effectivement chargées
+     * avant d'imprimer — sinon le navigateur peut laisser le texte invisible
+     * (flash of invisible text) le temps que la police charge, ce qui donne
+     * une page imprimée/PDF sans aucun texte.
+     */
+    _printWhenFontsReady(win) {
+        const doPrint = () => { win.focus(); win.print(); };
+        if (win.document.fonts?.ready) {
+            win.document.fonts.ready.then(doPrint).catch(doPrint);
+        } else {
+            doPrint();
+        }
+    }
 
     _download(content, filename, mime) {
         const blob = new Blob([content], { type: mime });

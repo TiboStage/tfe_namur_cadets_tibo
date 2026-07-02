@@ -110,7 +110,17 @@
                     <div></div>
                 </div>
 
+                {% set type_icons = {
+                    interior:   'lucide:home',
+                    exterior:   'lucide:trees',
+                    fantasy:    'lucide:wand-2',
+                    historical: 'lucide:castle',
+                    futuristic: 'lucide:rocket'
+                } %}
+
                 {% for location in locations %}
+                    {% set type_class = location.type ? 'location-type-' ~ location.type : '' %}
+                    {% set type_icon  = type_icons[location.type] ?? 'lucide:map-pin' %}
 
                     {# ── VUE GRILLE ── #}
                     <div class="grid-only"
@@ -118,50 +128,74 @@
                          data-id="{{ location.id }}"
                          data-sort-name="{{ location.name|lower }}"
                          data-sort-date="{{ location.createdAt|date('Y-m-d') }}">
-                        <a href="{{ path('app_location_show', {project_slug: project.slug, id: location.id}) }}"
-                           class="character-card">
+                        <article class="character-card {{ type_class }}">
 
-                            <div class="character-card-header">
-                                <div class="character-card-avatar location-card-avatar">
-                                    {{ ux_icon('lucide:map-pin', {class: 'icon-sm'}) }}
-                                </div>
-                                <div class="character-card-identity">
-                                    <span class="character-card-name">{{ location.name }}</span>
-                                    {% if location.parent %}
-                                        <span class="character-card-nickname">
-                                            {{ ux_icon('lucide:corner-up-right', {class: 'icon-3xs'}) }}
-                                            {{ location.parent.name }}
-                                        </span>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <div class="character-card-body">
+                            <div class="character-card-top">
                                 {% if location.type %}
-                                    <span class="character-card-role-badge location-type-{{ location.type }}">
-                                        {{ ux_icon('lucide:tag', {class: 'icon-xs'}) }}
+                                    <span class="character-card-role-badge {{ type_class }}">
                                         {{ ('location.type.' ~ location.type)|trans }}
                                     </span>
+                                {% else %}
+                                    <span class="character-card-role-badge">—</span>
                                 {% endif %}
+                                <span class="character-card-icon">
+                                    {{ ux_icon(type_icon, {class: 'icon-sm'}) }}
+                                </span>
+                            </div>
+
+                            <div class="character-card-main">
+                                <a href="{{ path('app_location_show', {project_slug: project.slug, id: location.id}) }}"
+                                   class="character-card-name-link">
+                                    <span class="character-card-name">{{ location.name }}</span>
+                                </a>
+                                <span class="character-card-nickname">
+                                    {% if location.parent %}
+                                        {{ ux_icon('lucide:corner-up-right', {class: 'icon-3xs'}) }}
+                                        {{ location.parent.name }}
+                                    {% endif %}
+                                </span>
                                 {% if location.description %}
                                     <p class="character-card-excerpt">{{ location.description }}</p>
+                                {% else %}
+                                    <p class="character-card-excerpt character-card-excerpt--empty">{{ 'location.show.no_description'|trans }}</p>
                                 {% endif %}
                             </div>
 
                             <div class="character-card-footer">
-                                <span class="character-card-meta">
-                                    {{ location.createdAt|date('d/m/Y') }}
-                                    {% if location.children|length > 0 %}
-                                        · {{ location.children|length }}
-                                        {{ ux_icon('lucide:map-pin', {class: 'icon-3xs'}) }}
-                                    {% endif %}
-                                </span>
-                                <span class="character-card-arrow">
-                                    {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
-                                </span>
+                                {% if not (readonly ?? false) %}
+                                    <form method="post"
+                                          action="{{ path('app_location_delete', {project_slug: project.slug, id: location.id}) }}"
+                                          data-action="submit->confirm-modal#intercept"
+                                          data-confirm-message="{{ 'location.edit.delete_confirm'|trans }}"
+                                          class="resource-card-delete-form">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_location_' ~ location.id) }}">
+                                        <button type="submit" class="resource-card-delete"
+                                                aria-label="{{ 'location.edit.delete_btn'|trans }}">
+                                            {{ ux_icon('lucide:trash-2', {class: 'icon-xs'}) }}
+                                        </button>
+                                    </form>
+                                    <a href="{{ path('app_location_edit', {project_slug: project.slug, id: location.id}) }}"
+                                       class="resource-card-edit">
+                                        {{ 'location.show.edit_btn'|trans }}
+                                        {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
+                                    </a>
+                                {% else %}
+                                    <span class="character-card-meta">
+                                        {{ location.createdAt|date('d/m/Y') }}
+                                        {% if location.children|length > 0 %}
+                                            · {{ location.children|length }}
+                                            {{ ux_icon('lucide:map-pin', {class: 'icon-3xs'}) }}
+                                        {% endif %}
+                                    </span>
+                                    <a href="{{ path('app_location_show', {project_slug: project.slug, id: location.id}) }}"
+                                       class="resource-card-edit">
+                                        {{ 'location.index.title'|trans }}
+                                        {{ ux_icon('lucide:arrow-right', {class: 'icon-xs'}) }}
+                                    </a>
+                                {% endif %}
                             </div>
 
-                        </a>
+                        </article>
                     </div>
 
                     {# ── VUE LISTE ── #}
@@ -173,8 +207,8 @@
                        data-sort-date="{{ location.createdAt|date('Y-m-d') }}">
 
                         <div class="character-list-main">
-                            <div class="character-list-avatar location-list-avatar">
-                                {{ ux_icon('lucide:map-pin', {class: 'icon-xs'}) }}
+                            <div class="character-list-avatar {{ type_class }}">
+                                {{ ux_icon(type_icon, {class: 'icon-xs'}) }}
                             </div>
                             <div>
                                 <div class="character-list-name">{{ location.name }}</div>
@@ -189,7 +223,7 @@
 
                         <div class="character-list-role">
                             {% if location.type %}
-                                <span class="character-card-role-badge location-type-{{ location.type }}">
+                                <span class="character-card-role-badge {{ type_class }}">
                                     {{ ('location.type.' ~ location.type)|trans }}
                                 </span>
                             {% else %}

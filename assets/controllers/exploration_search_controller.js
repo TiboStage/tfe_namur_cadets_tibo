@@ -37,6 +37,8 @@ export default class extends Controller {
         initialQuery: { type: String, default: '' },
         initialType:  { type: String, default: '' },
         initialGenre: { type: String, default: '' },
+        initialMode:  { type: String, default: 'projet' },
+        initialSort:  { type: String, default: '' },
     };
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -45,8 +47,8 @@ export default class extends Controller {
         this._query = this.initialQueryValue;
         this._type  = this.initialTypeValue;
         this._genre = this.initialGenreValue;
-        this._sort  = 'recent';
-        this._mode  = 'projet';
+        this._mode  = this.initialModeValue || 'projet';
+        this._sort  = this.initialSortValue || (this._mode === 'auteur' ? 'az' : 'recent');
         this._page  = 1;
         this._pages = 0;
         this._timer = null;
@@ -58,6 +60,16 @@ export default class extends Controller {
         }
         if (this.hasTypeSelectTarget  && this._type)  this.typeSelectTarget.value  = this._type;
         if (this.hasGenreSelectTarget && this._genre) this.genreSelectTarget.value = this._genre;
+
+        // Appliquer l'UI du mode Auteur si on arrive dessus depuis l'URL
+        if (this._mode === 'auteur') {
+            this.modeBtnTargets.forEach(btn =>
+                btn.classList.toggle('active', btn.dataset.mode === 'auteur')
+            );
+            this.typeSectionTargets.forEach(col => col.classList.add('xfilter-col--locked'));
+            if (this.hasProjectSortOptionsTarget) this.projectSortOptionsTarget.hidden = true;
+            if (this.hasAuthorSortOptionsTarget)  this.authorSortOptionsTarget.hidden  = false;
+        }
 
         this._filterGenreOptions();
 
@@ -373,7 +385,8 @@ export default class extends Controller {
             const skeleton = this._mode === 'auteur'
                 ? this._skeletonAuthorCard()
                 : this._skeletonCard();
-            this.resultsGridTarget.innerHTML = Array(5).fill(skeleton).join('');
+            // 8 = même taille de page que le back → pas de saut de layout
+            this.resultsGridTarget.innerHTML = Array(8).fill(skeleton).join('');
         }
 
         try {

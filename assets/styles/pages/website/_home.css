@@ -30,7 +30,7 @@
 }
 
 .hero h1 {
-    font-size: 72px;
+    font-size: var(--fs-hero);   /* fluide 34→72px (remplace les paliers 72/52/38) */
     font-weight: 900;
     letter-spacing: -3px;
     line-height: 1.0;
@@ -98,7 +98,7 @@
 }
 
 .features-section .main-title {
-    font-size: 42px;
+    font-size: var(--fs-3xl);
     font-weight: 900;
     line-height: 1.15;
     margin-bottom: 16px;
@@ -184,7 +184,7 @@
 }
 
 .for-whom-section h2 {
-    font-size: 42px;
+    font-size: var(--fs-3xl);
     font-weight: 900;
     margin-top: 16px;
     margin-bottom: 60px;
@@ -251,7 +251,7 @@
 }
 
 .cta-final h2 {
-    font-size: 56px;
+    font-size: var(--fs-3xl);
     font-weight: 900;
     letter-spacing: -2px;
     line-height: 1.1;
@@ -286,15 +286,12 @@
     .hero{
         padding: 0;
     }
-    .hero h1 {
-        font-size: 52px;
-    }
+    /* .hero h1 : font-size gérée par --fs-hero (fluide) */
 }
 
 @media (max-width: 768px) {
     .hero h1 {
-        font-size: 38px;
-        letter-spacing: -1px;
+        letter-spacing: -1px;   /* on garde juste l'ajustement d'interlettrage */
     }
 
     .hero-actions {
@@ -309,10 +306,5 @@
     .creator-grid {
         grid-template-columns: 1fr;
     }
-
-    .features-section .main-title,
-    .for-whom-section h2,
-    .cta-final h2 {
-        font-size: 32px;
-    }
+    /* titres de section : font-size gérée par --fs-3xl (fluide) */
 }

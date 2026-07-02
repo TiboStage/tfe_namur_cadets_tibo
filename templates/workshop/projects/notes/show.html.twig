@@ -27,7 +27,8 @@
 
                 <form method="post"
                       action="{{ path('app_note_delete', {project_slug: project.slug, id: note.id}) }}"
-                      data-turbo-confirm="{{ 'note.confirm_delete'|trans }}"
+                      data-action="submit->confirm-modal#intercept"
+                      data-confirm-message="{{ 'note.confirm_delete'|trans }}"
                       class="d-inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ note.id) }}">
                     <button type="submit" class="btn-delete">
@@ -41,10 +42,10 @@
         {# Contenu principal #}
         <div class="content-wrapper">
 
-            <div class="info-card">
+            <div class="detail-card">
 
                 {# Statut et priorité #}
-                <div class="info-card-section">
+                <div class="detail-card__section">
                     <div class="task-badges">
                         <span class="badge-status badge-status-{{ note.status }}">
                             {{ ('note.status.' ~ note.status)|trans }}
@@ -56,8 +57,8 @@
                 </div>
 
                 {# Contenu #}
-                <div class="info-card-section">
-                    <h3 class="info-card-title">
+                <div class="detail-card__section">
+                    <h3 class="detail-card__title">
                         {{ ux_icon('lucide:file-text', {class: 'icon-sm'}) }}
                         {{ 'note.show.content'|trans }}
                     </h3>
@@ -68,15 +69,13 @@
 
                 {# Assignation #}
                 {% if note.assignedTo %}
-                    <div class="info-card-section">
-                        <h3 class="info-card-title">
+                    <div class="detail-card__section">
+                        <h3 class="detail-card__title">
                             {{ ux_icon('lucide:user', {class: 'icon-sm'}) }}
                             {{ 'note.show.assigned_to'|trans }}
                         </h3>
                         <div class="note-assignee-display">
-                            <div class="assignee-avatar-large">
-                                {{ note.assignedTo.username|first|upper }}
-                            </div>
+                            {{ include('_partials/_user_avatar.html.twig', {user: note.assignedTo, size: 'lg', link: true}) }}
                             <div>
                                 <div class="assignee-name">{{ note.assignedTo.username }}</div>
                                 {% if note.assignedTo.email %}
@@ -88,12 +87,13 @@
                 {% endif %}
 
                 {# Auteur #}
-                <div class="info-card-section">
-                    <h3 class="info-card-title">
+                <div class="detail-card__section">
+                    <h3 class="detail-card__title">
                         {{ ux_icon('lucide:user-check', {class: 'icon-sm'}) }}
                         {{ 'note.show.author'|trans }}
                     </h3>
                     <div class="note-author">
+                        {{ include('_partials/_user_avatar.html.twig', {user: note.author, size: 'sm', link: true}) }}
                         <span class="author-name">{{ note.author.username }}</span>
                         <span class="author-date">{{ note.createdAt|date('d/m/Y H:i') }}</span>
                     </div>
