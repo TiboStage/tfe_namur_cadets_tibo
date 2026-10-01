@@ -11,6 +11,7 @@ auth:
     logout: "À bientôt !"
     logout_success: "Vous êtes maintenant déconnecté"
     register_success: "Compte créé avec succès ! Veuillez vous connecter."
+    reset_password_success: "Votre mot de passe a été réinitialisé avec succès. Vous pouvez vous connecter."
 
 # ===== PROFIL =====
 profile:
@@ -30,6 +31,7 @@ project:
     settings_saved_slug: "Paramètres enregistrés. L'URL du projet a été mise à jour."
     structure_updated: "Structure mise à jour."
     visibility_invalid: "Visibilité invalide."
+    limit_reached: "Vous avez atteint la limite de %limit% projets de votre forfait. Supprimez un projet existant ou passez à un forfait supérieur pour en créer un nouveau."
 
 # ===== VALIDATION FORMULAIRE =====
 validation:

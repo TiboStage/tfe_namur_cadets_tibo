@@ -496,6 +496,15 @@
     position: relative;
 }
 
+/* Un bloc seul plus grand qu'une page (long monologue…) ne peut pas être
+   scindé automatiquement : on préfère laisser la feuille grandir plutôt que
+   de tronquer silencieusement le texte en dehors du cadre visible. */
+.editor-paper--overflow {
+    height: auto;
+    min-height: 1100px;
+    overflow: visible;
+}
+
 /* Zone contenteditable */
 .fountain-editor {
     width: 100%;
@@ -1104,6 +1113,28 @@
     border-radius: 2px;
 }
 
+/* Fiche existante → lien vers la fiche personnage */
+a.edetect-char-chip--linked {
+    color: var(--color-primary);
+    border-color: rgba(245, 196, 0, 0.35);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+}
+a.edetect-char-chip--linked:hover {
+    background: var(--color-primary-medium);
+    border-color: var(--color-primary);
+}
+
+/* Pas encore de fiche → simple étiquette, sans lien */
+.edetect-char-chip--missing {
+    background: transparent;
+    color: var(--text-muted);
+    border-style: dashed;
+    border-color: var(--color-border-light);
+    cursor: default;
+}
+
 /* ── Page de création d'élément (modal) ──────────────────────────── */
 
 /* Carte principale */
@@ -1210,68 +1241,6 @@
     padding-bottom: 120px;
 }
 
-
-/* ── Indicateur de saut de page ──────────────────────────────────────────── */
-
-/*
- * Simule une vraie coupure de page :
- *   ─ ligne de fin de page (bord jaune, label page N)
- *   ─ espace "inter-page" (fond sombre = hors feuille)
- *   ─ ligne de début de page suivante (label page N+1)
- *
- * Les marges négatives font dépasser l'indicateur hors du padding du papier
- * (left: -80px, right: -72px) pour couvrir toute la largeur de la feuille.
- */
-.page-break-indicator {
-    position: relative;
-    /* Dépasse sur toute la largeur du papier (padding: 64px 72px 64px 80px) */
-    margin: 0 -72px 0 -80px;
-    height: 52px;
-    pointer-events: none;
-    user-select: none;
-    -webkit-user-select: none;
-    /* Fond "entre deux feuilles" */
-    background: var(--color-bg-inset);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-/* Ligne haute = fin de page N */
-.page-break-indicator::before,
-.page-break-indicator::after {
-    content: '';
-    display: block;
-    height: 1px;
-    background: var(--color-primary);
-    opacity: 0.4;
-}
-
-/* Labels */
-.page-break-label {
-    position: absolute;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-style: italic;
-    color: var(--color-primary);
-    opacity: 0.75;
-    background: var(--color-bg-inset);
-    padding: 0 10px;
-    white-space: nowrap;
-    line-height: 1;
-}
-
-/* "page N" collé à la ligne du haut */
-.page-break-label--left {
-    top: -6px;
-    left: 28px;
-}
-
-/* "page N+1" collé à la ligne du bas */
-.page-break-label--right {
-    bottom: -6px;
-    right: 28px;
-}
 
 /* ── Wrapper de bloc (position relative pour le bouton annotation) ─────── */
 
@@ -2000,6 +1969,13 @@
 
 .mention-dropdown.mention-dropdown--visible {
     display: block;
+}
+
+.mention-empty {
+    padding: 8px 12px 10px;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-muted);
 }
 
 /* ── Header ──────────────────────────────────────────────── */

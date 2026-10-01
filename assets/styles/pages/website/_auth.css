@@ -437,6 +437,15 @@
     color: var(--color-red);
 }
 
+/* Lien d'action dans l'alerte (ex. "Renvoyer le mail de confirmation") */
+.auth-alert__link {
+    display: block;
+    margin-top: 6px;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
 /* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 768px) {
     .auth-fullpage {
@@ -452,4 +461,108 @@
         justify-content: flex-start;
         padding-top: 60px;
     }
+}
+
+/* ── Ligne "se souvenir de moi" / "mot de passe oublié" ──── */
+.auth-row-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.auth-forgot-link {
+    font-size: 12px;
+    color: var(--color-primary);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.auth-forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* ── Pages "mot de passe oublié" / "vérifiez vos emails" /
+   "nouveau mot de passe" — un seul panneau centré, pas de tabs ── */
+.auth-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-top: 22px;
+}
+
+.auth-back-link:hover {
+    color: var(--text-main);
+}
+
+.auth-form-panel--centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.auth-form-panel--centered .auth-form-title,
+.auth-form-panel--centered .auth-form-subtitle {
+    text-align: center;
+}
+
+.auth-form-panel--centered form {
+    width: 100%;
+}
+
+/* Icône enveloppe de la page "vérifiez vos emails" */
+.auth-check-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+    color: var(--color-primary);
+    margin-bottom: 20px;
+    border-radius: 50%;
+}
+
+.auth-check-hint {
+    font-size: 12px;
+    color: var(--text-muted-dark);
+    line-height: 1.6;
+    margin-top: 4px;
+}
+
+/* Compteur de demandes + bouton "Renvoyer l'email" */
+.auth-resend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--color-border);
+    width: 100%;
+}
+
+.auth-resend__count {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.auth-resend__btn {
+    font-variant-numeric: tabular-nums;
+}
+
+.auth-resend__btn.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.auth-resend__limit {
+    font-size: 12px;
+    color: var(--color-red);
 }

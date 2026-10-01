@@ -3,72 +3,12 @@
 
 {% block title %}{{ 'meta.title'|trans }}{% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    {# Script Cloudflare Turnstile — chargé uniquement sur la page auth #}
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-{% endblock %}
-
 {% block body %}
 <div class="auth-fullpage"
      data-controller="auth-slider"
      data-has-errors="{{ not registrationForm.vars.valid ? 'true' : 'false' }}">
 
-    {# ══════════════════════════════════════════════════════
-       PANNEAU GAUCHE — branding
-       ══════════════════════════════════════════════════════ #}
-    <aside class="auth-brand">
-
-        {# Logo #}
-        <a href="{{ path('app_home') }}" class="auth-brand__logo">
-            <img src="{{ asset('images/favicons/favicon.png') }}"
-                 alt="Scénart"
-                 class="auth-brand__logo-img">
-            <span class="auth-brand__logo-name">Scén<span>art</span></span>
-        </a>
-
-        {# Corps #}
-        <div class="auth-brand__body">
-            <div class="auth-brand__tag">
-                {{ ux_icon('lucide:pen-line', {style: 'width:10px;height:10px'}) }}
-                Plateforme narrative
-            </div>
-            <h2 class="auth-brand__title">
-                Donnez vie à<br>vos <em>univers</em>
-            </h2>
-            <p class="auth-brand__subtitle">
-                Scénart est l'espace de création collaborative pour
-                scénaristes, auteurs et game designers.
-            </p>
-            <div class="auth-brand__features">
-                <div class="auth-brand__feature">
-                    <div class="auth-brand__feature-icon">
-                        {{ ux_icon('lucide:folder-open', {style: 'width:13px;height:13px'}) }}
-                    </div>
-                    Projets films, séries, jeux vidéo
-                </div>
-                <div class="auth-brand__feature">
-                    <div class="auth-brand__feature-icon">
-                        {{ ux_icon('lucide:users', {style: 'width:13px;height:13px'}) }}
-                    </div>
-                    Collaboration en temps réel
-                </div>
-                <div class="auth-brand__feature">
-                    <div class="auth-brand__feature-icon">
-                        {{ ux_icon('lucide:globe', {style: 'width:13px;height:13px'}) }}
-                    </div>
-                    Communauté de créateurs
-                </div>
-            </div>
-        </div>
-
-        {# Footer #}
-        <div class="auth-brand__footer">
-            &copy; {{ "now"|date("Y") }} Scénart &mdash;
-            <a href="{{ path('app_legal_cgu', {_locale: app.request.locale}) }}">Mentions légales</a>
-        </div>
-
-    </aside>
+    {% include 'website/_partials/_auth_brand.html.twig' %}
 
     {# ══════════════════════════════════════════════════════
        PANNEAU DROIT — formulaires
@@ -109,6 +49,12 @@
                 {% if error %}
                     <div class="auth-alert">
                         {{ error.messageKey|trans(error.messageData, 'security') }}
+                        {# Email pas encore confirmé → accès direct au renvoi du mail #}
+                        {% if error.messageKey == 'account.unverified' %}
+                            <a href="{{ path('app_verify_email_pending', {_locale: app.request.locale}) }}" class="auth-alert__link">
+                                {{ 'verify_email.resend_link'|trans }}
+                            </a>
+                        {% endif %}
                     </div>
                 {% endif %}
 
@@ -152,14 +98,19 @@
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                    <div class="form-check form-check--remember">
-                        <input type="checkbox" name="_remember_me" id="remember_me" value="1">
-                        <label for="remember_me">{{ 'login.remember_me'|trans }}</label>
+                    <div class="auth-row-between">
+                        <div class="form-check form-check--remember">
+                            <input type="checkbox" name="_remember_me" id="remember_me" value="1">
+                            <label for="remember_me">{{ 'login.remember_me'|trans }}</label>
+                        </div>
+                        <a href="{{ path('app_forgot_password_request', {_locale: app.request.locale}) }}" class="auth-forgot-link">
+                            {{ 'login.forgot_password'|trans }}
+                        </a>
                     </div>
 
-                    <div class="cf-turnstile auth-captcha"
-                         data-sitekey="{{ turnstile_site_key }}"
-                         data-theme="dark"></div>
+                    <div class="auth-captcha"
+                         data-controller="turnstile"
+                         data-turnstile-sitekey-value="{{ turnstile_site_key }}"></div>
 
                     <button type="submit" class="btn btn--cta-yellow auth-submit">
                         {{ 'login.submit'|trans }}
@@ -243,36 +194,13 @@
                     {{ form_errors(registrationForm.email) }}
                 </div>
 
-                {# Mot de passe #}
-                <div class="auth-field pw-group"
-                     data-controller="password-field"
-                     data-password-field-show-strength-value="true">
-                    <div class="pw-input-wrap">
-                        {{ form_widget(registrationForm.plainPassword, {
-                            'attr': {
-                                'placeholder': 'register.password'|trans,
-                                'data-password-field-target': 'input',
-                                'data-action': 'input->password-field#checkStrength focus->password-field#openStrength blur->password-field#closeStrength',
-                                'aria-describedby': 'register-pw-rules'
-                            }
-                        }) }}
-                        <button type="button"
-                                class="pw-toggle-btn"
-                                data-password-field-target="toggleBtn"
-                                data-action="click->password-field#toggleVisibility"
-                                aria-label="Voir le mot de passe">
-                            <span class="pw-eye-show">{{ ux_icon('lucide:eye', {style: 'width:15px;height:15px'}) }}</span>
-                            <span class="pw-eye-hide" hidden>{{ ux_icon('lucide:eye-off', {style: 'width:15px;height:15px'}) }}</span>
-                        </button>
-                    </div>
-                    <div class="pw-strength" id="register-pw-rules" data-password-field-target="strength" aria-live="polite">
-                        <div class="pw-rule" data-rule="length"    data-password-field-target="rule"><span class="pw-rule__dot"></span>Min. 8 caractères</div>
-                        <div class="pw-rule" data-rule="uppercase" data-password-field-target="rule"><span class="pw-rule__dot"></span>Une majuscule (A–Z)</div>
-                        <div class="pw-rule" data-rule="digit"     data-password-field-target="rule"><span class="pw-rule__dot"></span>Un chiffre (0–9)</div>
-                        <div class="pw-rule" data-rule="special"   data-password-field-target="rule"><span class="pw-rule__dot"></span>Un caractère spécial (!@#…)</div>
-                    </div>
-                    {{ form_errors(registrationForm.plainPassword) }}
-                </div>
+                {# Mot de passe + confirmation (même bloc que reset_password.html.twig) #}
+                {% include 'website/auth/_password_fields.html.twig' with {
+                    field: registrationForm.plainPassword,
+                    id_prefix: 'register',
+                    placeholder: 'register.password'|trans,
+                    placeholder_confirm: 'register.password_confirm'|trans,
+                } only %}
 
                 {# CGU #}
                 <div class="auth-check">
@@ -283,9 +211,9 @@
                 </div>
                 {{ form_errors(registrationForm.agreeTerms) }}
 
-                <div class="cf-turnstile auth-captcha"
-                     data-sitekey="{{ turnstile_site_key }}"
-                     data-theme="dark"></div>
+                <div class="auth-captcha"
+                     data-controller="turnstile"
+                     data-turnstile-sitekey-value="{{ turnstile_site_key }}"></div>
 
                 <button type="submit" class="btn btn--cta-yellow auth-submit">
                     {{ 'register.submit'|trans }}

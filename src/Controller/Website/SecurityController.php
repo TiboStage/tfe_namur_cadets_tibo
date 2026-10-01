@@ -28,7 +28,9 @@ namespace App\Controller\Website;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Security\UserChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -46,7 +48,7 @@ class SecurityController extends AbstractController
      * @param AuthenticationUtils $authenticationUtils Service pour récupérer les erreurs de login
      * @return Response La page d'authentification
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
     {
         // 1. Redirection si déjà connecté
         if ($this->getUser()) {
@@ -56,6 +58,12 @@ class SecurityController extends AbstractController
         // 2. Gestion de la partie CONNEXION (Login)
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
+
+        // Bon mot de passe mais email pas encore confirmé → on mémorise l'adresse
+        // pour que le bouton "Renvoyer le mail de confirmation" sache à qui l'envoyer.
+        if (UserChecker::UNVERIFIED === $error?->getMessageKey()) {
+            $request->getSession()->set(EmailVerificationController::SESSION_EMAIL, $lastUsername);
+        }
 
         // 3. Gestion de la partie INSCRIPTION (Register)
         $user = new User();

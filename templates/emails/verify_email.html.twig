@@ -1,0 +1,69 @@
+{# Email transactionnel — même gabarit que reset_password.html.twig :
+   pas d'extends base.html.twig, tout en HTML/CSS inline-friendly. #}
+<!DOCTYPE html>
+<html lang="{{ user.locale }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0; padding:0; background:#f4f4f2; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f2; padding:40px 16px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="480" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:6px; overflow:hidden;">
+
+                    {# ── En-tête ── #}
+                    <tr>
+                        <td style="background:#0A0A0A; padding:28px 32px;">
+                            <span style="font-size:18px; font-weight:900; color:#ece9e4; letter-spacing:-0.5px;">
+                                Scén<span style="color:#FFB800;">art</span>
+                            </span>
+                        </td>
+                    </tr>
+
+                    {# ── Corps ── #}
+                    <tr>
+                        <td style="padding:36px 32px 24px;">
+                            <h1 style="margin:0 0 12px; font-size:20px; color:#111111;">
+                                Bienvenue sur Scénart !
+                            </h1>
+                            <p style="margin:0 0 20px; font-size:14px; line-height:1.6; color:#444444;">
+                                Bonjour {{ user.firstName }},<br><br>
+                                Merci d'avoir créé votre compte (<strong>{{ user.username }}</strong>).
+                                Pour l'activer, confirmez simplement votre adresse email en cliquant sur le bouton ci-dessous.
+                            </p>
+
+                            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                                <tr>
+                                    <td style="border-radius:4px; background:#FFB800;">
+                                        <a href="{{ signedUrl }}"
+                                           style="display:inline-block; padding:13px 28px; font-size:14px; font-weight:700; color:#0A0A0A; text-decoration:none;">
+                                            Confirmer mon adresse email
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:0 0 6px; font-size:12px; line-height:1.6; color:#888888;">
+                                Ce lien expire dans {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle', 'fr') }}.
+                                Si vous n'êtes pas à l'origine de cette inscription, ignorez simplement cet email —
+                                le compte ne sera jamais activé.
+                            </p>
+                        </td>
+                    </tr>
+
+                    {# ── Pied de page ── #}
+                    <tr>
+                        <td style="padding:18px 32px; border-top:1px solid #eeeeee;">
+                            <p style="margin:0; font-size:11px; color:#aaaaaa;">
+                                &copy; {{ "now"|date("Y") }} Scénart
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

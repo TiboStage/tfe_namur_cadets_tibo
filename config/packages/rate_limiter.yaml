@@ -22,3 +22,36 @@ framework:
             # Stockage : cache (plus rapide que la DB)
             # Alternative : 'lock_factory' pour Redis en production
 #            storage_service: 'cache.rate_limiter'
+
+        # ── Mot de passe oublié — délai entre deux demandes ──────────
+        # Clé : adresse email. Même délai que throttle_limit (reset_password.yaml).
+        reset_password_cooldown:
+            policy: 'fixed_window'
+            limit: 1
+            interval: '2 minutes'
+
+        # ── Mot de passe oublié — plafond horaire par email ──────────
+        # Compté que le compte existe ou non → n'aide pas à deviner les emails inscrits.
+        reset_password:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '1 hour'
+
+        # ── Mot de passe oublié — plafond horaire par IP ─────────────
+        # Empêche de viser beaucoup d'adresses différentes depuis la même machine.
+        reset_password_ip:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '1 hour'
+
+        # ── Confirmation d'email — mêmes règles que le mot de passe oublié ──
+        # Le mail envoyé à l'inscription compte comme la 1re demande.
+        verify_email_cooldown:
+            policy: 'fixed_window'
+            limit: 1
+            interval: '2 minutes'
+
+        verify_email:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '1 hour'

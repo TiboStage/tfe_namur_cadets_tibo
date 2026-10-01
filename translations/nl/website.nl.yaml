@@ -34,6 +34,8 @@ navbar:
         workshop: "Werkplaats"
         login: "Aanmelden"
         register: "Aanmelden"
+        change_language: "Taal wijzigen"
+        open_menu: "Menu openen"
 
 # ===== FOOTER =====
 
@@ -157,113 +159,159 @@ home:
 # ===== VOORBEELDEN PAGINA =====
 examples:
     header:
-        tag: "Functies"
-        title: "Alles wat u nodig heeft om te"
-        title_highlight: "creëren"
-        description: "Van het schrijven van scripts tot teambeheer, ScénArt bundelt alle tools voor uw narratief project op één plek."
+        tag: Functies
+        title: 'Alles wat u nodig heeft om te'
+        title_highlight: creëren
+        description: 'Van het schrijven van scripts tot teambeheer, ScénArt bundelt alle tools voor uw narratief project op één plek.'
 
     scenariste:
-        tag: "Scenarioschrijver"
-        title: "Scenario-editor"
-        desc: "Schrijf uw scripts in een speciale Fountain-editor met scènenavigatie, syntaxismarkering en realtime opslaan."
-        feat1_title: "Fountain-formaat"
-        feat1_desc: "Scènes, dialogen, actielijnen, haakjes"
-        feat2_title: "Acte-navigatie"
-        feat2_desc: "Gestructureerde zijbalk, directe toegang tot elke scène"
-        feat3_title: "PDF-export"
-        feat3_desc: "Professionele lay-out drukklaar"
+        tag: Scenarioschrijver
+        title: Manuscript-editor
+        desc: 'Schrijf rechtstreeks op een scriptpagina in Fountain-formaat: elk blok wordt vanzelf opgemaakt en je werk wordt automatisch opgeslagen.'
+        feat1_title: 'Begeleide Fountain-blokken'
+        feat1_desc: 'Decor, actie, personage, dialoog, toneelaanwijzing, overgang — Tab naar het volgende'
+        feat2_title: '@-vermeldingen'
+        feat2_desc: 'Typ @ voor een personage of # voor een locatie: de naam wordt ingevoegd en de fiche gekoppeld'
+        feat3_title: 'Structuur op maat'
+        feat3_desc: 'Aktes en scènes voor een film, seizoenen en afleveringen voor een serie'
+        feat4_title: 'Export & leesmodus'
+        feat4_desc: 'Export naar Fountain en PDF, lezen op volledig scherm, woordenaantal en geschatte duur'
+
+    univers:
+        tag: Universum
+        title: 'Bouw je wereld'
+        desc: 'Personages, locaties en gebeurtenissen: de volledige bijbel van je verhaal op één plek, gekoppeld aan je manuscript.'
+        feat1_title: Personagefiches
+        feat1_desc: 'Rol, biografie, eigenschappen en relaties tussen personages'
+        feat2_title: Locatiefiches
+        feat2_desc: 'Interieurs, exterieurs, fantasiewerelden — met beschrijving en sfeer'
+        feat3_title: Verhaaltijdlijn
+        feat3_desc: 'De gebeurtenissen van je universum per jaar, gekoppeld aan een locatie of scène'
 
     exploration:
-        tag: "Verkenning"
-        title: "Uw projecten, uw fiches"
-        desc: "Elk project heeft personagefiches, locaties en scripts. Blader door communityprojecten of beheer uw eigen."
-        feat1_title: "Personagefiches"
-        feat1_desc: "Rol, achtergrond, eigenschappen en relaties"
-        feat2_title: "Locatiefiches"
-        feat2_desc: "Interieur, exterieur, fantasie, futuristisch"
-        feat3_title: "Lijst- of rasterweergave"
-        feat3_desc: "Filters, sortering en directe zoekfunctie"
+        tag: 'Projecten & delen'
+        title: 'Je projecten in één oogopslag'
+        desc: 'Volg de voortgang van elk project vanaf je dashboard en publiceer het om het met de community te delen.'
+        feat1_title: Dashboard
+        feat1_desc: 'Type, genres, voortgang van taken en zichtbaarheid van elk project'
+        feat2_title: 'Openbare pagina'
+        feat2_desc: 'Gepubliceerde afleveringen lezen, met reacties en stemmen van lezers'
+        feat3_title: Verkennen
+        feat3_desc: 'Zoek projecten op type, genre of auteur'
 
     collaboration:
-        tag: "Samenwerking"
-        title: "Nodig uw team uit"
-        desc: "Beheer de rechten van elke medewerker en werk samen aan hetzelfde project met duidelijke rollen."
-        feat1_title: "Uitnodiging per gebruikersnaam"
-        feat1_desc: "Zoek een lid op via hun gebruikersnaam"
-        feat2_title: "Gedetailleerde rollen"
-        feat2_desc: "Eigenaar · Moderator · Bijdrager · Lezer"
-        feat3_title: "Activiteitslogboek"
-        feat3_desc: "Volledige geschiedenis van alle teamacties"
-        modal_title: "Medewerker uitnodigen"
-        modal_username_label: "Gebruikersnaam"
-        modal_role_label: "Rol in het project"
-        modal_role_reader: "Lezer"
-        modal_role_contributor: "Bijdrager"
-        modal_role_moderator: "Moderator"
-        modal_cancel: "Annuleren"
-        modal_submit: "Uitnodiging versturen"
+        tag: Samenwerking
+        title: 'Nodig je team uit'
+        desc: 'Voeg medewerkers toe aan je project en bepaal precies wat ieder mag doen.'
+        feat1_title: 'Uitnodigen via gebruikersnaam'
+        feat1_desc: 'De genodigde krijgt een melding en accepteert of weigert'
+        feat2_title: 'Drie rollen'
+        feat2_desc: 'Lezer · Bijdrager · Moderator, elk met eigen rechten'
+        feat3_title: Activiteitenlog
+        feat3_desc: 'Geschiedenis van alle acties van het team op het project'
+        invite_title: 'Een medewerker uitnodigen'
+        username_label: Gebruikersnaam
+        role_label: Rol
+        role_contributor_desc: 'Bijdrager — schrijft inhoud'
+        invite_btn: Uitnodigen
+        members_title: 'Huidige leden'
+        since: sinds
+        pending: 'In afwachting'
+        role_reader: Lezer
+        role_contributor: Bijdrager
+        role_moderator: Moderator
 
     organisation:
-        tag: "Organisatie"
-        title: "Taken & notities"
-        desc: "Plan uw werk met een geïntegreerd takenbord en collaboratieve notities gekoppeld aan uw project."
-        feat1_title: "Takenbord"
-        feat1_desc: "Te doen · Bezig · Review · Klaar"
-        feat2_title: "Collaboratieve notities"
-        feat2_desc: "Verwijzingen, ideeën, scèneannotaties"
-        feat3_title: "Teamtoewijzing"
-        feat3_desc: "Elke taak toegewezen aan een teamlid"
+        tag: Organisatie
+        title: 'Taken & notities'
+        desc: 'Plan het schrijven met opgevolgde taken en bewaar je ideeën als notities, gekoppeld aan je project.'
+        feat1_title: Taakopvolging
+        feat1_desc: 'Te doen · Bezig · In beoordeling · Afgerond, met prioriteiten en waarschuwingen bij vertraging'
+        feat2_title: 'Gekoppelde notities'
+        feat2_desc: 'Verbonden aan het project, een scène, een personage of een locatie'
+        feat3_title: 'Taken toewijzen'
+        feat3_desc: 'Elke taak toegewezen aan een projectlid'
 
     demo:
-        saved: "Opgeslagen"
-        paper_url: "werkplaats / er-was-eens / akte-i / het-begin"
-        paper_title: "— er was eens op scénart —"
-        paper_scene1: "EXT. ROMMELIG BUREAU — NACHT"
-        paper_action1: "Een scenarioschrijver staart naar 47 Word-bestanden. Elk heet \"DEFINITIEF_ECHT_DEFINITIEF_v3_goed.docx\"."
-        paper_char1: "DE SCENARIOSCHRIJVER"
-        paper_paren1: "(wanhopig)"
-        paper_dial1: "Mijn Akte II... het was hier gisteren nog."
-        paper_scene2: "OP ZIJN SCHERM — ScénArt opent eindelijk."
-        paper_char2: "DE SCENARIOSCHRIJVER"
-        paper_paren2: "(tranen in de ogen)"
-        paper_dial2: "Er was eens... het einde van de chaos."
-        paper_scene3: "INT. SCÉNART — DOORLOPEND"
-        paper_action3: "Hij maakt zijn eerste project aan. Zijn scènes organiseren zich. Zijn personages komen tot leven. Ergens huilt een USB-stick."
-        paper_char3: "DE SCENARIOSCHRIJVER"
-        paper_paren3: "(eindelijk uitademend)"
-        paper_dial3: "En ze leefden nog lang en gelukkig, met vele scènes."
-        type_film: "Film"
-        type_serie: "Serie"
-        type_jv: "Videospel"
-        status_complete: "Voltooid"
-        status_ongoing: "Bezig"
-        card_follow: "Volgen →"
-        card_read: "Lezen →"
-        role_owner: "Eigenaar"
-        elements: "elementen"
-        visibility_public: "Openbaar"
-        visibility_private: "Privé"
-        tasks: "taken"
-        up_to_date: "Bijgewerkt"
-        cta_edit: "Bewerken →"
-        task_url: "werkplaats / snatch / taken"
-        stat_overdue: "Te laat"
-        stat_progress: "Bezig"
-        stat_done: "Klaar"
-        task_todo: "Te doen"
-        task_in_progress: "Bezig"
-        task_done: "Klaar"
-        priority_high: "Hoog"
-        priority_normal: "Normaal"
-        priority_low: "Laag"
+        saved: Opgeslagen
+        type_serie: Serie
+        status_ongoing: Bezig
+        role_owner: Eigenaar
+        elements: elementen
+        visibility_public: Openbaar
+        tasks: taken
+        up_to_date: Bijgewerkt
+        cta_edit: 'Bewerken →'
+        paper_scene1: 'EXT. ROMMELIG BUREAU — NACHT'
+        paper_action1: 'Een scenarioschrijver staart naar 47 Word-bestanden. Elk heet "DEFINITIEF_ECHT_DEFINITIEF_v3_goed.docx".'
+        paper_char1: 'DE SCENARIOSCHRIJVER'
+        paper_paren1: (wanhopig)
+        paper_dial1: 'Mijn Akte II... het was hier gisteren nog.'
+        paper_scene2: 'OP ZIJN SCHERM — ScénArt opent eindelijk.'
+        editor_url: 'werkplaats / er-was-eens / manuscript'
+        editor_crumb_parent: 'Akte I'
+        editor_crumb_current: 'Scène 1 — Het einde van de chaos'
+        editor_type: Scène
+        editor_reading: Lezen
+        editor_group_set: Decor
+        editor_group_action: Actie
+        editor_group_dialogue: Dialoog
+        block_action: Actie
+        block_character: Personage
+        block_dialogue: Dialoog
+        block_paren: Toneelaanwijzing
+        mention_prefix: 'Hij maakt zijn eerste project en voegt toe:'
+        mention_typed: 'DE SC'
+        mention_char: Personage
+        mention_hint: '↑↓ navigeren · ↵ bevestigen · Esc sluiten'
+        words: woorden
+        editor_tab_hint: 'Tab · volgend blok'
+        timeline_url: 'werkplaats / eclipse / tijdlijn'
+        timeline_title: Verhaaltijdlijn
+        timeline_sub: '3 gebeurtenissen · van Jaar -30 tot Jaar 0'
+        timeline_new: 'Nieuwe gebeurtenis'
+        year: Jaar
+        event: gebeurtenis
+        events: gebeurtenissen
+        event1_title: 'Het incident bij het meer'
+        event1_desc: 'Het geheim waar niemand over spreekt.'
+        event1_place: Beukenmeer
+        event2_title: 'Overlijden van vader Moreau'
+        event2_desc: 'Claire hoort het nieuws van Édouard.'
+        event2_place: 'Huize Moreau'
+        event3_title: 'Voorlezing van het testament'
+        event3_desc: 'Er duikt een onverwachte erfgenaam op.'
+        event3_place: 'Kantoor Bergeron'
+        members_url: 'werkplaats / eclipse / instellingen / medewerkers'
+        task_url: 'werkplaats / eclipse / taken'
+        stat_overdue: 'Te laat'
+        stat_urgent: Dringend
+        stat_done: Afgerond
+        filter_all: Alle
+        task_todo: 'Te doen'
+        task_in_progress: Bezig
+        task_review: 'In beoordeling'
+        task_done: Afgerond
+        col_task: Taak
+        col_status: Status
+        col_priority: Prioriteit
+        col_assignee: Toegewezen
+        task1: 'Dialoog afl. 2 schrijven — het testament'
+        task2: 'Locatiefiche — Kantoor Bergeron'
+        task3: 'Tijdlijn van seizoen 1 nalezen'
+        task4: 'Algemene synopsis v2'
+        priority_urgent: Dringend
+        priority_high: Hoog
+        priority_normal: Normaal
+        priority_low: Laag
 
     cta:
-        title: "Klaar om te"
-        title_highlight: "creëren"
-        title_suffix: " ?"
-        desc: "Word gratis lid van ScénArt en begin vandaag nog met uw eerste narratief project."
-        btn_start: "Gratis starten"
-        btn_pricing: "Bekijk prijzen"
+        title: 'Klaar om te'
+        title_highlight: creëren
+        title_suffix: ' ?'
+        desc: 'Word gratis lid van ScénArt en begin vandaag nog met uw eerste narratief project.'
+        btn_start: 'Gratis starten'
+        btn_pricing: 'Bekijk prijzen'
 
 # ===== PRIJZEN PAGINA =====
 pricing:
@@ -368,6 +416,9 @@ contact:
 
         privacy: "Ik ga ermee akkoord dat mijn gegevens worden gebruikt om mijn verzoek te verwerken in overeenstemming met het"
         privacy_link: "privacybeleid"
+        identity:
+            sending_as: "Je schrijft als"
+            edit: "Mijn profiel bewerken"
         submit: "Bericht versturen"
 
         errors:

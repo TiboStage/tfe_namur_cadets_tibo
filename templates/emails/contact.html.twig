@@ -1,0 +1,125 @@
+{# Email interne — message du formulaire de contact, envoyé à l'équipe (MAILER_ADMIN).
+   Même gabarit que reset_password.html.twig / verify_email.html.twig :
+   pas d'extends base.html.twig, tout en HTML/CSS inline-friendly.
+   Toutes les données saisies sont échappées automatiquement par Twig.
+
+   Variables : contact (App\Entity\Contact), subjectLabel (string),
+               sender (App\Entity\User|null — compte de l'expéditeur s'il était connecté) #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0; padding:0; background:#f4f4f2; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f2; padding:40px 16px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:6px; overflow:hidden;">
+
+                    {# ── En-tête ── #}
+                    <tr>
+                        <td style="background:#0A0A0A; padding:28px 32px;">
+                            <span style="font-size:18px; font-weight:900; color:#ece9e4; letter-spacing:-0.5px;">
+                                Scén<span style="color:#FFB800;">art</span>
+                            </span>
+                            <span style="float:right; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#888888; line-height:24px;">
+                                Formulaire de contact
+                            </span>
+                        </td>
+                    </tr>
+
+                    {# ── Titre + sujet ── #}
+                    <tr>
+                        <td style="padding:32px 32px 8px;">
+                            <span style="display:inline-block; padding:4px 10px; margin-bottom:14px; background:#FFF4D6; border:1px solid #FFE08A; border-radius:3px; font-size:11px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:#8A6300;">
+                                {{ subjectLabel }}
+                            </span>
+                            <h1 style="margin:0; font-size:20px; color:#111111;">
+                                Nouveau message de {{ contact.firstname }} {{ contact.lastname }}
+                            </h1>
+                            <p style="margin:6px 0 0; font-size:12px; color:#888888;">
+                                Reçu le {{ contact.createdAt|date('d/m/Y à H:i') }}
+                            </p>
+                        </td>
+                    </tr>
+
+                    {# ── Expéditeur ── #}
+                    <tr>
+                        <td style="padding:20px 32px 0;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fafaf8; border:1px solid #eeeeee; border-radius:4px;">
+                                <tr>
+                                    <td style="padding:16px 18px; font-size:13px; line-height:1.7; color:#444444;">
+                                        <strong style="color:#111111;">{{ contact.firstname }} {{ contact.lastname }}</strong><br>
+                                        <a href="mailto:{{ contact.email }}" style="color:#B37F00; text-decoration:none;">{{ contact.email }}</a><br>
+                                        {% if sender %}
+                                            <span style="display:inline-block; margin-top:6px; padding:2px 8px; background:#E7F6EC; border-radius:3px; font-size:11px; font-weight:700; color:#1E7B3C;">
+                                                ✓ Membre connecté
+                                            </span>
+                                            <span style="font-size:12px; color:#888888;">
+                                                &nbsp;@{{ sender.username }} · inscrit depuis {{ sender.createdAt|date('m/Y') }}
+                                            </span>
+                                        {% else %}
+                                            <span style="display:inline-block; margin-top:6px; padding:2px 8px; background:#F1F1EF; border-radius:3px; font-size:11px; font-weight:700; color:#777777;">
+                                                Visiteur non connecté
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    {# ── Message ── #}
+                    <tr>
+                        <td style="padding:24px 32px 8px;">
+                            <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#888888;">
+                                Message
+                            </p>
+                            <div style="padding:18px 20px; background:#fafaf8; border-left:3px solid #FFB800; font-size:14px; line-height:1.7; color:#222222;">
+                                {{ contact.message|nl2br }}
+                            </div>
+                        </td>
+                    </tr>
+
+                    {# ── Actions ── #}
+                    <tr>
+                        <td style="padding:20px 32px 32px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="border-radius:4px; background:#FFB800;">
+                                        <a href="mailto:{{ contact.email }}?subject={{ ('Re: ' ~ subjectLabel)|url_encode }}"
+                                           style="display:inline-block; padding:12px 24px; font-size:14px; font-weight:700; color:#0A0A0A; text-decoration:none;">
+                                            Répondre à {{ contact.firstname }}
+                                        </a>
+                                    </td>
+                                    {% if sender %}
+                                        <td style="width:10px;"></td>
+                                        <td style="border-radius:4px; border:1px solid #dddddd;">
+                                            <a href="{{ url('admin_user_show', {id: sender.id, _locale: 'fr'}) }}"
+                                               style="display:inline-block; padding:11px 20px; font-size:14px; font-weight:600; color:#333333; text-decoration:none;">
+                                                Voir le compte
+                                            </a>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    {# ── Pied de page ── #}
+                    <tr>
+                        <td style="padding:18px 32px; border-top:1px solid #eeeeee;">
+                            <p style="margin:0; font-size:11px; color:#aaaaaa;">
+                                Message n°{{ contact.id }} — aussi disponible dans l'administration.
+                                &copy; {{ "now"|date("Y") }} Scénart
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

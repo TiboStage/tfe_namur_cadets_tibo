@@ -3,8 +3,10 @@ import { Controller } from '@hotwired/stimulus';
 /**
  * Gestion d'un groupe de champs mot de passe :
  *  - Bascule visibilité (œil)  sur le champ principal ET sur la confirmation
- *  - Indicateur de force (4 règles)
- *  - Vérification de correspondance confirm
+ *  - Indicateur de force (4 règles) : visible dès l'affichage, masqué
+ *    automatiquement quand toutes les règles sont respectées
+ *  - Vérification de correspondance confirm (uniquement "identique ou non",
+ *    les règles ne sont affichées que sous le premier champ)
  *
  * Structure HTML attendue :
  *
@@ -56,7 +58,9 @@ export default class extends Controller {
         hasConfirm:   { type: Boolean, default: false },
     };
 
-    #closeTimer = null;
+    connect() {
+        this.checkStrength();
+    }
 
     // ── Visibilité — champ principal ────────────────────────
 
@@ -77,34 +81,26 @@ export default class extends Controller {
     checkStrength() {
         if (!this.showStrengthValue) return;
         const value = this.inputTarget.value;
+        let allPass = true;
 
         this.ruleTargets.forEach((rule) => {
             const key  = rule.dataset.rule;
             const pass = RULES[key]?.(value) ?? false;
             rule.classList.toggle('pw-rule--pass', pass);
             rule.classList.toggle('pw-rule--fail', value.length > 0 && !pass);
+            allPass &&= pass;
         });
+
+        // Règles visibles tant qu'il en reste une à respecter.
+        // Pas de lien avec le focus : cliquer sur l'œil ne les fait plus disparaître.
+        if (this.hasStrengthTarget) {
+            this.strengthTarget.classList.toggle('pw-strength--open', !allPass);
+        }
 
         // Si un champ confirm existe → re-vérifier la correspondance
         if (this.hasConfirmValue && this.hasConfirmTarget && this.confirmTarget.value) {
             this.checkMatch();
         }
-    }
-
-    openStrength() {
-        clearTimeout(this.#closeTimer);
-        if (this.showStrengthValue && this.hasStrengthTarget) {
-            this.strengthTarget.classList.add('pw-strength--open');
-        }
-    }
-
-    closeStrength() {
-        // Petit délai pour ne pas fermer si on clique sur le bouton toggle
-        this.#closeTimer = setTimeout(() => {
-            if (this.hasStrengthTarget) {
-                this.strengthTarget.classList.remove('pw-strength--open');
-            }
-        }, 150);
     }
 
     // ── Correspondance confirmation ─────────────────────────

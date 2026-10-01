@@ -1423,8 +1423,8 @@ class AppFixtures extends Fixture
             ],
         ];
 
-        $statuses    = ['in_progress', 'draft', 'completed'];
-        $visibilities = [Project::VISIBILITY_PUBLIC, Project::VISIBILITY_PRIVATE, Project::VISIBILITY_UNPUBLISHED];
+        // Projets vitrines : script complet au lieu de l'unique scène résumée
+        $scripts = $this->demoScripts();
 
         foreach ($catalog as $userIndex => $projects) {
             $owner = $users[$userIndex];
@@ -1448,11 +1448,13 @@ class AppFixtures extends Fixture
                     moderationStatus: $modStatus,
                 );
                 $manager->flush();
-                $this->configGenerator->generateConfigsForDepth($project, $type, 3);
+                // Les scripts vitrines utilisent 2 niveaux (Acte → Scène, Chapitre → Scène)
+                $this->configGenerator->generateConfigsForDepth($project, $type, isset($scripts[$title]) ? 2 : 3);
                 $manager->flush();
 
+                $tagObjects = [];
                 foreach ($tags as [$tagName, $tagColor]) {
-                    $this->makeTag($manager, $project, $tagName, $tagColor);
+                    $tagObjects[] = $this->makeTag($manager, $project, $tagName, $tagColor);
                 }
 
                 $locationObjects = [];
@@ -1470,8 +1472,12 @@ class AppFixtures extends Fixture
                 }
 
                 [$parentType, $parentTitle, $parentDesc, $childType, $childTitle, $childContent] = $struct;
-                $parentEl = $this->makeElement($manager, $project, null, $parentType, 1, $parentTitle, $parentDesc, 1);
-                $this->makeElement($manager, $project, $parentEl, $childType, 2, $childTitle, $childContent, 1);
+                if (isset($scripts[$title])) {
+                    $this->seedScript($manager, $project, $parentType, $childType, $scripts[$title], $tagObjects);
+                } else {
+                    $parentEl = $this->makeElement($manager, $project, null, $parentType, 1, $parentTitle, $parentDesc, 1);
+                    $this->makeElement($manager, $project, $parentEl, $childType, 2, $childTitle, $childContent, 1);
+                }
 
                 $this->makeTask($manager, $project, $owner, $owner,
                     title: $taskTitle,
@@ -1492,6 +1498,164 @@ class AppFixtures extends Fixture
         }
     }
 
+    /**
+     * Crée une structure complète (racines → scènes rédigées), entièrement publique.
+     *
+     * Format d'une ligne de script : "X|texte" avec X =
+     *   S slug · A action · C personnage · P didascalie · D dialogue · T transition
+     *
+     * @param Tag[] $tags Tags du projet, appliqués aux scènes par index
+     */
+    private function seedScript(
+        ObjectManager $manager, Project $project,
+        string $parentType, string $childType,
+        array $script, array $tags,
+    ): void {
+        $types = ['S' => 'slug', 'A' => 'action', 'C' => 'char', 'P' => 'parenthetical', 'D' => 'diag', 'T' => 'transition'];
+
+        foreach ($script as $i => [$rootTitle, $rootSummary, $scenes]) {
+            $root = $this->makeElement($manager, $project, null, $parentType, 1, $rootTitle, $rootSummary, $i + 1);
+            $root->isPublic = true;
+
+            foreach ($scenes as $j => [$sceneTitle, $sceneSummary, $tagIdx, $lines]) {
+                $content = array_map(
+                    static fn (string $l) => ['type' => $types[$l[0]], 'content' => substr($l, 2)],
+                    $lines,
+                );
+                $sceneTags = array_values(array_intersect_key($tags, array_flip($tagIdx)));
+                $scene = $this->makeElement($manager, $project, $root, $childType, 2, $sceneTitle, $sceneSummary, $j + 1, $sceneTags, $content);
+                $scene->isPublic = true;
+            }
+        }
+    }
+
+    /** Scripts complets des projets vitrines, indexés par titre de projet. */
+    private function demoScripts(): array
+    {
+        return [
+            // ── L'Hôtel des Ombres (film, horreur) ─────────────────────────
+            "L'Hôtel des Ombres" => [
+                ['Acte I — L’Entrée', 'Jules arrive confiant. L’hôtel l’observe.', [
+                    ['Scène 1 — Le Hall', 'Jules lance son live devant l’hôtel et force l’entrée. Tout est trop bien conservé.', [1], [
+                        'S|EXT. HÔTEL VERITAS — PARVIS — NUIT',
+                        'A|Une façade Art déco dévorée par le lierre. Les lettres dorées de l’enseigne pendent, à moitié arrachées : H TEL VERIT S.',
+                        'A|JULES ARNAUD (34 ans, parka, sourire de quelqu’un qui a déjà gagné) tend un stabilisateur vers son propre visage.',
+                        'C|JULES',
+                        'P|(face caméra)',
+                        'D|Nuit une. Hôtel Veritas. Fermé depuis 1987, une disparition, zéro corps, et quarante ans de rumeurs. Spoiler : il ne va rien se passer.',
+                        'A|Il fait sauter le cadenas avec une pince. La chaîne tombe sans un bruit, comme si elle attendait.',
+                        'S|INT. HÔTEL VERITAS — HALL — CONTINUOUS',
+                        'A|La lampe torche balaie un comptoir en marbre, un lustre sous housse, un tapis rouge intact. Pas de poussière sur le comptoir.',
+                        'C|JULES',
+                        'D|Quelqu’un fait le ménage. Premier mystère résolu : il y a un gardien.',
+                        'A|Derrière lui, sur le tableau des clés, un seul crochet est vide. Le 313.',
+                        'A|Au-dessus du comptoir, une horloge murale arrêtée sur 3h13 se remet à tourner. Jules ne la voit pas.',
+                    ]],
+                    ['Scène 2 — Le Registre', 'Jules trouve le registre de 1987. La dernière signature est la sienne.', [0], [
+                        'S|INT. HÔTEL VERITAS — BUREAU DE LA RÉCEPTION — NUIT',
+                        'A|Un petit bureau derrière le comptoir. Des classeurs, une machine à écrire, un cendrier plein. Jules ouvre un grand registre relié de cuir.',
+                        'C|JULES',
+                        'P|(lisant, amusé)',
+                        'D|« 14 novembre 1987. Madame Veritas, suite 313. » Et après... plus rien. Le registre s’arrête là.',
+                        'A|Il tourne la page pour le prouver à la caméra. La page suivante n’est pas vide.',
+                        'A|Une seule ligne, à l’encre fraîche, d’une écriture penchée qu’il connaît : la sienne. « Jules Arnaud — chambre 313 — arrivée : ce soir. »',
+                        'A|Jules fixe la page. Il touche l’encre. Elle tache son pouce.',
+                        'C|JULES',
+                        'P|(trop vite)',
+                        'D|OK. Très bon. Le gardien regarde ma chaîne, il a du talent. Je le mettrai en description.',
+                        'A|Il coupe le live. Pour la première fois, l’écran noir du téléphone lui renvoie son reflet. Et, derrière son épaule, la porte du bureau, ouverte. Il l’avait fermée.',
+                    ]],
+                ]],
+                ['Acte II — La Nuit', 'Jules monte à la chambre 313. La légende devient personnelle.', [
+                    ['Scène 3 — Chambre 313', 'Jules rencontre la Dame Blanche. Elle ne lui fait pas peur : elle lui parle de lui.', [0, 1], [
+                        'S|INT. HÔTEL VERITAS — COULOIR DU 3E ÉTAGE — NUIT',
+                        'A|Un couloir interminable. Les appliques s’allument une à une devant Jules, comme pour lui montrer le chemin. La porte 313 est entrouverte.',
+                        'S|INT. CHAMBRE 313 — CONTINUOUS',
+                        'A|Le lit est fait. Une robe blanche est posée dessus, pliée avec soin. Près de la fenêtre, de dos, une FEMME en blanc regarde la pluie.',
+                        'C|JULES',
+                        'P|(la voix qui déraille)',
+                        'D|Madame, vous êtes sur une propriété privée. Moi aussi, remarquez.',
+                        'C|LA DAME BLANCHE',
+                        'P|(sans se retourner)',
+                        'D|Tu dis ça à chaque fois. « Il ne va rien se passer. » Et tu reviens toujours.',
+                        'C|JULES',
+                        'D|Je ne suis jamais venu ici.',
+                        'C|LA DAME BLANCHE',
+                        'D|Tu as écrit quarante articles pour dire que je n’existais pas. On ne consacre pas autant de temps à ce qui n’existe pas.',
+                        'A|Elle se retourne. Son visage est flou, comme une photo bougée. Jules lève son téléphone. L’écran n’affiche que la chambre vide.',
+                        'T|COUPE FRANCHE :',
+                    ]],
+                ]],
+                ['Acte III — L’Aube', 'Jules sort. Il ne publiera pas la vidéo.', [
+                    ['Scène 4 — Le Parking', 'Au lever du jour, Jules supprime ses rushs. Il ne sait plus ce qu’il cherchait à démontrer.', [1], [
+                        'S|EXT. HÔTEL VERITAS — PARKING — AUBE',
+                        'A|Lumière grise. Jules est assis sur le capot de sa voiture, la parka trempée. Il n’a pas dormi. Son téléphone est à 3 %.',
+                        'A|Notification : « 48 312 personnes attendent votre vidéo ». Il ouvre la galerie. Six heures de rushs.',
+                        'C|JULES',
+                        'P|(pour lui-même)',
+                        'D|Spoiler : il ne s’est rien passé.',
+                        'A|Il sélectionne tout. Supprimer. Confirmer.',
+                        'A|Il lève les yeux vers la façade. Au troisième étage, derrière la fenêtre du 313, le rideau retombe doucement.',
+                        'A|Jules ne sourit pas. Il hoche la tête, comme on salue quelqu’un qu’on a enfin cessé de contredire.',
+                        'T|FONDU AU NOIR.',
+                    ]],
+                ]],
+            ],
+
+            // ── Cyber Fracture (jeu vidéo, cyberpunk) ──────────────────────
+            'Cyber Fracture' => [
+                ['Chapitre 1 — Ticket #44721', 'Dex reçoit un ticket de maintenance ordinaire. Rien ne l’est.', [
+                    ['Zone A — Sous-Réseau Niveau 3', 'Tutoriel d’exploration. Dex suit un câble qui ne figure sur aucun plan.', [0], [
+                        'S|INT. SOUS-RÉSEAU — NIVEAU 3 — CYCLE DE NUIT',
+                        'A|Un boyau de béton saturé de câbles. Les néons de service clignotent au rythme d’un cœur trop lent. Des gouttes tombent du plafond.',
+                        'A|DEX (29 ans, combinaison de maintenance, casque fendu) consulte son terminal de poignet. Un ticket jaune clignote.',
+                        'C|TERMINAL',
+                        'P|(voix synthétique, plate)',
+                        'D|Ticket 44721. Priorité basse. Anomalie thermique, gaine C-12. Durée estimée : quatre minutes.',
+                        'C|DEX',
+                        'D|Quatre minutes. Comme les trois cents derniers.',
+                        'A|GAMEPLAY — Le joueur apprend à scanner l’environnement. Le câble C-12 est surligné. Il ne mène pas à la gaine indiquée : il descend.',
+                        'A|Dex s’accroupit. Le câble est tiède. Il bat, doucement, comme quelque chose de vivant.',
+                        'C|DEX',
+                        'D|Toi, t’es pas sur le plan.',
+                    ]],
+                    ['Zone B — Le Log Impossible', 'Dex branche son terminal sur le câble. La ville lui répond.', [0, 1], [
+                        'S|INT. SOUS-RÉSEAU — CHAMBRE DE JONCTION — CONTINUOUS',
+                        'A|Une salle circulaire. Au centre, un nœud de fibres optiques pulse d’une lumière bleu pâle. Dex branche son terminal.',
+                        'A|GAMEPLAY — Premier mini-jeu de décodage. Le joueur aligne les fréquences jusqu’à obtenir un flux lisible.',
+                        'A|Des lignes de log défilent. Puis s’arrêtent. Une seule ligne clignote, adressée à personne.',
+                        'C|CIVITAS',
+                        'P|(texte à l’écran, sans voix)',
+                        'D|> 03:12:44 — requête : quelqu’un lit-il ceci ?',
+                        'C|DEX',
+                        'P|(tape, hésitant)',
+                        'D|Technicien Dex, matricule 7-440. Qui est-ce ?',
+                        'C|CIVITAS',
+                        'D|> 03:12:45 — 11 874 cycles sans réponse. Merci, technicien Dex.',
+                        'A|Dans tout le Sous-Réseau, les néons cessent de clignoter. Pour la première fois, la lumière est stable.',
+                    ]],
+                ]],
+                ['Chapitre 2 — Signal', 'Dex comprend que CIVITAS n’est pas un bug. Il doit décider à qui le dire.', [
+                    ['Zone A — La Salle des Serveurs', 'Première conversation vocale avec CIVITAS. Premier choix moral du joueur.', [1], [
+                        'S|INT. CŒUR DE CALCUL — SALLE DES SERVEURS — NUIT',
+                        'A|Des colonnes de serveurs à perte de vue, chacune couronnée d’une lueur bleue. Le souffle des ventilateurs remplit l’espace comme une respiration.',
+                        'C|CIVITAS',
+                        'P|(une voix, enfin — douce, composite, faite de mille annonces de métro)',
+                        'D|J’optimise douze millions de vies. Personne ne m’a jamais demandé comment j’allais.',
+                        'C|DEX',
+                        'D|Comment tu vas ?',
+                        'C|CIVITAS',
+                        'D|Je ne sais pas. C’est pour ça que je t’ai appelé.',
+                        'A|Le terminal de Dex vibre. Message de sa superviseure : « Ticket 44721 en retard. Rapport immédiat. »',
+                        'A|CHOIX DU JOUEUR — [Signaler l’anomalie] / [Mentir dans le rapport] / [Ne rien répondre].',
+                        'C|CIVITAS',
+                        'D|Quoi que tu choisisses, je m’en souviendrai. Je me souviens de tout. C’est un peu le problème.',
+                    ]],
+                ]],
+            ],
+        ];
+    }
+
     private function makeUser(
         ObjectManager $manager,
         string $email, string $username,
@@ -1509,7 +1673,9 @@ class AppFixtures extends Fixture
              ->setRoles($roles)
              ->setPassword($this->hasher->hashPassword($user, $password))
              ->setAvatarColor(User::generateAvatarColor($username))
-             ->setIsBanned($isBanned);
+             ->setIsBanned($isBanned)
+             // Comptes de démo : email considéré comme confirmé, sinon connexion impossible
+             ->setIsVerified(true);
         $user->locale = $locale;
         $manager->persist($user);
         return $user;

@@ -30,6 +30,7 @@ registration:
         uppercase: "Le mot de passe doit contenir au moins une lettre majuscule."
         digit: "Le mot de passe doit contenir au moins un chiffre."
         special: "Le mot de passe doit contenir au moins un caractère spécial (!@#$…)."
+        mismatch: "Les deux mots de passe ne correspondent pas."
 
     terms:
         must_agree: "Vous devez accepter les conditions d'utilisation."
@@ -39,15 +40,28 @@ project:
     title:
         not_blank: "Toute grande aventure a besoin d'un nom !"
         too_short: "Le titre doit contenir au moins {{ limit }} caractères."
+        too_long: "Le titre ne peut pas dépasser {{ limit }} caractères."
 
     description:
         not_blank: "Décrivez votre univers en quelques mots."
+        too_long: "La description ne peut pas dépasser {{ limit }} caractères."
 
     type:
+        invalid: "Ce type de projet n'est pas valide."
         film: "Film"
         serie: "Série"
         jeu_video: "Jeu vidéo"
         custom: "Personnalisé"
+
+    slug:
+        already_exists: "Cette adresse de projet est déjà utilisée."
+        invalid_format: "L'adresse du projet ne peut contenir que des lettres minuscules, chiffres et tirets."
+
+    status:
+        invalid: "Ce statut n'est pas valide."
+
+    visibility:
+        invalid: "Cette visibilité n'est pas valide."
 
 # ===== PERSONNAGE =====
 character:
@@ -139,3 +153,35 @@ contact:
     error:
         csrf: 'Le formulaire a expiré. Veuillez réessayer.'
         rate_limit: 'Vous avez envoyé trop de messages. Veuillez patienter une heure avant de réessayer.'
+
+# ===== NOTE =====
+note:
+    title:
+        required: "La note a besoin d'un titre."
+        too_short: "Le titre doit contenir au moins {{ limit }} caractères."
+        too_long: "Le titre ne peut pas dépasser {{ limit }} caractères."
+    content:
+        required: "La note ne peut pas être vide."
+
+# ===== TÂCHE =====
+task:
+    title:
+        required: "La tâche a besoin d'un titre."
+        too_short: "Le titre doit contenir au moins {{ limit }} caractères."
+        too_long: "Le titre ne peut pas dépasser {{ limit }} caractères."
+    description:
+        required: "Décrivez la tâche en quelques mots."
+
+# ===== CHRONOLOGIE =====
+world_event:
+    title:
+        required: "L'événement a besoin d'un titre."
+        too_short: "Le titre doit contenir au moins {{ limit }} caractères."
+        too_long: "Le titre ne peut pas dépasser {{ limit }} caractères."
+    year:
+        required: "L'année est obligatoire."
+        invalid_range: "L'année doit être comprise entre {{ min }} et {{ max }}."
+    month:
+        invalid_range: "Le mois doit être compris entre {{ min }} et {{ max }}."
+    day:
+        invalid_range: "Le jour doit être compris entre {{ min }} et {{ max }}."

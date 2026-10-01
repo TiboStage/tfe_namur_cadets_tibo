@@ -1,0 +1,28 @@
+{# templates/website/_partials/_navbar_lang.html.twig
+   Sélecteur de langue de la navbar — texte seul, sans drapeau.
+   Utilise le contrôleur `dropdown` (celui du menu profil juste à côté) plutôt
+   que le contrôleur `language` du footer : même comportement que le menu
+   avatar (Echap, clic extérieur, classe is-open) pour une navbar cohérente. #}
+<div class="nav-lang" data-controller="dropdown">
+
+    <button type="button"
+            class="nav-lang__toggle"
+            data-action="click->dropdown#toggle"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="{{ 'navbar.actions.change_language'|trans({}, 'website') }}">
+        {{ ux_icon('lucide:globe', {class: 'icon-sm'}) }}
+    </button>
+
+    <div class="nav-lang__dropdown" data-dropdown-target="menu">
+        {% set current_route  = app.request.attributes.get('_route')|default('app_home') %}
+        {% set current_params = app.request.attributes.get('_route_params')|default({}) %}
+
+        <a href="{{ path(current_route, current_params|merge({'_locale': 'fr'})) }}"
+           class="nav-lang__option {{ app.request.locale == 'fr' ? 'active' : '' }}">Français</a>
+        <a href="{{ path(current_route, current_params|merge({'_locale': 'en'})) }}"
+           class="nav-lang__option {{ app.request.locale == 'en' ? 'active' : '' }}">English</a>
+        <a href="{{ path(current_route, current_params|merge({'_locale': 'nl'})) }}"
+           class="nav-lang__option {{ app.request.locale == 'nl' ? 'active' : '' }}">Nederlands</a>
+    </div>
+</div>

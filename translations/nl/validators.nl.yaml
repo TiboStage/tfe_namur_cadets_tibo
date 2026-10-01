@@ -27,6 +27,10 @@ registration:
     password:
         not_blank: "Een wachtwoord is vereist."
         length: "Je wachtwoord moet minimaal {{ limit }} tekens lang zijn."
+        uppercase: "Het wachtwoord moet minstens één hoofdletter bevatten."
+        digit: "Het wachtwoord moet minstens één cijfer bevatten."
+        special: "Het wachtwoord moet minstens één speciaal teken bevatten (!@#$…)."
+        mismatch: "De twee wachtwoorden komen niet overeen."
 
     terms:
         must_agree: "Je moet akkoord gaan met de gebruiksvoorwaarden."
@@ -36,9 +40,24 @@ project:
     title:
         not_blank: "Elk groot avontuur heeft een naam nodig!"
         too_short: "De titel moet minimaal {{ limit }} tekens lang zijn."
+        too_long: "De titel mag niet langer zijn dan {{ limit }} tekens."
 
     description:
         not_blank: "Beschrijf je universum in een paar woorden."
+        too_long: "De beschrijving mag niet langer zijn dan {{ limit }} tekens."
+
+    type:
+        invalid: "Dit projecttype is niet geldig."
+
+    slug:
+        already_exists: "Dit projectadres is al in gebruik."
+        invalid_format: "Het projectadres mag alleen kleine letters, cijfers en koppeltekens bevatten."
+
+    status:
+        invalid: "Deze status is niet geldig."
+
+    visibility:
+        invalid: "Deze zichtbaarheid is niet geldig."
 
 # ===== PERSONAGE =====
 character:
@@ -104,3 +123,35 @@ contact:
     error:
         csrf: 'Het formulier is verlopen. Probeer het opnieuw.'
         rate_limit: 'U heeft te veel berichten verzonden. Wacht een uur voordat u het opnieuw probeert.'
+
+# ===== NOTITIE =====
+note:
+    title:
+        required: "De notitie heeft een titel nodig."
+        too_short: "De titel moet minimaal {{ limit }} tekens lang zijn."
+        too_long: "De titel mag niet langer zijn dan {{ limit }} tekens."
+    content:
+        required: "De notitie mag niet leeg zijn."
+
+# ===== TAAK =====
+task:
+    title:
+        required: "De taak heeft een titel nodig."
+        too_short: "De titel moet minimaal {{ limit }} tekens lang zijn."
+        too_long: "De titel mag niet langer zijn dan {{ limit }} tekens."
+    description:
+        required: "Beschrijf de taak in een paar woorden."
+
+# ===== TIJDLIJN =====
+world_event:
+    title:
+        required: "De gebeurtenis heeft een titel nodig."
+        too_short: "De titel moet minimaal {{ limit }} tekens lang zijn."
+        too_long: "De titel mag niet langer zijn dan {{ limit }} tekens."
+    year:
+        required: "Het jaar is verplicht."
+        invalid_range: "Het jaar moet tussen {{ min }} en {{ max }} liggen."
+    month:
+        invalid_range: "De maand moet tussen {{ min }} en {{ max }} liggen."
+    day:
+        invalid_range: "De dag moet tussen {{ min }} en {{ max }} liggen."

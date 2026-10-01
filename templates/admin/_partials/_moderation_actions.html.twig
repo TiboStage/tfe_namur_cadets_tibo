@@ -1,0 +1,34 @@
+{#
+  Boutons de décision de modération d'un projet.
+  Variables : project, action_url, token_id, statuses (liste parmi clear|warning|blocked|approved)
+#}
+{% set options = {
+    clear:    {icon: 'lucide:circle-check',  label: 'Lever le signalement', desc: 'Le projet repasse en statut neutre.',                   tone: 'success', confirm: 'Le projet repassera en statut neutre et sortira de la liste à traiter.'},
+    warning:  {icon: 'lucide:triangle-alert', label: 'Avertissement',        desc: 'Le projet reste visible, marqué comme à surveiller.',   tone: 'warning', confirm: 'Le projet reste en ligne mais sera marqué « à surveiller » par l’équipe de modération.'},
+    blocked:  {icon: 'lucide:ban',            label: 'Bloquer le projet',    desc: 'Le projet n’est plus visible publiquement.',            tone: 'danger',  confirm: 'Sa page publique et ses épisodes ne seront plus accessibles. L’auteur garde l’accès à son atelier.'},
+    approved: {icon: 'lucide:badge-check',    label: 'Approuver',            desc: 'Validé par l’équipe de modération.',                    tone: 'info',    confirm: 'Le projet sera marqué comme validé par l’équipe de modération.'},
+} %}
+
+<form method="post" action="{{ action_url }}" class="apr-actions"
+      data-action="submit->confirm-modal#intercept">
+    <input type="hidden" name="_token" value="{{ csrf_token(token_id) }}">
+    <input type="hidden" name="_back" value="project">
+
+    {% for status in statuses %}
+        {% set opt = options[status] %}
+        {% set current = project.moderationStatus == status %}
+        <button type="submit" name="status" value="{{ status }}"
+                class="apr-action apr-action--{{ status }} {{ current ? 'apr-action--current' }}"
+                data-confirm-title="{{ opt.label }} — {{ project.title }}"
+                data-confirm-message="{{ opt.confirm }}"
+                data-confirm-label="{{ opt.label }}"
+                data-confirm-tone="{{ opt.tone }}"
+                {{ current ? 'disabled' }}>
+            <span class="apr-action__icon">{{ ux_icon(opt.icon, {class: 'icon-sm'}) }}</span>
+            <span class="apr-action__text">
+                <strong>{{ opt.label }}</strong>
+                <span>{{ current ? 'Statut actuel' : opt.desc }}</span>
+            </span>
+        </button>
+    {% endfor %}
+</form>

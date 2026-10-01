@@ -8,6 +8,7 @@ use App\Repository\DocumentationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -93,6 +94,26 @@ class Documentation
         return $this->id;
     }
 
+    // Setters explicites : évitent une TypeError quand le formulaire soumet
+    // un champ vide (Symfony normalise un champ texte manquant en null).
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug ?? '';
+        return $this;
+    }
+
+    public function setCategory(?string $category): static
+    {
+        $this->category = $category ?? '';
+        return $this;
+    }
+
+    public function setOrderIndex(?int $orderIndex): static
+    {
+        $this->orderIndex = $orderIndex ?? 0;
+        return $this;
+    }
+
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
@@ -176,10 +197,6 @@ class Documentation
 
     public static function generateSlug(string $title): string
     {
-        $slug = strtolower(trim($title));
-        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $slug);
-        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
-
-        return trim($slug, '-');
+        return (new AsciiSlugger())->slug(trim($title))->lower()->toString();
     }
 }

@@ -43,7 +43,7 @@ class ProjectFormType extends AbstractType
                 ],
                 'placeholder' => 'project.form.type_placeholder',
             ])
-            ->add('description');
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

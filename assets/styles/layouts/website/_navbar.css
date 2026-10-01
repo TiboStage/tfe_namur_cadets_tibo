@@ -18,7 +18,7 @@
 }
 
 .nav-container .nav-links {
-    margin-left: auto;
+    margin-right: auto;
 }
 
 /* --- 2. Logo & Liens --- */
@@ -29,6 +29,13 @@
     text-decoration: none;
 }
 .logo-text .highlight { color: var(--color-primary); }
+
+/* Variante compacte — réutilisée dans l'Atelier, l'Admin et la Modération
+   pour que le logo reste identique dans toute l'application, juste plus
+   petit là où l'espace horizontal est plus réduit (sidebar, topbar). */
+.logo-text--sm {
+    font-size: 17px;
+}
 
 .nav-links {
     display: flex;
@@ -50,43 +57,126 @@
     display: flex;
     align-items: center;
     justify-content: end;
-    gap: 15px;
+    gap: 10px;
 }
 
+/* ── Sélecteur de langue (navbar) ────────────────────────────── */
+.nav-lang {
+    position: relative;
+}
+
+.nav-lang__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+}
+
+.nav-lang__toggle:hover,
+.nav-lang.is-open .nav-lang__toggle {
+    border-color: var(--color-primary);
+    background: var(--overlay-sm);
+    color: var(--color-primary);
+}
+
+.nav-lang__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .6);
+    min-width: 150px;
+    z-index: 200;
+    overflow: hidden;
+
+    /* Caché par défaut — même mécanique que .dropdown-content (menu profil) */
+    opacity: 0;
+    transform: translateX(-50%) translateY(-6px);
+    pointer-events: none;
+    transition: opacity .15s ease, transform .15s ease;
+}
+
+.nav-lang__dropdown.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: all;
+}
+
+.nav-lang__option {
+    display: block;
+    padding: 9px 14px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    transition: background .12s, color .12s;
+}
+
+.nav-lang__option:hover {
+    background: var(--overlay-sm);
+    color: var(--text-main);
+}
+
+.nav-lang__option.active {
+    background: var(--color-primary-glow);
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* ── Icône compte (visiteur non connecté) ────────────────────── */
+.nav-account-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: border-color .15s, background .15s, color .15s;
+}
+
+.nav-account-icon:hover {
+    border-color: var(--color-primary);
+    background: var(--overlay-sm);
+    color: var(--color-primary);
+}
 
 /* ── Bloc profil ─────────────────────────────────────────────── */
 .user-profile-dropdown {
     position: relative;
 }
 
-/* Trigger — bouton cliquable */
+/* Trigger — bouton cliquable. Pas de chevron : l'affordance clic vient du
+   fond/bordure qui s'éclaircit au survol et à l'ouverture. */
 .user-trigger {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    gap: 8px;
+    gap: 9px;
     height: 36px;
-    padding: 0 10px 0 12px;
+    padding: 0 14px 0 6px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
-    background: none;
+    background: var(--overlay-xs);
     cursor: pointer;
     font-family: inherit;
     transition: border-color 0.2s, background 0.2s;
-    justify-content: end;
 }
 
 .user-trigger:hover,
 .user-profile-dropdown.is-open .user-trigger {
     border-color: var(--color-primary);
-    background: var(--overlay-xs);
-}
-
-/* Infos utilisateur */
-.user-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    background: var(--overlay-sm);
 }
 
 .user-name {
@@ -94,19 +184,6 @@
     font-weight: 700;
     font-size: 12px;
     line-height: 1.2;
-}
-
-
-/* Chevron — tourne à l'ouverture */
-.dropdown-chevron {
-    color: var(--text-muted-light);
-    flex-shrink: 0;
-    transition: transform 0.2s ease, color 0.2s;
-}
-
-.user-profile-dropdown.is-open .dropdown-chevron {
-    transform: rotate(180deg);
-    color: var(--color-primary);
 }
 
 /* ── Bloc identité (header du dropdown) ─────────────────────── */
@@ -326,7 +403,9 @@
         width: 280px;
         background: var(--color-bg-dark);
         border-left: 1px solid var(--color-border);
-        z-index: 300;
+        /* Au-dessus du .main-nav (position:sticky, z-index:1000) — sinon la
+           barre du haut recouvre l'en-tête du tiroir. */
+        z-index: 1001;
         transform: translateX(100%);
         transition: transform .25s ease;
     }
@@ -389,15 +468,23 @@
         padding-left: 18px;
     }
 
-    .main-nav-drawer__actions {
-        padding: 16px 20px;
-        border-top: 1px solid var(--color-border);
+    .main-nav-drawer__top-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--color-border);
         background: var(--color-bg-dark);
     }
 
-    .main-nav-drawer__actions .btn-atelier {
+    .main-nav-drawer__top-actions .nav-lang,
+    .main-nav-drawer__top-actions .nav-account-icon {
+        flex-shrink: 0;
+    }
+
+    .main-nav-drawer__top-actions .btn-atelier {
         display: flex;
-        width: 100%;
+        flex: 1;
         justify-content: center;
     }
 }

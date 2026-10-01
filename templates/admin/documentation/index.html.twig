@@ -63,7 +63,11 @@
                            class="btn-sm btn-sm--outline">Modifier</a>
                         <form method="post"
                               action="{{ path('admin_doc_delete', {id: article.id, _locale: app.request.locale}) }}"
-                              onsubmit="return confirm('Supprimer cet article ?')"
+                              data-action="submit->confirm-modal#intercept"
+                              data-confirm-title="Supprimer cet article ?"
+                              data-confirm-message="« {{ article.getTitle() }} » sera supprimé dans toutes les langues. Cette action est définitive."
+                              data-confirm-label="Supprimer"
+                              data-confirm-tone="danger"
                               class="d-inline">
                             <input type="hidden" name="_token"
                                    value="{{ csrf_token('delete_doc_' ~ article.id) }}">

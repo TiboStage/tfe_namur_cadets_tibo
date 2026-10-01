@@ -168,7 +168,9 @@ class GenreAdminController extends AbstractController
         // ── Types de projet ───────────────────────────────────────────────────
         $rawTypes = $request->request->all('projectTypes');
         $validTypes = ['film', 'serie', 'jeu_video'];
-        $genre->projectTypes = array_values(array_intersect($rawTypes ?: [], $validTypes));
+        $types = array_values(array_unique(array_intersect($rawTypes ?: [], $validTypes)));
+        // Tous les types cochés = aucun coché : on normalise vers [] ("Tous")
+        $genre->projectTypes = count($types) === count($validTypes) ? [] : $types;
 
         // ── Ordre ─────────────────────────────────────────────────────────────
         $genre->orderIndex = max(0, (int) $request->request->get('orderIndex', 0));
@@ -180,9 +182,8 @@ class GenreAdminController extends AbstractController
             $label = trim($rawTranslations[$locale]['label'] ?? '');
 
             if ($label === '') {
-                $flag   = GenreTranslation::LOCALE_FLAGS[$locale];
                 $name   = GenreTranslation::LOCALE_LABELS[$locale];
-                $errors[] = "La traduction {$flag} {$name} est obligatoire.";
+                $errors[] = "La traduction {$name} est obligatoire.";
                 continue;
             }
 

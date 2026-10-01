@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -63,11 +64,15 @@ class RegistrationFormType extends AbstractType
                 'attr'  => ['autocomplete' => 'email'],
                 // Placeholder traduit dans le Twig : 'register.email'|trans
             ])
-            ->add('plainPassword', PasswordType::class, [
-                'mapped' => false,
-                'label'  => false,
-                'attr'   => ['autocomplete' => 'new-password'],
-                // Placeholder traduit dans le Twig : 'register.password'|trans
+            // Double saisie : le second champ doit être identique au premier
+            // (vérifié en direct par password_field_controller, puis côté serveur ici).
+            ->add('plainPassword', RepeatedType::class, [
+                'type'            => PasswordType::class,
+                'mapped'          => false,
+                'invalid_message' => 'registration.password.mismatch',
+                'first_options'   => ['label' => false, 'attr' => ['autocomplete' => 'new-password']],
+                'second_options'  => ['label' => false, 'attr' => ['autocomplete' => 'new-password']],
+                // Placeholders traduits dans le Twig : 'register.password' / 'register.password_confirm'
                 'constraints' => [
                     new NotBlank(message: 'registration.password.not_blank'),
                     new Length(min: 8, minMessage: 'registration.password.length', max: 4096),

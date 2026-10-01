@@ -25,67 +25,13 @@ class ContactType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // Utilisateur connecté : prénom, nom et email viennent de son compte
+        // (renseignés par PagesController::contact), on ne les redemande pas.
+        if ($options['with_identity']) {
+            $this->addIdentityFields($builder);
+        }
+
         $builder
-            // ── Prénom ──────────────────────────────────────────────────
-            ->add('firstname', TextType::class, [
-                'label' => 'contact.form.labels.firstname',
-                'translation_domain' => 'website',
-                'attr' => [
-                    'class' => 'form-control',
-                    'maxlength' => 255,
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(
-                        message: 'contact.firstname.not_blank',
-                    ),
-                    new Assert\Length(
-                        min: 2,
-                        max: 255,
-                        minMessage: 'contact.firstname.too_short',
-                        maxMessage: 'contact.firstname.too_long',
-                    ),
-                ],
-            ])
-
-            // ── Nom ─────────────────────────────────────────────────────
-            ->add('lastname', TextType::class, [
-                'label' => 'contact.form.labels.lastname',
-                'translation_domain' => 'website',
-                'attr' => [
-                    'class' => 'form-control',
-                    'maxlength' => 255,
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(
-                        message: 'contact.lastname.not_blank',
-                    ),
-                    new Assert\Length(
-                        min: 2,
-                        max: 255,
-                        minMessage: 'contact.lastname.too_short',
-                        maxMessage: 'contact.lastname.too_long',
-                    ),
-                ],
-            ])
-
-            // ── Email ───────────────────────────────────────────────────
-            ->add('email', EmailType::class, [
-                'label' => 'contact.form.labels.email',
-                'translation_domain' => 'website',
-                'attr' => [
-                    'class' => 'form-control',
-                    'maxlength' => 255,
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(
-                        message: 'contact.email.not_blank',
-                    ),
-                    new Assert\Email(
-                        message: 'contact.email.invalid',
-                    ),
-                ],
-            ])
-
             // ── Sujet (Select avec 3 options) ──────────────────────────
             ->add('subject', ChoiceType::class, [
                 'label' => 'contact.form.labels.subject',
@@ -153,6 +99,73 @@ class ContactType extends AbstractType
             ]);
     }
 
+    /**
+     * Prénom, nom et email — uniquement pour les visiteurs non connectés.
+     */
+    private function addIdentityFields(FormBuilderInterface $builder): void
+    {
+        $builder
+            // ── Prénom ──────────────────────────────────────────────────
+            ->add('firstname', TextType::class, [
+                'label' => 'contact.form.labels.firstname',
+                'translation_domain' => 'website',
+                'attr' => [
+                    'class' => 'form-control',
+                    'maxlength' => 255,
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message: 'contact.firstname.not_blank',
+                    ),
+                    new Assert\Length(
+                        min: 2,
+                        max: 255,
+                        minMessage: 'contact.firstname.too_short',
+                        maxMessage: 'contact.firstname.too_long',
+                    ),
+                ],
+            ])
+
+            // ── Nom ─────────────────────────────────────────────────────
+            ->add('lastname', TextType::class, [
+                'label' => 'contact.form.labels.lastname',
+                'translation_domain' => 'website',
+                'attr' => [
+                    'class' => 'form-control',
+                    'maxlength' => 255,
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message: 'contact.lastname.not_blank',
+                    ),
+                    new Assert\Length(
+                        min: 2,
+                        max: 255,
+                        minMessage: 'contact.lastname.too_short',
+                        maxMessage: 'contact.lastname.too_long',
+                    ),
+                ],
+            ])
+
+            // ── Email ───────────────────────────────────────────────────
+            ->add('email', EmailType::class, [
+                'label' => 'contact.form.labels.email',
+                'translation_domain' => 'website',
+                'attr' => [
+                    'class' => 'form-control',
+                    'maxlength' => 255,
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(
+                        message: 'contact.email.not_blank',
+                    ),
+                    new Assert\Email(
+                        message: 'contact.email.invalid',
+                    ),
+                ],
+            ]);
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -162,6 +175,9 @@ class ContactType extends AbstractType
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
             'csrf_token_id' => 'contact_form',
+            // false quand l'utilisateur est connecté (identité reprise de son compte)
+            'with_identity' => true,
         ]);
+        $resolver->setAllowedTypes('with_identity', 'bool');
     }
 }

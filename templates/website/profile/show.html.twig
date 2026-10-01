@@ -129,6 +129,23 @@
                 </div>
             </div>
 
+            {# Section — Préférences #}
+            <div class="pf-section">
+                <div class="pf-section__header">
+                    <div class="pf-section__title-row">
+                        {{ ux_icon('lucide:globe', {class: 'icon-xs'}) }}
+                        <h2>{{ 'profile.sections.preferences'|trans }}</h2>
+                    </div>
+                    <p class="text-muted">{{ 'profile.sections.preferences_desc'|trans }}</p>
+                </div>
+
+                <div class="pf-field">
+                    <label class="pf-label">{{ 'profile.form.locale_label'|trans }}</label>
+                    {{ form_widget(form.locale) }}
+                    {{ form_errors(form.locale) }}
+                </div>
+            </div>
+
             {# Section — Sécurité #}
             <div class="pf-section">
                 <div class="pf-section__header">
@@ -151,7 +168,7 @@
                                 'attr': {
                                     'placeholder': 'profile.form.new_password'|trans,
                                     'data-password-field-target': 'input',
-                                    'data-action': 'input->password-field#checkStrength focus->password-field#openStrength blur->password-field#closeStrength',
+                                    'data-action': 'input->password-field#checkStrength',
                                     'aria-describedby': 'profile-pw-rules'
                                 }
                             }) }}

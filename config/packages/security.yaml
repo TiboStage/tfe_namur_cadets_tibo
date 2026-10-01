@@ -21,6 +21,8 @@ security:
             lazy: true
             provider: app_user_provider
             custom_authenticator: App\Security\LoginFormAuthenticator
+            # Refuse la connexion aux comptes bannis ou dont l'email n'est pas confirmé
+            user_checker: App\Security\UserChecker
             logout:
                 path: app_logout
             remember_me:

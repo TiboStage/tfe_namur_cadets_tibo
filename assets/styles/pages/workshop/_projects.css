@@ -60,7 +60,7 @@
     color: var(--text-muted);
     font-size: 10px;
     font-weight: 700;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
 }
 
 .project-filter-tab.is-active .project-filter-tab__count {

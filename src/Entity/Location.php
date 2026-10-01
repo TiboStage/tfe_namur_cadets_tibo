@@ -152,9 +152,9 @@ class Location
 
     // ─── Setters compat Symfony Forms ────────────────────────────────────────
 
-    public function setName(string $v): static { $this->name = trim($v); return $this; }
-    public function setDescription(string $v): static { $this->description = trim($v); return $this; }
-    public function setType(string $v): static { $this->type = $v; return $this; }
+    public function setName(?string $v): static { $this->name = trim((string) $v); return $this; }
+    public function setDescription(?string $v): static { $this->description = trim((string) $v); return $this; }
+    public function setType(?string $v): static { $this->type = $v ?? ''; return $this; }
     public function setAliases(array $v): static { $this->aliases = $v; return $this; }
     public function setMetadata(array $v): static { $this->metadata = $v; return $this; }
 

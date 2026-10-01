@@ -1,0 +1,228 @@
+{#
+  Aperçu d'un projet pour la modération (admin + modo).
+  Utilisé via {% embed %} — blocs à surcharger : back_link, actions.
+
+  Variables : project, reports, recent_comments, comment_count
+#}
+{% set type_meta = {
+    film:      {label: 'Film',         icon: 'lucide:film'},
+    serie:     {label: 'Série',        icon: 'lucide:tv-2'},
+    jeu_video: {label: 'Jeu vidéo',    icon: 'lucide:gamepad-2'},
+    custom:    {label: 'Personnalisé', icon: 'lucide:sparkles'},
+} %}
+{% set type = type_meta[project.projectType] ?? {label: project.projectType, icon: 'lucide:folder'} %}
+{% set mod_labels = {clear: 'Neutre', warning: 'Avertissement', blocked: 'Bloqué', approved: 'Approuvé'} %}
+{% set report_status = {pending: 'En attente', reviewed: 'Examiné', dismissed: 'Rejeté', actioned: 'Traité'} %}
+{% set is_public = project.visibility == 'public' %}
+{% set can_read = is_public and project.moderationStatus != 'blocked' %}
+{% set genres = project.projectFeatures|filter(f => f.featureKey == 'genre') %}
+{% set readable = project.scenarioElements|filter(e => e.hasContent and (e.isPublic or project.projectType != 'serie')) %}
+
+<div class="admin-form-header">{% block back_link %}{% endblock %}</div>
+
+<div class="apr">
+
+    {# ══ Colonne principale ══════════════════════════════════════════════ #}
+    <div class="apr__main">
+
+        {# ── En-tête du projet (inspiré de la page publique) ──────────── #}
+        <div class="admin-card apr-hero">
+            <div class="apr-hero__cover apr-hero__cover--{{ project.projectType }}">
+                {% if project.coverFilename %}
+                    <img src="{{ asset('uploads/projects/' ~ project.coverFilename) }}" alt="" loading="lazy">
+                {% else %}
+                    {{ ux_icon(type.icon, {class: 'apr-hero__cover-icon'}) }}
+                {% endif %}
+            </div>
+
+            <div class="apr-hero__body">
+                <div class="apr-hero__badges">
+                    <span class="admin-badge admin-badge--type-{{ project.projectType }}">
+                        {{ ux_icon(type.icon, {class: 'icon-3xs'}) }} {{ type.label }}
+                    </span>
+                    {% if is_public %}
+                        <span class="admin-badge admin-badge--success">En ligne</span>
+                    {% elseif project.visibility == 'private' %}
+                        <span class="admin-badge admin-badge--warning">Privé</span>
+                    {% else %}
+                        <span class="admin-badge admin-badge--muted">Non publié</span>
+                    {% endif %}
+                    <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ mod_labels[project.moderationStatus] ?? project.moderationStatus }}</span>
+                </div>
+
+                <h2 class="apr-hero__title">{{ project.title }}</h2>
+
+                <div class="apr-hero__author">
+                    {{ include('_partials/_user_avatar.html.twig', {user: project.createdBy, size: 'sm'}) }}
+                    <div>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('admin_user_show', {id: project.createdBy.id, _locale: app.request.locale}) }}" class="apr-user-link">{{ project.createdBy.username }}</a>
+                        {% else %}
+                            <strong>{{ project.createdBy.username }}</strong>
+                        {% endif %}
+                        <span>Créé le {{ project.createdAt|date('d/m/Y') }} · modifié le {{ project.updatedAt|date('d/m/Y à H:i') }}</span>
+                    </div>
+                </div>
+
+                {% if genres is not empty %}
+                    <div class="apr-hero__genres">
+                        {% for feature in genres %}
+                            <span class="apr-genre">{{ feature.value|genre_label }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="apr-hero__links">
+                    {% if can_read %}
+                        <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: project.slug}) }}" target="_blank" rel="noopener" class="btn-sm btn-sm--outline">
+                            {{ ux_icon('lucide:external-link', {class: 'icon-xs'}) }} Page publique
+                        </a>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_project_show', {_locale: app.request.locale, slug: project.slug}) }}" target="_blank" rel="noopener" class="btn-sm btn-sm--ghost">
+                            {{ ux_icon('lucide:pencil', {class: 'icon-xs'}) }} Ouvrir dans l'atelier
+                        </a>
+                    {% endif %}
+                    <span class="apr-hero__slug" title="Slug">{{ project.slug }}</span>
+                </div>
+            </div>
+        </div>
+
+        {# ── Description ───────────────────────────────────────────────── #}
+        <div class="admin-card">
+            <div class="admin-card__header">Description</div>
+            <div class="admin-card__body">
+                {% if project.description %}
+                    <p class="apr-text">{{ project.description }}</p>
+                {% else %}
+                    <p class="admin-form-hint">Aucune description.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {# ── Contenu lisible ───────────────────────────────────────────── #}
+        <div class="admin-card">
+            <div class="admin-card__header">
+                Contenu du manuscrit
+                <span class="admin-card__hint">{{ readable|length }} élément{{ readable|length > 1 ? 's' }} avec du texte</span>
+            </div>
+            {% if readable is empty %}
+                <div class="aup-empty">
+                    {{ ux_icon('lucide:file-x', {class: 'icon-md'}) }}
+                    <span>Aucun texte rédigé pour l'instant.</span>
+                </div>
+            {% else %}
+                <ul class="apr-list">
+                    {% for element in readable|slice(0, 8) %}
+                        <li class="apr-list__item">
+                            <span class="apr-list__icon">{{ ux_icon('lucide:file-text', {class: 'icon-xs'}) }}</span>
+                            <div class="apr-list__text">
+                                <strong>{{ element.title }}</strong>
+                                {% if element.summary %}<span>{{ element.summary|length > 110 ? element.summary|slice(0, 110)|trim ~ '…' : element.summary }}</span>{% endif %}
+                            </div>
+                            {% if can_read %}
+                                <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: element.id}) }}"
+                                   target="_blank" rel="noopener" class="btn-sm btn-sm--ghost">
+                                    {{ ux_icon('lucide:book-open', {class: 'icon-xs'}) }} Lire
+                                </a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% if readable|length > 8 %}
+                    <p class="apr-more">+ {{ readable|length - 8 }} autre{{ readable|length - 8 > 1 ? 's' }}</p>
+                {% endif %}
+                {% if not can_read %}
+                    <p class="apr-more">Le projet n'est pas lisible publiquement{{ project.moderationStatus == 'blocked' ? ' (bloqué)' }}.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        {# ── Derniers commentaires ─────────────────────────────────────── #}
+        <div class="admin-card">
+            <div class="admin-card__header">
+                Commentaires
+                <span class="admin-card__hint">{{ comment_count }} au total</span>
+            </div>
+            {% if recent_comments is empty %}
+                <div class="aup-empty">
+                    {{ ux_icon('lucide:message-square', {class: 'icon-md'}) }}
+                    <span>Aucun commentaire.</span>
+                </div>
+            {% else %}
+                <ul class="apr-list">
+                    {% for comment in recent_comments %}
+                        <li class="apr-list__item apr-list__item--top">
+                            {{ include('_partials/_user_avatar.html.twig', {user: comment.author, size: 'xs'}) }}
+                            <div class="apr-list__text">
+                                <strong>{{ comment.author.username }} <em>· {{ comment.createdAt|date('d/m/Y H:i') }}</em></strong>
+                                <span>{{ comment.content|length > 180 ? comment.content|slice(0, 180)|trim ~ '…' : comment.content }}</span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <p class="apr-more">
+                    <a href="{{ path('modo_comments', {_locale: app.request.locale}) }}" class="apr-user-link">Gérer les commentaires →</a>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    {# ══ Colonne latérale ════════════════════════════════════════════════ #}
+    <aside class="apr__side">
+
+        <div class="admin-card">
+            <div class="admin-card__header">Décision de modération</div>
+            <div class="admin-card__body">
+                {% block actions %}{% endblock %}
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card__header">Contenu</div>
+            <div class="apr-stats">
+                {% for stat in [
+                    {icon: 'lucide:layers',         n: project.scenarioElements|length, label: 'Éléments'},
+                    {icon: 'lucide:user-round',     n: project.characters|length,       label: 'Personnages'},
+                    {icon: 'lucide:map-pin',        n: project.locations|length,        label: 'Lieux'},
+                    {icon: 'lucide:calendar-range', n: project.worldEvents|length,      label: 'Événements'},
+                    {icon: 'lucide:users',          n: project.projectMembers|length,   label: 'Membres'},
+                    {icon: 'lucide:message-square', n: comment_count,                   label: 'Commentaires'},
+                ] %}
+                    <div class="apr-stat">
+                        {{ ux_icon(stat.icon, {class: 'icon-xs'}) }}
+                        <strong>{{ stat.n }}</strong>
+                        <span>{{ stat.label }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card__header">
+                Signalements
+                <span class="admin-card__hint">{{ reports|length }}</span>
+            </div>
+            {% if reports is empty %}
+                <div class="aup-empty">
+                    {{ ux_icon('lucide:flag', {class: 'icon-md'}) }}
+                    <span>Aucun signalement.</span>
+                </div>
+            {% else %}
+                <ul class="apr-list">
+                    {% for report in reports|slice(0, 6) %}
+                        <li class="apr-list__item">
+                            <div class="apr-list__text">
+                                <strong>{{ report.reasonLabel }}</strong>
+                                <span>par {{ report.reporter.username }} · {{ report.createdAt|date('d/m/Y') }}</span>
+                            </div>
+                            <a href="{{ path('modo_report_show', {id: report.id, _locale: app.request.locale}) }}"
+                               class="mod-badge mod-badge--{{ report.status }} apr-report-link">{{ report_status[report.status] ?? report.status }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+    </aside>
+</div>

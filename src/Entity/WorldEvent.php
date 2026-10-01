@@ -130,9 +130,11 @@ class WorldEvent
     }
 
     // Setters compat Symfony Forms
-    public function setTitle(string $v): static { $this->title = trim($v); return $this; }
+    public function setTitle(?string $v): static { $this->title = trim((string) $v); return $this; }
     public function setDescription(?string $v): static { $this->description = $v; return $this; }
-    public function setYear(int $v): static { $this->year = $v; return $this; }
+    // Année absente du formulaire → valeur hors plage volontaire pour que la
+    // contrainte Range (et non 0, valeur narrative légitime) déclenche l'erreur.
+    public function setYear(?int $v): static { $this->year = $v ?? -100000; return $this; }
     public function setMonth(?int $v): static { $this->month = $v; return $this; }
     public function setDay(?int $v): static { $this->day = $v; return $this; }
 

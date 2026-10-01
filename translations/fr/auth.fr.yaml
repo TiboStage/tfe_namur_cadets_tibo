@@ -21,7 +21,49 @@ login:
     email: "Email"
     password: "Mot de passe"
     remember_me: "Se souvenir de moi"
+    forgot_password: "Mot de passe oublié ?"
     submit: "Se connecter"
+
+# ===== MOT DE PASSE OUBLIÉ =====
+forgot_password:
+    browser_title: "Mot de passe oublié - Scénart"
+    title: "Mot de passe oublié ?"
+    subtitle: "Indiquez votre adresse email, nous vous envoyons un lien pour le réinitialiser."
+    email: "Adresse email"
+    submit: "Envoyer le lien"
+    back_to_login: "Retour à la connexion"
+    too_soon: "Un email vient d'être demandé. Patientez %seconds% s avant d'en redemander un."
+    limit_reached: "Limite de %max% demandes par heure atteinte. Réessayez dans %minutes% min."
+
+check_email:
+    browser_title: "Vérifiez vos emails - Scénart"
+    title: "Vérifiez vos emails"
+    subtitle: "Si un compte existe avec cette adresse, un lien de réinitialisation vient de lui être envoyé."
+    hint: "Rien reçu d'ici quelques minutes ? Pensez à vérifier vos spams."
+    back_to_login: "Retour à la connexion"
+    counter: "Demande %used%/%max% cette heure"
+    resend: "Renvoyer l'email"
+    resend_in: "Renvoyer dans %time%"
+    limit_reached: "Limite atteinte : vous pourrez refaire une demande dans l'heure."
+
+verify_email:
+    browser_title: "Confirmez votre email - Scénart"
+    title: "Confirmez votre adresse email"
+    subtitle: "Un lien de confirmation a été envoyé à %email%. Cliquez dessus pour activer votre compte."
+    resend_link: "Renvoyer le mail de confirmation"
+    resent: "Un nouveau mail de confirmation vient d'être envoyé."
+    success: "Votre adresse email est confirmée ! Vous pouvez maintenant vous connecter."
+    already_verified: "Votre adresse email est déjà confirmée. Vous pouvez vous connecter."
+    invalid_link: "Ce lien de confirmation est invalide. Connectez-vous pour en recevoir un nouveau."
+
+reset_password:
+    browser_title: "Nouveau mot de passe - Scénart"
+    title: "Choisissez un nouveau mot de passe"
+    subtitle: "Il doit respecter les mêmes règles qu'à l'inscription."
+    password: "Nouveau mot de passe"
+    password_confirm: "Confirmer le nouveau mot de passe"
+    submit: "Réinitialiser le mot de passe"
+    invalid_token: "Ce lien de réinitialisation est invalide ou a expiré. Veuillez refaire une demande."
 
 # ===== INSCRIPTION =====
 register:
@@ -34,6 +76,7 @@ register:
     username: "Nom d'utilisateur"
     email: "Adresse email"
     password: "Mot de passe"
+    password_confirm: "Confirmer le mot de passe"
     agree_terms: "J'accepte les conditions d'utilisation"
     submit: "L'Atelier vous attend"
 
@@ -64,6 +107,8 @@ profile:
         identity_desc: "Vos informations publiques"
         security: "Sécurité"
         security_desc: "Modifier votre mot de passe"
+        preferences: "Préférences"
+        preferences_desc: "Langue utilisée dans l'interface"
         stats: "Statistiques"
         avatar_color: "Couleur d'avatar"
         avatar_color_desc: "Personnalisez la couleur de votre initiale."
@@ -73,6 +118,11 @@ profile:
         lastname: "Nom"
         username: "Nom d'utilisateur"
         email: "Adresse email"
+        locale_label: "Langue de l'interface"
+        locale:
+            fr: "Français"
+            en: "English"
+            nl: "Nederlands"
         new_password: "Nouveau mot de passe"
         confirm_password: "Confirmer le mot de passe"
         password_hint: "Laissez vide pour conserver votre mot de passe actuel (min. 8 caractères)"

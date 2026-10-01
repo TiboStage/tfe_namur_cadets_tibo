@@ -62,7 +62,9 @@ class ProfileController extends AbstractController
                 $this->translator->trans('profile.updated', [], 'flash_messages')
             );
 
-            return $this->redirectToRoute('app_profile', ['_locale' => $request->getLocale()]);
+            // Utilise la nouvelle langue choisie (pas forcément celle de l'URL courante)
+            // pour que le changement soit visible immédiatement après la sauvegarde.
+            return $this->redirectToRoute('app_profile', ['_locale' => $user->locale]);
         }
 
         return $this->render('website/profile/show.html.twig', [

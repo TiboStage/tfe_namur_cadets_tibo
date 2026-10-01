@@ -374,9 +374,9 @@
                         <div class="ps-field flex-1">
                             <label class="ps-label">Rôle</label>
                             <select name="role" class="ps-select">
-                                <option value="reader">Lecteur — lecture + notes</option>
-                                <option value="contributor">Contributeur — écriture du contenu</option>
-                                <option value="moderator">Modérateur — gestion du projet</option>
+                                <option value="reader">{{ 'projects.edit.members.role_reader'|trans({}, 'workshop') }}</option>
+                                <option value="contributor">{{ 'projects.edit.members.role_contributor'|trans({}, 'workshop') }}</option>
+                                <option value="moderator">{{ 'projects.edit.members.role_moderator'|trans({}, 'workshop') }}</option>
                             </select>
                         </div>
                         <div class="ps-field ps-field--submit">
@@ -426,9 +426,9 @@
                             <select name="role" class="ps-select ps-select--small"
                                     onchange="this.closest('form').submit()"
                                     {{ member.isPending() ? 'disabled title="En attente d\'acceptation"' : '' }}>
-                                <option value="reader"      {{ member.role == 'reader'      ? 'selected' }}>Lecteur</option>
-                                <option value="contributor" {{ member.role == 'contributor' ? 'selected' }}>Contributeur</option>
-                                <option value="moderator"   {{ member.role == 'moderator'   ? 'selected' }}>Modérateur</option>
+                                <option value="reader"      {{ member.role == 'reader'      ? 'selected' }}>{{ 'projects.roles.reader'|trans({}, 'workshop') }}</option>
+                                <option value="contributor" {{ member.role == 'contributor' ? 'selected' }}>{{ 'projects.roles.contributor'|trans({}, 'workshop') }}</option>
+                                <option value="moderator"   {{ member.role == 'moderator'   ? 'selected' }}>{{ 'projects.roles.moderator'|trans({}, 'workshop') }}</option>
                             </select>
                         </form>
 

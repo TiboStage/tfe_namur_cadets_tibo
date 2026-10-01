@@ -12,11 +12,7 @@
 
         {{ include('_partials/_user_avatar.html.twig', {user: app.user, size: 'sm'}) }}
 
-        <div class="user-info">
-            <span class="user-name">{{ app.user.username }}</span>
-        </div>
-
-        {{ ux_icon('lucide:chevron-down', {class: 'icon-xs dropdown-chevron'}) }}
+        <span class="user-name">{{ app.user.username }}</span>
     </button>
 
     {# ── Dropdown ─────────────────────────────────────────────── #}

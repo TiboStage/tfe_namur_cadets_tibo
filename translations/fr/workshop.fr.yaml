@@ -611,6 +611,7 @@ common:
     optional: "(optionnel)"
     search: "Rechercher"
     back: "Retour"
+    scene_deleted: "Cette scène n'existe plus"
 
 # ===== NOTES =====
 note:
@@ -723,6 +724,7 @@ task:
         in_progress: "En cours"
         review: "En révision"
         done: "Terminé"
+        archived: "Archivé"
 
     priority:
         low: "Faible"
@@ -911,8 +913,12 @@ manuscript:
             char: "Personnage"
             loc: "Lieu"
             hint: "↑↓ naviguer · ↵ valider · Échap fermer"
+            empty_char: "Aucune fiche personnage ne correspond — créez-la dans Personnages"
+            empty_loc: "Aucune fiche lieu ne correspond — créez-la dans Lieux"
         detect:
             hint: "Utilisez des blocs Personnage pour détecter les noms."
+            open: "Ouvrir la fiche"
+            missing: "Aucune fiche pour ce personnage"
         mode:
             reading: "Lecture"
             writing: "Écriture"

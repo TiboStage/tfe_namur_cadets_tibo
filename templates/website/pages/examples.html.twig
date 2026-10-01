@@ -18,7 +18,7 @@
     </div>
 
     {# ══════════════════════════════════════════════════════════════════════ #}
-    {# BLOC 1 — Éditeur Fountain (feuille A4)                                #}
+    {# BLOC 1 — Éditeur de manuscrit (fidèle à manuscript/show)              #}
     {# ══════════════════════════════════════════════════════════════════════ #}
     <section class="feat-section">
         <div class="container feat-block">
@@ -29,16 +29,43 @@
                         <span class="demo-win__dot"></span>
                         <span class="demo-win__dot"></span>
                         <span class="demo-win__dot"></span>
-                        <span class="demo-win__url">{{ 'examples.demo.paper_url'|trans }}</span>
-                        <span class="demo-save">
-                            {{ ux_icon('lucide:check', {class: 'icon-xs'}) }}
-                            {{ 'examples.demo.saved'|trans }}
-                        </span>
+                        <span class="demo-win__url">{{ 'examples.demo.editor_url'|trans }}</span>
                     </div>
+
+                    {# Topbar : fil d'Ariane + actions #}
+                    <div class="fe-topbar">
+                        <div class="fe-crumb">
+                            {{ ux_icon('lucide:book-open', {class: 'icon-3xs'}) }}
+                            <span>{{ 'examples.demo.editor_crumb_parent'|trans }}</span>
+                            <span class="fe-crumb__sep">/</span>
+                            <strong>{{ 'examples.demo.editor_crumb_current'|trans }}</strong>
+                            <span class="fe-pill fe-pill--type">{{ 'examples.demo.editor_type'|trans }}</span>
+                            <span class="fe-pill fe-pill--script">Script</span>
+                        </div>
+                        <div class="fe-actions">
+                            <span class="fe-btn">{{ ux_icon('lucide:download', {class: 'icon-3xs'}) }} Fountain</span>
+                            <span class="fe-btn">{{ ux_icon('lucide:file-text', {class: 'icon-3xs'}) }} PDF</span>
+                            <span class="fe-btn">{{ ux_icon('lucide:book-open', {class: 'icon-3xs'}) }} {{ 'examples.demo.editor_reading'|trans }}</span>
+                            <span class="fe-saved">{{ 'examples.demo.saved'|trans }}</span>
+                        </div>
+                    </div>
+
+                    {# Barre de blocs Fountain #}
+                    <div class="fe-toolbar">
+                        <span class="fe-toolbar__group">{{ 'examples.demo.editor_group_set'|trans }}</span>
+                        <span class="fe-chip fe-chip--mono">INT.</span>
+                        <span class="fe-chip fe-chip--mono">EXT.</span>
+                        <span class="fe-toolbar__group">{{ 'examples.demo.editor_group_action'|trans }}</span>
+                        <span class="fe-chip fe-chip--active">{{ ux_icon('lucide:align-left', {class: 'icon-3xs'}) }} {{ 'examples.demo.block_action'|trans }}</span>
+                        <span class="fe-toolbar__group">{{ 'examples.demo.editor_group_dialogue'|trans }}</span>
+                        <span class="fe-chip">{{ ux_icon('lucide:user', {class: 'icon-3xs'}) }} {{ 'examples.demo.block_character'|trans }}</span>
+                        <span class="fe-chip">{{ ux_icon('lucide:message-square', {class: 'icon-3xs'}) }} {{ 'examples.demo.block_dialogue'|trans }}</span>
+                        <span class="fe-chip">{{ ux_icon('lucide:parentheses', {class: 'icon-3xs'}) }} {{ 'examples.demo.block_paren'|trans }}</span>
+                    </div>
+
+                    {# Feuille de script #}
                     <div class="feat-paper-area">
                         <div class="feat-paper">
-                            <div class="feat-paper__title">{{ 'examples.demo.paper_title'|trans }}</div>
-                            <div class="feat-paper__gap"></div>
                             <div class="feat-paper__scene">{{ 'examples.demo.paper_scene1'|trans }}</div>
                             <div class="feat-paper__action">{{ 'examples.demo.paper_action1'|trans }}</div>
                             <div class="feat-paper__gap"></div>
@@ -47,17 +74,28 @@
                             <div class="feat-paper__dial">{{ 'examples.demo.paper_dial1'|trans }}</div>
                             <div class="feat-paper__gap"></div>
                             <div class="feat-paper__scene">{{ 'examples.demo.paper_scene2'|trans }}</div>
-                            <div class="feat-paper__char">{{ 'examples.demo.paper_char2'|trans }}</div>
-                            <div class="feat-paper__paren">{{ 'examples.demo.paper_paren2'|trans }}</div>
-                            <div class="feat-paper__dial">{{ 'examples.demo.paper_dial2'|trans }}<span class="demo-cursor">▌</span></div>
-                            <div class="feat-paper__gap"></div>
-                            <div class="feat-paper__scene">{{ 'examples.demo.paper_scene3'|trans }}</div>
-                            <div class="feat-paper__action">{{ 'examples.demo.paper_action3'|trans }}</div>
-                            <div class="feat-paper__gap"></div>
-                            <div class="feat-paper__char">{{ 'examples.demo.paper_char3'|trans }}</div>
-                            <div class="feat-paper__paren">{{ 'examples.demo.paper_paren3'|trans }}</div>
-                            <div class="feat-paper__dial">{{ 'examples.demo.paper_dial3'|trans }}</div>
+                            <div class="feat-paper__action feat-paper__typing">{{ 'examples.demo.mention_prefix'|trans }} <span class="fe-mention-token">@{{ 'examples.demo.mention_typed'|trans }}</span><span class="demo-cursor">▌</span>
+
+                                {# Menu de mention @ (personnages / lieux) #}
+                                <div class="fe-mention">
+                                    <div class="fe-mention__item fe-mention__item--active">
+                                        {{ ux_icon('lucide:user', {class: 'icon-3xs'}) }}
+                                        <span>{{ 'examples.demo.paper_char1'|trans }}</span>
+                                        <em>{{ 'examples.demo.mention_char'|trans }}</em>
+                                    </div>
+                                    <div class="fe-mention__hint">{{ 'examples.demo.mention_hint'|trans }}</div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+
+                    {# Barre d'état #}
+                    <div class="fe-statusbar">
+                        <span class="fe-statusbar__block">{{ 'examples.demo.block_action'|trans }}</span>
+                        <span>312 {{ 'examples.demo.words'|trans }}</span>
+                        <span class="fe-statusbar__sep">·</span>
+                        <span>~2 min</span>
+                        <span class="fe-statusbar__hint">{{ 'examples.demo.editor_tab_hint'|trans }}</span>
                     </div>
                 </div>
             </div>
@@ -75,17 +113,24 @@
                         </div>
                     </li>
                     <li>
-                        {{ ux_icon('lucide:layers', {class: 'icon-sm'}) }}
+                        {{ ux_icon('lucide:at-sign', {class: 'icon-sm'}) }}
                         <div>
                             <strong>{{ 'examples.scenariste.feat2_title'|trans }}</strong>
                             <span>{{ 'examples.scenariste.feat2_desc'|trans }}</span>
                         </div>
                     </li>
                     <li>
-                        {{ ux_icon('lucide:download', {class: 'icon-sm'}) }}
+                        {{ ux_icon('lucide:layers', {class: 'icon-sm'}) }}
                         <div>
                             <strong>{{ 'examples.scenariste.feat3_title'|trans }}</strong>
                             <span>{{ 'examples.scenariste.feat3_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:download', {class: 'icon-sm'}) }}
+                        <div>
+                            <strong>{{ 'examples.scenariste.feat4_title'|trans }}</strong>
+                            <span>{{ 'examples.scenariste.feat4_desc'|trans }}</span>
                         </div>
                     </li>
                 </ul>
@@ -95,10 +140,93 @@
     </section>
 
     {# ══════════════════════════════════════════════════════════════════════ #}
-    {# BLOC 2 — Carousel de projets                                           #}
+    {# BLOC 2 — Univers : chronologie, personnages, lieux                     #}
     {# ══════════════════════════════════════════════════════════════════════ #}
     <section class="feat-section feat-section--alt">
         <div class="container feat-block feat-block--reverse">
+
+            <div class="feat-visual" aria-hidden="true">
+                <div class="demo-win">
+                    <div class="demo-win__bar">
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__url">{{ 'examples.demo.timeline_url'|trans }}</span>
+                    </div>
+                    <div class="ft-timeline">
+                        <div class="ft-head">
+                            <div>
+                                <div class="ft-head__title">{{ 'examples.demo.timeline_title'|trans }}</div>
+                                <div class="ft-head__sub">{{ 'examples.demo.timeline_sub'|trans }}</div>
+                            </div>
+                            <span class="fd-btn-primary">{{ ux_icon('lucide:plus', {class: 'icon-3xs'}) }} {{ 'examples.demo.timeline_new'|trans }}</span>
+                        </div>
+
+                        <div class="ft-track">
+                            {% for year in [
+                                {label: '-30', events: [{date: 'M7', place: 'examples.demo.event1_place', title: 'examples.demo.event1_title', desc: 'examples.demo.event1_desc'}]},
+                                {label: '0',   events: [
+                                    {date: 'J1 · M3', place: 'examples.demo.event2_place', title: 'examples.demo.event2_title', desc: 'examples.demo.event2_desc'},
+                                    {date: 'J4 · M3', place: 'examples.demo.event3_place', title: 'examples.demo.event3_title', desc: 'examples.demo.event3_desc'},
+                                ]},
+                            ] %}
+                                <div class="ft-year">
+                                    <span class="ft-year__pill">{{ ux_icon('lucide:flag', {class: 'icon-3xs'}) }} {{ 'examples.demo.year'|trans }} {{ year.label }}</span>
+                                    <span class="ft-year__count">{{ year.events|length }} {{ (year.events|length > 1 ? 'examples.demo.events' : 'examples.demo.event')|trans }}</span>
+                                </div>
+                                {% for event in year.events %}
+                                    <div class="ft-event">
+                                        <div class="ft-event__chips">
+                                            <span class="ft-chip">{{ ux_icon('lucide:calendar', {class: 'icon-3xs'}) }} {{ event.date }}</span>
+                                            <span class="ft-chip">{{ ux_icon('lucide:map-pin', {class: 'icon-3xs'}) }} {{ event.place|trans }}</span>
+                                        </div>
+                                        <div class="ft-event__title">{{ event.title|trans }}</div>
+                                        <div class="ft-event__desc">{{ event.desc|trans }}</div>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feat-content">
+                <span class="feat-tag feat-tag--orange">{{ 'examples.univers.tag'|trans }}</span>
+                <h2 class="feat-title">{{ 'examples.univers.title'|trans }}</h2>
+                <p class="section-desc">{{ 'examples.univers.desc'|trans }}</p>
+                <ul class="feat-list">
+                    <li>
+                        {{ ux_icon('lucide:user-round', {class: 'icon-sm orange'}) }}
+                        <div>
+                            <strong>{{ 'examples.univers.feat1_title'|trans }}</strong>
+                            <span>{{ 'examples.univers.feat1_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:map-pin', {class: 'icon-sm orange'}) }}
+                        <div>
+                            <strong>{{ 'examples.univers.feat2_title'|trans }}</strong>
+                            <span>{{ 'examples.univers.feat2_desc'|trans }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        {{ ux_icon('lucide:calendar-range', {class: 'icon-sm orange'}) }}
+                        <div>
+                            <strong>{{ 'examples.univers.feat3_title'|trans }}</strong>
+                            <span>{{ 'examples.univers.feat3_desc'|trans }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    {# ══════════════════════════════════════════════════════════════════════ #}
+    {# BLOC 3 — Carte projet (fidèle à components/project_card)              #}
+    {# ══════════════════════════════════════════════════════════════════════ #}
+    <section class="feat-section">
+        <div class="container feat-block">
 
             <div class="feat-visual" aria-hidden="true">
                 <article class="sc-card sc-card--private sc-card--owner">
@@ -164,21 +292,21 @@
                 <p class="section-desc">{{ 'examples.exploration.desc'|trans }}</p>
                 <ul class="feat-list">
                     <li>
-                        {{ ux_icon('lucide:user-round', {class: 'icon-sm blue'}) }}
+                        {{ ux_icon('lucide:layout-grid', {class: 'icon-sm blue'}) }}
                         <div>
                             <strong>{{ 'examples.exploration.feat1_title'|trans }}</strong>
                             <span>{{ 'examples.exploration.feat1_desc'|trans }}</span>
                         </div>
                     </li>
                     <li>
-                        {{ ux_icon('lucide:map-pin', {class: 'icon-sm blue'}) }}
+                        {{ ux_icon('lucide:globe', {class: 'icon-sm blue'}) }}
                         <div>
                             <strong>{{ 'examples.exploration.feat2_title'|trans }}</strong>
                             <span>{{ 'examples.exploration.feat2_desc'|trans }}</span>
                         </div>
                     </li>
                     <li>
-                        {{ ux_icon('lucide:layout-grid', {class: 'icon-sm blue'}) }}
+                        {{ ux_icon('lucide:compass', {class: 'icon-sm blue'}) }}
                         <div>
                             <strong>{{ 'examples.exploration.feat3_title'|trans }}</strong>
                             <span>{{ 'examples.exploration.feat3_desc'|trans }}</span>
@@ -191,42 +319,67 @@
     </section>
 
     {# ══════════════════════════════════════════════════════════════════════ #}
-    {# BLOC 3 — Modal Collaboration                                           #}
+    {# BLOC 4 — Collaboration (fidèle à projects/settings ?tab=members)      #}
     {# ══════════════════════════════════════════════════════════════════════ #}
-    <section class="feat-section">
-        <div class="container feat-block">
+    <section class="feat-section feat-section--alt">
+        <div class="container feat-block feat-block--reverse">
 
             <div class="feat-visual" aria-hidden="true">
-                <div class="feat-modal-bg">
-                    <div class="feat-modal">
-                        <div class="feat-modal__head">
-                            {{ ux_icon('lucide:user-plus', {class: 'icon-sm'}) }}
-                            <span>{{ 'examples.collaboration.modal_title'|trans }}</span>
-                        </div>
-                        <div class="feat-modal__body">
-                            <div class="feat-modal__field">
-                                <label class="feat-modal__label">{{ 'examples.collaboration.modal_username_label'|trans }}</label>
-                                <div class="feat-modal__input">
-                                    {{ ux_icon('lucide:at-sign', {class: 'icon-xs'}) }}
-                                    <span>sarah_martin</span>
-                                </div>
+                <div class="demo-win">
+                    <div class="demo-win__bar">
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__dot"></span>
+                        <span class="demo-win__url">{{ 'examples.demo.members_url'|trans }}</span>
+                    </div>
+                    <div class="fc-panel">
+
+                        <div class="fc-card">
+                            <div class="fc-card__head">
+                                {{ ux_icon('lucide:user-plus', {class: 'icon-xs'}) }}
+                                {{ 'examples.collaboration.invite_title'|trans }}
                             </div>
-                            <div class="feat-modal__field">
-                                <label class="feat-modal__label">{{ 'examples.collaboration.modal_role_label'|trans }}</label>
-                                <div class="feat-modal__roles">
-                                    <div class="feat-modal__role">{{ 'examples.collaboration.modal_role_reader'|trans }}</div>
-                                    <div class="feat-modal__role feat-modal__role--active">{{ 'examples.collaboration.modal_role_contributor'|trans }}</div>
-                                    <div class="feat-modal__role">{{ 'examples.collaboration.modal_role_moderator'|trans }}</div>
+                            <div class="fc-invite">
+                                <div class="fc-field">
+                                    <span class="fc-label">{{ 'examples.collaboration.username_label'|trans }}</span>
+                                    <span class="fc-input">sarah_martin<span class="demo-cursor">▌</span></span>
                                 </div>
+                                <div class="fc-field">
+                                    <span class="fc-label">{{ 'examples.collaboration.role_label'|trans }}</span>
+                                    <span class="fc-input fc-input--select">
+                                        {{ 'examples.collaboration.role_contributor_desc'|trans }}
+                                        {{ ux_icon('lucide:chevron-down', {class: 'icon-3xs'}) }}
+                                    </span>
+                                </div>
+                                <span class="fd-btn-primary fc-invite__btn">{{ ux_icon('lucide:user-plus', {class: 'icon-3xs'}) }} {{ 'examples.collaboration.invite_btn'|trans }}</span>
                             </div>
                         </div>
-                        <div class="feat-modal__footer">
-                            <button class="feat-modal__btn feat-modal__btn--secondary" type="button">{{ 'examples.collaboration.modal_cancel'|trans }}</button>
-                            <button class="feat-modal__btn feat-modal__btn--primary" type="button">
-                                {{ ux_icon('lucide:send', {class: 'icon-xs'}) }}
-                                {{ 'examples.collaboration.modal_submit'|trans }}
-                            </button>
+
+                        <div class="fc-card">
+                            <div class="fc-card__head">
+                                {{ ux_icon('lucide:users', {class: 'icon-xs'}) }}
+                                {{ 'examples.collaboration.members_title'|trans }}
+                            </div>
+                            {% for m in [
+                                {name: 'thibault',     letter: 'T', color: 'blue',   since: '29/09/2026', role: 'examples.collaboration.role_contributor', pending: false},
+                                {name: 'alice_writes', letter: 'A', color: 'pink',   since: '14/09/2026', role: 'examples.collaboration.role_moderator',   pending: false},
+                                {name: 'luc_moreau',   letter: 'L', color: 'green',  since: '01/10/2026', role: 'examples.collaboration.role_reader',      pending: true},
+                            ] %}
+                                <div class="fc-member">
+                                    <span class="fd-avatar fd-avatar--{{ m.color }}">{{ m.letter }}</span>
+                                    <div class="fc-member__id">
+                                        <strong>{{ m.name }}</strong>
+                                        <span>{{ 'examples.collaboration.since'|trans }} {{ m.since }}</span>
+                                    </div>
+                                    {% if m.pending %}
+                                        <span class="fc-pending">{{ 'examples.collaboration.pending'|trans }}</span>
+                                    {% endif %}
+                                    <span class="fc-role">{{ m.role|trans }}</span>
+                                    <span class="fc-remove">{{ ux_icon('lucide:x', {class: 'icon-3xs'}) }}</span>
+                                </div>
+                            {% endfor %}
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -264,10 +417,10 @@
     </section>
 
     {# ══════════════════════════════════════════════════════════════════════ #}
-    {# BLOC 4 — Tâches & Notes                                               #}
+    {# BLOC 5 — Tâches & Notes (fidèle à tasks/index)                        #}
     {# ══════════════════════════════════════════════════════════════════════ #}
-    <section class="feat-section feat-section--alt">
-        <div class="container feat-block feat-block--reverse">
+    <section class="feat-section">
+        <div class="container feat-block">
 
             <div class="feat-visual" aria-hidden="true">
                 <div class="demo-win">
@@ -278,46 +431,59 @@
                         <span class="demo-win__url">{{ 'examples.demo.task_url'|trans }}</span>
                     </div>
                     <div class="feat-tasks-demo">
-                        <div class="feat-task-stats">
-                            <div class="feat-task-stat feat-task-stat--red">
-                                <span class="feat-task-stat__num">1</span>
-                                <span class="feat-task-stat__lbl">{{ 'examples.demo.stat_overdue'|trans }}</span>
+
+                        <div class="fk-stats">
+                            <div class="fk-stat">
+                                <span class="fk-stat__icon fk-stat__icon--red">{{ ux_icon('lucide:circle-alert', {class: 'icon-xs'}) }}</span>
+                                <div><strong>1</strong><span>{{ 'examples.demo.stat_overdue'|trans }}</span></div>
                             </div>
-                            <div class="feat-task-stat feat-task-stat--yellow">
-                                <span class="feat-task-stat__num">2</span>
-                                <span class="feat-task-stat__lbl">{{ 'examples.demo.stat_progress'|trans }}</span>
+                            <div class="fk-stat">
+                                <span class="fk-stat__icon fk-stat__icon--orange">{{ ux_icon('lucide:zap', {class: 'icon-xs'}) }}</span>
+                                <div><strong>1</strong><span>{{ 'examples.demo.stat_urgent'|trans }}</span></div>
                             </div>
-                            <div class="feat-task-stat feat-task-stat--green">
-                                <span class="feat-task-stat__num">4</span>
-                                <span class="feat-task-stat__lbl">{{ 'examples.demo.stat_done'|trans }}</span>
-                            </div>
-                        </div>
-                        <div class="feat-task-list">
-                            <div class="feat-task-row">
-                                <span class="feat-task-badge feat-task-badge--progress">{{ 'examples.demo.task_in_progress'|trans }}</span>
-                                <span class="feat-task-name">Écrire Sc. 12 — La fuite</span>
-                                <span class="feat-task-priority feat-task-priority--high">{{ 'examples.demo.priority_high'|trans }}</span>
-                                <span class="feat-task-user">@thibault</span>
-                            </div>
-                            <div class="feat-task-row">
-                                <span class="feat-task-badge feat-task-badge--todo">{{ 'examples.demo.task_todo'|trans }}</span>
-                                <span class="feat-task-name">Fiche lieu — Le chantier</span>
-                                <span class="feat-task-priority feat-task-priority--normal">{{ 'examples.demo.priority_normal'|trans }}</span>
-                                <span class="feat-task-user">@sarah</span>
-                            </div>
-                            <div class="feat-task-row feat-task-row--done">
-                                <span class="feat-task-badge feat-task-badge--done">{{ 'examples.demo.task_done'|trans }}</span>
-                                <span class="feat-task-name">Relecture Acte II</span>
-                                <span class="feat-task-priority feat-task-priority--low">{{ 'examples.demo.priority_low'|trans }}</span>
-                                <span class="feat-task-user">@thibault</span>
-                            </div>
-                            <div class="feat-task-row feat-task-row--done">
-                                <span class="feat-task-badge feat-task-badge--done">{{ 'examples.demo.task_done'|trans }}</span>
-                                <span class="feat-task-name">Synopsis général v2</span>
-                                <span class="feat-task-priority feat-task-priority--low">{{ 'examples.demo.priority_low'|trans }}</span>
-                                <span class="feat-task-user">@sarah</span>
+                            <div class="fk-stat">
+                                <span class="fk-stat__icon fk-stat__icon--yellow">{{ ux_icon('lucide:circle-check', {class: 'icon-xs'}) }}</span>
+                                <div class="fk-stat__grow">
+                                    <strong>1/4</strong><span>{{ 'examples.demo.stat_done'|trans }}</span>
+                                    <span class="fk-progress"><span style="width:25%"></span></span>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="fk-filters">
+                            <span class="fk-filter fk-filter--active">{{ 'examples.demo.filter_all'|trans }}</span>
+                            <span class="fk-filter">{{ 'examples.demo.task_todo'|trans }}</span>
+                            <span class="fk-filter">{{ 'examples.demo.task_in_progress'|trans }}</span>
+                            <span class="fk-filter">{{ 'examples.demo.task_review'|trans }}</span>
+                            <span class="fk-filter">{{ 'examples.demo.task_done'|trans }}</span>
+                        </div>
+
+                        <div class="fk-table">
+                            <div class="fk-row fk-row--head">
+                                <span>{{ 'examples.demo.col_task'|trans }}</span>
+                                <span>{{ 'examples.demo.col_status'|trans }}</span>
+                                <span>{{ 'examples.demo.col_priority'|trans }}</span>
+                                <span>{{ 'examples.demo.col_assignee'|trans }}</span>
+                            </div>
+                            {% for t in [
+                                {title: 'examples.demo.task1', status: 2, prio: 'urgent', user: 'alice_writes', letter: 'A', color: 'pink',  accent: true},
+                                {title: 'examples.demo.task2', status: 1, prio: 'high',   user: 'thibault',     letter: 'T', color: 'blue',  accent: false},
+                                {title: 'examples.demo.task3', status: 0, prio: 'normal', user: 'sarah_martin', letter: 'S', color: 'green', accent: false},
+                                {title: 'examples.demo.task4', status: 3, prio: 'low',    user: 'thibault',     letter: 'T', color: 'blue',  accent: false},
+                            ] %}
+                                <div class="fk-row {{ t.accent ? 'fk-row--accent' }} {{ t.status == 3 ? 'fk-row--done' }}">
+                                    <span class="fk-title">{{ t.title|trans }}</span>
+                                    <span class="fk-status">
+                                        {% for icon in ['lucide:circle', 'lucide:loader-circle', 'lucide:eye', 'lucide:circle-check'] %}
+                                            <span class="fk-status__btn {{ loop.index0 == t.status ? 'fk-status__btn--on' }}">{{ ux_icon(icon, {class: 'icon-3xs'}) }}</span>
+                                        {% endfor %}
+                                    </span>
+                                    <span class="fk-prio fk-prio--{{ t.prio }}">{{ ('examples.demo.priority_' ~ t.prio)|trans }}</span>
+                                    <span class="fk-user"><span class="fd-avatar fd-avatar--{{ t.color }}">{{ t.letter }}</span>{{ t.user }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -328,7 +494,7 @@
                 <p class="section-desc">{{ 'examples.organisation.desc'|trans }}</p>
                 <ul class="feat-list">
                     <li>
-                        {{ ux_icon('lucide:kanban', {class: 'icon-sm green'}) }}
+                        {{ ux_icon('lucide:list-checks', {class: 'icon-sm green'}) }}
                         <div>
                             <strong>{{ 'examples.organisation.feat1_title'|trans }}</strong>
                             <span>{{ 'examples.organisation.feat1_desc'|trans }}</span>

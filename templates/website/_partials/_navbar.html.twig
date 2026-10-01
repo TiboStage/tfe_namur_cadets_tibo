@@ -33,13 +33,18 @@
         </ul>
 
         <div class="nav-actions">
+            {{ include('website/_partials/_navbar_lang.html.twig') }}
+
             {% if app.user %}
+                <twig:UserProfile />
                 <a href="{{ path('app_workshop_dashboard') }}" class="btn-atelier" data-turbo="false">
                     {{ 'navbar.actions.workshop'|trans }}
                     {{ ux_icon('lucide:arrow-up-right', { class: 'icon-xs icon-inline' }) }}
                 </a>
-                <twig:UserProfile />
             {% else %}
+                <a href="{{ path('app_login') }}" class="nav-account-icon" aria-label="{{ 'navbar.actions.login'|trans }}">
+                    {{ ux_icon('lucide:circle-user', {class: 'icon-base'}) }}
+                </a>
                 <a href="{{ path('app_login') }}" class="btn-atelier">{{ 'navbar.actions.login'|trans }}</a>
             {% endif %}
         </div>
@@ -49,7 +54,7 @@
                 type="button"
                 aria-label="{{ 'navbar.actions.open_menu'|trans }}"
                 data-action="mobile-nav#toggle">
-            {{ ux_icon('lucide:panel-right-open', {class: 'icon-base'}) }}
+            {{ ux_icon('lucide:menu', {class: 'icon-base'}) }}
         </button>
     </div>
 
@@ -63,8 +68,24 @@
                     type="button"
                     data-action="mobile-nav#close"
                     aria-label="Fermer">
-                {{ ux_icon('lucide:panel-right-close', {class: 'icon-base'}) }}
+                {{ ux_icon('lucide:x', {class: 'icon-base'}) }}
             </button>
+        </div>
+
+        <div class="main-nav-drawer__top-actions">
+            {{ include('website/_partials/_navbar_lang.html.twig') }}
+
+            {% if app.user %}
+                <a href="{{ path('app_workshop_dashboard') }}" class="btn-atelier" data-turbo="false">
+                    {{ 'navbar.actions.workshop'|trans }}
+                    {{ ux_icon('lucide:arrow-up-right', { class: 'icon-xs icon-inline' }) }}
+                </a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="nav-account-icon" aria-label="{{ 'navbar.actions.login'|trans }}">
+                    {{ ux_icon('lucide:circle-user', {class: 'icon-base'}) }}
+                </a>
+                <a href="{{ path('app_login') }}" class="btn-atelier">{{ 'navbar.actions.login'|trans }}</a>
+            {% endif %}
         </div>
 
         <nav class="main-nav-drawer__links">
@@ -89,17 +110,6 @@
                 {{ 'navbar.links.contact'|trans }}
             </a>
         </nav>
-
-        <div class="main-nav-drawer__actions">
-            {% if app.user %}
-                <a href="{{ path('app_workshop_dashboard') }}" class="btn-atelier" data-turbo="false">
-                    {{ 'navbar.actions.workshop'|trans }}
-                    {{ ux_icon('lucide:arrow-up-right', { class: 'icon-xs icon-inline' }) }}
-                </a>
-            {% else %}
-                <a href="{{ path('app_login') }}" class="btn-atelier">{{ 'navbar.actions.login'|trans }}</a>
-            {% endif %}
-        </div>
     </div>
     <div class="mobile-nav-overlay" data-action="click->mobile-nav#close"></div>
 

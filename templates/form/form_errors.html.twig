@@ -44,14 +44,20 @@
 {% endblock %}
 
 {# ── Row complet : ajoute .is-invalid sur le widget si erreurs ───────── #}
+{# Enveloppé dans .form-field pour que label+widget+erreurs restent un   #}
+{# bloc unique — indispensable pour que les grilles 2 colonnes           #}
+{# (.form-row-group) alignent des CHAMPS entiers et non label/input      #}
+{# séparément (sinon la grille intercale un label puis un input libres). #}
 {% block form_row %}
     {% set widget_attr = {} %}
     {% if errors|length > 0 %}
         {% set widget_attr = {class: (attr.class|default('') ~ ' is-invalid')|trim} %}
     {% endif %}
-    {% if label is not same as(false) %}
-        {{ form_label(form) }}
-    {% endif %}
-    {{ form_widget(form, {attr: widget_attr}) }}
-    {{ form_errors(form) }}
+    <div class="form-field">
+        {% if label is not same as(false) %}
+            {{ form_label(form) }}
+        {% endif %}
+        {{ form_widget(form, {attr: widget_attr}) }}
+        {{ form_errors(form) }}
+    </div>
 {% endblock %}

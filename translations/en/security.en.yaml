@@ -1,1 +1,3 @@
 captcha.invalid: "Anti-robot verification failed. Please try again."
+account.unverified: "Your email address is not confirmed yet. Click the link we emailed you to activate your account."
+account.banned: "This account has been suspended. Contact the Scénart team if you think this is a mistake."

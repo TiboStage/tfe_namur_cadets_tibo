@@ -308,10 +308,15 @@ class NoteController extends AbstractController
 
     /**
      * Pour chaque note liée à un scenario_element, résout l'entité et retourne
-     * un tableau [noteId => ScenarioElement] pour afficher le chemin dans la vue.
+     * un tableau [noteId => ScenarioElement|null] pour afficher le chemin dans la vue.
+     *
+     * La clé est toujours présente dès qu'une note est liée à un scenario_element,
+     * même si celui-ci a été supprimé depuis (valeur null) — la référence n'est pas
+     * une vraie FK, donc rien ne l'a nettoyée automatiquement. Le null explicite permet
+     * au template d'afficher « cette scène n'existe plus » plutôt que de ne rien montrer.
      *
      * @param Note[] $notes
-     * @return array<int, ScenarioElement>
+     * @return array<int, ScenarioElement|null>
      */
     private function resolveElementPaths(array $notes): array
     {
@@ -320,10 +325,7 @@ class NoteController extends AbstractController
 
         foreach ($notes as $note) {
             if ($note->getLinkedEntityType() === 'scenario_element' && $note->getLinkedEntityId()) {
-                $element = $repo->find($note->getLinkedEntityId());
-                if ($element instanceof ScenarioElement) {
-                    $result[$note->getId()] = $element;
-                }
+                $result[$note->getId()] = $repo->find($note->getLinkedEntityId());
             }
         }
 

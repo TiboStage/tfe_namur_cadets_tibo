@@ -21,7 +21,49 @@ login:
     email: "Email"
     password: "Password"
     remember_me: "Remember me"
+    forgot_password: "Forgot your password?"
     submit: "Sign in"
+
+# ===== FORGOT PASSWORD =====
+forgot_password:
+    browser_title: "Forgot password - Scénart"
+    title: "Forgot your password?"
+    subtitle: "Enter your email address and we'll send you a link to reset it."
+    email: "Email address"
+    submit: "Send the link"
+    back_to_login: "Back to sign in"
+    too_soon: "An email was just requested. Please wait %seconds% s before requesting another one."
+    limit_reached: "Limit of %max% requests per hour reached. Try again in %minutes% min."
+
+check_email:
+    browser_title: "Check your email - Scénart"
+    title: "Check your email"
+    subtitle: "If an account exists with that address, a reset link has just been sent to it."
+    hint: "Nothing after a few minutes? Check your spam folder."
+    back_to_login: "Back to sign in"
+    counter: "Request %used%/%max% this hour"
+    resend: "Resend the email"
+    resend_in: "Resend in %time%"
+    limit_reached: "Limit reached: you can make a new request within the hour."
+
+verify_email:
+    browser_title: "Confirm your email - Scénart"
+    title: "Confirm your email address"
+    subtitle: "A confirmation link was sent to %email%. Click it to activate your account."
+    resend_link: "Resend the confirmation email"
+    resent: "A new confirmation email has just been sent."
+    success: "Your email address is confirmed! You can now sign in."
+    already_verified: "Your email address is already confirmed. You can sign in."
+    invalid_link: "This confirmation link is invalid. Sign in to receive a new one."
+
+reset_password:
+    browser_title: "New password - Scénart"
+    title: "Choose a new password"
+    subtitle: "It must follow the same rules as at registration."
+    password: "New password"
+    password_confirm: "Confirm the new password"
+    submit: "Reset password"
+    invalid_token: "This reset link is invalid or has expired. Please request a new one."
 
 # ===== REGISTER =====
 register:
@@ -34,6 +76,7 @@ register:
     username: "Username"
     email: "Email address"
     password: "Password"
+    password_confirm: "Confirm password"
     agree_terms: "I agree to the terms of service"
     submit: "The Workshop awaits"
 
@@ -64,6 +107,8 @@ profile:
         identity_desc: "Your public information"
         security: "Security"
         security_desc: "Change your password"
+        preferences: "Preferences"
+        preferences_desc: "Language used in the interface"
         stats: "Statistics"
         avatar_color: "Avatar color"
         avatar_color_desc: "Customize the color of your initial."
@@ -73,6 +118,11 @@ profile:
         lastname: "Last name"
         username: "Username"
         email: "Email address"
+        locale_label: "Interface language"
+        locale:
+            fr: "Français"
+            en: "English"
+            nl: "Nederlands"
         new_password: "New password"
         confirm_password: "Confirm password"
         password_hint: "Leave blank to keep your current password (min. 8 characters)"

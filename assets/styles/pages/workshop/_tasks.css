@@ -229,6 +229,12 @@
 .tl-task-path a { color: inherit; text-decoration: none; }
 .tl-task-path a:hover { color: var(--color-primary); }
 
+.tl-task-path--deleted {
+    color: var(--text-muted-dark);
+    font-style: italic;
+    cursor: help;
+}
+
 /* Description */
 .tl-cell--desc {
     color: var(--text-muted);

@@ -36,9 +36,9 @@
             <tr>
                 <th>Ordre</th>
                 <th>Slug</th>
-                <th>🇫🇷 Français</th>
-                <th>🇳🇱 Nederlands</th>
-                <th>🇬🇧 English</th>
+                <th>Français</th>
+                <th>Nederlands</th>
+                <th>English</th>
                 <th>Types</th>
                 <th>Statut</th>
                 <th>Actions</th>
@@ -53,24 +53,31 @@
                 <td>{{ genre.getLabel('nl') }}</td>
                 <td>{{ genre.getLabel('en') }}</td>
                 <td>
-                    {% if genre.projectTypes is empty %}
-                        <span class="badge-all">Tous</span>
-                    {% else %}
-                        {% for type in genre.projectTypes %}
-                            <span class="badge-type badge-type--{{ type }}">{{ type }}</span>
-                        {% endfor %}
-                    {% endif %}
+                    {% set type_labels = {film: 'Film', serie: 'Série', jeu_video: 'Jeu vidéo', custom: 'Personnalisé'} %}
+                    <div class="admin-badge-group">
+                        {% if genre.projectTypes is empty %}
+                            <span class="admin-badge admin-badge--neutral">Tous</span>
+                        {% else %}
+                            {% for type in genre.projectTypes %}
+                                <span class="admin-badge admin-badge--type-{{ type }}">{{ type_labels[type] ?? type }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </td>
                 <td>
                     {% if genre.isActive %}
-                        <span class="badge-status badge-status-active">Actif</span>
+                        <span class="admin-badge admin-badge--success">Actif</span>
                     {% else %}
-                        <span class="badge-status badge-status-inactive">Inactif</span>
+                        <span class="admin-badge admin-badge--muted">Inactif</span>
                     {% endif %}
                 </td>
-                <td class="admin-actions">
+                <td>
+                    <div class="admin-table__actions">
                     <a href="{{ path('admin_genre_edit', {_locale: app.request.locale, id: genre.id}) }}"
-                       class="btn-action btn-action--edit">Modifier</a>
+                       class="btn-sm btn-sm--outline">
+                        {{ ux_icon('lucide:pencil', {class: 'icon-xs'}) }}
+                        Modifier
+                    </a>
 
                     {# Toggle actif / inactif #}
                     <form method="post"
@@ -78,20 +85,36 @@
                           class="d-inline">
                         <input type="hidden" name="_token"
                                value="{{ csrf_token('genre_toggle_' ~ genre.id) }}">
-                        <button type="submit" class="btn-action btn-action--toggle">
-                            {{ genre.isActive ? 'Désactiver' : 'Activer' }}
-                        </button>
+                        {% if genre.isActive %}
+                            <button type="submit" class="btn-sm btn-sm--ghost">
+                                {{ ux_icon('lucide:eye-off', {class: 'icon-xs'}) }}
+                                Désactiver
+                            </button>
+                        {% else %}
+                            <button type="submit" class="btn-sm btn-sm--success">
+                                {{ ux_icon('lucide:eye', {class: 'icon-xs'}) }}
+                                Activer
+                            </button>
+                        {% endif %}
                     </form>
 
                     {# Suppression #}
                     <form method="post"
                           action="{{ path('admin_genre_delete', {_locale: app.request.locale, id: genre.id}) }}"
                           class="d-inline"
-                          onsubmit="return confirm('Supprimer le genre « {{ genre.slug }} » ? Il disparaîtra des sélecteurs mais restera affiché sur les projets existants.')">
+                          data-action="submit->confirm-modal#intercept"
+                          data-confirm-title="Supprimer le genre « {{ genre.getLabel('fr') }} » ?"
+                          data-confirm-message="Il disparaîtra des sélecteurs mais restera affiché sur les projets qui l'utilisent déjà."
+                          data-confirm-label="Supprimer"
+                          data-confirm-tone="danger">
                         <input type="hidden" name="_token"
                                value="{{ csrf_token('genre_delete_' ~ genre.id) }}">
-                        <button type="submit" class="btn-action btn-action--delete">{{ 'genre.btn.delete'|trans({}, 'admin') }}</button>
+                        <button type="submit" class="btn-sm btn-sm--danger">
+                            {{ ux_icon('lucide:trash-2', {class: 'icon-xs'}) }}
+                            {{ 'genre.btn.delete'|trans({}, 'admin') }}
+                        </button>
                     </form>
+                    </div>
                 </td>
             </tr>
         {% endfor %}

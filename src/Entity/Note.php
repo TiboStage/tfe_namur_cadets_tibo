@@ -108,16 +108,16 @@ class Note
     public function setAssignedTo(?User $assignedTo): static { $this->assignedTo = $assignedTo; return $this; }
 
     public function getTitle(): string { return $this->title; }
-    public function setTitle(string $title): static { $this->title = $title; return $this; }
+    public function setTitle(?string $title): static { $this->title = $title ?? ''; return $this; }
 
     public function getContent(): string { return $this->content; }
-    public function setContent(string $content): static { $this->content = $content; return $this; }
+    public function setContent(?string $content): static { $this->content = $content ?? ''; return $this; }
 
     public function getStatus(): string { return $this->status; }
-    public function setStatus(string $status): static { $this->status = $status; return $this; }
+    public function setStatus(?string $status): static { $this->status = $status ?? 'note'; return $this; }
 
     public function getPriority(): string { return $this->priority; }
-    public function setPriority(string $priority): static { $this->priority = $priority; return $this; }
+    public function setPriority(?string $priority): static { $this->priority = $priority ?? 'normal'; return $this; }
 
     public function getLinkedEntityType(): string { return $this->linkedEntityType; }
     public function setLinkedEntityType(string $linkedEntityType): static { $this->linkedEntityType = $linkedEntityType; return $this; }

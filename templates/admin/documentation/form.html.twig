@@ -24,7 +24,7 @@
                 {# Onglets de langue #}
                 <div class="doc-lang-tabs" role="tablist">
                     {% for locale in ['fr', 'nl', 'en'] %}
-                        {% set labels = {fr: '🇫🇷 Français', nl: '🇳🇱 Nederlands', en: '🇬🇧 English'} %}
+                        {% set labels = {fr: 'Français', nl: 'Nederlands', en: 'English'} %}
                         <button type="button"
                                 class="doc-lang-tab {{ loop.first ? 'doc-lang-tab--active' : '' }}"
                                 data-lang-tab="{{ locale }}"

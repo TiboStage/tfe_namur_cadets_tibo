@@ -11,6 +11,7 @@ auth:
     logout: "Tot snel!"
     logout_success: "Je bent nu uitgelogd"
     register_success: "Account succesvol aangemaakt! Log in."
+    reset_password_success: "Je wachtwoord is succesvol opnieuw ingesteld. Je kan nu inloggen."
 
 # ===== PROFIEL =====
 profile:
@@ -30,6 +31,7 @@ project:
     settings_saved_slug: "Instellingen opgeslagen. De project-URL is bijgewerkt."
     structure_updated: "Structuur bijgewerkt."
     visibility_invalid: "Ongeldige zichtbaarheid."
+    limit_reached: "Je hebt de limiet van %limit% projecten van je abonnement bereikt. Verwijder een bestaand project of upgrade je abonnement om een nieuw project aan te maken."
 
 # ===== FORMULIERVALIDATIE =====
 validation:

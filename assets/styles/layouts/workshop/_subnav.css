@@ -33,6 +33,7 @@
     gap: 6px;
     border-bottom: 2px solid transparent;
     transition: color var(--transition-fast);
+    padding: 10px 8px;
 }
 
 .subnav-links a:hover {

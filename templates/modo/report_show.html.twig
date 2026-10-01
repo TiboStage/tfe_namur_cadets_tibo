@@ -6,151 +6,218 @@
 
 {% block modo_content %}
 
-    <div class="modo-row-header mb-5">
-        <a href="{{ path('modo_report_list', {_locale: app.request.locale}) }}" class="btn-table text-2xs">
-            ← Retour à la liste
-        </a>
-        <span class="mod-badge mod-badge--{{ report.status }}">
-            {% if report.status == 'pending' %}En attente
-            {% elseif report.status == 'reviewed' %}Examiné
-            {% elseif report.status == 'dismissed' %}Rejeté
-            {% else %}Traité{% endif %}
-        </span>
-    </div>
+{% set status_labels = {pending: 'En attente', reviewed: 'Examiné', dismissed: 'Rejeté', actioned: 'Traité'} %}
+{% set mod_labels    = {clear: 'Neutre', warning: 'Avertissement', blocked: 'Bloqué', approved: 'Approuvé'} %}
+{% set type_meta     = {
+    film:      {label: 'Film',         icon: 'lucide:film'},
+    serie:     {label: 'Série',        icon: 'lucide:tv-2'},
+    jeu_video: {label: 'Jeu vidéo',    icon: 'lucide:gamepad-2'},
+    custom:    {label: 'Personnalisé', icon: 'lucide:sparkles'},
+} %}
 
-    <div class="modo-report-grid">
+{# Projet concerné : directement, ou via le commentaire signalé #}
+{% set target_project = report.targetType == 'project'
+    ? report.targetProject
+    : (report.targetType == 'comment' and report.targetComment ? report.targetComment.project : null) %}
 
-        {# ── Détail principal ──────────────────────────────────────────── #}
-        <div class="panel-box">
-            <div class="panel-header">
-                <h3>{{ 'reports.detail.title'|trans({}, 'admin') }}</h3>
-                <span class="text-muted text-2xs">{{ report.createdAt|date('d/m/Y à H:i') }}</span>
+<div class="admin-form-header rs-head">
+    <a href="{{ path('modo_report_list', {_locale: app.request.locale}) }}" class="admin-back-link">← Retour aux signalements</a>
+    <span class="mod-badge mod-badge--{{ report.status }}">{{ status_labels[report.status] ?? report.status }}</span>
+</div>
+
+<div class="apr">
+
+    <div class="apr__main">
+
+        {# ── Le signalement ──────────────────────────────────────────── #}
+        <div class="admin-card">
+            <div class="admin-card__header">
+                {{ 'reports.detail.title'|trans({}, 'admin') }}
+                <span class="admin-card__hint">{{ report.createdAt|date('d/m/Y à H:i') }}</span>
             </div>
+            <div class="admin-card__body rs-body">
+                <div class="rs-field">
+                    <span class="rs-label">Raison</span>
+                    <span class="admin-badge admin-badge--danger rs-reason">
+                        {{ ux_icon('lucide:flag', {class: 'icon-3xs'}) }} {{ report.reasonLabel }}
+                    </span>
+                </div>
 
-            <div class="modo-report-body">
+                {% if report.description %}
+                    <div class="rs-field">
+                        <span class="rs-label">Description du signalement</span>
+                        <blockquote class="rs-quote">{{ report.description }}</blockquote>
+                    </div>
+                {% endif %}
 
-                {# Type + Cible #}
-                <div>
-                    <div class="admin-label">Élément signalé</div>
-                    {% if report.targetType == 'project' %}
-                        <div class="modo-target-row">
-                            <span class="tag-reason tag-reason--blue">Projet</span>
-                            {% if report.targetProject %}
-                                <strong>{{ report.targetProject.title }}</strong>
-                                <span class="text-muted">par {{ report.targetProject.createdBy.username }}</span>
-                            {% else %}
-                                <em class="text-muted">Projet supprimé</em>
-                            {% endif %}
+                <div class="rs-field">
+                    <span class="rs-label">Signalé par</span>
+                    <div class="rs-user">
+                        {{ include('_partials/_user_avatar.html.twig', {user: report.reporter, size: 'sm'}) }}
+                        <div>
+                            <strong>{{ report.reporter.username }}</strong>
+                            <span>{{ report.reporter.email }}</span>
                         </div>
-                    {% elseif report.targetType == 'comment' %}
-                        <div class="mt-2">
-                            <span class="tag-reason tag-reason--purple">Commentaire</span>
-                            {% if report.targetComment %}
-                                <div class="modo-comment-box">
-                                    {{ report.targetComment.content }}
-                                    <div class="modo-comment-meta">
-                                        Par {{ report.targetComment.author.username }}
-                                        · {{ report.targetComment.createdAt|date('d/m/Y H:i') }}
-                                        · Sur <em>{{ report.targetComment.project.title }}</em>
-                                    </div>
-                                </div>
-                            {% else %}
-                                <em class="text-muted ml-2">Commentaire supprimé</em>
+                    </div>
+                </div>
+
+                {% if report.reviewedBy %}
+                    <div class="rs-field">
+                        <span class="rs-label">Examiné par</span>
+                        <div class="rs-user">
+                            {{ include('_partials/_user_avatar.html.twig', {user: report.reviewedBy, size: 'sm'}) }}
+                            <div>
+                                <strong>{{ report.reviewedBy.username }}</strong>
+                                {% if report.reviewedAt %}<span>le {{ report.reviewedAt|date('d/m/Y à H:i') }}</span>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {# ── Commentaire signalé ─────────────────────────────────────── #}
+        {% if report.targetType == 'comment' %}
+            <div class="admin-card">
+                <div class="admin-card__header">Commentaire signalé</div>
+                <div class="admin-card__body">
+                    {% if report.targetComment %}
+                        <div class="rs-comment">
+                            {{ include('_partials/_user_avatar.html.twig', {user: report.targetComment.author, size: 'sm'}) }}
+                            <div>
+                                <strong>{{ report.targetComment.author.username }} <em>· {{ report.targetComment.createdAt|date('d/m/Y H:i') }}</em></strong>
+                                <p>{{ report.targetComment.content }}</p>
+                            </div>
+                        </div>
+                        <div class="aup-card-actions">
+                            <a href="{{ path('modo_comments', {_locale: app.request.locale}) }}" class="btn-sm btn-sm--outline">
+                                {{ ux_icon('lucide:message-square', {class: 'icon-xs'}) }} Gérer les commentaires
+                            </a>
+                        </div>
+                    {% else %}
+                        <p class="admin-form-hint">Ce commentaire a été supprimé.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+        {# ── Utilisateur signalé ─────────────────────────────────────── #}
+        {% if report.targetType == 'user' %}
+            <div class="admin-card">
+                <div class="admin-card__header">Utilisateur signalé</div>
+                <div class="admin-card__body">
+                    {% if report.targetUser %}
+                        <div class="rs-user rs-user--lg">
+                            {{ include('_partials/_user_avatar.html.twig', {user: report.targetUser, size: 'lg'}) }}
+                            <div>
+                                <strong>{{ report.targetUser.username }}</strong>
+                                <span>{{ report.targetUser.email }}</span>
+                            </div>
+                        </div>
+                        <div class="aup-card-actions">
+                            <a href="{{ path('app_workshop_creator_show', {_locale: app.request.locale, username: report.targetUser.username}) }}" target="_blank" rel="noopener" class="btn-sm btn-sm--outline">
+                                {{ ux_icon('lucide:external-link', {class: 'icon-xs'}) }} Profil public
+                            </a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('admin_user_show', {id: report.targetUser.id, _locale: app.request.locale}) }}" class="btn-sm btn-sm--ghost">
+                                    {{ ux_icon('lucide:user-cog', {class: 'icon-xs'}) }} Fiche admin
+                                </a>
                             {% endif %}
                         </div>
                     {% else %}
-                        <div class="modo-target-row">
-                            <span class="tag-reason tag-reason--orange">Utilisateur</span>
-                            {% if report.targetUser %}
-                                <strong>{{ report.targetUser.username }}</strong>
-                            {% else %}
-                                <em class="text-muted">Utilisateur supprimé</em>
-                            {% endif %}
-                        </div>
+                        <p class="admin-form-hint">Cet utilisateur a été supprimé.</p>
                     {% endif %}
                 </div>
-
-                {# Raison #}
-                <div>
-                    <div class="admin-label">Raison</div>
-                    <div class="mt-2">
-                        <span class="tag-reason">{{ report.reasonLabel }}</span>
-                    </div>
-                </div>
-
-                {# Description #}
-                {% if report.description %}
-                <div>
-                    <div class="admin-label">Description complémentaire</div>
-                    <p class="modo-reason-text">{{ report.description }}</p>
-                </div>
-                {% endif %}
-
-                {# Signalé par #}
-                <div>
-                    <div class="admin-label">Signalé par</div>
-                    <div class="modo-target-text">
-                        {{ report.reporter.username }}
-                        <span class="text-muted">· {{ report.reporter.email }}</span>
-                    </div>
-                </div>
-
-                {# Examiné par #}
-                {% if report.reviewedBy %}
-                <div>
-                    <div class="admin-label">Examiné par</div>
-                    <div class="modo-target-text">
-                        {{ report.reviewedBy.username }}
-                        {% if report.reviewedAt %}
-                            <span class="text-muted">le {{ report.reviewedAt|date('d/m/Y à H:i') }}</span>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endif %}
-
             </div>
-        </div>
+        {% endif %}
 
-        {# ── Actions ──────────────────────────────────────────────────── #}
-        <div class="panel-box">
-            <div class="panel-header">
-                <h3>{{ 'reports.detail.actions_title'|trans({}, 'admin') }}</h3>
-            </div>
-            <div class="modo-report-side">
-
-                {% if report.status == 'pending' %}
-                    <p class="modo-info-text">
-                        Choisissez une action pour traiter ce signalement.
-                    </p>
+        {# ── Projet concerné ─────────────────────────────────────────── #}
+        {% if report.targetType != 'user' %}
+            <div class="admin-card">
+                <div class="admin-card__header">{{ report.targetType == 'project' ? 'Projet signalé' : 'Projet concerné' }}</div>
+                {% if target_project %}
+                    {% set type = type_meta[target_project.projectType] ?? {label: target_project.projectType, icon: 'lucide:folder'} %}
+                    {% set can_read = target_project.visibility == 'public' and target_project.moderationStatus != 'blocked' %}
+                    <div class="rs-project">
+                        <a href="{{ path('modo_project_show', {id: target_project.id, _locale: app.request.locale}) }}"
+                           class="rs-project__cover apr-hero__cover--{{ target_project.projectType }}">
+                            {{ ux_icon(type.icon, {class: 'icon-md'}) }}
+                        </a>
+                        <div class="rs-project__body">
+                            <div class="apr-hero__badges">
+                                <span class="admin-badge admin-badge--type-{{ target_project.projectType }}">{{ type.label }}</span>
+                                {% if target_project.visibility == 'public' %}
+                                    <span class="admin-badge admin-badge--success">En ligne</span>
+                                {% else %}
+                                    <span class="admin-badge admin-badge--muted">Non publié</span>
+                                {% endif %}
+                                <span class="mod-badge mod-badge--{{ target_project.moderationStatus }}">{{ mod_labels[target_project.moderationStatus] ?? target_project.moderationStatus }}</span>
+                            </div>
+                            <a href="{{ path('modo_project_show', {id: target_project.id, _locale: app.request.locale}) }}" class="rs-project__title">{{ target_project.title }}</a>
+                            <div class="apr-hero__author">
+                                {{ include('_partials/_user_avatar.html.twig', {user: target_project.createdBy, size: 'xs'}) }}
+                                <span>par <strong>{{ target_project.createdBy.username }}</strong> · {{ target_project.reportCount }} signalement{{ target_project.reportCount > 1 ? 's' }} au total</span>
+                            </div>
+                            {% if target_project.description %}
+                                <p class="rs-project__desc">{{ target_project.description|length > 220 ? target_project.description|slice(0, 220)|trim ~ '…' : target_project.description }}</p>
+                            {% endif %}
+                            <div class="apr-hero__links">
+                                <a href="{{ path('modo_project_show', {id: target_project.id, _locale: app.request.locale}) }}" class="btn-sm btn-sm--outline">
+                                    {{ ux_icon('lucide:search', {class: 'icon-xs'}) }} Examiner le projet
+                                </a>
+                                {% if can_read %}
+                                    <a href="{{ path('app_project_public', {_locale: app.request.locale, slug: target_project.slug}) }}{{ report.targetType == 'comment' ? '#comments' }}"
+                                       target="_blank" rel="noopener" class="btn-sm btn-sm--ghost">
+                                        {{ ux_icon('lucide:external-link', {class: 'icon-xs'}) }} Page publique
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="aup-empty">
+                        {{ ux_icon('lucide:folder-x', {class: 'icon-md'}) }}
+                        <span>Ce projet a été supprimé.</span>
+                    </div>
                 {% endif %}
-
-                {# Formulaire de changement de statut #}
-                <form
-                    action="{{ path('modo_report_review', {id: report.id, _locale: app.request.locale}) }}"
-                    method="post"
-                    class="modo-report-actions"
-                >
-                    <input type="hidden" name="_token" value="{{ csrf_token('report_review_' ~ report.id) }}">
-
-                    <button type="submit" name="status" value="reviewed" class="btn-admin btn-admin--outline">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Marquer comme examiné
-                    </button>
-
-                    <button type="submit" name="status" value="dismissed" class="btn-admin btn-admin--outline">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                        Rejeter (non fondé)
-                    </button>
-
-                    <button type="submit" name="status" value="actioned" class="btn-admin btn-admin--danger">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                        Action prise
-                    </button>
-                </form>
-
             </div>
-        </div>
+        {% endif %}
 
     </div>
+
+    {# ── Actions ────────────────────────────────────────────────────── #}
+    <aside class="apr__side">
+        <div class="admin-card">
+            <div class="admin-card__header">{{ 'reports.detail.actions_title'|trans({}, 'admin') }}</div>
+            <div class="admin-card__body">
+                {% set report_actions = [
+                    {status: 'reviewed',  icon: 'lucide:circle-check', label: 'Marquer comme examiné', desc: 'Le signalement a été vu, sans suite particulière.'},
+                    {status: 'dismissed', icon: 'lucide:circle-x',     label: 'Rejeter (non fondé)',   desc: 'Le contenu ne pose pas de problème.'},
+                    {status: 'actioned',  icon: 'lucide:gavel',        label: 'Action prise',           desc: 'Une sanction a été appliquée (avertissement, blocage…).'},
+                ] %}
+                <form action="{{ path('modo_report_review', {id: report.id, _locale: app.request.locale}) }}"
+                      method="post" class="apr-actions">
+                    <input type="hidden" name="_token" value="{{ csrf_token('report_review_' ~ report.id) }}">
+                    {% for a in report_actions %}
+                        {% set current = report.status == a.status %}
+                        <button type="submit" name="status" value="{{ a.status }}"
+                                class="apr-action apr-action--{{ a.status }} {{ current ? 'apr-action--current' }}"
+                                {{ current ? 'disabled' }}>
+                            <span class="apr-action__icon">{{ ux_icon(a.icon, {class: 'icon-sm'}) }}</span>
+                            <span class="apr-action__text">
+                                <strong>{{ a.label }}</strong>
+                                <span>{{ current ? 'Statut actuel' : a.desc }}</span>
+                            </span>
+                        </button>
+                    {% endfor %}
+                </form>
+                {% if target_project %}
+                    <p class="admin-form-hint">Pour avertir ou bloquer le projet, utilisez « Examiner le projet ».</p>
+                {% endif %}
+            </div>
+        </div>
+    </aside>
+
+</div>
 
 {% endblock %}

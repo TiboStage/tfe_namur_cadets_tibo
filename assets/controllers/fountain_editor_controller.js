@@ -190,7 +190,31 @@ export default class extends Controller {
         };
         document.addEventListener('mousedown', this._outsideClick);
 
+        // Toute variation de largeur du stage (redimensionnement fenêtre, ou
+        // repli/déploiement de l'inspecteur droit) change le retour à la ligne
+        // du texte, donc la hauteur des blocs déjà mesurée devient obsolète.
+        this._onResize = () => {
+            clearTimeout(this._pageBreakTimer);
+            this._pageBreakTimer = setTimeout(() => this._paginateBlocks(), 200);
+        };
+        window.addEventListener('resize', this._onResize);
+
         this._setIndicatorState('saved');
+    }
+
+    /** Toggle du panneau inspecteur droit — replanifie une pagination une fois
+     *  la transition CSS de largeur terminée (voir .editor-shell.right-collapsed). */
+    toggleInspector(event) {
+        const shell = this.element;
+        shell.classList.toggle('right-collapsed');
+        event.currentTarget.classList.toggle('sidebar-toggle--active');
+
+        const onTransitionEnd = (e) => {
+            if (e.target !== shell) return;
+            shell.removeEventListener('transitionend', onTransitionEnd);
+            this._paginateBlocks();
+        };
+        shell.addEventListener('transitionend', onTransitionEnd);
     }
 
     _applyReadonlyMode() {
@@ -224,6 +248,7 @@ export default class extends Controller {
         clearTimeout(this._pageBreakTimer);
         clearInterval(this.autoSaveTimer);
         window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+        window.removeEventListener('resize', this._onResize);
         document.removeEventListener('mousedown', this._outsideClick);
         this.element.removeEventListener('focusin', this._trackFocus);
         this._mentionDropdown?.remove();
@@ -261,13 +286,20 @@ export default class extends Controller {
         this.updateStats();
         this._updateDetectedChars();
 
-        // Attendre que le navigateur ait calculé les hauteurs avant de paginer
-        requestAnimationFrame(() => {
-            setTimeout(() => {
-                this._paginateBlocks();
-                const first = stage.querySelector('.block-wrapper .block');
-                if (first) this._moveCursorToEnd(first);
-            }, 80);
+        // Attendre que la police (Courier Prime) soit chargée avant de paginer :
+        // tant qu'elle ne l'est pas, le texte est mesuré dans la police de
+        // secours (font-display: swap), qui n'a pas la même largeur de
+        // caractère — le retour à la ligne change au swap et les hauteurs déjà
+        // calculées deviennent fausses.
+        const ready = document.fonts?.ready ?? Promise.resolve();
+        ready.catch(() => {}).then(() => {
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    this._paginateBlocks();
+                    const first = stage.querySelector('.block-wrapper .block');
+                    if (first) this._moveCursorToEnd(first);
+                }, 80);
+            });
         });
     }
 
@@ -362,6 +394,21 @@ export default class extends Controller {
                 if (el.textContent.trim() === '') {
                     e.preventDefault();
                     this._handleBackspaceEmpty(el);
+                } else if (this._isAtStart(el) && (window.getSelection()?.isCollapsed ?? true)) {
+                    // Chaque bloc est une zone éditable isolée : le navigateur
+                    // ne peut pas nativement remonter dans le bloc précédent.
+                    // (ignoré si du texte est sélectionné : la suppression de
+                    // la sélection doit rester native, dans le bloc courant)
+                    e.preventDefault();
+                    this._mergeWithPrevious(el);
+                }
+                break;
+            case 'Delete':
+                if (this._isAtEnd(el) && (window.getSelection()?.isCollapsed ?? true)) {
+                    // Idem en sens inverse : Suppr en fin de bloc doit fusionner
+                    // avec le bloc suivant, ce que le navigateur ne fait pas seul.
+                    e.preventDefault();
+                    this._mergeWithNext(el);
                 }
                 break;
             case 'ArrowUp':
@@ -458,6 +505,55 @@ export default class extends Controller {
         this._pageBreakTimer = setTimeout(() => this._paginateBlocks(), 150);
     }
 
+    /** Backspace en tout début d'un bloc non vide : fusionne son contenu à la
+     *  fin du bloc précédent (garde le type du bloc précédent) et supprime le
+     *  bloc courant. Le curseur se retrouve au point de jonction. */
+    _mergeWithPrevious(el) {
+        this._closeMention();
+        const all  = this._allBlocks();
+        const idx  = all.indexOf(el);
+        const prev = all[idx - 1];
+        if (!prev) return; // premier bloc : rien avant, on laisse faire
+
+        const joinAt = prev.textContent.length;
+        prev.textContent += el.textContent;
+        el.parentElement.remove();
+        prev.focus();
+        this._setCaretOffset(prev, joinAt);
+        this._updateTypePill(prev.dataset.type);
+
+        this.markDirty();
+        this.updateStats();
+        this._updateDetectedChars();
+        this.scheduleDebounce();
+        clearTimeout(this._pageBreakTimer);
+        this._pageBreakTimer = setTimeout(() => this._paginateBlocks(), 150);
+    }
+
+    /** Suppr en toute fin d'un bloc : fusionne le contenu du bloc suivant dans
+     *  le bloc courant (garde le type du bloc courant) et supprime le bloc
+     *  suivant. Le curseur reste au point de jonction. */
+    _mergeWithNext(el) {
+        this._closeMention();
+        const all  = this._allBlocks();
+        const idx  = all.indexOf(el);
+        const next = all[idx + 1];
+        if (!next) return; // dernier bloc : rien après, on laisse faire
+
+        const joinAt = el.textContent.length;
+        el.textContent += next.textContent;
+        next.parentElement.remove();
+        el.focus();
+        this._setCaretOffset(el, joinAt);
+
+        this.markDirty();
+        this.updateStats();
+        this._updateDetectedChars();
+        this.scheduleDebounce();
+        clearTimeout(this._pageBreakTimer);
+        this._pageBreakTimer = setTimeout(() => this._paginateBlocks(), 150);
+    }
+
     _tryAutoDetect(el) {
         const text = el.textContent;
         for (const { pattern, type } of AUTO_DETECT_RULES) {
@@ -487,8 +583,6 @@ export default class extends Controller {
         const query   = match[2];
         const items   = this._getMentionItems(trigger, query);
 
-        if (items.length === 0) { this._closeMention(); return; }
-
         this._mentionActive   = true;
         this._mentionTrigger  = trigger;
         this._mentionQuery    = query;
@@ -514,7 +608,13 @@ export default class extends Controller {
                 <span class="mention-header-hint">${this._mentionHint()}</span>
             </div>`;
 
-        const itemsHtml = items.map((item, i) => `
+        const emptyMsg = trigger === '@'
+            ? (this.i18nValue?.mention_empty_char ?? 'Aucune fiche personnage ne correspond.')
+            : (this.i18nValue?.mention_empty_loc  ?? 'Aucune fiche lieu ne correspond.');
+
+        const itemsHtml = items.length === 0
+            ? `<div class="mention-empty">${this._esc(emptyMsg)}</div>`
+            : items.map((item, i) => `
             <div class="mention-item ${i === 0 ? 'mention-item--focused' : ''}"
                  data-idx="${i}" data-name="${this._escAttr(item.name)}" data-trigger="${trigger}"
                  role="option" aria-selected="${i === 0}">
@@ -575,7 +675,8 @@ export default class extends Controller {
         const triggerStart = caretPos - triggerMatch[0].length;
         const before  = el.textContent.slice(0, triggerStart);
         const after   = el.textContent.slice(caretPos);
-        const mention = trigger + name;
+        // Le @ / # ne sert qu'à appeler la liste : on insère uniquement le nom
+        const mention = el.dataset.type === 'CHARACTER' ? name.toUpperCase() : name;
         el.textContent = before + mention + ' ' + after;
         this._setCaretOffset(el, triggerStart + mention.length + 1);
         this._closeMention();
@@ -612,10 +713,32 @@ export default class extends Controller {
         const allWrappers = [...stage.querySelectorAll('.editor-paper .block-wrapper')];
         if (allWrappers.length === 0) return;
 
-        // 2. Mesurer les hauteurs MAINTENANT (blocs encore dans le DOM)
-        const heights = allWrappers.map(w => Math.max(w.getBoundingClientRect().height, 30));
+        // 2. Regrouper temporairement tous les wrappers dans le papier de la
+        //    première page pour les mesurer en flux continu. Certains types de
+        //    bloc (SCENE, CHARACTER, TRANSITION) ont un margin-top qui se
+        //    "collapse" avec le wrapper précédent : cette marge n'apparaît
+        //    JAMAIS dans le getBoundingClientRect() d'un wrapper mesuré seul,
+        //    seulement dans l'écart entre deux wrappers voisins dans le même
+        //    flux. La mesurer isolément la fait disparaître du calcul, ce qui
+        //    sous-estime la hauteur réelle et provoque un texte tronqué en bas
+        //    de page (.editor-paper a overflow:hidden).
+        const firstPaper = stage.querySelector('.editor-page:first-child .editor-paper')
+            ?? allWrappers[0].parentElement;
+        allWrappers.forEach(w => {
+            if (w.parentElement !== firstPaper) firstPaper.appendChild(w);
+        });
 
-        // 3. Calculer la distribution : quels blocs vont sur quelle page
+        // 3. Mesurer les hauteurs réellement occupées (marges collapsées incluses)
+        //    via l'écart de position entre wrappers consécutifs dans le flux.
+        const paperTop = firstPaper.getBoundingClientRect().top;
+        const tops = allWrappers.map(w => w.getBoundingClientRect().top - paperTop);
+        const lastBottom = allWrappers[allWrappers.length - 1].getBoundingClientRect().bottom - paperTop;
+        const heights = allWrappers.map((w, i) => {
+            const bottom = i < allWrappers.length - 1 ? tops[i + 1] : lastBottom;
+            return Math.max(bottom - tops[i], 30);
+        });
+
+        // 4. Calculer la distribution : quels blocs vont sur quelle page
         const groups = [[]]; // groups[pageIdx] = [wrapperIdx, ...]
         let acc = 0;
 
@@ -629,7 +752,7 @@ export default class extends Controller {
             acc += h;
         });
 
-        // 4. Synchroniser le nombre de pages dans le DOM
+        // 5. Synchroniser le nombre de pages dans le DOM
         let pages = [...stage.querySelectorAll('.editor-page')];
 
         // Créer les pages manquantes
@@ -645,7 +768,10 @@ export default class extends Controller {
             pages.pop();
         }
 
-        // 5. Déplacer les blocs dans la bonne page si nécessaire
+        // 6. Déplacer les blocs dans la bonne page si nécessaire, et gérer le
+        //    cas d'un bloc seul plus grand qu'une page (long monologue…) : on
+        //    laisse la feuille grandir plutôt que de tronquer silencieusement
+        //    le texte (voir .editor-paper--overflow dans _scenario.css).
         groups.forEach((wrapperIndices, pageIdx) => {
             const paper = pages[pageIdx].querySelector('.editor-paper');
             wrapperIndices.forEach(wi => {
@@ -654,15 +780,17 @@ export default class extends Controller {
                     paper.appendChild(w); // déplacement DOM sans perte d'events
                 }
             });
+            const overflows = wrapperIndices.length === 1 && heights[wrapperIndices[0]] > PAGE_CONTENT_HEIGHT;
+            paper.classList.toggle('editor-paper--overflow', overflows);
         });
 
-        // 6. Mettre à jour les numéros de page
+        // 7. Mettre à jour les numéros de page
         pages.forEach((page, i) => {
             const num = page.querySelector('.editor-page-num');
             if (num) num.textContent = `Page ${i + 1}`;
         });
 
-        // 7. Restaurer le focus (le déplacement DOM peut le perdre)
+        // 8. Restaurer le focus (le déplacement DOM peut le perdre)
         if (hadFocus && focused && document.body.contains(focused)) {
             focused.focus();
         }
@@ -935,15 +1063,90 @@ ${html}
 
     _updateDetectedChars() {
         if (!this.hasDetectedCharsTarget) return;
-        const names = new Set(
-            this._allBlocks()
-                .filter(el => el.dataset.type === 'CHARACTER' && el.textContent.trim().length > 1)
-                .map(el => el.textContent.trim())
-        );
+
+        const index  = this._characterIndex();
+        const found  = new Map();   // clé → { label, character|null }
+
+        // a) Blocs Personnage : "CLAIRE", "CLAIRE (V.O.)", "@CLAIRE"…
+        //    Dédoublonnage insensible à la casse, affichage en majuscules.
+        this._allBlocks()
+            .filter(el => el.dataset.type === 'CHARACTER')
+            .forEach(el => {
+                const label = this._normalizeCharName(el.textContent);
+                if (label.length < 2) return;
+                const character = index.byAlias.get(label) ?? null;
+                const key = character ? `id:${character.id}` : `name:${label}`;
+                if (!found.has(key)) found.set(key, { label, character });
+            });
+
+        // b) Personnages ayant une fiche et cités dans le texte (action, dialogue…)
+        const text = this._allBlocks()
+            .filter(el => el.dataset.type !== 'CHARACTER')
+            .map(el => el.textContent)
+            .join('\n');
+        index.patterns.forEach(({ regex, character }) => {
+            const key = `id:${character.id}`;
+            if (!found.has(key) && regex.test(text)) {
+                found.set(key, { label: character.name.toUpperCase(), character });
+            }
+        });
+
         const c = this.detectedCharsTarget;
-        c.innerHTML = names.size > 0
-            ? [...names].map(n => `<span class="edetect-char-chip">${this._esc(n)}</span>`).join('')
-            : `<p class="edetect-empty">${this.i18nValue?.detect_hint ?? 'Utilisez des blocs Personnage pour détecter les noms.'}</p>`;
+        if (found.size === 0) {
+            c.innerHTML = `<p class="edetect-empty">${this.i18nValue?.detect_hint ?? 'Utilisez des blocs Personnage pour détecter les noms.'}</p>`;
+            return;
+        }
+
+        const openTitle    = this.i18nValue?.detect_open    ?? 'Ouvrir la fiche';
+        const missingTitle = this.i18nValue?.detect_missing ?? 'Aucune fiche pour ce personnage';
+        c.innerHTML = [...found.values()].map(({ label, character }) => character?.url
+            ? `<a class="edetect-char-chip edetect-char-chip--linked" href="${this._escAttr(character.url)}" title="${this._escAttr(openTitle)}">${this._esc(label)}</a>`
+            : `<span class="edetect-char-chip edetect-char-chip--missing" title="${this._escAttr(missingTitle)}">${this._esc(label)}</span>`
+        ).join('');
+    }
+
+    /**
+     * Index des fiches personnages par alias (nom complet, prénom, nom, surnom, alias).
+     * Un alias partagé par plusieurs fiches (ex. nom de famille commun) est ignoré
+     * pour ne jamais lier au mauvais personnage.
+     */
+    _characterIndex() {
+        const owners = new Map();   // ALIAS → Set(ids)
+        const byId   = new Map();
+        (this.charactersValue ?? []).forEach(ch => {
+            byId.set(ch.id, ch);
+            // json_encode d'un tableau filtré par Twig peut donner un objet {"0":…,"2":…}
+            const aliases = Array.isArray(ch.aliases) ? ch.aliases : Object.values(ch.aliases ?? {});
+            [ch.name, ...aliases].forEach(alias => {
+                if (typeof alias !== 'string') return;
+                const key = this._normalizeCharName(alias);
+                if (key.length < 2) return;
+                if (!owners.has(key)) owners.set(key, new Set());
+                owners.get(key).add(ch.id);
+            });
+        });
+
+        const byAlias  = new Map();
+        const patterns = [];
+        owners.forEach((ids, alias) => {
+            if (ids.size !== 1) return;
+            const character = byId.get([...ids][0]);
+            byAlias.set(alias, character);
+            const escaped = alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            patterns.push({ character, regex: new RegExp(`(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`, 'iu') });
+        });
+        return { byAlias, patterns };
+    }
+
+    /** "@Claire (V.O.)" → "CLAIRE" */
+    _normalizeCharName(raw) {
+        return raw
+            .replace(/^[@#]/, '')
+            .replace(/\s*\(.*?\)\s*/g, ' ')
+            .replace(/\^$/, '')
+            .trim()
+            .replace(/\s+/g, ' ')
+            .toUpperCase();
     }
 
     _updateTypePill(type) {

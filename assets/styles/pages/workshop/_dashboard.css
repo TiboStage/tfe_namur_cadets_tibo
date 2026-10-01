@@ -516,7 +516,7 @@
     /* Grille 2×2 pour les stats */
     .dash-stats-bar {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         width: 100%;
     }
 
@@ -525,8 +525,6 @@
         flex: unset;
         justify-content: center;
         padding: 12px 8px;
-        border-right: 1px solid var(--color-border);
-        border-bottom: 1px solid var(--color-border);
         gap: 6px;
     }
 

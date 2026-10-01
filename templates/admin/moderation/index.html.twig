@@ -15,61 +15,83 @@
             <p>Tous les projets ont un statut de modération neutre.</p>
         </div>
     {% else %}
-        <p class="text-muted mb-6">{{ flagged_count }} projet{{ flagged_count > 1 ? 's' : '' }} nécessite{{ flagged_count > 1 ? 'nt' : '' }} attention.</p>
-    {% endif %}
+        {% set type_labels = {film: 'Film', serie: 'Série', jeu_video: 'Jeu vidéo', custom: 'Personnalisé'} %}
+        {% set mod_labels  = {clear: 'Neutre', warning: 'Avertissement', blocked: 'Bloqué', approved: 'Approuvé'} %}
+        {% set actions = [
+            {status: 'clear',    icon: 'lucide:circle-check',   key: 'moderation.action.clear'},
+            {status: 'warning',  icon: 'lucide:triangle-alert', key: 'moderation.action.warn'},
+            {status: 'blocked',  icon: 'lucide:ban',            key: 'moderation.action.block'},
+            {status: 'approved', icon: 'lucide:badge-check',    key: 'moderation.action.approve'},
+        ] %}
 
-    {% if flagged_count > 0 %}
-    <div class="panel-box panel-box--flush">
-        <div class="table-wrapper">
-            <table class="admin-table">
-                <thead><tr>
-                    <th>Projet</th>
-                    <th>Auteur</th>
-                    <th>Signalements</th>
-                    <th>Statut actuel</th>
-                    <th>Changer le statut</th>
-                </tr></thead>
-                <tbody>
-                {% for project in flagged %}
-                    <tr>
-                        <td>
-                            <strong>{{ project.title }}</strong>
-                            <br><span class="text-muted text-2xs">{{ project.projectType|upper }}</span>
-                        </td>
-                        <td class="text-muted">
-                            <a href="{{ path('admin_user_show', {id: project.createdBy.id, _locale: app.request.locale}) }}">
-                                {{ project.createdBy.username }}
-                            </a>
-                        </td>
-                        <td>
-                            {% if project.reportCount > 0 %}
-                                <span class="tag-reason">{{ project.reportCount }} signal.</span>
-                            {% else %}
-                                <span class="text-muted">Statut non-neutre</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span>
-                        </td>
-                        <td>
-                            <form method="post"
-                                  action="{{ path('admin_moderation_status', {id: project.id, _locale: app.request.locale}) }}"
-                                  class="mod-inline-form">
-                                <input type="hidden" name="_token" value="{{ csrf_token('mod_status_' ~ project.id) }}">
-                                <div class="mod-btn-group">
-                                    <button type="submit" name="status" value="clear"    class="btn-table btn-table--success"  title="{{ 'moderation.action.clear'|trans({}, 'admin') }}"   aria-label="{{ 'moderation.action.clear'|trans({}, 'admin') }}">✓</button>
-                                    <button type="submit" name="status" value="warning"  class="btn-table btn-table--warn"     title="{{ 'moderation.action.warn'|trans({}, 'admin') }}"    aria-label="{{ 'moderation.action.warn'|trans({}, 'admin') }}">⚠</button>
-                                    <button type="submit" name="status" value="blocked"  class="btn-table btn-table--danger"   title="{{ 'moderation.action.block'|trans({}, 'admin') }}"   aria-label="{{ 'moderation.action.block'|trans({}, 'admin') }}">✕</button>
-                                    <button type="submit" name="status" value="approved" class="btn-table btn-table--primary"  title="{{ 'moderation.action.approve'|trans({}, 'admin') }}" aria-label="{{ 'moderation.action.approve'|trans({}, 'admin') }}">★</button>
+        <p class="admin-form-hint mod-intro">
+            {{ flagged_count }} projet{{ flagged_count > 1 ? 's' }} nécessite{{ flagged_count > 1 ? 'nt' }} attention.
+        </p>
+
+        <div class="admin-card">
+            <div class="table-wrapper">
+                <table class="admin-table">
+                    <thead><tr>
+                        <th>Projet</th>
+                        <th>Auteur</th>
+                        <th>Signalements</th>
+                        <th>Statut actuel</th>
+                        <th>Décision</th>
+                    </tr></thead>
+                    <tbody>
+                    {% for project in flagged %}
+                        <tr>
+                            <td>
+                                <div class="mod-project">
+                                    <a href="{{ path('admin_project_show', {id: project.id, _locale: app.request.locale}) }}" class="mod-project__title">{{ project.title }}</a>
+                                    <span class="admin-badge admin-badge--type-{{ project.projectType }}">{{ type_labels[project.projectType] ?? project.projectType }}</span>
                                 </div>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                            </td>
+                            <td>
+                                <a href="{{ path('admin_user_show', {id: project.createdBy.id, _locale: app.request.locale}) }}" class="mod-author">
+                                    {{ include('_partials/_user_avatar.html.twig', {user: project.createdBy, size: 'xs'}) }}
+                                    <span>{{ project.createdBy.username }}</span>
+                                </a>
+                            </td>
+                            <td>
+                                {% if project.reportCount > 0 %}
+                                    <span class="admin-badge admin-badge--danger">
+                                        {{ project.reportCount }} signalement{{ project.reportCount > 1 ? 's' }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ mod_labels[project.moderationStatus] ?? project.moderationStatus }}</span>
+                            </td>
+                            <td>
+                                <form method="post"
+                                      action="{{ path('admin_moderation_status', {id: project.id, _locale: app.request.locale}) }}"
+                                      class="mod-inline-form">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('mod_status_' ~ project.id) }}">
+                                    <div class="mod-icon-group">
+                                        {% for a in actions %}
+                                            {% set current = project.moderationStatus == a.status %}
+                                            <button type="submit" name="status" value="{{ a.status }}"
+                                                    class="mod-icon-btn mod-icon-btn--{{ a.status }} {{ current ? 'mod-icon-btn--current' }}"
+                                                    title="{{ a.key|trans({}, 'admin') }}"
+                                                    aria-label="{{ a.key|trans({}, 'admin') }}"
+                                                    {{ current ? 'disabled' }}>
+                                                {{ ux_icon(a.icon, {class: 'icon-xs'}) }}
+                                            </button>
+                                        {% endfor %}
+                                        <a href="{{ path('admin_project_show', {id: project.id, _locale: app.request.locale}) }}"
+                                           class="btn-sm btn-sm--outline mod-view-btn">Examiner</a>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
     {% endif %}
 
 {% endblock %}

@@ -973,6 +973,72 @@ app_register:
         _locale: en|fr|nl
     methods: [POST]
 
+# ── Mot de passe oublié ───────────────────────────────────────────────
+
+app_forgot_password_request:
+    path:
+        fr: /{_locale}/mot-de-passe-oublie
+        en: /{_locale}/forgot-password
+        nl: /{_locale}/wachtwoord-vergeten
+    controller: App\Controller\Website\ResetPasswordController::request
+    requirements:
+        _locale: en|fr|nl
+
+app_check_email:
+    path:
+        fr: /{_locale}/mot-de-passe-oublie/verifiez-vos-emails
+        en: /{_locale}/forgot-password/check-email
+        nl: /{_locale}/wachtwoord-vergeten/controleer-email
+    controller: App\Controller\Website\ResetPasswordController::checkEmail
+    requirements:
+        _locale: en|fr|nl
+
+app_reset_password:
+    path:
+        fr: /{_locale}/reinitialiser-mot-de-passe/{token}
+        en: /{_locale}/reset-password/{token}
+        nl: /{_locale}/wachtwoord-resetten/{token}
+    controller: App\Controller\Website\ResetPasswordController::reset
+    defaults:
+        token: ~
+    requirements:
+        _locale: en|fr|nl
+
+# ── Confirmation d'email (inscription) ────────────────────────────────
+
+# Page "Vérifiez vos emails" affichée après l'inscription
+app_verify_email_pending:
+    path:
+        fr: /{_locale}/inscription/verifiez-vos-emails
+        en: /{_locale}/register/check-email
+        nl: /{_locale}/aanmelden/controleer-email
+    controller: App\Controller\Website\EmailVerificationController::pending
+    requirements:
+        _locale: en|fr|nl
+    methods: [GET]
+
+# Renvoi du mail de confirmation (bouton de la page ci-dessus)
+app_verify_email_resend:
+    path:
+        fr: /{_locale}/inscription/renvoyer-confirmation
+        en: /{_locale}/register/resend-confirmation
+        nl: /{_locale}/aanmelden/bevestiging-opnieuw-versturen
+    controller: App\Controller\Website\EmailVerificationController::resend
+    requirements:
+        _locale: en|fr|nl
+    methods: [POST]
+
+# Lien signé contenu dans le mail
+app_verify_email:
+    path:
+        fr: /{_locale}/confirmer-email
+        en: /{_locale}/verify-email
+        nl: /{_locale}/email-bevestigen
+    controller: App\Controller\Website\EmailVerificationController::verify
+    requirements:
+        _locale: en|fr|nl
+    methods: [GET]
+
 # ═══════════════════════════════════════════════════════════════════
 # ADMINISTRATION
 # ═══════════════════════════════════════════════════════════════════

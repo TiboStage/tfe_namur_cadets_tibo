@@ -126,7 +126,9 @@ projects:
         owner: "Owner"
         lead: "Co-lead"
         editor: "Editor"
+        moderator: "Moderator"
         contributor: "Contributor"
+        reader: "Reader"
 
     visibility:
         public: "Online"
@@ -184,9 +186,9 @@ projects:
             username_label: "Username"
             username_ph: "e.g. johndoe"
             role_label: "Role"
-            role_contributor: "Contributor — read + suggestions"
-            role_editor: "Editor — can edit content"
-            role_lead: "Co-lead — full access"
+            role_reader: "Reader — read + notes only"
+            role_contributor: "Contributor — writes content"
+            role_moderator: "Moderator — manages the project"
             invite_btn: "Invite"
             empty: "No collaborators yet."
             since: "Since"
@@ -609,6 +611,7 @@ common:
     optional: "(optional)"
     search: "Search"
     back: "Back"
+    scene_deleted: "This scene no longer exists"
 
 # ===== NOTES =====
 note:
@@ -721,6 +724,7 @@ task:
         in_progress: "In progress"
         review: "In review"
         done: "Done"
+        archived: "Archived"
 
     priority:
         low: "Low"
@@ -909,8 +913,12 @@ manuscript:
             char: "Character"
             loc: "Location"
             hint: "↑↓ navigate · ↵ confirm · Esc close"
+            empty_char: "No matching character sheet — create it in Characters"
+            empty_loc: "No matching location sheet — create it in Locations"
         detect:
             hint: "Use Character blocks to detect character names."
+            open: "Open the sheet"
+            missing: "No sheet for this character"
         mode:
             reading: "Reading"
             writing: "Writing"

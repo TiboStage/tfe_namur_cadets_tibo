@@ -108,6 +108,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isBanned = false;
 
+    /**
+     * Email confirmé via le lien envoyé à l'inscription.
+     * Tant que false, la connexion est refusée (voir App\Security\UserChecker).
+     */
+    #[ORM\Column(options: ['default' => false])]
+    private bool $isVerified = false;
+
     // ─── Préférences ──────────────────────────────────────────────────────────
 
     /**
@@ -269,9 +276,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): static
     {
-        $this->email = $email;
+        $this->email = $email ?? '';
         return $this;
     }
 
@@ -280,9 +287,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(?string $username): static
     {
-        $this->username = $username;
+        $this->username = $username ?? '';
         return $this;
     }
 
@@ -291,9 +298,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): static
+    public function setFirstName(?string $firstName): static
     {
-        $this->firstName = $firstName;
+        $this->firstName = $firstName ?? '';
         return $this;
     }
 
@@ -302,9 +309,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): static
+    public function setLastName(?string $lastName): static
     {
-        $this->lastName = $lastName;
+        $this->lastName = $lastName ?? '';
         return $this;
     }
 
@@ -343,9 +350,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->avatarColor;
     }
 
-    public function setAvatarColor(string $avatarColor): static
+    public function setAvatarColor(?string $avatarColor): static
     {
-        $this->avatarColor = $avatarColor;
+        $this->avatarColor = $avatarColor ?? '';
         return $this;
     }
 
@@ -357,6 +364,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsBanned(bool $isBanned): static
     {
         $this->isBanned = $isBanned;
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
         return $this;
     }
 

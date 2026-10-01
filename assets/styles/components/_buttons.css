@@ -355,9 +355,9 @@
 /* Groupe de boutons */
 .btn-group {
     display: inline-flex;
-    background: var(--color-bg-inset);
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-sm);
+    /* background: var(--color-bg-inset); */
+    /* border: 1px solid var(--color-border-light); */
+    /* border-radius: var(--radius-sm); */
     padding: 4px;
 }
 
@@ -382,8 +382,9 @@
 
 /* État actif (le bouton sélectionné) */
 .btn-group .btn.active {
-    background: var(--color-border-light);
-    color: var(--color-primary);
+    border-radius: var(--radius-sm);
+    background: var(--color-primary);
+    color: var(--text-dark);
 }
 
 /* Taille de l'icône à l'intérieur */

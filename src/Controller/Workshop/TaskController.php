@@ -287,8 +287,12 @@ class TaskController extends AbstractController
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
     /**
+     * La clé est toujours présente dès qu'une tâche est liée à un scenario_element,
+     * même si celui-ci a été supprimé depuis (valeur null) — voir NoteController::resolveElementPaths
+     * pour le même mécanisme et son explication.
+     *
      * @param Task[] $tasks
-     * @return array<int, ScenarioElement>
+     * @return array<int, ScenarioElement|null>
      */
     private function resolveElementPaths(array $tasks): array
     {
@@ -297,10 +301,7 @@ class TaskController extends AbstractController
 
         foreach ($tasks as $task) {
             if ($task->getLinkedEntityType() === 'scenario_element' && $task->getLinkedEntityId()) {
-                $element = $repo->find($task->getLinkedEntityId());
-                if ($element instanceof ScenarioElement) {
-                    $result[$task->getId()] = $element;
-                }
+                $result[$task->getId()] = $repo->find($task->getLinkedEntityId());
             }
         }
 

@@ -42,7 +42,6 @@
 
 /* Section Workshop */
 @import "pages/workshop/_dashboard.css";
-@import "pages/workshop/_editor.css";
 @import "pages/workshop/_scenario.css";
 @import "pages/workshop/_projects.css";
 @import "pages/workshop/_project-funnel.css";

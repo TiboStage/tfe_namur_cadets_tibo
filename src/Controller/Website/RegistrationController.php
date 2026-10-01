@@ -4,14 +4,14 @@ namespace App\Controller\Website;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Security\LoginFormAuthenticator;
 use App\Service\TurnstileService;
+use App\Service\VerificationEmailSender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\RateLimiter\Exception\RateLimitExceededException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
@@ -21,9 +21,8 @@ class RegistrationController extends AbstractController
         UserPasswordHasherInterface $hasher,
         EntityManagerInterface $em,
         TranslatorInterface $translator,
-        UserAuthenticatorInterface $userAuthenticator,
-        LoginFormAuthenticator $authenticator,
         TurnstileService $turnstile,
+        VerificationEmailSender $verificationSender,
     ): Response {
         // Déjà connecté → dashboard
         if ($this->getUser()) {
@@ -62,13 +61,18 @@ class RegistrationController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            // Connexion automatique après inscription
-            // authenticateUser() redirige automatiquement via LoginFormAuthenticator
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
+            // Pas de connexion automatique : le compte doit d'abord être confirmé
+            // via le lien envoyé par mail (voir EmailVerificationController).
+            $session = $request->getSession();
+            $session->set(EmailVerificationController::SESSION_EMAIL, $user->getEmail());
+            try {
+                $session->set(EmailVerificationController::SESSION_REMAINING, $verificationSender->send($user));
+                $session->set(EmailVerificationController::SESSION_RETRY_AT, time() + VerificationEmailSender::COOLDOWN_SECONDS);
+            } catch (RateLimitExceededException) {
+                // Impossible sur un compte tout neuf ; au pire, le bouton "renvoyer" reste disponible
+            }
+
+            return $this->redirectToRoute('app_verify_email_pending', ['_locale' => $request->getLocale()]);
         }
 
         // Formulaire invalide → retour à la page auth, panneau inscription ouvert

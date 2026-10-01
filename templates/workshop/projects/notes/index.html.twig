@@ -228,7 +228,7 @@
                         <a href="{{ path('app_manuscript_show', {_locale: app.request.locale, project_slug: project.slug, id: el.id}) }}"
                            class="nl-group-link">{{ el.getFullPath() }}</a>
                     {% else %}
-                        <span class="nl-group-deleted">Scène supprimée</span>
+                        <span class="nl-group-deleted">{{ 'common.scene_deleted'|trans({}, 'workshop') }}</span>
                     {% endif %}
                     <span class="nl-group-count">{{ groupNotes|length }}</span>
                 </div>
@@ -332,11 +332,18 @@
 
     {# Lien narratif #}
     <div class="nl-cell nl-cell--link">
-        {% if note.linkedEntityType == 'scenario_element' and elementPaths[note.id] is defined %}
-            <span class="nl-link-badge nl-link-badge--scene">
-                {{ ux_icon('lucide:file-text', {style: 'width:10px;height:10px'}) }}
-                {{ elementPaths[note.id].title }}
-            </span>
+        {% if note.linkedEntityType == 'scenario_element' %}
+            {% if elementPaths[note.id] is defined and elementPaths[note.id] is not null %}
+                <span class="nl-link-badge nl-link-badge--scene">
+                    {{ ux_icon('lucide:file-text', {style: 'width:10px;height:10px'}) }}
+                    {{ elementPaths[note.id].title }}
+                </span>
+            {% else %}
+                <span class="nl-link-badge nl-link-badge--deleted" title="{{ 'common.scene_deleted'|trans({}, 'workshop') }}">
+                    {{ ux_icon('lucide:file-x', {style: 'width:10px;height:10px'}) }}
+                    {{ 'common.scene_deleted'|trans({}, 'workshop') }}
+                </span>
+            {% endif %}
         {% else %}
             <span class="nl-link-badge nl-link-badge--project">
                 {{ ux_icon('lucide:folder', {style: 'width:10px;height:10px'}) }}

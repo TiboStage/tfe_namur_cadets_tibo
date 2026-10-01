@@ -2,16 +2,17 @@
 {% extends 'base.html.twig' %}
 
 {% set current_route = app.request.attributes.get('_route') %}
+{% set nav_counts = admin_nav_counts() %}
 
 {% block body %}
-    <div class="modo-layout">
+    <div class="modo-layout" data-controller="confirm-modal">
 
         {# ── SIDEBAR (même structure que le panneau modo) ───────────── #}
         <aside class="modo-sidebar">
 
             <div class="modo-sidebar__header">
-                <span class="brand-dot"></span>
-                <span class="modo-sidebar__brand">Scénart <span class="brand-badge">Admin</span></span>
+                <a href="{{ path('app_home') }}" class="logo-text logo-text--sm">SCÉN<span class="highlight">ART</span></a>
+                <span class="brand-badge">Admin</span>
             </div>
 
             <nav class="modo-nav">
@@ -24,19 +25,20 @@
                    class="modo-nav__item {{ current_route starts with 'admin_user' ? 'active' : '' }}">
                     {{ ux_icon('lucide:users', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.users'|trans({}, 'admin') }}</span>
+                    <span class="modo-nav__count">{{ nav_counts.users }}</span>
                 </a>
                 <a href="{{ path('admin_projects', {_locale: app.request.locale}) }}"
                    class="modo-nav__item {{ current_route starts with 'admin_project' ? 'active' : '' }}">
                     {{ ux_icon('lucide:folder', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.projects'|trans({}, 'admin') }}</span>
+                    <span class="modo-nav__count">{{ nav_counts.projects }}</span>
                 </a>
                 <a href="{{ path('admin_moderation', {_locale: app.request.locale}) }}"
                    class="modo-nav__item {{ current_route starts with 'admin_moderation' ? 'active' : '' }}">
                     {{ ux_icon('lucide:triangle-alert', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.moderation'|trans({}, 'admin') }}</span>
-                    {% set flagged_count = flagged_count ?? 0 %}
-                    {% if flagged_count > 0 %}
-                        <span class="badge-count">{{ flagged_count }}</span>
+                    {% if nav_counts.flagged > 0 %}
+                        <span class="modo-nav__count modo-nav__count--alert">{{ nav_counts.flagged }}</span>
                     {% endif %}
                 </a>
                 <a href="{{ path('admin_config', {_locale: app.request.locale}) }}"
@@ -48,11 +50,13 @@
                    class="modo-nav__item {{ current_route starts with 'admin_doc_' ? 'active' : '' }}">
                     {{ ux_icon('lucide:book-open', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.documentation'|trans({}, 'admin') }}</span>
+                    <span class="modo-nav__count">{{ nav_counts.documentation }}</span>
                 </a>
                 <a href="{{ path('admin_genre_index', {_locale: app.request.locale}) }}"
                    class="modo-nav__item {{ current_route starts with 'admin_genre' ? 'active' : '' }}">
                     {{ ux_icon('lucide:tag', {class: 'icon-sm'}) }}
                     <span>{{ 'layout.menu.genres'|trans({}, 'admin') }}</span>
+                    <span class="modo-nav__count">{{ nav_counts.genres }}</span>
                 </a>
             </nav>
 
@@ -88,5 +92,7 @@
                 {% block admin_content %}{% endblock %}
             </div>
         </main>
+
+        {{ include('admin/_partials/_confirm_modal.html.twig') }}
     </div>
 {% endblock %}

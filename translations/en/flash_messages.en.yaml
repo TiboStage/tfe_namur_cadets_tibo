@@ -11,6 +11,7 @@ auth:
     logout: "See you soon!"
     logout_success: "You are now logged out"
     register_success: "Account created successfully! Please sign in."
+    reset_password_success: "Your password has been reset successfully. You can now sign in."
 
 # ===== PROFILE =====
 profile:
@@ -30,6 +31,7 @@ project:
     settings_saved_slug: "Settings saved. The project URL has been updated."
     structure_updated: "Structure updated."
     visibility_invalid: "Invalid visibility."
+    limit_reached: "You've reached your plan's limit of %limit% projects. Delete an existing project or upgrade your plan to create a new one."
 
 # ===== FORM VALIDATION =====
 validation:

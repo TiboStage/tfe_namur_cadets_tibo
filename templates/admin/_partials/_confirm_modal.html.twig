@@ -1,0 +1,22 @@
+{# Popup de confirmation (admin + modo) — piloté par confirm_modal_controller.js #}
+<div class="confirm-modal confirm-modal--admin"
+     data-confirm-modal-target="overlay"
+     data-action="click->confirm-modal#backdropClick"
+     role="dialog" aria-modal="true">
+    <div class="confirm-modal-box">
+        <div class="confirm-modal-icon">
+            <span class="cm-icon cm-icon--danger">{{ ux_icon('lucide:triangle-alert', {class: 'icon-md'}) }}</span>
+            <span class="cm-icon cm-icon--warning">{{ ux_icon('lucide:circle-alert', {class: 'icon-md'}) }}</span>
+            <span class="cm-icon cm-icon--success">{{ ux_icon('lucide:circle-check', {class: 'icon-md'}) }}</span>
+            <span class="cm-icon cm-icon--info">{{ ux_icon('lucide:info', {class: 'icon-md'}) }}</span>
+        </div>
+        <h3 class="confirm-modal-title" data-confirm-modal-target="title" hidden></h3>
+        <p class="confirm-modal-message" data-confirm-modal-target="message"></p>
+        <div class="confirm-modal-actions">
+            <button type="button" class="btn-sm btn-sm--ghost" data-action="click->confirm-modal#cancel">Annuler</button>
+            <button type="button" class="cm-confirm"
+                    data-confirm-modal-target="confirmBtn"
+                    data-action="click->confirm-modal#confirm">Confirmer</button>
+        </div>
+    </div>
+</div>

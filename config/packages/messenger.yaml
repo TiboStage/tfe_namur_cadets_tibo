@@ -18,9 +18,11 @@ framework:
             messenger.bus.default: []
 
         routing:
-            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
+            # SendEmailMessage n'est PAS routé ici : ça enverrait TOUS les emails
+            # (y compris le formulaire de contact) en asynchrone. On route au cas
+            # par cas nos propres messages, un par usage, pour garder le contrôle.
 #            Symfony\Component\Notifier\Message\ChatMessage: async
 #            Symfony\Component\Notifier\Message\SmsMessage: async
 
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
+            App\Message\SendResetPasswordEmailMessage: async
+            App\Message\SendVerificationEmailMessage: async

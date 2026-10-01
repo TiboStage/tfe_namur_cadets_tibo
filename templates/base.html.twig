@@ -47,6 +47,13 @@
 
     {% block javascripts %}
         {{ importmap('app') }}
+        {# Cloudflare Turnstile — chargé une seule fois, site-wide, en rendu explicite.
+           Nécessaire car Turbo remplace le <body> sans recharger la page : le rendu
+           automatique de Cloudflare ne re-scanne pas le DOM après une navigation Turbo.
+           Le contrôleur Stimulus `turnstile` (assets/controllers/turnstile_controller.js)
+           déclenche le rendu lui-même à chaque fois qu'il se connecte. #}
+        <script>window.onTurnstileLoad = () => window.dispatchEvent(new Event('turnstile:ready'));</script>
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async defer></script>
     {% endblock %}
 </head>
 <body>

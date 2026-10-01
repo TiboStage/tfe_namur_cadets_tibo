@@ -9,6 +9,12 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ProjectRepository extends ServiceEntityRepository
 {
+    /**
+     * Statuts qui demandent l'attention de la modération.
+     * "approved" (validé) et "clear" (neutre) n'en font pas partie.
+     */
+    public const ATTENTION_STATUSES = ['warning', 'blocked'];
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Project::class);
@@ -38,22 +44,22 @@ class ProjectRepository extends ServiceEntityRepository
     {
         return (int) $this->createQueryBuilder('p')
             ->select('COUNT(p.id)')
-            ->andWhere('p.reportCount > 0 OR p.moderationStatus != :clear')
-            ->setParameter('clear', 'clear')
+            ->andWhere('p.reportCount > 0 OR p.moderationStatus IN (:attention)')
+            ->setParameter('attention', self::ATTENTION_STATUSES)
             ->getQuery()
             ->getSingleScalarResult();
     }
 
     /**
-     * Projets signalés ou avec statut de modération non-neutre.
+     * Projets signalés, en avertissement ou bloqués.
      *
      * @return Project[]
      */
     public function findFlagged(): array
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.reportCount > 0 OR p.moderationStatus != :clear')
-            ->setParameter('clear', 'clear')
+            ->andWhere('p.reportCount > 0 OR p.moderationStatus IN (:attention)')
+            ->setParameter('attention', self::ATTENTION_STATUSES)
             ->orderBy('p.reportCount', 'DESC')
             ->addOrderBy('p.updatedAt', 'DESC')
             ->getQuery()
@@ -73,6 +79,52 @@ class ProjectRepository extends ServiceEntityRepository
             ->orderBy('p.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Liste admin paginée et triable, filtrée par onglet (all/public/flagged).
+     *
+     * @return Project[]
+     */
+    public function findForAdmin(string $filter, string $sort, int $page, int $perPage): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->leftJoin('p.createdBy', 'u')
+            ->addSelect('u');
+
+        match ($filter) {
+            'flagged' => $qb->andWhere('p.reportCount > 0 OR p.moderationStatus IN (:attention)')->setParameter('attention', self::ATTENTION_STATUSES),
+            'public'  => $qb->andWhere('p.visibility = :vis')->setParameter('vis', Project::VISIBILITY_PUBLIC),
+            default   => null,
+        };
+
+        match ($sort) {
+            'created_asc'  => $qb->orderBy('p.createdAt', 'ASC'),
+            'title_asc'    => $qb->orderBy('p.title', 'ASC'),
+            'reports_desc' => $qb->orderBy('p.reportCount', 'DESC')->addOrderBy('p.createdAt', 'DESC'),
+            default        => $qb->orderBy('p.createdAt', 'DESC'), // created_desc
+        };
+
+        return $qb->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Nombre de projets pour un onglet donné — utilisé pour la pagination.
+     */
+    public function countForAdmin(string $filter): int
+    {
+        $qb = $this->createQueryBuilder('p')->select('COUNT(p.id)');
+
+        match ($filter) {
+            'flagged' => $qb->andWhere('p.reportCount > 0 OR p.moderationStatus IN (:attention)')->setParameter('attention', self::ATTENTION_STATUSES),
+            'public'  => $qb->andWhere('p.visibility = :vis')->setParameter('vis', Project::VISIBILITY_PUBLIC),
+            default   => null,
+        };
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     // ─── Atlas / Exploration publique ────────────────────────────────────────

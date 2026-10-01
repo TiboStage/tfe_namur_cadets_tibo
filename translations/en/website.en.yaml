@@ -34,6 +34,8 @@ navbar:
         workshop: "Workshop"
         login: "Sign in"
         register: "Sign Up"
+        change_language: "Change language"
+        open_menu: "Open menu"
 
 # ===== FOOTER =====
 
@@ -157,113 +159,159 @@ home:
 # ===== EXAMPLES PAGE =====
 examples:
     header:
-        tag: "Features"
-        title: "Everything you need to"
-        title_highlight: "create"
-        description: "From writing scripts to team management, ScénArt brings all your narrative project tools together in one place."
+        tag: Features
+        title: 'Everything you need to'
+        title_highlight: create
+        description: 'From writing scripts to team management, ScénArt brings all your narrative project tools together in one place.'
 
     scenariste:
-        tag: "Screenwriter"
-        title: "Screenplay editor"
-        desc: "Write your scripts in a dedicated Fountain editor with scene navigation, syntax highlighting and real-time saving."
-        feat1_title: "Fountain format"
-        feat1_desc: "Scenes, dialogue, action lines, parentheticals"
-        feat2_title: "Act navigation"
-        feat2_desc: "Structured sidebar, direct access to each scene"
-        feat3_title: "PDF export"
-        feat3_desc: "Professional layout ready for printing"
+        tag: Screenwriter
+        title: 'Manuscript editor'
+        desc: 'Write directly on a Fountain-formatted script page: every block formats itself and your work is saved automatically.'
+        feat1_title: 'Guided Fountain blocks'
+        feat1_desc: 'Scene heading, action, character, dialogue, parenthetical, transition — Tab to move to the next'
+        feat2_title: '@ mentions'
+        feat2_desc: 'Type @ for a character or # for a location: the name is inserted and its sheet is linked'
+        feat3_title: 'Structure that fits your project'
+        feat3_desc: 'Acts and scenes for a film, seasons and episodes for a series'
+        feat4_title: 'Export & reading mode'
+        feat4_desc: 'Fountain and PDF export, full-screen reading, word count and estimated runtime'
+
+    univers:
+        tag: World
+        title: 'Build your world'
+        desc: 'Characters, locations and events: your whole story bible in one place, linked to your manuscript.'
+        feat1_title: 'Character sheets'
+        feat1_desc: 'Role, biography, traits and relationships between characters'
+        feat2_title: 'Location sheets'
+        feat2_desc: 'Interiors, exteriors, imaginary worlds — with description and atmosphere'
+        feat3_title: 'Story timeline'
+        feat3_desc: 'Your world’s events sorted by year, linked to a location or a scene'
 
     exploration:
-        tag: "Exploration"
-        title: "Your projects, your cards"
-        desc: "Each project has character sheets, locations and scripts. Browse community creations or manage your own."
-        feat1_title: "Character sheets"
-        feat1_desc: "Role, backstory, traits and relationships"
-        feat2_title: "Location sheets"
-        feat2_desc: "Interior, exterior, fantasy, futuristic"
-        feat3_title: "List or grid view"
-        feat3_desc: "Filters, sorting and instant search"
+        tag: 'Projects & sharing'
+        title: 'Your projects at a glance'
+        desc: 'Track every project’s progress from your dashboard, then publish it to share it with the community.'
+        feat1_title: Dashboard
+        feat1_desc: 'Type, genres, task progress and visibility of each project'
+        feat2_title: 'Public page'
+        feat2_desc: 'Read published episodes, with reader comments and votes'
+        feat3_title: Explore
+        feat3_desc: 'Find projects by type, genre or author'
 
     collaboration:
-        tag: "Collaboration"
-        title: "Invite your team"
-        desc: "Manage each collaborator's permissions and work together on the same project with distinct roles."
-        feat1_title: "Invite by username"
-        feat1_desc: "Search for a member by their username"
-        feat2_title: "Granular roles"
-        feat2_desc: "Owner · Moderator · Contributor · Reader"
-        feat3_title: "Activity log"
-        feat3_desc: "Complete history of all team actions"
-        modal_title: "Invite a collaborator"
-        modal_username_label: "Username"
-        modal_role_label: "Role in project"
-        modal_role_reader: "Reader"
-        modal_role_contributor: "Contributor"
-        modal_role_moderator: "Moderator"
-        modal_cancel: "Cancel"
-        modal_submit: "Send invitation"
+        tag: Collaboration
+        title: 'Invite your team'
+        desc: 'Add collaborators to your project and choose exactly what each of them can do.'
+        feat1_title: 'Invite by username'
+        feat1_desc: 'The invitee gets a notification and accepts or declines'
+        feat2_title: 'Three roles'
+        feat2_desc: 'Reader · Contributor · Moderator, each with its own permissions'
+        feat3_title: 'Activity log'
+        feat3_desc: 'History of every team action on the project'
+        invite_title: 'Invite a collaborator'
+        username_label: Username
+        role_label: Role
+        role_contributor_desc: 'Contributor — writes content'
+        invite_btn: Invite
+        members_title: 'Current members'
+        since: since
+        pending: Pending
+        role_reader: Reader
+        role_contributor: Contributor
+        role_moderator: Moderator
 
     organisation:
-        tag: "Organisation"
-        title: "Tasks & notes"
-        desc: "Plan your work with an integrated task board and collaborative notes linked to your project."
-        feat1_title: "Task board"
-        feat1_desc: "To do · In progress · Review · Done"
-        feat2_title: "Collaborative notes"
-        feat2_desc: "References, ideas, scene annotations"
-        feat3_title: "Team assignment"
-        feat3_desc: "Each task assigned to a team member"
+        tag: Organisation
+        title: 'Tasks & notes'
+        desc: 'Plan your writing with tracked tasks and keep your ideas as notes, linked to your project.'
+        feat1_title: 'Task tracking'
+        feat1_desc: 'To do · In progress · In review · Done, with priorities and overdue alerts'
+        feat2_title: 'Linked notes'
+        feat2_desc: 'Attached to the project, a scene, a character or a location'
+        feat3_title: 'Team assignment'
+        feat3_desc: 'Each task assigned to a project member'
 
     demo:
-        saved: "Saved"
-        paper_url: "workshop / once-upon-a-time / act-i / the-beginning"
-        paper_title: "— once upon a time on scénart —"
-        paper_scene1: "EXT. CLUTTERED OFFICE — NIGHT"
-        paper_action1: "A screenwriter stares at 47 Word files. Each one is called \"FINAL_TRULY_FINAL_v3_good.docx\"."
-        paper_char1: "THE SCREENWRITER"
-        paper_paren1: "(desperate)"
-        paper_dial1: "My Act II... it was here yesterday."
-        paper_scene2: "ON HIS SCREEN — ScénArt finally opens."
-        paper_char2: "THE SCREENWRITER"
-        paper_paren2: "(tears in eyes)"
-        paper_dial2: "Once upon a time... the end of chaos."
-        paper_scene3: "INT. SCÉNART — CONTINUOUS"
-        paper_action3: "He creates his first project. His scenes organise themselves. His characters come to life. Somewhere, a USB key weeps."
-        paper_char3: "THE SCREENWRITER"
-        paper_paren3: "(finally exhaling)"
-        paper_dial3: "And they lived happily ever after, with many scenes."
-        type_film: "Film"
-        type_serie: "Series"
-        type_jv: "Video game"
-        status_complete: "Finished"
-        status_ongoing: "In progress"
-        card_follow: "Follow →"
-        card_read: "Read →"
-        role_owner: "Owner"
-        elements: "elements"
-        visibility_public: "Public"
-        visibility_private: "Private"
-        tasks: "tasks"
-        up_to_date: "Up to date"
-        cta_edit: "Edit →"
-        task_url: "workshop / snatch / tasks"
-        stat_overdue: "Overdue"
-        stat_progress: "In progress"
-        stat_done: "Done"
-        task_todo: "To do"
-        task_in_progress: "In progress"
-        task_done: "Done"
-        priority_high: "High"
-        priority_normal: "Normal"
-        priority_low: "Low"
+        saved: Saved
+        type_serie: Series
+        status_ongoing: 'In progress'
+        role_owner: Owner
+        elements: elements
+        visibility_public: Public
+        tasks: tasks
+        up_to_date: 'Up to date'
+        cta_edit: 'Edit →'
+        paper_scene1: 'EXT. CLUTTERED OFFICE — NIGHT'
+        paper_action1: 'A screenwriter stares at 47 Word files. Each one is called "FINAL_TRULY_FINAL_v3_good.docx".'
+        paper_char1: 'THE SCREENWRITER'
+        paper_paren1: (desperate)
+        paper_dial1: 'My Act II... it was here yesterday.'
+        paper_scene2: 'ON HIS SCREEN — ScénArt finally opens.'
+        editor_url: 'workshop / once-upon-a-time / manuscript'
+        editor_crumb_parent: 'Act I'
+        editor_crumb_current: 'Scene 1 — The end of chaos'
+        editor_type: Scene
+        editor_reading: Reading
+        editor_group_set: Scene
+        editor_group_action: Action
+        editor_group_dialogue: Dialogue
+        block_action: Action
+        block_character: Character
+        block_dialogue: Dialogue
+        block_paren: Parenthetical
+        mention_prefix: 'He creates his first project and adds'
+        mention_typed: 'THE SC'
+        mention_char: Character
+        mention_hint: '↑↓ navigate · ↵ confirm · Esc close'
+        words: words
+        editor_tab_hint: 'Tab · next block'
+        timeline_url: 'workshop / eclipse / timeline'
+        timeline_title: 'Story timeline'
+        timeline_sub: '3 events · from Year -30 to Year 0'
+        timeline_new: 'New event'
+        year: Year
+        event: event
+        events: events
+        event1_title: 'The lake incident'
+        event1_desc: 'The secret no one speaks of.'
+        event1_place: 'Beech Lake'
+        event2_title: 'Father Moreau dies'
+        event2_desc: 'Claire hears the news from Édouard.'
+        event2_place: 'The Moreau House'
+        event3_title: 'Reading of the will'
+        event3_desc: 'An unexpected heir appears.'
+        event3_place: 'Bergeron Office'
+        members_url: 'workshop / eclipse / settings / collaborators'
+        task_url: 'workshop / eclipse / tasks'
+        stat_overdue: Overdue
+        stat_urgent: Urgent
+        stat_done: Done
+        filter_all: All
+        task_todo: 'To do'
+        task_in_progress: 'In progress'
+        task_review: 'In review'
+        task_done: Done
+        col_task: Task
+        col_status: Status
+        col_priority: Priority
+        col_assignee: Assignee
+        task1: 'Write Ep. 2 dialogue — the will'
+        task2: 'Location sheet — Bergeron Office'
+        task3: 'Review the season 1 timeline'
+        task4: 'General synopsis v2'
+        priority_urgent: Urgent
+        priority_high: High
+        priority_normal: Normal
+        priority_low: Low
 
     cta:
-        title: "Ready to"
-        title_highlight: "create"
-        title_suffix: " ?"
-        desc: "Join ScénArt for free and start your first narrative project today."
-        btn_start: "Get started for free"
-        btn_pricing: "See pricing"
+        title: 'Ready to'
+        title_highlight: create
+        title_suffix: ' ?'
+        desc: 'Join ScénArt for free and start your first narrative project today.'
+        btn_start: 'Get started for free'
+        btn_pricing: 'See pricing'
 
 # ===== PRICING PAGE =====
 pricing:
@@ -368,6 +416,9 @@ contact:
 
         privacy: "I agree that my data will be used to process my request in accordance with the"
         privacy_link: "privacy policy"
+        identity:
+            sending_as: "You are writing as"
+            edit: "Edit my profile"
         submit: "Send message"
 
         errors:

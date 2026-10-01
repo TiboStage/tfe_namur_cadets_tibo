@@ -175,16 +175,16 @@ class Character
 
     // ─── Setters compat Symfony Forms ────────────────────────────────────────
 
-    public function setName(string $v): static { $this->name = trim($v); return $this; }
-    public function setFirstName(string $v): static { $this->firstName = trim($v); return $this; }
-    public function setLastName(string $v): static { $this->lastName = trim($v); return $this; }
-    public function setNickname(string $v): static { $this->nickname = trim($v); return $this; }
-    public function setDescription(string $v): static { $this->description = trim($v); return $this; }
-    public function setRole(string $v): static { $this->role = $v; return $this; }
-    public function setBiography(string $v): static { $this->biography = trim($v); return $this; }
-    public function setGoals(string $v): static { $this->goals = trim($v); return $this; }
-    public function setMotivations(string $v): static { $this->motivations = trim($v); return $this; }
-    public function setCharacterArc(string $v): static { $this->characterArc = trim($v); return $this; }
+    public function setName(?string $v): static { $this->name = trim((string) $v); return $this; }
+    public function setFirstName(?string $v): static { $this->firstName = trim((string) $v); return $this; }
+    public function setLastName(?string $v): static { $this->lastName = trim((string) $v); return $this; }
+    public function setNickname(?string $v): static { $this->nickname = trim((string) $v); return $this; }
+    public function setDescription(?string $v): static { $this->description = trim((string) $v); return $this; }
+    public function setRole(?string $v): static { $this->role = $v ?? ''; return $this; }
+    public function setBiography(?string $v): static { $this->biography = trim((string) $v); return $this; }
+    public function setGoals(?string $v): static { $this->goals = trim((string) $v); return $this; }
+    public function setMotivations(?string $v): static { $this->motivations = trim((string) $v); return $this; }
+    public function setCharacterArc(?string $v): static { $this->characterArc = trim((string) $v); return $this; }
     public function setAliases(array $v): static { $this->aliases = $v; return $this; }
 
     // ─── Getters compat Twig/code existant ───────────────────────────────────

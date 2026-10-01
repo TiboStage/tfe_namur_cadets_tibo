@@ -1,0 +1,4 @@
+symfonycasts_verify_email:
+    # Durée de validité du lien de confirmation envoyé à l'inscription (secondes) — 24h.
+    # Plus long que le lien de reset : l'utilisateur ne lit pas forcément ses mails tout de suite.
+    lifetime: 86400

@@ -38,7 +38,6 @@
                     type="button">
                 {% include 'workshop/_partials/_project_icon.html.twig' with {project: project, size: 'xs'} %}
                 <span class="project-bar__project-name" title="{{ project.title }}">{{ project.title }}</span>
-                {{ ux_icon('lucide:chevron-down', {class: 'icon-xs project-bar__chevron'}) }}
             </button>
 
             <div class="project-bar__switcher-menu" data-dropdown-target="menu">

@@ -1,1 +1,3 @@
 captcha.invalid: "Vérification anti-robot échouée. Veuillez réessayer."
+account.unverified: "Votre adresse email n'est pas encore confirmée. Cliquez sur le lien reçu par mail pour activer votre compte."
+account.banned: "Ce compte a été suspendu. Contactez l'équipe Scénart si vous pensez qu'il s'agit d'une erreur."

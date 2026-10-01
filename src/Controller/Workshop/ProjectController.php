@@ -184,8 +184,22 @@ class ProjectController extends AbstractController
     // FUNNEL CRÉATION — ÉTAPE 1 : CHOIX DU TYPE
     // ═══════════════════════════════════════════════════════════════
 
+    /** Limite de projets pour un compte gratuit (cf. mémoire — modèle freemium). */
+    private const MAX_PROJECTS_FREE = 5;
+
     public function newStep1(Request $request): Response
     {
+        $ownedCount = $this->projectRepository->count(['createdBy' => $this->getUser()]);
+        if ($ownedCount >= self::MAX_PROJECTS_FREE) {
+            $this->addFlash('warning', $this->translator->trans('project.limit_reached', [
+                'limit' => self::MAX_PROJECTS_FREE,
+            ], 'flash_messages'));
+
+            return $this->redirectToRoute('app_project_index', [
+                '_locale' => $request->getLocale(),
+            ]);
+        }
+
         if ($request->isMethod('POST')) {
             $type = $request->request->getString('project_type');
 

@@ -79,6 +79,7 @@
                                 action="{{ path('modo_comment_moderate', {id: comment.id, _locale: app.request.locale}) }}"
                                 method="post"
                                 class="mod-actions-cell"
+                                data-action="submit->confirm-modal#intercept"
                             >
                                 <input type="hidden" name="_token" value="{{ csrf_token('comment_moderate_' ~ comment.id) }}">
                                 <input
@@ -90,11 +91,11 @@
                                 >
 
                                 {% if comment.status == 'visible' %}
-                                    <button type="submit" name="action" value="hide" class="btn-table text-xs">
+                                    <button type="submit" name="action" value="hide" class="btn-table text-xs" data-confirm-skip>
                                         Masquer
                                     </button>
                                 {% else %}
-                                    <button type="submit" name="action" value="show" class="btn-table text-xs">
+                                    <button type="submit" name="action" value="show" class="btn-table text-xs" data-confirm-skip>
                                         Remettre
                                     </button>
                                 {% endif %}
@@ -102,7 +103,10 @@
                                 <button
                                     type="submit" name="action" value="delete"
                                     class="btn-table btn-table--danger text-xs"
-                                    onclick="return confirm('Supprimer définitivement ce commentaire ?')"
+                                    data-confirm-title="Supprimer ce commentaire ?"
+                                    data-confirm-message="Le commentaire sera supprimé définitivement. Pour le retirer temporairement, utilisez plutôt « Masquer »."
+                                    data-confirm-label="Supprimer"
+                                    data-confirm-tone="danger"
                                 >
                                     Supprimer
                                 </button>

@@ -6,158 +6,241 @@
 
 {% block admin_content %}
 
-    <div class="admin-user-profile">
+{# Rôle courant (le plus élevé) — un seul rôle, en cascade #}
+{% set current_role = 'default' %}
+{% if 'ROLE_SUPER_ADMIN' in user.roles %}{% set current_role = 'ROLE_SUPER_ADMIN' %}
+{% elseif 'ROLE_ADMIN' in user.roles %}{% set current_role = 'ROLE_ADMIN' %}
+{% elseif 'ROLE_MODO' in user.roles %}{% set current_role = 'ROLE_MODO' %}
+{% endif %}
 
-        {# ── En-tête ───────────────────────────────────────────────── #}
-        <div class="aup-header">
-            <div class="aup-avatar">
-                {% if user.avatarFilename %}
-                    <img src="{{ asset('uploads/avatars/' ~ user.avatarFilename) }}" alt="{{ user.username }}" width="64" height="64" loading="lazy">
-                {% else %}
-                    <span class="aup-avatar-placeholder">{{ user.username|first|upper }}</span>
-                {% endif %}
-            </div>
-            <div class="aup-identity">
-                <h2>{{ user.firstName }} {{ user.lastName }}
+{% set role_meta = {
+    'default':          {label: 'users.show.role_default', icon: 'lucide:user',         desc: 'Accès à l’atelier et à ses propres projets.'},
+    'ROLE_MODO':        {label: 'users.show.role_modo',    icon: 'lucide:shield-check', desc: 'Traite les signalements et modère les commentaires.'},
+    'ROLE_ADMIN':       {label: 'users.show.role_admin',   icon: 'lucide:shield',       desc: 'Gère les utilisateurs, projets, genres et documentation.'},
+    'ROLE_SUPER_ADMIN': {label: 'users.show.role_super',   icon: 'lucide:crown',        desc: 'Tous les droits, y compris la gestion des administrateurs.'},
+} %}
+
+{% set role_options = ['default', 'ROLE_MODO'] %}
+{% if is_granted('ROLE_SUPER_ADMIN') %}
+    {% set role_options = role_options|merge(['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']) %}
+{% endif %}
+
+{# Un admin non-super ne peut pas gérer un compte déjà Admin/Super Admin #}
+{% set can_manage = is_granted('ROLE_SUPER_ADMIN') or current_role in ['default', 'ROLE_MODO'] %}
+{% set is_self = user == app.user %}
+{% set public_count = projects|filter(p => p.visibility == 'public')|length %}
+
+<div class="admin-form-header">
+    <a href="{{ path('admin_users', {_locale: app.request.locale}) }}" class="admin-back-link">
+        ← Retour aux utilisateurs
+    </a>
+</div>
+
+<div class="aup">
+
+    {# ── Identité ──────────────────────────────────────────────────── #}
+    <div class="admin-card aup-identity-card">
+        <div class="aup-identity-card__main">
+            {{ include('_partials/_user_avatar.html.twig', {user: user, size: '2xl'}) }}
+            <div class="aup-identity-card__text">
+                <div class="aup-identity-card__name">
+                    <h2>{{ (user.firstName ~ ' ' ~ user.lastName)|trim ?: user.username }}</h2>
+                    <span class="admin-badge {{ current_role == 'default' ? 'admin-badge--neutral' : 'admin-badge--role' }}">
+                        {{ role_meta[current_role].label|trans({}, 'admin') }}
+                    </span>
                     {% if user.isBanned %}
-                        <span class="status-badge status-badge--banned">BANNI</span>
+                        <span class="admin-badge admin-badge--danger">Banni</span>
+                    {% else %}
+                        <span class="admin-badge admin-badge--success">Actif</span>
                     {% endif %}
-                </h2>
-                <p class="text-muted">@{{ user.username }} · {{ user.email }}</p>
-                <p class="text-muted">Inscrit le {{ user.createdAt|date('d/m/Y à H:i') }}</p>
-            </div>
-            <div class="aup-actions">
-                <a href="{{ path('admin_users', {_locale: app.request.locale}) }}" class="btn-table">← Retour</a>
+                </div>
+                <ul class="aup-meta">
+                    <li>{{ ux_icon('lucide:at-sign', {class: 'icon-xs'}) }} {{ user.username }}</li>
+                    <li>{{ ux_icon('lucide:mail', {class: 'icon-xs'}) }} {{ user.email }}</li>
+                    <li>{{ ux_icon('lucide:calendar', {class: 'icon-xs'}) }} Inscrit le {{ user.createdAt|date('d/m/Y à H:i') }}</li>
+                </ul>
             </div>
         </div>
 
-        <div class="aup-grid">
+        <div class="aup-stats">
+            <div class="aup-stat">
+                <strong>{{ projects|length }}</strong>
+                <span>Projet{{ projects|length > 1 ? 's' }}</span>
+            </div>
+            <div class="aup-stat">
+                <strong>{{ public_count }}</strong>
+                <span>En ligne</span>
+            </div>
+        </div>
+    </div>
 
-            {# ── Rôles ─────────────────────────────────────────────── #}
-            <div class="panel-box">
-                <h3>{{ 'users.show.roles_title'|trans({}, 'admin') }}</h3>
+    <div class="aup-grid">
+
+        {# ── Rôle ─────────────────────────────────────────────────── #}
+        <div class="admin-card">
+            <div class="admin-card__header">{{ 'users.show.roles_title'|trans({}, 'admin') }}</div>
+            <div class="admin-card__body">
                 <form method="post"
                       action="{{ path('admin_user_roles', {id: user.id, _locale: app.request.locale}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('admin_roles_' ~ user.id) }}">
 
-                    {# Rôle courant (le plus élevé) — un seul rôle, en cascade #}
-                    {% set current_role = 'default' %}
-                    {% if 'ROLE_SUPER_ADMIN' in user.roles %}{% set current_role = 'ROLE_SUPER_ADMIN' %}
-                    {% elseif 'ROLE_ADMIN' in user.roles %}{% set current_role = 'ROLE_ADMIN' %}
-                    {% elseif 'ROLE_MODO' in user.roles %}{% set current_role = 'ROLE_MODO' %}
-                    {% endif %}
-
-                    {% set role_options = [
-                        {value: 'default',          label: 'users.show.role_default'},
-                        {value: 'ROLE_MODO',        label: 'users.show.role_modo'},
-                        {value: 'ROLE_ADMIN',       label: 'users.show.role_admin'},
-                        {value: 'ROLE_SUPER_ADMIN', label: 'users.show.role_super'},
-                    ] %}
-
-                    <div class="roles-list">
-                        {% for opt in role_options %}
-                            <label class="role-item {{ current_role == opt.value ? 'role-item--selected' : '' }}">
-                                <input type="radio" name="role" value="{{ opt.value }}"
-                                       {{ current_role == opt.value ? 'checked' : '' }}
-                                       {{ user == app.user ? 'disabled' : '' }}>
-                                <span>{{ opt.label|trans({}, 'admin') }}</span>
+                    <div class="aup-roles">
+                        {% for value in role_options %}
+                            {% set meta = role_meta[value] %}
+                            <label class="aup-role">
+                                <input type="radio" name="role" value="{{ value }}"
+                                       {{ current_role == value ? 'checked' : '' }}
+                                       {{ (is_self or not can_manage) ? 'disabled' : '' }}>
+                                <span class="aup-role__icon">{{ ux_icon(meta.icon, {class: 'icon-sm'}) }}</span>
+                                <span class="aup-role__text">
+                                    <strong>{{ meta.label|trans({}, 'admin') }}</strong>
+                                    <span>{{ meta.desc }}</span>
+                                </span>
+                                <span class="aup-role__check">{{ ux_icon('lucide:check', {class: 'icon-xs'}) }}</span>
                             </label>
                         {% endfor %}
                     </div>
 
-                    {% if user != app.user %}
-                        <button type="submit" class="btn-table mt-4">{{ 'users.show.save_roles'|trans({}, 'admin') }}</button>
+                    {% if not can_manage %}
+                        <p class="admin-form-hint">{{ 'users.show.elevated_roles_locked'|trans({}, 'admin') }}</p>
+                    {% elseif is_self %}
+                        <p class="admin-form-hint">{{ 'users.show.own_roles_locked'|trans({}, 'admin') }}</p>
                     {% else %}
-                        <p class="text-muted text-sm mt-2">{{ 'users.show.own_roles_locked'|trans({}, 'admin') }}</p>
+                        <div class="aup-card-actions">
+                            <button type="submit" class="btn-sm btn-sm--outline">
+                                {{ ux_icon('lucide:save', {class: 'icon-xs'}) }}
+                                {{ 'users.show.save_roles'|trans({}, 'admin') }}
+                            </button>
+                        </div>
                     {% endif %}
                 </form>
             </div>
+        </div>
 
-            {# ── Ban / déban ───────────────────────────────────────── #}
-            <div class="panel-box">
-                <h3>{{ 'users.show.moderation_title'|trans({}, 'admin') }}</h3>
+        {# ── Modération du compte ─────────────────────────────────── #}
+        <div class="admin-card">
+            <div class="admin-card__header">{{ 'users.show.moderation_title'|trans({}, 'admin') }}</div>
+            <div class="admin-card__body">
+                <div class="aup-status {{ user.isBanned ? 'aup-status--banned' : 'aup-status--active' }}">
+                    <span class="aup-status__icon">
+                        {{ ux_icon(user.isBanned ? 'lucide:ban' : 'lucide:circle-check', {class: 'icon-sm'}) }}
+                    </span>
+                    <div>
+                        <strong>{{ user.isBanned ? 'Compte banni' : 'Compte actif' }}</strong>
+                        <span>
+                            {% if user.isBanned %}
+                                L'utilisateur ne peut plus se connecter.
+                            {% else %}
+                                Le bannir empêchera toute connexion.
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
 
-                <p class="text-muted mb-5 text-base">
-                    {% if user.isBanned %}
-                        Ce compte est actuellement <strong>banni</strong>. L'utilisateur ne peut plus se connecter.
-                    {% else %}
-                        Ce compte est actif. Le bannir empêchera toute connexion.
-                    {% endif %}
-                </p>
-
-                {% if user != app.user %}
+                {% if not is_self %}
                     <form method="post"
                           action="{{ path('admin_user_ban', {id: user.id, _locale: app.request.locale}) }}"
-                          onsubmit="return confirm('{% if user.isBanned %}Débannir cet utilisateur ?{% else %}Bannir cet utilisateur ? Il ne pourra plus se connecter.{% endif %}')">
+                          class="aup-card-actions"
+                          data-action="submit->confirm-modal#intercept"
+                          {% if user.isBanned %}
+                          data-confirm-title="Débannir {{ user.username }} ?"
+                          data-confirm-message="Le compte sera réactivé : {{ user.username }} pourra de nouveau se connecter à Scénart."
+                          data-confirm-label="Débannir"
+                          data-confirm-tone="success"
+                          {% else %}
+                          data-confirm-title="Bannir {{ user.username }} ?"
+                          data-confirm-message="Le compte sera suspendu immédiatement : {{ user.username }} ne pourra plus se connecter. Ses projets restent en place et l'action est réversible."
+                          data-confirm-label="Bannir l'utilisateur"
+                          data-confirm-tone="danger"
+                          {% endif %}>
                         <input type="hidden" name="_token" value="{{ csrf_token('admin_ban_' ~ user.id) }}">
-                        <button type="submit"
-                                class="btn-table {{ user.isBanned ? 'btn-table--success' : 'btn-table--danger' }}">
-                            {% if user.isBanned %}
-                                ✓ Débannir l'utilisateur
-                            {% else %}
-                                ✕ Bannir l'utilisateur
-                            {% endif %}
-                        </button>
+                        {% if user.isBanned %}
+                            <button type="submit" class="btn-sm btn-sm--success">
+                                {{ ux_icon('lucide:rotate-ccw', {class: 'icon-xs'}) }}
+                                Débannir l'utilisateur
+                            </button>
+                        {% else %}
+                            <button type="submit" class="btn-sm btn-sm--danger">
+                                {{ ux_icon('lucide:ban', {class: 'icon-xs'}) }}
+                                Bannir l'utilisateur
+                            </button>
+                        {% endif %}
                     </form>
                 {% else %}
-                    <p class="text-muted text-sm">Impossible d'agir sur votre propre compte.</p>
+                    <p class="admin-form-hint">Impossible d'agir sur votre propre compte.</p>
                 {% endif %}
             </div>
-
-            {# ── Projets ───────────────────────────────────────────── #}
-            <div class="panel-box col-full">
-                <div class="panel-header">
-                    <h3>{{ 'users.show.projects_title'|trans({'%username%': user.username, '%count%': projects|length}, 'admin') }}</h3>
-                </div>
-                <div class="table-wrapper">
-                    <table class="admin-table">
-                        <thead><tr>
-                            <th>Titre</th>
-                            <th>Type</th>
-                            <th>Visibilité</th>
-                            <th>Statut modération</th>
-                            <th>Signalements</th>
-                            <th>Créé le</th>
-                            <th></th>
-                        </tr></thead>
-                        <tbody>
-                        {% for project in projects %}
-                            <tr>
-                                <td><strong>{{ project.title }}</strong></td>
-                                <td class="text-muted">{{ project.projectType|upper }}</td>
-                                <td>
-                                    {% if project.visibility == 'public' %}
-                                        <span class="status-badge status-badge--active">En ligne</span>
-                                    {% elseif project.visibility == 'private' %}
-                                        <span class="status-badge status-badge--warning">Privé</span>
-                                    {% else %}
-                                        <span class="status-badge">Non publié</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span>
-                                </td>
-                                <td>
-                                    {% if project.reportCount > 0 %}
-                                        <span class="tag-reason">{{ project.reportCount }}</span>
-                                    {% else %}
-                                        <span class="text-muted">—</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-muted">{{ project.createdAt|date('d/m/Y') }}</td>
-                                <td>
-                                    <a href="{{ path('admin_project_show', {id: project.id, _locale: app.request.locale}) }}" class="btn-table">Voir</a>
-                                </td>
-                            </tr>
-                        {% else %}
-                            <tr><td colspan="7" class="text-muted td-compact">Cet utilisateur n'a aucun projet.</td></tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
         </div>
+
     </div>
+
+    {# ── Projets ───────────────────────────────────────────────────── #}
+    <div class="admin-card">
+        <div class="admin-card__header">
+            {{ 'users.show.projects_title'|trans({'%username%': user.username, '%count%': projects|length}, 'admin') }}
+        </div>
+
+        {% if projects is empty %}
+            <div class="aup-empty">
+                {{ ux_icon('lucide:folder-open', {class: 'icon-md'}) }}
+                <span>Cet utilisateur n'a aucun projet.</span>
+            </div>
+        {% else %}
+            <div class="table-wrapper">
+                <table class="admin-table">
+                    <thead><tr>
+                        <th>Titre</th>
+                        <th>Type</th>
+                        <th>Visibilité</th>
+                        <th>Modération</th>
+                        <th>Signalements</th>
+                        <th>Créé le</th>
+                        <th></th>
+                    </tr></thead>
+                    <tbody>
+                    {% set type_labels = {film: 'Film', serie: 'Série', jeu_video: 'Jeu vidéo', custom: 'Personnalisé'} %}
+                    {% for project in projects %}
+                        <tr>
+                            <td><strong>{{ project.title }}</strong></td>
+                            <td>
+                                <span class="admin-badge admin-badge--type-{{ project.projectType }}">
+                                    {{ type_labels[project.projectType] ?? project.projectType }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if project.visibility == 'public' %}
+                                    <span class="admin-badge admin-badge--success">En ligne</span>
+                                {% elseif project.visibility == 'private' %}
+                                    <span class="admin-badge admin-badge--warning">Privé</span>
+                                {% else %}
+                                    <span class="admin-badge admin-badge--muted">Non publié</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="mod-badge mod-badge--{{ project.moderationStatus }}">{{ project.moderationStatus }}</span>
+                            </td>
+                            <td>
+                                {% if project.reportCount > 0 %}
+                                    <span class="tag-reason">{{ project.reportCount }}</span>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-muted">{{ project.createdAt|date('d/m/Y') }}</td>
+                            <td>
+                                <div class="admin-table__actions">
+                                    <a href="{{ path('admin_project_show', {id: project.id, _locale: app.request.locale}) }}"
+                                       class="btn-sm btn-sm--outline">Voir</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
 
 {% endblock %}

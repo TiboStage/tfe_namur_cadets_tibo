@@ -7,9 +7,7 @@
 
         {# ── Gauche : logo + liens nav (desktop) ─────────────────── #}
         <div class="nav-left">
-            <a href="{{ path('app_home') }}" class="topbar-logo">
-                <img src="{{ asset('images/favicons/favicon_workshop.png') }}" alt="Scénart" width="28">
-            </a>
+            <a href="{{ path('app_home') }}" class="logo-text logo-text--sm">SCÉN<span class="highlight">ART</span></a>
 
             <div class="subnav-links">
                 <a href="{{ path('app_workshop_dashboard') }}"
@@ -45,9 +43,9 @@
         {# ── Burger (mobile uniquement) ──────────────────────────── #}
         <button class="topbar-burger"
                 type="button"
-                aria-label="{{ 'navbar.actions.open_menu'|trans }}"
+                aria-label="{{ 'navbar.actions.open_menu'|trans({}, 'website') }}"
                 data-action="mobile-nav#toggle">
-            {{ ux_icon('lucide:panel-left-open', {class: 'icon-base'}) }}
+            {{ ux_icon('lucide:menu', {class: 'icon-base'}) }}
         </button>
 
         {# ── Droite : notifs + user ───────────────────────────────── #}
@@ -111,16 +109,28 @@
     {# ── Drawer mobile (pages sans sidebar projet) ────────────── #}
     <div class="mobile-nav-drawer">
         <div class="mobile-nav-drawer__header">
-            <a href="{{ path('app_home') }}" class="topbar-logo">
-                <img src="{{ asset('images/favicons/favicon_workshop.png') }}" alt="Scénart" width="32">
+            <a href="{{ path('app_home') }}">
+                <img src="{{ asset('images/favicons/favicon.png') }}" alt="Scénart" width="32">
             </a>
             <button class="mobile-nav-drawer__close"
                     type="button"
                     data-action="mobile-nav#close"
                     aria-label="Fermer">
-                {{ ux_icon('lucide:panel-left-close', {class: 'icon-base'}) }}
+                {{ ux_icon('lucide:x', {class: 'icon-base'}) }}
             </button>
         </div>
+
+        {% if app.user %}
+        <div class="mobile-nav-drawer__top-actions">
+            {{ include('website/_partials/_navbar_lang.html.twig') }}
+
+            <a href="{{ path('app_profile') }}" class="nav-account-icon" aria-label="{{ 'navbar.actions.profile'|trans }}">
+                {{ ux_icon('lucide:settings', {class: 'icon-base'}) }}
+            </a>
+
+            <twig:UserProfile />
+        </div>
+        {% endif %}
 
         <nav class="mobile-nav-drawer__links">
             <a href="{{ path('app_home') }}" class="mobile-nav-drawer__back">

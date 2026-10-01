@@ -34,6 +34,8 @@ navbar:
         workshop: "Atelier"
         login: "S'identifier"
         register: "Inscription"
+        change_language: "Changer de langue"
+        open_menu: "Ouvrir le menu"
 
 # ===== FOOTER =====
 
@@ -157,113 +159,159 @@ home:
 # ===== PAGE EXEMPLES =====
 examples:
     header:
-        tag: "Fonctionnalités"
-        title: "Tout ce dont vous avez besoin pour"
-        title_highlight: "créer"
+        tag: Fonctionnalités
+        title: 'Tout ce dont vous avez besoin pour'
+        title_highlight: créer
         description: "De l'écriture du script à la gestion d'équipe, ScénArt centralise tous les outils de votre projet narratif."
 
     scenariste:
-        tag: "Scénariste"
-        title: "Éditeur de scénario"
-        desc: "Rédigez vos scripts dans un éditeur dédié au format Fountain avec navigation par scènes, coloration syntaxique et sauvegarde en temps réel."
-        feat1_title: "Format Fountain"
-        feat1_desc: "Scènes, dialogues, didascalies, parenthèses"
-        feat2_title: "Navigation par actes"
-        feat2_desc: "Sidebar structurée, accès direct à chaque scène"
-        feat3_title: "Export PDF"
-        feat3_desc: "Mise en page professionnelle prête à l'impression"
+        tag: Scénariste
+        title: 'Éditeur de manuscrit'
+        desc: 'Écrivez directement sur une feuille de script au format Fountain : chaque bloc se met en forme tout seul et votre travail est sauvegardé automatiquement.'
+        feat1_title: 'Blocs Fountain guidés'
+        feat1_desc: 'Décor, action, personnage, dialogue, didascalie, transition — Tab pour passer au suivant'
+        feat2_title: 'Mentions @'
+        feat2_desc: 'Tapez @ pour un personnage ou # pour un lieu : le nom s''insère et sa fiche est reliée'
+        feat3_title: 'Structure adaptée au projet'
+        feat3_desc: 'Actes et scènes pour un film, saisons et épisodes pour une série'
+        feat4_title: 'Export & mode lecture'
+        feat4_desc: 'Export Fountain et PDF, lecture plein écran, nombre de mots et durée estimée'
+
+    univers:
+        tag: Univers
+        title: 'Construisez votre monde'
+        desc: 'Personnages, lieux et événements : toute la bible de votre histoire au même endroit, reliée à votre manuscrit.'
+        feat1_title: 'Fiches personnages'
+        feat1_desc: 'Rôle, biographie, traits et relations entre personnages'
+        feat2_title: 'Fiches de lieux'
+        feat2_desc: 'Intérieurs, extérieurs, mondes imaginaires — avec description et ambiance'
+        feat3_title: 'Chronologie narrative'
+        feat3_desc: 'Les événements de votre univers classés par année, liés à un lieu ou une scène'
 
     exploration:
-        tag: "Exploration"
-        title: "Vos projets, vos fiches"
-        desc: "Chaque projet dispose de fiches personnages, lieux et scénarios. Parcourez les créations de la communauté ou gérez les vôtres."
-        feat1_title: "Fiches personnages"
-        feat1_desc: "Rôle, backstory, traits et relations"
-        feat2_title: "Fiches de lieux"
-        feat2_desc: "Intérieur, extérieur, fantastique, futuriste"
-        feat3_title: "Vue liste ou grille"
-        feat3_desc: "Filtres, tri et recherche instantanée"
+        tag: 'Projets & partage'
+        title: 'Vos projets, en un coup d’œil'
+        desc: "Suivez l'avancement de chaque projet depuis votre tableau de bord, puis publiez-le pour le partager avec la communauté."
+        feat1_title: 'Tableau de bord'
+        feat1_desc: 'Type, genres, progression des tâches et visibilité de chaque projet'
+        feat2_title: 'Page publique'
+        feat2_desc: 'Lecture des épisodes publiés, commentaires et votes des lecteurs'
+        feat3_title: Exploration
+        feat3_desc: 'Recherchez des projets par type, genre ou auteur'
 
     collaboration:
-        tag: "Collaboration"
-        title: "Invitez votre équipe"
-        desc: "Gérez les droits de chaque collaborateur et travaillez ensemble sur le même projet avec des rôles distincts."
-        feat1_title: "Invitation par pseudo"
-        feat1_desc: "Recherchez un membre par son nom d'utilisateur"
-        feat2_title: "Rôles granulaires"
-        feat2_desc: "Propriétaire · Modérateur · Contributeur · Lecteur"
+        tag: Collaboration
+        title: 'Invitez votre équipe'
+        desc: 'Ajoutez des collaborateurs à votre projet et choisissez précisément ce que chacun peut faire.'
+        feat1_title: 'Invitation par pseudo'
+        feat1_desc: "L'invité reçoit une notification et accepte ou refuse"
+        feat2_title: 'Trois rôles'
+        feat2_desc: 'Lecteur · Contributeur · Modérateur, chacun avec ses droits'
         feat3_title: "Journal d'activité"
-        feat3_desc: "Historique complet de toutes les actions d'équipe"
-        modal_title: "Inviter un collaborateur"
-        modal_username_label: "Nom d'utilisateur"
-        modal_role_label: "Rôle dans le projet"
-        modal_role_reader: "Lecteur"
-        modal_role_contributor: "Contributeur"
-        modal_role_moderator: "Modérateur"
-        modal_cancel: "Annuler"
-        modal_submit: "Envoyer l'invitation"
+        feat3_desc: "Historique de toutes les actions de l'équipe sur le projet"
+        invite_title: 'Inviter un collaborateur'
+        username_label: "Nom d'utilisateur"
+        role_label: Rôle
+        role_contributor_desc: 'Contributeur — écriture du contenu'
+        invite_btn: Inviter
+        members_title: 'Membres actuels'
+        since: depuis
+        pending: 'En attente'
+        role_reader: Lecteur
+        role_contributor: Contributeur
+        role_moderator: Modérateur
 
     organisation:
-        tag: "Organisation"
-        title: "Tâches & notes"
-        desc: "Planifiez votre travail avec un tableau de tâches et des notes collaboratives liées à votre projet."
-        feat1_title: "Tableau de tâches"
-        feat1_desc: "À faire · En cours · Révision · Terminé"
-        feat2_title: "Notes collaboratives"
-        feat2_desc: "Références, idées, annotations de scènes"
+        tag: Organisation
+        title: 'Tâches & notes'
+        desc: "Planifiez l'écriture avec des tâches suivies et gardez vos idées sous forme de notes, liées à votre projet."
+        feat1_title: 'Suivi des tâches'
+        feat1_desc: 'À faire · En cours · En révision · Terminé, avec priorités et alertes de retard'
+        feat2_title: 'Notes liées'
+        feat2_desc: 'Rattachées au projet, à une scène, un personnage ou un lieu'
         feat3_title: "Assignation d'équipe"
-        feat3_desc: "Chaque tâche attribuée à un membre"
+        feat3_desc: 'Chaque tâche attribuée à un membre du projet'
 
     demo:
-        saved: "Sauvegardé"
-        paper_url: "atelier / il-etait-une-fois / acte-i / le-debut"
-        paper_title: "— il était une fois sur scénart —"
-        paper_scene1: "EXT. BUREAU ENCOMBRÉ — NUIT"
+        saved: Sauvegardé
+        type_serie: Série
+        status_ongoing: 'En cours'
+        role_owner: Propriétaire
+        elements: éléments
+        visibility_public: Public
+        tasks: tâches
+        up_to_date: 'À jour'
+        cta_edit: 'Éditer →'
+        paper_scene1: 'EXT. BUREAU ENCOMBRÉ — NUIT'
         paper_action1: "Un scénariste contemple ses 47 fichiers Word. Chacun s'appelle « FINAL_VRAIMENT_FINAL_v3_bon.docx »."
-        paper_char1: "LE SCÉNARISTE"
-        paper_paren1: "(désespéré)"
-        paper_dial1: "Mon Acte II... il était là hier pourtant."
+        paper_char1: 'LE SCÉNARISTE'
+        paper_paren1: (désespéré)
+        paper_dial1: 'Mon Acte II... il était là hier pourtant.'
         paper_scene2: "SUR SON ÉCRAN — ScénArt s'ouvre enfin."
-        paper_char2: "LE SCÉNARISTE"
-        paper_paren2: "(les larmes aux yeux)"
-        paper_dial2: "Il était une fois... la fin du chaos."
-        paper_scene3: "INT. SCÉNART — CONTINU"
-        paper_action3: "Il crée son premier projet. Ses scènes s'organisent. Ses personnages prennent vie. Quelque part, une clé USB pleure."
-        paper_char3: "LE SCÉNARISTE"
-        paper_paren3: "(soufflant enfin)"
-        paper_dial3: "Et ils vécurent heureux et eurent beaucoup de scènes."
-        type_film: "Film"
-        type_serie: "Série"
-        type_jv: "Jeu vidéo"
-        status_complete: "Terminé"
-        status_ongoing: "En cours"
-        card_follow: "Suivre →"
-        card_read: "Lire →"
-        role_owner: "Propriétaire"
-        elements: "éléments"
-        visibility_public: "Public"
-        visibility_private: "Privé"
-        tasks: "tâches"
-        up_to_date: "À jour"
-        cta_edit: "Éditer →"
-        task_url: "atelier / snatch / tâches"
-        stat_overdue: "En retard"
-        stat_progress: "En cours"
-        stat_done: "Terminées"
-        task_todo: "À faire"
-        task_in_progress: "En cours"
-        task_done: "Terminé"
-        priority_high: "Haute"
-        priority_normal: "Normale"
-        priority_low: "Basse"
+        editor_url: 'atelier / il-etait-une-fois / manuscrit'
+        editor_crumb_parent: 'Acte I'
+        editor_crumb_current: 'Scène 1 — La fin du chaos'
+        editor_type: Scène
+        editor_reading: Lecture
+        editor_group_set: Décor
+        editor_group_action: Action
+        editor_group_dialogue: Dialogue
+        block_action: Action
+        block_character: Personnage
+        block_dialogue: Dialogue
+        block_paren: Didascalie
+        mention_prefix: 'Il crée son premier projet et y ajoute'
+        mention_typed: 'LE SC'
+        mention_char: Personnage
+        mention_hint: '↑↓ naviguer · ↵ valider · Échap fermer'
+        words: mots
+        editor_tab_hint: 'Tab · bloc suivant'
+        timeline_url: 'atelier / eclipse / chronologie'
+        timeline_title: 'Chronologie narrative'
+        timeline_sub: "3 événements · de l'An -30 à l'An 0"
+        timeline_new: 'Nouvel événement'
+        year: An
+        event: événement
+        events: événements
+        event1_title: "L'incident du lac"
+        event1_desc: 'Le secret que personne ne prononce.'
+        event1_place: 'Lac des Hêtres'
+        event2_title: 'Décès du père Moreau'
+        event2_desc: 'Claire apprend la nouvelle par Édouard.'
+        event2_place: 'La Maison Moreau'
+        event3_title: 'Lecture du testament'
+        event3_desc: 'Un héritier inattendu apparaît.'
+        event3_place: 'Étude Bergeron'
+        members_url: 'atelier / eclipse / paramètres / collaborateurs'
+        task_url: 'atelier / eclipse / tâches'
+        stat_overdue: 'En retard'
+        stat_urgent: Urgentes
+        stat_done: Terminées
+        filter_all: Tous
+        task_todo: 'À faire'
+        task_in_progress: 'En cours'
+        task_review: 'En révision'
+        task_done: Terminé
+        col_task: Tâche
+        col_status: Statut
+        col_priority: Priorité
+        col_assignee: Assigné
+        task1: 'Écrire le dialogue Ép. 2 — le testament'
+        task2: 'Fiche lieu — Étude Bergeron'
+        task3: 'Relire la chronologie de la saison 1'
+        task4: 'Synopsis général v2'
+        priority_urgent: Urgente
+        priority_high: Haute
+        priority_normal: Normale
+        priority_low: Basse
 
     cta:
-        title: "Prêt à"
-        title_highlight: "créer"
-        title_suffix: " ?"
+        title: 'Prêt à'
+        title_highlight: créer
+        title_suffix: ' ?'
         desc: "Rejoignez ScénArt gratuitement et commencez votre premier projet narratif dès aujourd'hui."
-        btn_start: "Commencer gratuitement"
-        btn_pricing: "Voir les tarifs"
+        btn_start: 'Commencer gratuitement'
+        btn_pricing: 'Voir les tarifs'
 
 # ===== PAGE TARIFS =====
 pricing:
@@ -368,6 +416,9 @@ contact:
 
         privacy: "J'accepte que mes données soient utilisées pour traiter ma demande conformément à la"
         privacy_link: "politique de confidentialité"
+        identity:
+            sending_as: "Vous écrivez en tant que"
+            edit: "Modifier mon profil"
         submit: "Envoyer le message"
 
         errors:

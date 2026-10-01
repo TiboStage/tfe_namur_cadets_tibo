@@ -280,6 +280,12 @@
     background: var(--color-primary-glow, color-mix(in srgb, var(--color-primary) 6%, transparent));
 }
 
+.nl-link-badge--deleted {
+    color: var(--text-muted-dark);
+    font-style: italic;
+    cursor: help;
+}
+
 /* Statut */
 .nl-status {
     display: inline-flex;

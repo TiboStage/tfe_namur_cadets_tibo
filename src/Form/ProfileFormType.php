@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -54,6 +55,15 @@ class ProfileFormType extends AbstractType
                     'placeholder' => 'profile.form.email',
                     'autocomplete' => 'email'
                 ],
+            ])
+            ->add('locale', ChoiceType::class, [
+                'label'   => false,
+                'choices' => [
+                    'profile.form.locale.fr' => 'fr',
+                    'profile.form.locale.en' => 'en',
+                    'profile.form.locale.nl' => 'nl',
+                ],
+                'translation_domain' => 'auth',
             ])
             ->add('avatarColor', HiddenType::class, [
                 'label'    => false,

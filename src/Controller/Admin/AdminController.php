@@ -6,7 +6,9 @@ namespace App\Controller\Admin;
 
 use App\Entity\Project;
 use App\Entity\User;
+use App\Repository\CommentRepository;
 use App\Repository\ProjectRepository;
+use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +34,8 @@ class AdminController extends AbstractController
     public function __construct(
         private readonly UserRepository    $userRepo,
         private readonly ProjectRepository $projectRepo,
+        private readonly ReportRepository  $reportRepo,
+        private readonly CommentRepository $commentRepo,
         private readonly EntityManagerInterface $em,
         private readonly TranslatorInterface    $translator,
     ) {}
@@ -87,10 +91,10 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_user_show', ['id' => $user->getId(), '_locale' => $request->getLocale()]);
         }
 
-        $user->setIsBanned(!$user->isIsBanned());
+        $user->setIsBanned(!$user->isBanned());
         $this->em->flush();
 
-        $this->addFlash('success', $user->isIsBanned()
+        $this->addFlash('success', $user->isBanned()
             ? "Utilisateur {$user->getUsername()} banni."
             : "Utilisateur {$user->getUsername()} débanni."
         );
@@ -137,19 +141,32 @@ class AdminController extends AbstractController
 
     // ─── Projets ──────────────────────────────────────────────────────────────
 
+    private const PROJECTS_PER_PAGE = 25;
+
     public function projects(Request $request): Response
     {
         $filter = $request->query->getString('filter', 'all');
+        if (!in_array($filter, ['all', 'public', 'flagged'], true)) {
+            $filter = 'all';
+        }
 
-        $projects = match ($filter) {
-            'flagged' => $this->projectRepo->findFlagged(),
-            'public'  => $this->projectRepo->findBy(['visibility' => 'public'], ['createdAt' => 'DESC']),
-            default   => $this->projectRepo->findAllForAdmin(),
-        };
+        $sort = $request->query->getString('sort', 'created_desc');
+        if (!in_array($sort, ['created_desc', 'created_asc', 'title_asc', 'reports_desc'], true)) {
+            $sort = 'created_desc';
+        }
+
+        $total    = $this->projectRepo->countForAdmin($filter);
+        $pages    = max(1, (int) ceil($total / self::PROJECTS_PER_PAGE));
+        $page     = max(1, min($pages, $request->query->getInt('page', 1)));
+
+        $projects = $this->projectRepo->findForAdmin($filter, $sort, $page, self::PROJECTS_PER_PAGE);
 
         return $this->render('admin/projects/index.html.twig', [
             'projects' => $projects,
             'filter'   => $filter,
+            'sort'     => $sort,
+            'page'     => $page,
+            'pages'    => $pages,
             'counts'   => [
                 'all'     => $this->projectRepo->countAll(),
                 'public'  => $this->projectRepo->countPublic(),
@@ -161,7 +178,10 @@ class AdminController extends AbstractController
     public function projectShow(Project $project): Response
     {
         return $this->render('admin/projects/show.html.twig', [
-            'project' => $project,
+            'project'         => $project,
+            'reports'         => $this->reportRepo->findByProject($project),
+            'recent_comments' => $this->commentRepo->findRecentByProject($project->getId(), 3),
+            'comment_count'   => $this->commentRepo->countByProject($project->getId()),
         ]);
     }
 
@@ -191,6 +211,11 @@ class AdminController extends AbstractController
             $project->setModerationStatus($status);
             $this->em->flush();
             $this->addFlash('success', $this->translator->trans('admin.project_status_updated', ['%title%' => $project->getTitle(), '%status%' => $status], 'flash_messages'));
+        }
+
+        // Depuis la fiche projet → on y revient ; sinon → centre de modération
+        if ($request->request->getString('_back') === 'project') {
+            return $this->redirectToRoute('admin_project_show', ['id' => $project->getId(), '_locale' => $request->getLocale()]);
         }
 
         return $this->redirectToRoute('admin_moderation', ['_locale' => $request->getLocale()]);

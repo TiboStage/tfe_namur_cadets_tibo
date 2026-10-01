@@ -614,10 +614,10 @@
     justify-content: center;
     padding: 0 7px;
     background: var(--overlay-md);
-    border: 1px solid var(--overlay-lg);
     color: var(--text-muted);
     font-size: 11px;
     font-weight: 700;
+    border-radius: var(--radius-sm);
 }
 
 .nav-item.active .nav-badge,

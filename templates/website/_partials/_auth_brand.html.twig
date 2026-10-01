@@ -1,0 +1,55 @@
+{# ══════════════════════════════════════════════════════
+   PANNEAU GAUCHE — branding (partagé par toutes les pages auth)
+   ══════════════════════════════════════════════════════ #}
+<aside class="auth-brand">
+
+    {# Logo #}
+    <a href="{{ path('app_home') }}" class="auth-brand__logo">
+        <img src="{{ asset('images/favicons/favicon.png') }}"
+             alt="Scénart"
+             class="auth-brand__logo-img">
+        <span class="auth-brand__logo-name">Scén<span>art</span></span>
+    </a>
+
+    {# Corps #}
+    <div class="auth-brand__body">
+        <div class="auth-brand__tag">
+            {{ ux_icon('lucide:pen-line', {style: 'width:10px;height:10px'}) }}
+            Plateforme narrative
+        </div>
+        <h2 class="auth-brand__title">
+            Donnez vie à<br>vos <em>univers</em>
+        </h2>
+        <p class="auth-brand__subtitle">
+            Scénart est l'espace de création collaborative pour
+            scénaristes, auteurs et game designers.
+        </p>
+        <div class="auth-brand__features">
+            <div class="auth-brand__feature">
+                <div class="auth-brand__feature-icon">
+                    {{ ux_icon('lucide:folder-open', {style: 'width:13px;height:13px'}) }}
+                </div>
+                Projets films, séries, jeux vidéo
+            </div>
+            <div class="auth-brand__feature">
+                <div class="auth-brand__feature-icon">
+                    {{ ux_icon('lucide:users', {style: 'width:13px;height:13px'}) }}
+                </div>
+                Collaboration en temps réel
+            </div>
+            <div class="auth-brand__feature">
+                <div class="auth-brand__feature-icon">
+                    {{ ux_icon('lucide:globe', {style: 'width:13px;height:13px'}) }}
+                </div>
+                Communauté de créateurs
+            </div>
+        </div>
+    </div>
+
+    {# Footer #}
+    <div class="auth-brand__footer">
+        &copy; {{ "now"|date("Y") }} Scénart &mdash;
+        <a href="{{ path('app_legal_cgu', {_locale: app.request.locale}) }}">Mentions légales</a>
+    </div>
+
+</aside>

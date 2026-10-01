@@ -69,6 +69,26 @@
                         }
                     }) }}
 
+                    {% if app.user %}
+                    {# ── Connecté : identité reprise du compte, rien à retaper ── #}
+                    <div class="contact-identity">
+                        <span class="u-avatar contact-identity__avatar" style="background-color:{{ app.user.avatarColor }};">
+                            {% if app.user.avatarFilename %}
+                                <img src="/uploads/avatars/{{ app.user.avatarFilename }}" alt="" class="img-cover">
+                            {% else %}
+                                {{ app.user.username|first|upper }}
+                            {% endif %}
+                        </span>
+                        <div class="contact-identity__info">
+                            <span class="contact-identity__label">{{ 'contact.form.identity.sending_as'|trans }}</span>
+                            <strong>{{ app.user.firstName }} {{ app.user.lastName }}</strong>
+                            <span class="contact-identity__email">{{ app.user.email }}</span>
+                        </div>
+                        <a href="{{ path('app_profile', {_locale: app.request.locale}) }}" class="contact-identity__edit">
+                            {{ 'contact.form.identity.edit'|trans }}
+                        </a>
+                    </div>
+                    {% else %}
                     {# ── Email ─────────────────────────────────── #}
                     <div class="form-group-full">
                         {{ form_row(form.email, {
@@ -110,6 +130,7 @@
                             }
                         }) }}
                     </div>
+                    {% endif %}
 
                     {# ── Sujet ─────────────────────────────────── #}
                     <div class="form-group-full">

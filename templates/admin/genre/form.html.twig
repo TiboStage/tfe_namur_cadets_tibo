@@ -1,122 +1,138 @@
 {% extends 'admin/layout.html.twig' %}
 
 {% block admin_title %}
-    {{ mode == 'edit' ? 'genre.form.edit_title'|trans({}, 'admin') : 'genre.form.new_title'|trans({}, 'admin') }}
+    {{ mode == 'edit' ? 'genre.form.edit_header'|trans({'%name%': genre.slug}, 'admin') : 'genre.form.new_title'|trans({}, 'admin') }}
 {% endblock %}
 
 {% block admin_content %}
-<div class="admin-section admin-section--narrow">
+<div class="admin-form-header">
+    <a href="{{ path('admin_genre_index', {_locale: app.request.locale}) }}" class="admin-back-link">
+        {{ 'genre.form.back'|trans({}, 'admin') }}
+    </a>
+</div>
 
-    <div class="admin-section-header">
-        <div>
-            <a href="{{ path('admin_genre_index', {_locale: app.request.locale}) }}"
-               class="admin-back">{{ 'genre.form.back'|trans({}, 'admin') }}</a>
-            <h2>{{ mode == 'edit' ? 'genre.form.edit_header'|trans({'%name%': genre.slug}, 'admin') : 'genre.form.new_header'|trans({}, 'admin') }}</h2>
-        </div>
-    </div>
-
-    {% if errors is not empty %}
+{% if errors is not empty %}
     <div class="admin-flash admin-flash--error">
         {% for err in errors %}
             <p>{{ err }}</p>
         {% endfor %}
     </div>
-    {% endif %}
+{% endif %}
 
-    <form method="post"
-          action="{{ mode == 'edit'
-              ? path('admin_genre_edit', {_locale: app.request.locale, id: genre.id})
-              : path('admin_genre_new',  {_locale: app.request.locale}) }}"
-          class="admin-form"
-          novalidate>
+<form method="post"
+      action="{{ mode == 'edit'
+          ? path('admin_genre_edit', {_locale: app.request.locale, id: genre.id})
+          : path('admin_genre_new',  {_locale: app.request.locale}) }}"
+      novalidate>
 
-        {# ── Slug ────────────────────────────────────────────────────── #}
-        <div class="admin-field">
-            <label class="admin-label">
-                {{ 'genre.form.slug_label'|trans({}, 'admin') }} <span class="admin-required">*</span>
-                <span class="admin-hint">{{ 'genre.form.slug_hint'|trans({}, 'admin') }}</span>
-            </label>
-            <input type="text"
-                   name="slug"
-                   class="admin-input"
-                   value="{{ genre.slug }}"
-                   placeholder="{{ 'genre.form.slug_placeholder'|trans({}, 'admin') }}"
-                   pattern="[a-z0-9_]+"
-                   maxlength="50"
-                   required>
-            <p class="admin-field-note">
-                ⚠️ {{ 'genre.form.slug_warning'|trans({}, 'admin') }}
-            </p>
-        </div>
+<div class="admin-form-layout">
 
-        {# ── Traductions (obligatoires) ───────────────────────────────── #}
-        <div class="admin-field">
-            <label class="admin-label">
-                {{ 'genre.form.translations_label'|trans({}, 'admin') }} <span class="admin-required">*</span>
-                <span class="admin-hint">{{ 'genre.form.translations_hint'|trans({}, 'admin') }}</span>
-            </label>
-
-            <div class="admin-translations-grid">
+    {# ── Colonne principale : traductions ───────────────────────────────── #}
+    <div class="admin-form-layout__main">
+        <div class="admin-card">
+            <div class="admin-card__header">
+                {{ 'genre.form.translations_label'|trans({}, 'admin') }}
+                <span class="admin-card__hint">{{ 'genre.form.translations_hint'|trans({}, 'admin') }}</span>
+            </div>
+            <div class="admin-card__body">
                 {% for locale in ['fr', 'nl', 'en'] %}
-                {% set flags   = {fr: '🇫🇷', nl: '🇳🇱', en: '🇬🇧'} %}
-                {% set langNames = {fr: 'Français', nl: 'Nederlands', en: 'English'} %}
-                {% set existing = genre.getTranslation(locale) %}
-                <div class="admin-translation-row">
-                    <span class="admin-translation-flag">{{ flags[locale] }}</span>
-                    <label class="admin-translation-lang">{{ langNames[locale] }}</label>
-                    <input type="text"
-                           name="translations[{{ locale }}][label]"
-                           class="admin-input"
-                           value="{{ existing ? existing.label : '' }}"
-                           placeholder="{{ locale == 'fr' ? 'Ex : Thriller' : (locale == 'nl' ? 'Bijv.: Thriller' : 'E.g.: Thriller') }}"
-                           maxlength="100"
-                           required>
-                </div>
+                    {% set existing = genre.getTranslation(locale) %}
+                    <div class="form-group">
+                        <label class="form-label" for="genre_label_{{ locale }}">
+                            {{ ('genre.form.lang_' ~ locale)|trans({}, 'admin') }}
+                            <span class="text-primary">*</span>
+                        </label>
+                        <input type="text"
+                               id="genre_label_{{ locale }}"
+                               name="translations[{{ locale }}][label]"
+                               class="form-control"
+                               value="{{ existing ? existing.label : '' }}"
+                               placeholder="{{ ('genre.form.placeholder_' ~ locale)|trans({}, 'admin') }}"
+                               maxlength="100"
+                               required>
+                    </div>
                 {% endfor %}
             </div>
         </div>
 
-        {# ── Types de projet compatibles ──────────────────────────────── #}
-        <div class="admin-field">
-            <label class="admin-label">
+        <div class="admin-card">
+            <div class="admin-card__header">
                 {{ 'genre.form.types_label'|trans({}, 'admin') }}
-                <span class="admin-hint">{{ 'genre.form.types_hint'|trans({}, 'admin') }}</span>
-            </label>
-            <div class="admin-checkboxes">
-                {% for type, label in {film: 'genre.form.type_film'|trans({}, 'admin'), serie: 'genre.form.type_serie'|trans({}, 'admin'), jeu_video: 'genre.form.type_jeu_video'|trans({}, 'admin')} %}
-                <label class="admin-checkbox-label">
-                    <input type="checkbox"
-                           name="projectTypes[]"
-                           value="{{ type }}"
-                           {{ type in genre.projectTypes ? 'checked' : '' }}>
-                    {{ label }}
-                </label>
-                {% endfor %}
+                <span class="admin-card__hint">{{ 'genre.form.types_hint'|trans({}, 'admin') }}</span>
+            </div>
+            <div class="admin-card__body">
+                <div class="admin-type-choices">
+                    {% set types = {
+                        film:      {icon: 'lucide:clapperboard', label: 'genre.form.type_film'},
+                        serie:     {icon: 'lucide:tv',           label: 'genre.form.type_serie'},
+                        jeu_video: {icon: 'lucide:gamepad-2',    label: 'genre.form.type_jeu_video'},
+                    } %}
+                    {% for type, cfg in types %}
+                        <label class="admin-type-choice admin-type-choice--{{ type }}">
+                            <input type="checkbox"
+                                   name="projectTypes[]"
+                                   value="{{ type }}"
+                                   {{ type in genre.projectTypes ? 'checked' : '' }}>
+                            {{ ux_icon(cfg.icon, {class: 'icon-sm'}) }}
+                            <span>{{ cfg.label|trans({}, 'admin') }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── Colonne latérale : paramètres ──────────────────────────────────── #}
+    <aside class="admin-form-layout__sidebar">
+        <div class="admin-card">
+            <div class="admin-card__header">Paramètres</div>
+            <div class="admin-card__body">
+
+                <div class="form-group">
+                    <label class="form-label" for="genre_slug">
+                        {{ 'genre.form.slug_label'|trans({}, 'admin') }} <span class="text-primary">*</span>
+                    </label>
+                    <input type="text"
+                           id="genre_slug"
+                           name="slug"
+                           class="form-control admin-input--mono"
+                           value="{{ genre.slug }}"
+                           placeholder="{{ 'genre.form.slug_placeholder'|trans({}, 'admin') }}"
+                           pattern="[a-z0-9_]+"
+                           maxlength="50"
+                           required>
+                    <p class="admin-form-hint">{{ 'genre.form.slug_hint'|trans({}, 'admin') }}</p>
+                    {% if mode == 'edit' %}
+                        <p class="admin-form-warning">
+                            {{ ux_icon('lucide:triangle-alert', {class: 'icon-xs'}) }}
+                            <span>{{ 'genre.form.slug_warning'|trans({}, 'admin') }}</span>
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="genre_order">{{ 'genre.form.order_label'|trans({}, 'admin') }}</label>
+                    <input type="number"
+                           id="genre_order"
+                           name="orderIndex"
+                           class="form-control"
+                           value="{{ genre.orderIndex }}"
+                           min="0" max="999">
+                    <p class="admin-form-hint">{{ 'genre.form.order_hint'|trans({}, 'admin') }}</p>
+                </div>
+
             </div>
         </div>
 
-        {# ── Ordre d'affichage ─────────────────────────────────────────── #}
-        <div class="admin-field admin-field--short">
-            <label class="admin-label">
-                {{ 'genre.form.order_label'|trans({}, 'admin') }}
-                <span class="admin-hint">{{ 'genre.form.order_hint'|trans({}, 'admin') }}</span>
-            </label>
-            <input type="number"
-                   name="orderIndex"
-                   class="admin-input"
-                   value="{{ genre.orderIndex }}"
-                   min="0" max="999">
-        </div>
-
-        {# ── Actions ──────────────────────────────────────────────────── #}
         <div class="admin-form-actions">
-            <button type="submit" class="btn btn--cta-yellow">
+            <button type="submit" class="btn-primary w-full">
                 {{ mode == 'edit' ? 'genre.form.btn_save'|trans({}, 'admin') : 'genre.form.btn_create'|trans({}, 'admin') }}
             </button>
             <a href="{{ path('admin_genre_index', {_locale: app.request.locale}) }}"
-               class="btn btn--ghost">{{ 'genre.form.btn_cancel'|trans({}, 'admin') }}</a>
+               class="btn-sm btn-sm--ghost admin-form-actions__cancel">{{ 'genre.form.btn_cancel'|trans({}, 'admin') }}</a>
         </div>
+    </aside>
 
-    </form>
 </div>
+</form>
 {% endblock %}

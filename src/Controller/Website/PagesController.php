@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace App\Controller\Website;
 
 use App\Entity\Contact;
+use App\Entity\User;
 use App\Form\ContactType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -88,8 +90,19 @@ final class PagesController extends AbstractController
         RateLimiterFactory $contactLimiter, // ← Injection automatique
     ): Response|JsonResponse {
         // ── Créer l'entité Contact et le formulaire ────────────────────
+        // Connecté → prénom, nom et email repris du compte (non modifiables),
+        // le formulaire ne demande plus que le sujet et le message.
+        $user = $this->getUser();
         $contact = new Contact();
-        $form = $this->createForm(ContactType::class, $contact);
+        if ($user instanceof User) {
+            $contact->setFirstname($user->getFirstName())
+                ->setLastname($user->getLastName())
+                ->setEmail($user->getEmail());
+        }
+
+        $form = $this->createForm(ContactType::class, $contact, [
+            'with_identity' => !$user instanceof User,
+        ]);
         $form->handleRequest($request);
 
         // ── Vérifier si le formulaire est soumis et valide ─────────────
@@ -134,7 +147,7 @@ final class PagesController extends AbstractController
 
             // ── Préparer et envoyer l'email ─────────────────────────────
             try {
-                $this->sendContactEmail($contact, $mailer);
+                $this->sendContactEmail($contact, $mailer, $user instanceof User ? $user : null);
                 $successMessage = $this->translator->trans(
                     'contact.flash.success',
                     [],
@@ -178,49 +191,39 @@ final class PagesController extends AbstractController
     /**
      * Envoie l'email de contact à l'administrateur
      *
-     * SÉCURITÉ : Tous les champs sont échappés avec htmlspecialchars()
-     * pour éviter les injections XSS dans l'email
+     * SÉCURITÉ : le contenu est rendu par Twig (emails/contact.html.twig),
+     * qui échappe automatiquement toutes les données saisies (protection XSS).
      *
      * @param Contact $contact Données du formulaire de contact
      * @param MailerInterface $mailer Service d'envoi d'emails
+     * @param User|null $user Compte de l'expéditeur s'il était connecté
      * @throws \Exception Si l'envoi échoue
      */
-    private function sendContactEmail(Contact $contact, MailerInterface $mailer): void
+    private function sendContactEmail(Contact $contact, MailerInterface $mailer, ?User $user): void
     {
-        // ── Échapper TOUTES les données utilisateur (protection XSS) ──
-        $firstname = htmlspecialchars($contact->getFirstname(), ENT_QUOTES, 'UTF-8');
-        $lastname = htmlspecialchars($contact->getLastname(), ENT_QUOTES, 'UTF-8');
-        $emailSender = htmlspecialchars($contact->getEmail(), ENT_QUOTES, 'UTF-8');
-        $subject = htmlspecialchars($contact->getSubject(), ENT_QUOTES, 'UTF-8');
-
-        // Échapper ET convertir les sauts de ligne en <br>
-        $message = nl2br(htmlspecialchars($contact->getMessage(), ENT_QUOTES, 'UTF-8'));
-
         // ── Récupérer les adresses email depuis les variables d'environnement ──
         $fromEmail = $_ENV['MAILER_FROM'] ?? 'system@scenart.be';
         $adminEmail = $_ENV['MAILER_ADMIN'] ?? 'admin@scenart.be';
 
+        // Libellé lisible du sujet ("support" → "Support technique"), en français pour l'équipe
+        $subjectLabel = $this->translator->trans('contact.form.subjects.' . $contact->getSubject(), [], 'website', 'fr');
+
         // ── Construire l'email ─────────────────────────────────────────
-        $email = (new Email())
-            ->from($fromEmail)
-            ->replyTo($contact->getEmail()) // Email brut pour le reply-to
+        // Le sujet du mail n'est pas passé par Twig : on retire les retours à la ligne
+        // du prénom pour éviter toute injection d'en-tête.
+        $firstname = preg_replace('/[\r\n]+/', ' ', (string) $contact->getFirstname());
+
+        $email = (new TemplatedEmail())
+            ->from(new Address($fromEmail, 'Scénart'))
+            ->replyTo(new Address($contact->getEmail(), trim($contact->getFirstname() . ' ' . $contact->getLastname())))
             ->to($adminEmail)
-            ->subject("Contact [{$subject}] - {$firstname}")
-            ->html(sprintf(
-                '<h2>Nouveau message de contact</h2>
-                <p><strong>De :</strong> %s %s (%s)</p>
-                <p><strong>Sujet :</strong> %s</p>
-                <hr>
-                <p><strong>Message :</strong></p>
-                <div style="padding: 15px; background: #f5f5f5; border-left: 3px solid #FFC107;">
-                    %s
-                </div>',
-                $firstname,
-                $lastname,
-                $emailSender,
-                $subject,
-                $message
-            ));
+            ->subject("Contact [{$subjectLabel}] — {$firstname}")
+            ->htmlTemplate('emails/contact.html.twig')
+            ->context([
+                'contact'      => $contact,
+                'subjectLabel' => $subjectLabel,
+                'sender'       => $user,
+            ]);
 
         // ── Envoyer l'email ────────────────────────────────────────────
         $mailer->send($email);

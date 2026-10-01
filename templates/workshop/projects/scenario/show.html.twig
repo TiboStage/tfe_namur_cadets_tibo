@@ -21,6 +21,10 @@
     'mention_loc':        'manuscript.editor.mention.loc'|trans,
     'mention_hint':       'manuscript.editor.mention.hint'|trans,
     'detect_hint':        'manuscript.editor.detect.hint'|trans,
+    'detect_open':        'manuscript.editor.detect.open'|trans,
+    'detect_missing':     'manuscript.editor.detect.missing'|trans,
+    'mention_empty_char': 'manuscript.editor.mention.empty_char'|trans,
+    'mention_empty_loc':  'manuscript.editor.mention.empty_loc'|trans,
     'mode_reading':       'manuscript.editor.mode.reading'|trans,
     'mode_writing':       'manuscript.editor.mode.writing'|trans,
     'save_dirty':         'manuscript.editor.save.dirty'|trans,
@@ -42,7 +46,12 @@
      data-fountain-editor-element-id-value="{{ element.id }}"
      data-fountain-editor-element-title-value="{{ element.title }}"
      data-fountain-editor-content-value="{{ element.content|json_encode|e('html_attr') }}"
-     data-fountain-editor-characters-value="{{ project.characters|map(c => {'id': c.id, 'name': ((c.firstName ~ ' ' ~ c.lastName)|trim) ?: c.name})|json_encode|e('html_attr') }}"
+     data-fountain-editor-characters-value="{{ project.characters|map(c => {
+         'id':      c.id,
+         'name':    ((c.firstName ~ ' ' ~ c.lastName)|trim) ?: c.name,
+         'url':     path('app_character_show', {project_slug: project.slug, id: c.id}),
+         'aliases': [c.name, c.firstName, c.lastName, c.nickname, (c.firstName ~ ' ' ~ c.lastName)|trim]|merge(c.aliases)|filter(a => a is not iterable and (a|trim|length) > 1)|map(a => a|trim),
+     })|json_encode|e('html_attr') }}"
      data-fountain-editor-locations-value="{{ project.locations|map(l => {'id': l.id, 'name': l.name})|json_encode|e('html_attr') }}"
      data-fountain-editor-note-new-url-value="{{ path('app_note_new', {project_slug: project.slug, element_id: element.id}) }}"
      data-fountain-editor-words-per-page-value="{{ project.settings.ms_words_per_page ?? 170 }}"
@@ -123,7 +132,7 @@
 
                 {# Toggle inspecteur droit #}
                 <button class="sidebar-toggle sidebar-toggle--active" type="button" title="Inspecteur"
-                        onclick="this.closest('.editor-shell').classList.toggle('right-collapsed'); this.classList.toggle('sidebar-toggle--active');">
+                        data-action="click->fountain-editor#toggleInspector">
                     {{ ux_icon('lucide:panel-right', {class: 'icon-sm'}) }}
                 </button>
 

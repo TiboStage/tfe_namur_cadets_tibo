@@ -105,7 +105,8 @@
                 <div class="pub-project__elements">
                     {% for element in public_elements|slice(0, 12) %}
                         {% if element.depth == 1 %}
-                        <div class="pub-element">
+                        <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: element.id}) }}"
+                           class="pub-element">
                             <div class="pub-element__icon">
                                 {{ ux_icon('lucide:book-open', {style: 'width:13px;height:13px'}) }}
                             </div>
@@ -119,13 +120,12 @@
                             </div>
                             <div class="pub-element__actions">
                                 <span class="pub-element__type">{{ element.elementType|capitalize }}</span>
-                                <a href="{{ path('app_element_reader', {_locale: app.request.locale, slug: project.slug, id: element.id}) }}"
-                                   class="pub-element__read-btn">
+                                <span class="pub-element__read-btn">
                                     {{ ux_icon('lucide:book-open-text', {class: 'icon-3xs'}) }}
                                     Lire
-                                </a>
+                                </span>
                             </div>
-                        </div>
+                        </a>
                         {% endif %}
                     {% endfor %}
                     {% if public_elements|length > 12 %}

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'auth' %}
+
+{% block title %}{{ 'verify_email.browser_title'|trans }}{% endblock %}
+
+{% block body %}
+<div class="auth-fullpage">
+
+    {% include 'website/_partials/_auth_brand.html.twig' %}
+
+    <section class="auth-forms">
+        <div class="auth-forms__inner">
+
+            <div class="auth-form-panel auth-form-panel--centered">
+
+                <div class="auth-check-icon">
+                    {{ ux_icon('lucide:mail-check', {style: 'width:26px;height:26px'}) }}
+                </div>
+
+                <h1 class="auth-form-title">{{ 'verify_email.title'|trans }}</h1>
+                <p class="auth-form-subtitle">
+                    {{ 'verify_email.subtitle'|trans({'%email%': email}) }}
+                </p>
+                <p class="auth-check-hint">{{ 'check_email.hint'|trans }}</p>
+
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        {{ component('Alert', { type: label, message: message }) }}
+                    {% endfor %}
+                {% endfor %}
+
+                {# Compteur + renvoi — mêmes règles que "mot de passe oublié" #}
+                <div class="auth-resend">
+                    {% if remaining is not null %}
+                        <p class="auth-resend__count">
+                            {{ 'check_email.counter'|trans({
+                                '%used%': max_requests - remaining,
+                                '%max%': max_requests,
+                            }) }}
+                        </p>
+                    {% endif %}
+
+                    {% if remaining is null or remaining > 0 %}
+                        <form method="post" action="{{ path('app_verify_email_resend', {_locale: app.request.locale}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('verify_email_resend') }}">
+                            <button type="submit"
+                                    class="btn btn--ghost auth-resend__btn"
+                                    data-controller="resend-countdown"
+                                    data-resend-countdown-seconds-value="{{ retry_in }}"
+                                    data-resend-countdown-label-value="{{ 'check_email.resend'|trans }}"
+                                    data-resend-countdown-waiting-value="{{ 'check_email.resend_in'|trans }}"
+                                    data-action="click->resend-countdown#guard">
+                                {{ 'check_email.resend'|trans }}
+                            </button>
+                        </form>
+                    {% else %}
+                        <p class="auth-resend__limit">{{ 'check_email.limit_reached'|trans }}</p>
+                    {% endif %}
+                </div>
+
+                <a href="{{ path('app_login', {_locale: app.request.locale}) }}" class="auth-back-link">
+                    {{ ux_icon('lucide:arrow-left', {style: 'width:13px;height:13px'}) }}
+                    {{ 'check_email.back_to_login'|trans }}
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+</div>
+{% endblock %}

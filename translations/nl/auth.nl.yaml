@@ -21,7 +21,49 @@ login:
     email: "Email"
     password: "Wachtwoord"
     remember_me: "Mij onthouden"
+    forgot_password: "Wachtwoord vergeten?"
     submit: "Inloggen"
+
+# ===== WACHTWOORD VERGETEN =====
+forgot_password:
+    browser_title: "Wachtwoord vergeten - Scénart"
+    title: "Wachtwoord vergeten?"
+    subtitle: "Vul je e-mailadres in en we sturen je een link om het opnieuw in te stellen."
+    email: "E-mailadres"
+    submit: "Link versturen"
+    back_to_login: "Terug naar inloggen"
+    too_soon: "Er is net een e-mail aangevraagd. Wacht %seconds% s voordat je een nieuwe aanvraagt."
+    limit_reached: "Limiet van %max% aanvragen per uur bereikt. Probeer opnieuw over %minutes% min."
+
+check_email:
+    browser_title: "Controleer je email - Scénart"
+    title: "Controleer je email"
+    subtitle: "Als er een account bestaat met dit adres, is er zojuist een resetlink naartoe gestuurd."
+    hint: "Nog niets ontvangen na een paar minuten? Controleer je spamfolder."
+    back_to_login: "Terug naar inloggen"
+    counter: "Aanvraag %used%/%max% dit uur"
+    resend: "E-mail opnieuw versturen"
+    resend_in: "Opnieuw versturen over %time%"
+    limit_reached: "Limiet bereikt: je kunt binnen het uur een nieuwe aanvraag doen."
+
+verify_email:
+    browser_title: "Bevestig je email - Scénart"
+    title: "Bevestig je e-mailadres"
+    subtitle: "Er is een bevestigingslink gestuurd naar %email%. Klik erop om je account te activeren."
+    resend_link: "Bevestigingsmail opnieuw versturen"
+    resent: "Er is zojuist een nieuwe bevestigingsmail verstuurd."
+    success: "Je e-mailadres is bevestigd! Je kunt nu inloggen."
+    already_verified: "Je e-mailadres is al bevestigd. Je kunt inloggen."
+    invalid_link: "Deze bevestigingslink is ongeldig. Log in om een nieuwe te ontvangen."
+
+reset_password:
+    browser_title: "Nieuw wachtwoord - Scénart"
+    title: "Kies een nieuw wachtwoord"
+    subtitle: "Het moet dezelfde regels volgen als bij registratie."
+    password: "Nieuw wachtwoord"
+    password_confirm: "Bevestig het nieuwe wachtwoord"
+    submit: "Wachtwoord resetten"
+    invalid_token: "Deze resetlink is ongeldig of verlopen. Vraag een nieuwe aan."
 
 # ===== AANMELDEN =====
 register:
@@ -34,6 +76,7 @@ register:
     username: "Gebruikersnaam"
     email: "E-mailadres"
     password: "Wachtwoord"
+    password_confirm: "Bevestig wachtwoord"
     agree_terms: "Ik ga akkoord met de gebruiksvoorwaarden"
     submit: "De Werkplaats wacht"
 
@@ -64,6 +107,8 @@ profile:
         identity_desc: "Je publieke informatie"
         security: "Beveiliging"
         security_desc: "Wijzig je wachtwoord"
+        preferences: "Voorkeuren"
+        preferences_desc: "Taal van de interface"
         stats: "Statistieken"
         avatar_color: "Avatarkleur"
         avatar_color_desc: "Pas de kleur van je initiaal aan."
@@ -73,6 +118,11 @@ profile:
         lastname: "Achternaam"
         username: "Gebruikersnaam"
         email: "E-mailadres"
+        locale_label: "Taal van de interface"
+        locale:
+            fr: "Français"
+            en: "English"
+            nl: "Nederlands"
         new_password: "Nieuw wachtwoord"
         confirm_password: "Bevestig wachtwoord"
         password_hint: "Laat leeg om je huidige wachtwoord te behouden (min. 8 tekens)"

@@ -122,11 +122,13 @@
     --container-padding: clamp(16px, 3.2vw, 50px);
 
     /* ── Hauteurs de layout workshop ───────────────────────── */
-    --topbar-h:      52px;   /* .top-nav height */
-    --topbar-gap:    10px;   /* margin-top du .top-nav */
-    --topbar-total:  62px;   /* --topbar-h + --topbar-gap */
-    --project-bar-h: 44px;   /* .project-bar height */
-    --workspace-offset: 106px; /* --topbar-total + --project-bar-h */
+    /* .top-nav aligné sur .main-nav (site public) : même hauteur, collé en
+       haut, sans marge — cf. _topbar.css et _navbar.css. */
+    --topbar-h:      57px;   /* .top-nav height */
+    --topbar-gap:    0px;    /* plus de marge du haut, collé comme .main-nav */
+    --topbar-total:  57px;   /* --topbar-h + --topbar-gap */
+    --project-bar-h: 44px;   /* .project-bar height (mobile, barre horizontale) */
+    --workspace-offset: 101px; /* --topbar-total + --project-bar-h */
 
     /* ═══════════════════════════════════════════════════════════ */
     /* TRANSITIONS                                                  */

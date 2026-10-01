@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
@@ -53,7 +54,7 @@ class Project
         maxMessage: 'project.title.too_long',
     )]
     public string $title = '' {
-        set => trim((string) $value);
+        set(?string $value) => trim((string) $value);
     }
 
     #[ORM\Column(length: 255, unique: true)]
@@ -71,7 +72,7 @@ class Project
         maxMessage: 'project.description.too_long',
     )]
     public string $description = '' {
-        set => $this->description = trim((string) $value);
+        set(?string $value) => $this->description = trim((string) $value);
     }
 
     #[ORM\Column(length: 50)]
@@ -80,8 +81,9 @@ class Project
         message: 'project.type.invalid',
     )]
     public string $projectType = 'film' {
-        set {
-            if (!in_array($value, self::VALID_TYPES, true)) {
+        set(?string $value) {
+            $value ??= '';
+            if ($value !== '' && !in_array($value, self::VALID_TYPES, true)) {
                 throw new \InvalidArgumentException("Type invalide : $value");
             }
             $this->projectType = $value;
@@ -522,10 +524,8 @@ class Project
      */
     private function slugifyTitle(string $title): string
     {
-        $slug = strtolower(trim($title));
-        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $slug) ?: $slug;
-        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
-        $slug = trim($slug, '-');
+        // AsciiSlugger translittère correctement les accents ("Éclipse" → "eclipse")
+        $slug = (new AsciiSlugger())->slug(trim($title))->lower()->toString();
 
         // Fallback si le titre ne contient que des caractères spéciaux
         return $slug !== '' ? $slug : 'projet';

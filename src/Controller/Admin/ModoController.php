@@ -62,7 +62,10 @@ class ModoController extends AbstractController
     public function projectShow(Project $project): Response
     {
         return $this->render('modo/project_show.html.twig', [
-            'project' => $project,
+            'project'         => $project,
+            'reports'         => $this->reportRepository->findByProject($project),
+            'recent_comments' => $this->commentRepository->findRecentByProject($project->getId(), 3),
+            'comment_count'   => $this->commentRepository->countByProject($project->getId()),
         ]);
     }
 
@@ -83,6 +86,10 @@ class ModoController extends AbstractController
             $project->setModerationStatus($status);
             $this->em->flush();
             $this->addFlash('success', $this->translator->trans('moderation.project_status_updated', ['%title%' => $project->getTitle(), '%status%' => $status], 'flash_messages'));
+        }
+
+        if ($request->request->getString('_back') === 'project') {
+            return $this->redirectToRoute('modo_project_show', ['id' => $project->getId(), '_locale' => $request->getLocale()]);
         }
 
         return $this->redirectToRoute('modo_reports', ['_locale' => $request->getLocale()]);

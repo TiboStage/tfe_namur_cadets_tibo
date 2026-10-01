@@ -47,6 +47,11 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
+    margin-bottom: 20px;
+}
+
+.form-row-group .form-field {
+    margin-bottom: 0;
 }
 
 .form-actions {
@@ -54,7 +59,33 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding-top: 4px;
+    padding-top: 20px;
+    margin-top: 4px;
+}
+
+/* ── Zone de danger (suppression) — pages standalone new/edit ────── */
+
+.danger-zone {
+    margin-top: 32px;
+    padding: 20px 24px;
+    border: 1px solid color-mix(in srgb, var(--color-error) 25%, transparent);
+    background: color-mix(in srgb, var(--color-error) 4%, transparent);
+}
+
+.danger-zone-header {
+    margin-bottom: 14px;
+}
+
+.danger-zone-header h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-error);
+    margin-bottom: 4px;
+}
+
+.danger-zone-header p {
+    font-size: 12px;
+    color: var(--text-muted);
 }
 
 /* ── Bouton supprimer ────────────────────────────────────── */

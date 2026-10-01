@@ -127,7 +127,9 @@ projects:
         owner: "Eigenaar"
         lead: "Co-verantwoordelijke"
         editor: "Redacteur"
+        moderator: "Moderator"
         contributor: "Bijdrager"
+        reader: "Lezer"
 
     visibility:
         public: "Online"
@@ -174,9 +176,9 @@ projects:
             username_label: "Gebruikersnaam"
             username_ph: "bijv. johndoe"
             role_label: "Rol"
-            role_contributor: "Bijdrager — lezen + suggesties"
-            role_editor: "Redacteur — kan inhoud bewerken"
-            role_lead: "Co-verantwoordelijke — volledige toegang"
+            role_reader: "Lezer — alleen lezen + notities"
+            role_contributor: "Bijdrager — schrijft inhoud"
+            role_moderator: "Moderator — beheert het project"
             invite_btn: "Uitnodigen"
             empty: "Nog geen medewerkers."
             since: "Sinds"
@@ -594,6 +596,7 @@ common:
     optional: "(optioneel)"
     search: "Zoeken"
     back: "Terug"
+    scene_deleted: "Deze scène bestaat niet meer"
 
 # ===== NOTITIES =====
 note:
@@ -706,6 +709,7 @@ task:
         in_progress: "Bezig"
         review: "In beoordeling"
         done: "Afgerond"
+        archived: "Gearchiveerd"
 
     priority:
         low: "Laag"
@@ -894,8 +898,12 @@ manuscript:
             char: "Personage"
             loc: "Locatie"
             hint: "↑↓ navigeren · ↵ bevestigen · Esc sluiten"
+            empty_char: "Geen overeenkomende personagefiche — maak er een aan bij Personages"
+            empty_loc: "Geen overeenkomende locatiefiche — maak er een aan bij Locaties"
         detect:
             hint: "Gebruik Personage-blokken om personagenamen te detecteren."
+            open: "Fiche openen"
+            missing: "Geen fiche voor dit personage"
         mode:
             reading: "Lezen"
             writing: "Schrijven"

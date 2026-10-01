@@ -49,6 +49,22 @@
 /* FORMULAIRES - ERREURS & VALIDATION (RÉUTILISABLE)               */
 /* ═══════════════════════════════════════════════════════════════ */
 
+/* ── Champ (label + widget + erreurs) ────────────────────────────── */
+/* Générée par le form theme (form_row) — assure un espacement vertical
+   régulier entre champs, et permet à .form-row-group de grouper des
+   champs entiers en colonnes (et non label/input séparément). */
+.form-field {
+    margin-bottom: 20px;
+}
+
+.form-field:last-child {
+    margin-bottom: 0;
+}
+
+.form-field label {
+    margin-bottom: 8px;
+}
+
 /* ── Labels des champs ─────────────────────────────────────────── */
 label {
     display: block;

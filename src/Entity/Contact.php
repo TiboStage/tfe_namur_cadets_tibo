@@ -48,9 +48,9 @@ class Contact
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): static
+    public function setFirstname(?string $firstname): static
     {
-        $this->firstname = $firstname;
+        $this->firstname = $firstname ?? '';
 
         return $this;
     }
@@ -60,9 +60,9 @@ class Contact
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): static
+    public function setLastname(?string $lastname): static
     {
-        $this->lastname = $lastname;
+        $this->lastname = $lastname ?? '';
 
         return $this;
     }
@@ -72,9 +72,9 @@ class Contact
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): static
     {
-        $this->email = $email;
+        $this->email = $email ?? '';
 
         return $this;
     }
@@ -104,9 +104,9 @@ class Contact
         return $this->message;
     }
 
-    public function setMessage(string $message): static
+    public function setMessage(?string $message): static
     {
-        $this->message = $message;
+        $this->message = $message ?? '';
 
         return $this;
     }

@@ -5,17 +5,17 @@
 .top-nav {
     display: flex;
     justify-content: space-between;
-    height: 52px;
+    align-items: center;
     background: var(--color-bg-dark);
-    border-radius: var(--radius-lg);
+    border-bottom: 1px solid var(--color-border);
     position: sticky;
-    top: 10px;
-    z-index: 100;
+    top: 0;
+    z-index: 1000;
     justify-self: center;
-    padding: 0 20px;
+    padding: 10px 20px;
     width: 100%;
     max-width: 1700px;
-    margin: 10px auto auto auto;
+    margin: 0 auto;
 }
 
 /* ── Gauche ──────────────────────────────────────────────── */
@@ -24,10 +24,6 @@
     display: flex;
     align-items: center;
     gap: 20px;
-}
-
-.topbar-logo img {
-    display: block;
 }
 
 .link-back {
@@ -162,18 +158,21 @@
     display: flex;
     align-items: center;
     gap: 7px;
-    background: none;
-    border: none;
+    background: var(--overlay-xs);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
     color: var(--text-main);
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    padding: 4px 6px;
-    transition: background 0.15s;
+    padding: 4px 8px;
+    transition: background 0.15s, border-color 0.15s;
 }
 
-.project-bar__project-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
+.project-bar__project-btn:hover,
+.project-bar__switcher.is-open .project-bar__project-btn {
+    background: var(--overlay-sm);
+    border-color: var(--color-primary);
 }
 
 .project-bar__project-icon {
@@ -194,16 +193,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.project-bar__chevron {
-    color: var(--text-muted);
-    transition: transform 0.15s;
-    flex-shrink: 0;
-}
-
-.project-bar__switcher.is-open .project-bar__chevron {
-    transform: rotate(180deg);
 }
 
 /* Switcher dropdown */
@@ -666,15 +655,28 @@
 .mobile-nav-overlay { display: none; }
 
 @media (max-width: 768px) {
-    /* Topbar mobile */
-    .nav-left { display: none; }
+    /* Topbar mobile : on garde le logo, on masque juste les liens texte */
+    .nav-left { gap: 0; }
+    .subnav-links { display: none; }
 
     .top-nav {
         width: 100%;
-        padding: 0 var(--container-padding);
-        border: none;
+        padding: 10px var(--container-padding);
         align-items: center;
+        gap: 10px;
+        /* space-between écarterait le burger (2e élément) au milieu au lieu
+           de le coller aux notifs : on regroupe donc logo à gauche, puis
+           notifs + burger collés à droite via margin-right:auto + order. */
+        justify-content: flex-start;
     }
+
+    .nav-left { margin-right: auto; }
+    .nav-right { order: 1; }
+    .topbar-burger { order: 2; }
+
+    /* Le profil vit désormais uniquement dans le tiroir (mobile-nav-drawer__top-actions) :
+       le garder aussi ici visible en permanence faisait doublon. */
+    .nav-right .user-profile-dropdown { display: none; }
 
     /*.top-nav .user-trigger {*/
     /*    height: 36px;*/
@@ -683,18 +685,21 @@
     /* Burger visible */
     .topbar-burger { display: flex; }
 
-    /* Drawer slide-in depuis la gauche */
+    /* Drawer slide-in depuis la droite — même sens que la navbar du site public */
     .mobile-nav-drawer {
         display: flex;
         flex-direction: column;
         position: fixed;
         top: 0;
-        left: 0;
+        right: 0;
         bottom: 0;
         width: 280px;
-        border-right: 1px solid var(--color-border);
-        z-index: 300;
-        transform: translateX(-100%);
+        border-left: 1px solid var(--color-border);
+        /* Au-dessus du .top-nav (position:sticky, z-index:1000) — sinon la
+           barre du haut recouvre l'en-tête du tiroir (favicon + croix) et
+           donne l'impression que le contenu du tiroir démarre plus bas. */
+        z-index: 1001;
+        transform: translateX(100%);
         transition: transform .25s ease;
     }
 
@@ -706,7 +711,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 16px 20px;
+        padding: 10px 15px;
         border-bottom: 1px solid var(--color-border);
         background: var(--color-bg-dark);
     }
@@ -723,6 +728,36 @@
         transition: color .15s;
     }
     .mobile-nav-drawer__close:hover { color: var(--text-main); }
+
+    .mobile-nav-drawer__top-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--color-border);
+        background: var(--color-bg-dark);
+    }
+
+    .mobile-nav-drawer__top-actions .nav-lang,
+    .mobile-nav-drawer__top-actions .nav-account-icon {
+        flex-shrink: 0;
+    }
+
+    .mobile-nav-drawer__top-actions .user-profile-dropdown {
+        flex: 1;
+        min-width: 0; /* laisse .user-name tronquer avec ellipsis plutôt que déborder */
+    }
+
+    .mobile-nav-drawer__top-actions .user-trigger {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .mobile-nav-drawer__top-actions .user-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
     .mobile-nav-drawer__links {
         display: flex;
@@ -776,13 +811,14 @@
         padding-left: 18px;
     }
 
-    /* Overlay sombre derrière le drawer */
+    /* Overlay sombre derrière le drawer — au-dessus du .top-nav (z-index:1000)
+       pour que la barre du haut s'assombrisse aussi avec le reste de la page */
     .mobile-nav-overlay {
         display: none;
         position: fixed;
         inset: 0;
         background: rgba(0,0,0,.6);
-        z-index: 299;
+        z-index: 1000;
     }
     .mobile-nav-open .mobile-nav-overlay { display: block; }
 
@@ -908,7 +944,7 @@
     .project-bar {
         flex-direction: column;
         align-items: stretch;
-        width: 230px;
+        width: 240px;
         max-width: none;
         height: 100%;
         margin: 0;

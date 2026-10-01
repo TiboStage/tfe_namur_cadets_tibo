@@ -4,14 +4,14 @@
 {% set current_route = app.request.attributes.get('_route') %}
 
 {% block body %}
-    <div class="modo-layout modo-layout--modo">
+    <div class="modo-layout modo-layout--modo" data-controller="confirm-modal">
 
         {# ── SIDEBAR (structure calquée sur .project-bar) ──────────── #}
         <aside class="modo-sidebar">
 
             <div class="modo-sidebar__header">
-                <span class="brand-dot brand-dot--modo"></span>
-                <span class="modo-sidebar__brand">Scénart <span class="brand-badge brand-badge--modo">Modo</span></span>
+                <a href="{{ path('app_home') }}" class="logo-text logo-text--sm">SCÉN<span class="highlight">ART</span></a>
+                <span class="brand-badge brand-badge--modo">Modo</span>
             </div>
 
             <nav class="modo-nav">
@@ -77,5 +77,7 @@
                 {% block modo_content %}{% endblock %}
             </div>
         </main>
+
+        {{ include('admin/_partials/_confirm_modal.html.twig') }}
     </div>
 {% endblock %}

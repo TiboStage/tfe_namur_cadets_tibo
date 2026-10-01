@@ -193,12 +193,19 @@
                     </a>
                     {% if elementPaths[task.id] is defined %}
                         {% set el = elementPaths[task.id] %}
-                        <div class="tl-task-path">
-                            {{ ux_icon('lucide:map-pin', {style: 'width:10px;height:10px'}) }}
-                            <a href="{{ path('app_manuscript_show', {_locale: app.request.locale, project_slug: project.slug, id: el.id}) }}">
-                                {{ el.getFullPath() }}
-                            </a>
-                        </div>
+                        {% if el is not null %}
+                            <div class="tl-task-path">
+                                {{ ux_icon('lucide:map-pin', {style: 'width:10px;height:10px'}) }}
+                                <a href="{{ path('app_manuscript_show', {_locale: app.request.locale, project_slug: project.slug, id: el.id}) }}">
+                                    {{ el.getFullPath() }}
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="tl-task-path tl-task-path--deleted" title="{{ 'common.scene_deleted'|trans({}, 'workshop') }}">
+                                {{ ux_icon('lucide:map-pin-off', {style: 'width:10px;height:10px'}) }}
+                                {{ 'common.scene_deleted'|trans({}, 'workshop') }}
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
 
